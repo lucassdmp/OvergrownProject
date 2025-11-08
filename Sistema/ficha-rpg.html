@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Personagem - Overgrown 2.0</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cinzel+Decorative:wght@700&display=swap');
+        
+        :root {
+            --primary-color: #2c1810;
+            --secondary-color: #8b4513;
+            --accent-color: #d2b48c;
+            --light-color: #f5f5dc;
+            --dark-color: #1a0f08;
+            --border-color: #8b6914;
+            --hover-color: #a0522d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%);
+            color: var(--light-color);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(210, 180, 140, 0.1) 0%, transparent 50%);
+        }
+
+        .character-sheet {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            background: rgba(26, 15, 8, 0.9);
+            border: none;
+            border-radius: 0;
+            padding: 20px;
+            box-shadow: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .sheet-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .sheet-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .sheet-subtitle {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .character-info {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(210, 180, 140, 0.1);
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            color: var(--light-color);
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(210, 180, 140, 0.3);
+        }
+
+        /* Remove setas dos inputs number */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .attributes-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .attribute-card {
+            background: rgba(139, 69, 19, 0.2);
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .attribute-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(210, 180, 140, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .attribute-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(210, 180, 140, 0.2);
+        }
+
+        .attribute-card:hover::before {
+            left: 100%;
+        }
+
+        .attribute-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .attribute-modifier {
+            font-size: 0.9rem;
+            color: var(--light-color);
+            font-style: italic;
+        }
+
+        .attribute-dice {
+            font-size: 0.8rem;
+            color: var(--light-color);
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .derived-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(26, 15, 8, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--light-color);
+        }
+
+        .dice-roller {
+            background: rgba(139, 69, 19, 0.15);
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .dice-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .dice-type-card {
+            background: rgba(26, 15, 8, 0.8);
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            perspective: 1000px;
+            user-select: none;
+        }
+
+        .dice-type-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(210, 180, 140, 0.2);
+        }
+
+        .dice-3d {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        .dice-face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--accent-color), #f4d03f);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark-color);
+            font-size: 1.2rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dice-d2 .dice-face {
+            border-radius: 50%;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: 3px solid #B8860B;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .dice-d2 .dice-3d:hover {
+            transform: rotateY(180deg);
+        }
+
+        .dice-d4 .dice-face {
+            clip-path: polygon(50% 5%, 10% 95%, 90% 95%);
+            background: linear-gradient(45deg, var(--accent-color), #e6c57a);
+        }
+
+        .dice-d4 .dice-3d:hover {
+            transform: rotateX(20deg) rotateY(20deg);
+        }
+
+        .dice-d6 .dice-face {
+            border-radius: 6px;
+        }
+
+        .dice-d6 .dice-3d:hover {
+            transform: rotateX(15deg) rotateY(15deg);
+        }
+
+        .dice-d8 .dice-face {
+            clip-path: polygon(50% 0%, 15% 35%, 15% 65%, 50% 100%, 85% 65%, 85% 35%);
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        }
+
+        .dice-d8 .dice-3d:hover {
+            transform: rotateX(25deg) rotateZ(45deg);
+        }
+
+        .dice-d10 .dice-face {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+            background: linear-gradient(45deg, #4ecdc4, #7dd3c7);
+        }
+
+        .dice-d10 .dice-3d:hover {
+            transform: rotateX(30deg) rotateY(30deg);
+        }
+
+        .dice-d12 .dice-face {
+            clip-path: polygon(50% 0%, 85% 15%, 100% 50%, 85% 85%, 50% 100%, 15% 85%, 0% 50%, 15% 15%);
+            background: linear-gradient(45deg, #9b59b6, #c39bd3);
+        }
+
+        .dice-d12 .dice-3d:hover {
+            transform: rotateX(35deg) rotateY(35deg);
+        }
+
+        .dice-d16 .dice-face {
+            clip-path: polygon(50% 0%, 75% 12%, 93% 25%, 100% 50%, 93% 75%, 75% 88%, 50% 100%, 25% 88%, 7% 75%, 0% 50%, 7% 25%, 25% 12%);
+            background: linear-gradient(45deg, #f39c12, #f4d03f);
+        }
+
+        .dice-d16 .dice-3d:hover {
+            transform: rotateX(40deg) rotateY(40deg);
+        }
+
+        .dice-d20 .dice-face {
+            clip-path: polygon(50% 0%, 80% 20%, 95% 40%, 100% 60%, 85% 80%, 50% 100%, 15% 80%, 0% 60%, 5% 40%, 20% 20%);
+            background: linear-gradient(45deg, #3498db, #5dade2);
+        }
+
+        .dice-d20 .dice-3d:hover {
+            transform: rotateX(45deg) rotateY(45deg);
+        }
+
+        .dice-d100 .dice-face {
+            background: linear-gradient(45deg, #e74c3c, #ec7063);
+            border-radius: 8px;
+            border: 3px solid #c0392b;
+        }
+
+        .dice-d100 .dice-3d:hover {
+            transform: rotateX(50deg) rotateY(50deg);
+        }
+
+        .dice-label {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .dice-count {
+            background: var(--secondary-color);
+            color: var(--light-color);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            border: 2px solid var(--border-color);
+        }
+
+        .dice-count.zero {
+            display: none;
+        }
+
+        .selected-dice {
+            background: rgba(139, 69, 19, 0.2);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 80px;
+        }
+
+        .dice-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dice-in-pool {
+            background: rgba(210, 180, 140, 0.2);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dice-in-pool:hover {
+            background: rgba(220, 20, 60, 0.2);
+            border-color: #dc143c;
+            color: #dc143c;
+        }
+
+        .roll-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .modifier-input {
+            background: rgba(210, 180, 140, 0.1);
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            padding: 10px;
+            color: var(--light-color);
+            font-family: 'Cinzel', serif;
+            width: 100px;
+            text-align: center;
+        }
+
+        .clear-dice-button {
+            background: linear-gradient(45deg, #dc143c, #8b0000);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: var(--light-color);
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-dice-button:hover {
+            background: linear-gradient(45deg, #8b0000, #dc143c);
+            transform: translateY(-1px);
+        }
+
+        .roll-button {
+            background: linear-gradient(45deg, var(--secondary-color), var(--hover-color));
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            color: var(--light-color);
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .roll-button:hover {
+            background: linear-gradient(45deg, var(--hover-color), var(--accent-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .roll-result {
+            background: rgba(26, 15, 8, 0.8);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .roll-result.success {
+            border-color: #228b22;
+            background: rgba(34, 139, 34, 0.1);
+        }
+
+        .roll-result.failure {
+            border-color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+        }
+
+        .roll-result.critical {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+        }
+
+        .save-load-section {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .save-load-button {
+            background: linear-gradient(45deg, var(--dark-color), var(--primary-color));
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 24px;
+            color: var(--light-color);
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .save-load-button:hover {
+            border-color: var(--accent-color);
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        }
+
+        @media (max-width: 768px) {
+            .character-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .dice-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .sheet-title {
+                font-size: 2rem;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="character-sheet">
+        <header class="sheet-header">
+            <h1 class="sheet-title">Ficha de Personagem</h1>
+            <p class="sheet-subtitle">Sistema Overgrown 2.0</p>
+        </header>
+
+        <section class="character-info">
+            <div class="input-group">
+                <label for="character-name">Nome do Personagem</label>
+                <input type="text" id="character-name" placeholder="Digite o nome do personagem">
+            </div>
+            <div class="input-group">
+                <label for="character-level">Nível</label>
+                <input type="number" id="character-level" value="1" min="1" max="20">
+            </div>
+        </section>
+
+        <section class="attributes-section">
+            <h2 class="section-title">Atributos</h2>
+            <div class="attributes-grid">
+                <div class="attribute-card tooltip">
+                    <div class="attribute-name">CON</div>
+                    <input type="number" id="con-input" value="0" min="0" max="100" style="width: 100px; margin: 10px 0; padding: 8px; background: rgba(210, 180, 140, 0.15); border: 2px solid var(--secondary-color); border-radius: 8px; color: var(--light-color); text-align: center; font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: bold;">
+                    <div class="attribute-modifier">Constituição</div>
+                    <div class="attribute-dice" id="con-dice">0D20</div>
+                    <div class="tooltiptext">Vida, resistência (+5 vida por ponto, +1 bloqueio a cada 5 pontos)</div>
+                </div>
+                <div class="attribute-card tooltip">
+                    <div class="attribute-name">INT</div>
+                    <input type="number" id="int-input" value="0" min="0" max="100" style="width: 100px; margin: 10px 0; padding: 8px; background: rgba(210, 180, 140, 0.15); border: 2px solid var(--secondary-color); border-radius: 8px; color: var(--light-color); text-align: center; font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: bold;">
+                    <div class="attribute-modifier">Inteligência</div>
+                    <div class="attribute-dice" id="int-dice">0D20</div>
+                    <div class="tooltiptext">Conhecimento, energia mágica (+5 energia por ponto)</div>
+                </div>
+                <div class="attribute-card tooltip">
+                    <div class="attribute-name">DEX</div>
+                    <input type="number" id="agi-input" value="0" min="0" max="100" style="width: 100px; margin: 10px 0; padding: 8px; background: rgba(210, 180, 140, 0.15); border: 2px solid var(--secondary-color); border-radius: 8px; color: var(--light-color); text-align: center; font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: bold;">
+                    <div class="attribute-modifier">Destreza</div>
+                    <div class="attribute-dice" id="agi-dice">0D20</div>
+                    <div class="tooltiptext">Velocidade, equilíbrio, esquiva (+1 iniciativa e esquiva a cada 5 pontos)</div>
+                </div>
+                <div class="attribute-card tooltip">
+                    <div class="attribute-name">STR</div>
+                    <input type="number" id="str-input" value="0" min="0" max="100" style="width: 100px; margin: 10px 0; padding: 8px; background: rgba(210, 180, 140, 0.15); border: 2px solid var(--secondary-color); border-radius: 8px; color: var(--light-color); text-align: center; font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: bold;">
+                    <div class="attribute-modifier">Força</div>
+                    <div class="attribute-dice" id="str-dice">0D20</div>
+                    <div class="tooltiptext">Força física, dano corpo a corpo</div>
+                </div>
+                <div class="attribute-card tooltip">
+                    <div class="attribute-name">INF</div>
+                    <input type="number" id="inf-input" value="0" min="0" max="100" style="width: 100px; margin: 10px 0; padding: 8px; background: rgba(210, 180, 140, 0.15); border: 2px solid var(--secondary-color); border-radius: 8px; color: var(--light-color); text-align: center; font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: bold;">
+                    <div class="attribute-modifier">Influência</div>
+                    <div class="attribute-dice" id="inf-dice">0D20</div>
+                    <div class="tooltiptext">Influência social (definido por rolagem inicial)</div>
+                </div>
+            </div>
+
+            <div class="derived-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Pontos de Vida</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="number" id="character-current-hp" value="10" min="10" style="width: 60px; padding: 5px; background: rgba(210, 180, 140, 0.1); border: 1px solid var(--secondary-color); border-radius: 4px; color: var(--light-color); text-align: center; font-family: 'Cinzel', serif;">
+                        <span style="color: var(--accent-color); font-weight: bold;">/</span>
+                        <span class="stat-value" id="total-hp-value">10</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Energia</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="number" id="character-current-energy" value="0" min="0" style="width: 60px; padding: 5px; background: rgba(210, 180, 140, 0.1); border: 1px solid var(--secondary-color); border-radius: 4px; color: var(--light-color); text-align: center; font-family: 'Cinzel', serif;">
+                        <span style="color: var(--accent-color); font-weight: bold;">/</span>
+                        <span class="stat-value" id="energy-value">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Esquiva</div>
+                    <div class="stat-value" id="dodge-value">10</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Bloqueio</div>
+                    <div class="stat-value" id="block-value">10</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Iniciativa</div>
+                    <div class="stat-value" id="initiative-value">+0</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dice-roller">
+            <h2 class="section-title">Dados</h2>
+            
+            <div class="dice-selection">
+                <div class="dice-type-card dice-d2" onclick="addDice(2)" oncontextmenu="removeDice(2); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">🪙</div>
+                    </div>
+                    <div class="dice-label">D2 (Moeda)</div>
+                    <div class="dice-count zero" id="count-2">0</div>
+                </div>
+                
+                <div class="dice-type-card dice-d4" onclick="addDice(4)" oncontextmenu="removeDice(4); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">▲</div>
+                    </div>
+                    <div class="dice-label">D4</div>
+                    <div class="dice-count zero" id="count-4">0</div>
+                </div>
+                
+                <div class="dice-type-card dice-d6" onclick="addDice(6)" oncontextmenu="removeDice(6); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">⚅</div>
+                    </div>
+                    <div class="dice-label">D6</div>
+                    <div class="dice-count zero" id="count-6">0</div>
+                </div>
+                
+                <div class="dice-type-card dice-d8" onclick="addDice(8)" oncontextmenu="removeDice(8); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">◆</div>
+                    </div>
+                    <div class="dice-label">D8</div>
+                    <div class="dice-count zero" id="count-8">0</div>
+                </div>
+                
+                <div class="dice-type-card dice-d10" onclick="addDice(10)" oncontextmenu="removeDice(10); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">🔟</div>
+                    </div>
+                    <div class="dice-label">D10</div>
+                    <div class="dice-count zero" id="count-10">0</div>
+                </div>
+                
+                <div class="dice-type-card dice-d12" onclick="addDice(12)" oncontextmenu="removeDice(12); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">⬢</div>
+                    </div>
+                    <div class="dice-label">D12</div>
+                    <div class="dice-count zero" id="count-12">0</div>
+                </div>
+                
+                <div class="dice-type-card dice-d16" onclick="addDice(16)" oncontextmenu="removeDice(16); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">🔯</div>
+                    </div>
+                    <div class="dice-label">D16</div>
+                    <div class="dice-count zero" id="count-16">0</div>
+                </div>
+                
+                <div class="dice-type-card dice-d20" onclick="addDice(20)" oncontextmenu="removeDice(20); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">🔷</div>
+                    </div>
+                    <div class="dice-label">D20</div>
+                    <div class="dice-count zero" id="count-20">0</div>
+                </div>
+                
+                <div class="dice-type-card dice-d100" onclick="addDice(100)" oncontextmenu="removeDice(100); return false;">
+                    <div class="dice-3d">
+                        <div class="dice-face">💯</div>
+                    </div>
+                    <div class="dice-label">D100</div>
+                    <div class="dice-count zero" id="count-100">0</div>
+                </div>
+            </div>
+
+            <div class="selected-dice">
+                <h3 style="color: var(--accent-color); text-align: center; margin-bottom: 15px;">Dados Selecionados</h3>
+                <div class="dice-pool" id="dice-pool">
+                    <span style="color: var(--secondary-color); font-style: italic;">Clique esquerdo para adicionar | Clique direito para remover</span>
+                </div>
+            </div>
+
+            <div class="roll-controls">
+                <div>
+                    <label style="color: var(--accent-color); display: block; margin-bottom: 5px;">Modificador</label>
+                    <input type="number" id="dice-modifier" class="modifier-input" value="0">
+                </div>
+                <button class="roll-button" onclick="rollSelectedDice()">🎲 Rolar Dados</button>
+                <button class="clear-dice-button" onclick="clearAllDice()">🗑️ Limpar</button>
+            </div>
+            
+            <div class="roll-result" id="roll-result">
+                <span>Selecione dados e clique em "Rolar Dados" para começar</span>
+            </div>
+        </section>
+
+        <div class="save-load-section">
+            <button class="save-load-button" onclick="saveCharacter()">💾 Salvar Personagem</button>
+            <button class="save-load-button" onclick="loadCharacter()">📂 Carregar Personagem</button>
+            <button class="save-load-button" onclick="resetCharacter()">🔄 Resetar Ficha</button>
+        </div>
+    </div>
+
+    <script>
+        // Estado do personagem
+        let character = {
+            name: '',
+            level: 1,
+            currentHp: 10,
+            maxHp: 10,
+            currentEnergy: 0,
+            maxEnergy: 0,
+            attributes: { int: 0, str: 0, agi: 0, con: 0, inf: 0 },
+            derivedStats: { energy: 0, dodge: 10, block: 10, initiative: 0 }
+        };
+
+        // Estado dos dados selecionados
+        let selectedDice = {};
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAttributeListeners();
+            updateDerivedStats();
+            loadFromLocalStorage();
+            updateDiceDisplay();
+        });
+
+        // Atualiza listeners dos atributos
+        function updateAttributeListeners() {
+            ['int', 'str', 'agi', 'con', 'inf'].forEach(attr => {
+                const input = document.getElementById(`${attr}-input`);
+                input.addEventListener('input', function() {
+                    character.attributes[attr] = parseInt(this.value) || 0;
+                    updateAttributeDisplay();
+                    updateDerivedStats();
+                    saveToLocalStorage();
+                });
+            });
+
+            document.getElementById('character-name').addEventListener('input', function() {
+                character.name = this.value;
+                saveToLocalStorage();
+            });
+
+            document.getElementById('character-level').addEventListener('input', function() {
+                character.level = parseInt(this.value) || 1;
+                saveToLocalStorage();
+            });
+
+            document.getElementById('character-current-hp').addEventListener('input', function() {
+                character.currentHp = parseInt(this.value) || 10;
+                saveToLocalStorage();
+            });
+
+            document.getElementById('character-current-energy').addEventListener('input', function() {
+                character.currentEnergy = parseInt(this.value) || 0;
+                saveToLocalStorage();
+            });
+        }
+
+        // Atualiza display dos atributos
+        function updateAttributeDisplay() {
+            Object.keys(character.attributes).forEach(attr => {
+                const value = character.attributes[attr];
+                document.getElementById(`${attr}-input`).value = value;
+                
+                // Atualiza dados individuais por atributo
+                const diceCount = Math.min(5, Math.floor(value / 10));
+                document.getElementById(`${attr}-dice`).textContent = `${diceCount}D20`;
+            });
+        }
+
+        // Atualiza estatísticas derivadas
+        function updateDerivedStats() {
+            const int = character.attributes.int;
+            const agi = character.attributes.agi;
+            const con = character.attributes.con;
+            const str = character.attributes.str;
+            
+            // Vida máxima (10 base + CON * 5)
+            const maxHp = 10 + (con * 5);
+            character.maxHp = maxHp;
+            
+            // Energia máxima (0 base + INT * 5)
+            const maxEnergy = int * 5;
+            character.maxEnergy = maxEnergy;
+            
+            // Esquiva
+            const dodge = 10 + Math.floor(agi / 5);
+            
+            // Bloqueio
+            const block = 10 + Math.floor(con / 5);
+            
+            // Iniciativa
+            const initiative = Math.floor(agi / 5);
+            
+            // Atualiza display
+            document.getElementById('total-hp-value').textContent = maxHp;
+            document.getElementById('character-current-hp').max = maxHp;
+            document.getElementById('character-current-hp').value = maxHp;
+            document.getElementById('energy-value').textContent = maxEnergy;
+            document.getElementById('character-current-energy').value = maxEnergy;
+            document.getElementById('character-current-energy').max = maxEnergy;
+            document.getElementById('dodge-value').textContent = dodge;
+            document.getElementById('block-value').textContent = block;
+            document.getElementById('initiative-value').textContent = `+${initiative}`;
+            
+            character.derivedStats = { energy: maxEnergy, dodge, block, initiative };
+        }
+
+        // Adiciona dado ao pool
+        function addDice(sides) {
+            if (!selectedDice[sides]) {
+                selectedDice[sides] = 0;
+            }
+            selectedDice[sides]++;
+            updateDiceDisplay();
+            animateDiceAdd(sides);
+        }
+
+        // Remove dado do pool
+        function removeDice(sides) {
+            if (selectedDice[sides] && selectedDice[sides] > 0) {
+                selectedDice[sides]--;
+                if (selectedDice[sides] === 0) {
+                    delete selectedDice[sides];
+                }
+                updateDiceDisplay();
+                animateDiceRemove(sides);
+            }
+        }
+
+        // Atualiza display dos dados
+        function updateDiceDisplay() {
+            // Atualiza contadores
+            [2, 4, 6, 8, 10, 12, 16, 20, 100].forEach(sides => {
+                const countElement = document.getElementById(`count-${sides}`);
+                const count = selectedDice[sides] || 0;
+                countElement.textContent = count;
+                countElement.className = count > 0 ? 'dice-count' : 'dice-count zero';
+            });
+
+            // Atualiza pool de dados
+            const pool = document.getElementById('dice-pool');
+            pool.innerHTML = '';
+            
+            if (Object.keys(selectedDice).length === 0) {
+                pool.innerHTML = '<span style="color: var(--secondary-color); font-style: italic;">Clique esquerdo para adicionar | Clique direito para remover</span>';
+                return;
+            }
+
+            Object.keys(selectedDice).forEach(sides => {
+                const count = selectedDice[sides];
+                if (count > 0) {
+                    const diceElement = document.createElement('div');
+                    diceElement.className = 'dice-in-pool';
+                    diceElement.innerHTML = `${count}D${sides} <span style="font-size: 0.7rem;">❌</span>`;
+                    diceElement.onclick = () => removeDice(parseInt(sides));
+                    pool.appendChild(diceElement);
+                }
+            });
+        }
+
+        // Animação ao adicionar dado
+        function animateDiceAdd(sides) {
+            const card = document.querySelector(`.dice-d${sides === 2 ? '2' : sides}`);
+            card.style.transform = 'scale(1.1)';
+            card.style.borderColor = 'var(--accent-color)';
+            setTimeout(() => {
+                card.style.transform = '';
+                card.style.borderColor = '';
+            }, 200);
+        }
+
+        // Animação ao remover dado
+        function animateDiceRemove(sides) {
+            const card = document.querySelector(`.dice-d${sides === 2 ? '2' : sides}`);
+            card.style.transform = 'scale(0.9)';
+            card.style.borderColor = '#dc143c';
+            setTimeout(() => {
+                card.style.transform = '';
+                card.style.borderColor = '';
+            }, 200);
+        }
+
+        // Limpa todos os dados
+        function clearAllDice() {
+            selectedDice = {};
+            updateDiceDisplay();
+        }
+
+        // Rola dados selecionados
+        function rollSelectedDice() {
+            if (Object.keys(selectedDice).length === 0) {
+                alert('Selecione pelo menos um dado para rolar!');
+                return;
+            }
+
+            const modifier = parseInt(document.getElementById('dice-modifier').value) || 0;
+            let allResults = [];
+            let total = 0;
+            let rollDetails = [];
+
+            Object.keys(selectedDice).forEach(sides => {
+                const count = selectedDice[sides];
+                const sidesNum = parseInt(sides);
+                let results = [];
+                
+                for (let i = 0; i < count; i++) {
+                    const roll = Math.floor(Math.random() * sidesNum) + 1;
+                    results.push(roll);
+                    total += roll;
+                    allResults.push({ dice: sidesNum, roll: roll });
+                }
+                
+                rollDetails.push(`${count}D${sides}: [${results.join(', ')}]`);
+            });
+
+            total += modifier;
+
+            const resultElement = document.getElementById('roll-result');
+            resultElement.className = 'roll-result';
+            
+            // Determina classe baseada no resultado
+            const hasCritical = allResults.some(r => r.roll === r.dice && r.dice === 20);
+            const hasFailure = allResults.some(r => r.roll === 1 && r.dice === 20);
+            
+            if (hasCritical) {
+                resultElement.classList.add('critical');
+            } else if (hasFailure) {
+                resultElement.classList.add('failure');
+            } else if (total >= 15) {
+                resultElement.classList.add('success');
+            }
+
+            const modifierText = modifier !== 0 ? ` ${modifier >= 0 ? '+' : ''}${modifier}` : '';
+            
+            resultElement.innerHTML = `
+                <div>
+                    <strong>Rolagem${modifierText}</strong><br>
+                    ${rollDetails.join('<br>')}
+                    <br><span style="font-size: 1.5rem; color: var(--accent-color);">Total: ${total}</span>
+                </div>
+            `;
+
+            // Animação dos dados
+            animateRoll();
+        }
+
+        // Animação de rolagem
+        function animateRoll() {
+            Object.keys(selectedDice).forEach(sides => {
+                const dice3d = document.querySelector(`.dice-d${sides === '2' ? '2' : sides} .dice-3d`);
+                if (dice3d) {
+                    dice3d.style.transform = 'rotateX(720deg) rotateY(720deg)';
+                    setTimeout(() => {
+                        dice3d.style.transform = '';
+                    }, 1000);
+                }
+            });
+        }
+
+        // Salvar personagem
+        function saveCharacter() {
+            const characterData = {
+                ...character,
+                name: document.getElementById('character-name').value,
+                level: parseInt(document.getElementById('character-level').value),
+                currentHp: parseInt(document.getElementById('character-current-hp').value),
+                currentEnergy: parseInt(document.getElementById('character-current-energy').value)
+            };
+            
+            const dataStr = JSON.stringify(characterData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `${characterData.name || 'personagem'}_overgrown.json`;
+            link.click();
+        }
+
+        // Carregar personagem
+        function loadCharacter() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const loadedCharacter = JSON.parse(e.target.result);
+                            applyLoadedCharacter(loadedCharacter);
+                        } catch (error) {
+                            alert('Erro ao carregar arquivo: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // Aplica personagem carregado
+        function applyLoadedCharacter(loadedCharacter) {
+            character = { ...character, ...loadedCharacter };
+            
+            // Atualiza campos de entrada
+            document.getElementById('character-name').value = character.name || '';
+            document.getElementById('character-level').value = character.level || 1;
+            document.getElementById('character-current-hp').value = character.currentHp || 10;
+            document.getElementById('character-current-energy').value = character.currentEnergy || 0;
+            
+            // Atualiza atributos
+            Object.keys(character.attributes).forEach(attr => {
+                document.getElementById(`${attr}-input`).value = character.attributes[attr] || 0;
+            });
+            
+            updateAttributeDisplay();
+            updateDerivedStats();
+            saveToLocalStorage();
+        }
+
+        // Resetar personagem
+        function resetCharacter() {
+            if (confirm('Tem certeza que deseja resetar toda a ficha?')) {
+                character = {
+                    name: '',
+                    level: 1,
+                    currentHp: 10,
+                    currentEnergy: 0,
+                    attributes: { int: 0, str: 0, agi: 0, con: 0, inf: 0 },
+                    derivedStats: { energy: 0, dodge: 10, block: 10, initiative: 0 }
+                };
+                
+                document.getElementById('character-name').value = '';
+                document.getElementById('character-level').value = 1;
+                document.getElementById('character-current-hp').value = 10;
+                document.getElementById('character-current-energy').value = 0;
+                
+                Object.keys(character.attributes).forEach(attr => {
+                    document.getElementById(`${attr}-input`).value = 0;
+                });
+                
+                selectedDice = {};
+                updateAttributeDisplay();
+                updateDerivedStats();
+                updateDiceDisplay();
+                saveToLocalStorage();
+            }
+        }
+
+        // Salvar no localStorage
+        function saveToLocalStorage() {
+            const characterData = {
+                ...character,
+                name: document.getElementById('character-name').value,
+                level: parseInt(document.getElementById('character-level').value),
+                currentHp: parseInt(document.getElementById('character-current-hp').value),
+                currentEnergy: parseInt(document.getElementById('character-current-energy').value)
+            };
+            localStorage.setItem('overgrown_character', JSON.stringify(characterData));
+        }
+
+        // Carregar do localStorage
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('overgrown_character');
+            if (saved) {
+                try {
+                    const loadedCharacter = JSON.parse(saved);
+                    applyLoadedCharacter(loadedCharacter);
+                } catch (error) {
+                    console.log('Erro ao carregar dados salvos:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
