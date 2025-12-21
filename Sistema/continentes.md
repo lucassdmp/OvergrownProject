@@ -124,7 +124,9 @@ Anões valorizam artesanato, resistência e lealdade aos clãs. Juramentos são 
 
 **O Desaparecimento, "A Noite Sem Amanhecer":**
 
-Há exatamente 1 ano, no momento exato em que o **Cataclisma de Nostradum** varreu o mundo, a Montanha Titânica simplesmente **desapareceu**. Não houve terremoto, explosão ou aviso. Comerciantes que chegaram pela manhã encontraram apenas um vazio perfeitamente circular onde a montanha existia. A terra foi cortada tão precisamente que parecia polida. Neve que caía simplesmente enchia o grande vazio. Agora se sabe que este evento não foi isolado, mas sim parte do grande colapso que consumiu toda a mana do mundo, a trocando por uma energia caótica, conhecida como Null, ou só energia.
+Em **4521**, no momento exato em que muitos registros chamam de **"Cataclisma de Nostradum"** (o choque global associado ao **Surgimento do Null**), a Montanha Titânica simplesmente **desapareceu**. Não houve terremoto, explosão ou aviso. Comerciantes que chegaram pela manhã encontraram apenas um vazio perfeitamente circular onde a montanha existia. A terra foi cortada tão precisamente que parecia polida. Neve que caía simplesmente enchia o grande vazio.
+
+Agora se sabe que este evento coincidiu com a chegada do **Null** — a Energia Impossível — que passou a **consumir a mana** e tornar fenômenos mágicos perigosamente instáveis em muitas regiões.
 
 **Sobreviventes, Os Anões Exilados:**
 
@@ -431,28 +433,25 @@ Missões relacionadas a Sorodrum (raríssimas, altíssimo pagamento):
 ## A Ilha da Guilda, 
 No centro do mundo ergue-se uma ilha colossal, de proporções quase continentais. É o coração da **Guilda**, uma organização presente em todos os continentes, reunindo aventureiros, mercenários e comerciantes. 
 
-Aqui, pessoas buscam fama, poder, dinheiro ou apenas sobrevivência. **Onde os deuses outrora caminhavam entre seus aprendizes**, agora lutam para manter sua existência após o Cataclisma que enfraqueceu terrivelmente os que não se adaptaram.
+Aqui, pessoas buscam fama, poder, dinheiro ou apenas sobrevivência. A Ilha é também um eixo político e logístico: um território neutro que intermedia missões e acordos entre nações que, por séculos, sequer conseguiram se comunicar.
 
 ---
 
-### **A História da Guilda, Fundação e Propósito**
+### **Conhecimento de Mundo e da Guilda (público)**
 
-**Há 2500 anos**, logo após o **Primeiro Cataclisma**, o mundo estava fragmentado e em constante guerra. Continentes não se comunicavam. Raças se odiavam. Monstros apareciam descontrolados. Foi quando todos os deuses se reuniram, preocupados com o destino do mundo mortal. Eles decidiram descer de seu panteão e criar uma organização que pudesse unir todas as raças e proteger o equilíbrio do planeta, com um objetivo claro:
+#### **O Mundo Fragmentado**
+Overgrown é um mundo vasto e fragmentado, composto por continentes independentes com culturas e políticas próprias. No coração dessa realidade reside A Ilha da Guilda: um território singular que se tornou ponte entre povos e, por muito tempo, o **Último Bastião da Civilização**.
 
-1. **Unificação através de Propósito Comum:** Criar uma organização neutra onde todas as raças pudessem colaborar
-2. **Contenção de Ameaças Globais:** Formar grupos de elite para combater perigos que nenhuma nação sozinha poderia enfrentar
-3. **Preservação do Conhecimento:** Documentar monstros, magias, história e garantir que desastres nunca fossem esquecidos
+#### **Linha do Tempo (resumo canônico)**
+- **2020 — Primeiro Cataclismo:** os **Celestiais** descem ao plano terrestre para conter a ruína. Onde tocavam o solo, abriam-se **Fendas de Energia Primordial**, capazes de alterar matéria e leis naturais.
+- **2020 — Overgrown (Segundo Cataclismo):** a Energia Primordial espalha-se, o mundo rompe-se em terremotos e maremotos. Parte dos Celestiais espalha-se para conter a destruição; outra parte recua ao centro do mundo, levando consigo populações e erguendo a **Guilda** como medida de segurança e refúgio.
+- **2020–4020 — Era do Isolamento:** por aproximadamente **2.000 anos**, a Guilda permanece isolada, acreditando ser o último grande núcleo organizado.
+- **4020 — A Grande Expansão:** as fronteiras abrem. Nos **500 anos** seguintes, alianças são formadas, bases surgem e aventureiros passam a ser treinados dentro e fora da Guilda.
+- **4521 — O Surgimento do Null:** coincide com o desaparecimento de **Yroln** (capital anã). O **Null** (Energia Impossível, ou apenas Energia) começa a consumir a própria mana e a se espalhar com instabilidade sem precedentes.
+- **4522 — Selos de Divindade:** o antigo sistema dos **Oculys** é abolido e substituído pelos **Selos de Divindade**, marcas que ligam aventureiros ao **Pináculo**.
 
-**O Segredo Oculto:** Por 2500 anos, a Guilda guardou um segredo que nem mesmo a maioria de seus membros conhecia. A verdadeira razão pela qual a organização foi fundada não era apenas unir as raças, mas **proteger as Fendas de Mana Primordial**, pontos onde os Deuses haviam descido ao plano terrestre após o Primeiro Cataclisma. Essas fendas serviam como âncoras que mantinham os Deuses conectados ao mundo mortal, permitindo-lhes canalizar seu poder e influência. A Guilda, sob ordens diretas dos próprios Deuses, estabeleceu filiais estrategicamente posicionadas próximas a essas fendas, disfarçando sua proteção como "contenção de ameaças mágicas".
-
-**Os Sete Deuses Fundadores (agora lendas):**
-- **Valdris, Deus da Guerra**
-- **Lunara, Deusa da Lua e Magia**
-- **Morvash, Deus da Morte e Memória**
-- **Tyros, Deus da Justiça**
-- **Rynna, Deusa da Fortuna**
-- **Eldrin, Deus da Natureza e Vida**
-- **Zyra, Deusa do Conhecimento e Sabedoria**
+#### **Missões da Guilda (postura e prática)**
+A Guilda mantém postura **neutra**: não impõe julgamentos morais sobre missões conduzidas fora de seus domínios, reconhecendo que cada país possui leis e valores próprios. Missões dentro da Ilha tendem a ser mais controladas; fora dela, refletem as tensões e instabilidades de cada região.
 
 ---
 
@@ -464,123 +463,53 @@ A Ilha da Guilda tem aproximadamente **500km de diâmetro**, dividida em sete re
 Megalópole de 2 milhões de habitantes. Sede central da Guilda. Arquitetura mistura estilos de todos os continentes. Possui grandes arcos que sustentam todos os portos de decolagem e pouso de aeronaves.
 
 **Estruturas principais:**
-- **O Salão do Oculi:** Região administrativa, onde grupos são montados e missões são designadas.
+- **O Salão do Oculys:** Região administrativa, onde grupos são montados e missões são designadas (nome histórico, anterior aos Selos).
 - **A Biblioteca Infinita:** Contém registros de todas as missões, monstros, magias e história do mundo.
 - **O Mercado Global:** Comércio de itens raros, equipamentos e artefatos de todos os continentes.
 - **Estalagem dos Mil Ventos:** Ponto de encontro para aventureiros, oferece quartos, rações de suprimentos.
 
-#### **2. Região de Valdris, Campos de Treinamento e Arenas**
-Campos de batalha, arenas de combate e centros de treinamento militar. Aventureiros treinam técnicas de guerra, táticas e sobrevivência. Contem lojas focadas em armas, armaduras e equipamentos de combate.
+#### **2. Campos de Treinamento e Arenas**
+Campos de batalha, arenas de combate e centros de treinamento militar. Aventureiros treinam técnicas de guerra, táticas e sobrevivência. Contém lojas focadas em armas, armaduras e equipamentos de combate.
 
-#### **3. Região de Lunara, Torres de Magia e Laboratórios**
+#### **3. Torres de Magia e Laboratórios**
 Torres dedicadas ao estudo da magia. Laboratórios de alquimia, escolas de feitiços e bibliotecas arcanas. Aventureiros podem aprender novas magias, criar poções e estudar fenômenos mágicos.
 
-#### **4. Região de Morvash, Necrotérios e Memorial dos Caídos**
+#### **4. Necrotérios e Memorial dos Caídos**
 Locais dedicados ao estudo da morte, necromancia ética e memorial para aventureiros que morreram em missões. Aventureiros podem aprender sobre rituais de passagem, comunicação com espíritos e preservação de memórias.
 
-#### **5. Região de Tyros, Tribunais e Salões de Justiça**
+#### **5. Tribunais e Salões de Justiça**
 Tribunais onde disputas entre aventureiros são resolvidas. Salões de justiça para treinamento em ética e leis. Aventureiros podem buscar resolução para conflitos e informações.
 
-#### **6. Região de Rynna, Cassinos e Casas de Apostas**
+#### **6. Cassinos e Casas de Apostas**
 Locais de entretenimento, jogos de azar e apostas. Aventureiros tentam a sorte em jogos que podem render grandes recompensas ou perdas devastadoras. Aventureiros podem encontrar informações valiosas entre os frequentadores.
 
-#### **7. Região de Eldrin e Zyra, Jardins e Bibliotecas Naturais**
+#### **7. Jardins e Bibliotecas Naturais**
 Jardins botânicos, zoológicos e bibliotecas dedicadas ao estudo da natureza e do conhecimento. Aventureiros podem aprender sobre plantas medicinais, criaturas exóticas e história natural.
 ---
 
-### **O Cataclisma de Nostradum, Um Ano de Caos**
+### **O Surgimento do Null (4521)**
 
-**Há exatamente 1 ano**, o mundo foi abalado pelo **Cataclisma de Nostradum**. Em um único instante, toda a mana do mundo foi **consumida e corrompida** por uma energia estranha e desconhecida, agora nomeada de Null ou somente energia. As **Fendas de Mana Primordial** que a Guilda protegia há 2500 anos colapsaram simultaneamente, revelando ao mundo inteiro seu verdadeiro propósito: eram os pontos onde os **Deuses haviam ancorado sua existência** no plano mortal.
+> Nota: a denominação **"Cataclisma de Nostradum"** é usada em alguns registros e tradições locais para se referir ao choque global associado ao **Surgimento do Null**.
 
-**O Que Aconteceu:**
-
-Quando as fendas colapsaram, os Deuses foram **severamente enfraquecidos**, perdendo a maior parte de seus poderes divinos. Aqueles que dependiam totalmente da mana para existir no plano mortal quase desapareceram completamente. A Ilha da Guilda, que estava no centro de convergência das **Linhas Ley** (correntes de mana primordial), foi parcialmente poupada, mas agora a energia que a permeia é estranha, instável e imprevisível.
-
-**Os Deuses Enfraquecidos:**
-
-Os Deuses que outrora caminhavam majestosamente entre mortais agora lutam para manter formas humanas estáveis. E os que falharam, explodiram em grandes explosões de energia.
-
-**A Nova Realidade:**
-
-A guilda está um caos, devido a falta de uma força para monitorar, serviços antes só anunciados no mercado negro agora são abertamente oferecidos. A magia tradicional não funciona mais, e magias afetadas pela nova energia tem efeitos mais fortes e imprevisíveis. 
-
-**Interação com Aventureiros:**
-
-Diferente de antes, os Deuses agora temem por suas vidas. Alguns ficaram **vulneráveis** e podem ser mortos se não forem protegidos. Aventureiros que se adaptam com essa nova energia ganham parte de divindade, permitindo-lhes acessar novos poderes e habilidades.
+Em **4521**, com o desaparecimento de **Yroln**, o mundo entra em uma nova crise: o **Null** passa a consumir mana e a contaminar fenômenos mágicos, tornando regiões inteiras instáveis. Em muitos lugares, magia tradicional ainda existe, mas é **intermitente**, **perigosa** ou exige novas práticas.
 
 ---
 
-### **A Regeneração Divina, O Ciclo das Encarnações**
-
-Quando um Deus sofre danos críticos mas **não fatais**, entrando em um estado de extrema fraqueza onde sua essência divina está prestes a se dissipar completamente, um mecanismo de sobrevivência ancestral se ativa. Este processo, conhecido entre os poucos que conhecem a verdade como **A Renovação**, permite que a essência divina se reconstrua em uma nova forma, mas com um custo terrível.
-
-**Nota Crítica:** Se um Deus sofrer danos fatais diretos (decapitação, destruição completa do corpo, aniquilação da essência), ele **morre permanentemente** e deixa de existir. A regeneração só ocorre quando o Deus atinge um estado de **fraqueza extrema sem morte imediata**, dando tempo para o processo se completar.
-
-#### **O Processo de Regeneração:**
-
-**Fase 1, O Colapso (Minutos antes da regeneração):**
-Quando um Deus atinge um estado de **fraqueza extrema**, sua forma física começa a se desestabilizar. A energia divina residual dentro dele entra em pânico, tentando preservar a essência do ser. O Deus sente uma dor insuportável, como se cada célula de seu corpo estivesse sendo queimada e recongelada simultaneamente. Ele experimenta **flashes de todas as suas encarnações anteriores**, revivendo memórias de versões passadas de si mesmo. Durante esta fase, o Deus está **vulnerável à morte definitiva**, um golpe fatal neste momento o mataria permanentemente, causando uma explosão destrutiva.
-
-**Fase 2, A Explosão de Luz:**
-Se o Deus **sobreviver** à fase de colapso sem sofrer um golpe fatal, no momento crítico da regeneração, o corpo do Deus começa a brilhar e se distorcer, uma luz cegante que pode ser vista a quilômetros de distância. Esta luz não é destrutiva para o ambiente, mas causa uma emoções em todos os seres conscientes próximos, como se algo fundamental estivesse mudando no mundo.
-
-**Fase 3, A Reconstrução:**
-Do epicentro da luz, a energia começa a se **condensar** novamente. Partículas de luz se aglomeram, formando primeiro um esqueleto etéreo, depois músculos de energia pura, e finalmente pele e características físicas. Este processo leva entre **5 a 30 minutos**, dependendo da gravidade dos danos sofridos.
-
-**Fase 4, O Despertar:**
-Quando a nova forma está completa, o Deus **desperta com uma inspiração profunda**, como alguém emergindo de um afogamento. Ele está **confuso, desorientado e emocionalmente instável**. As primeiras horas após a regeneração são críticas, pois o Deus pode não reconhecer aliados, agir de forma errática ou até hostil.
-
-#### **O Custo da Regeneração:**
-
-**Perda de Memória Seletiva:**
-Cada regeneração apaga fragmentos da memória do Deus. Não são memórias completas, mas **detalhes específicos**:
-- Rostos de pessoas que ele amou
-- Promessas que fez
-- Conversas importantes
-- Emoções associadas a eventos passados
-
-Por exemplo, **Valdris** pode se lembrar de ter lutado ao lado de um grande guerreiro, mas **esquecer seu nome** ou **por que lutaram juntos**. Ele pode se lembrar de uma batalha, mas não da **razão pela qual era importante**.
-
-**Mudança de Personalidade:**
-A nova encarnação mantém a essência central do Deus (seus domínios, propósitos e valores fundamentais), mas sua **personalidade pode mudar drasticamente**:
-- Um Deus que era gentil pode se tornar cínico
-- Um guerreiro honrado pode se tornar pragmático e frio
-- Uma divindade sábia pode se tornar impulsiva
-
-**Alteração Física:**
-A aparência muda completamente. Gênero, idade aparente, estatura, cor de pele, tudo pode ser diferente.
-
-**Perda de Poder:**
-Cada regeneração **enfraquece permanentemente o Deus**. Eles perdem cerca de **10-15% de seu poder total**. Após múltiplas regenerações, um Deus pode se tornar tão fraco que **a próxima morte será definitiva**, pois não haverá energia suficiente para regenerar.
-
-Após o **Cataclisma de Nostradum**, este número foi **drasticamente reduzido**. Muitos Deuses que poderiam ter regenerado 15 vezes agora mal conseguem 3 ou 4.
-
-#### **Mecânica para Jogadores:**
-
-Aventureiros que testemunham uma regeneração divina podem experimentar efeitos:
-- **Teste de Sanidade:** A explosão de energia pode causar choque mental
-- **Bênção Residual:** Absorver fragmentos de energia divina durante a regeneração, ganhando buffs temporários
-- **Fragmento de Memória:** Em raras ocasiões, o aventureiro pode **herdar uma memória perdida do Deus**, vendo flashbacks de encarnações anteriores e ganhando habilidades.
-
----
-
-**A Regeneração Divina é tanto uma bênção quanto uma maldição. Garante que os Deuses não sejam facilmente eliminados por fraqueza, mas cada ciclo os torna **menos divinos** e **mais humanos**. No mundo pós-Cataclisma, onde a mana desapareceu e a nova energia reina, os Deuses não estão apenas lutando para sobreviver, estão lutando para **se lembrarem de quem são**. E a cada regeneração, essa batalha fica mais difícil. Mas acima de tudo, eles vivem com o conhecimento terrível de que **a morte definitiva está sempre a um golpe fatal de distância**, e nenhuma regeneração pode salvá-los se forem destruídos completamente.**
-
-### **Como a Guilda Funciona Após o Cataclisma**
+### **Como a Guilda Funciona Após o Null**
  
-#### **Hierarquia de Aventureiros pós-Cataclisma:**
+#### **Hierarquia de Aventureiros pós-Null:**
 
 O sistema de ranques foi mantido, mas os critérios mudaram drasticamente:
 
 1. **Ferro**, Iniciantes. Missões de sobrevivência básica (escoltar refugiados, coletar recursos, proteger assentamentos).
 2. **Bronze**, Competentes. Missões de adaptação (investigar anomalias da nova energia, caçar criaturas mutadas).
 3. **Prata**, Veteranos. Missões de exploração (buscar Rastros Ancestrais, mapear zonas corrompidas).
-4. **Ouro**, Elite. Missões de alto risco (proteger Deuses enfraquecidos, investigar ruínas do Cataclisma).
+4. **Ouro**, Elite. Missões de alto risco (investigar ruínas do Overgrown, conter surtos de Null, recuperar conhecimento perdido).
 5. **Platina**, Lendários. Missões impossíveis (enfrentar criaturas nascidas da nova energia, buscar a verdade sobre Nostradum).
-6. **Mithril**, Heróis do Mundo. Apenas 30 existentes (muitos morreram no Cataclisma). Combatem ameaças existenciais.
-7. **Divine**, Lendas Vivas. Apenas **3 existentes** após o Cataclisma.
+6. **Mithril**, Heróis do Mundo. Apenas 30 existentes (muitos morreram nos cataclismos e nas crises do Null). Combatem ameaças existenciais.
+7. **Divine**, Lendas Vivas. Apenas **3 existentes** após as crises mais recentes.
 
-**Progressão:** Baseada em contribuições para a sobrevivência do mundo. Magia tradicional não funciona mais, então aventureiros devem aprender a usar a **Nova Energia** ou confiar em habilidades não-mágicas.
+**Progressão:** Baseada em contribuições para a sobrevivência do mundo. Com a mana sendo consumida e a energia instável, aventureiros aprendem a lidar com a **Energia** (Null e variantes) ou confiam em habilidades não-mágicas.
 
 #### **Filiais Continentais:**
 
@@ -598,7 +527,7 @@ Filiais mantêm:
 ### **Cultura da Guilda**
 
 **Código de Honra:**
-Desde o cataclisma, o código deixou de ser uma regra e passou a ser uma opnião pessoal. Muitos aventureiros acreditam que, em um mundo caótico, a sobrevivência justifica qualquer meio. Outros ainda seguem o código estritamente, acreditando que a honra é o último bastião da civilização.  
+Desde os cataclismos, o código deixou de ser uma regra e passou a ser uma opinião pessoal. Muitos aventureiros acreditam que, em um mundo caótico, a sobrevivência justifica qualquer meio. Outros ainda seguem o código estritamente, acreditando que a honra é o último bastião da civilização.  
 
 **Moeda da Guilda:**
 A Guilda cunha a própria moeda universal:
@@ -611,5 +540,26 @@ Aventureiros recebem pagamento em moeda da Guilda, garantindo valor independente
 
 ---
 
-**A Ilha da Guilda não é mais apenas uma organização, é o último farol de civilização em um mundo que perdeu seu equilíbrio cósmico. Aqui, todas as raças, classes e credos se encontram não em terreno neutro, mas em terreno **desesperado**, unidos por um único propósito: sobreviver ao caos, descobrir a verdade sobre o Cataclisma de Nostradum, e talvez, se os Deuses permitirem, encontrar uma forma de restaurar o que foi perdido. Mas o tempo é curto, a nova energia continua se espalhando, e os rastros ancestrais da mana estão desaparecendo. O mundo está morrendo, e apenas os aventureiros mais corajosos, ou mais loucos, ousam enfrentar as trevas que agora consomem OverGrown.**
+### **Conhecimento Celestial (restrito)**
+
+#### **O Pináculo e os Selos de Divindade**
+Em **4522**, o sistema dos **Oculys** foi abolido e substituído pelo **Sistema de Selos de Divindade**. Os Selos são marcas gravadas nas costas dos aventureiros, funcionando como um elo direto com o **Pináculo** — uma torre inacessível que abriga o conhecimento acumulado dos Celestiais.
+
+É possível se conectar ao Pináculo sem fazer parte da Guilda por meio de magia, porém:
+- criar um selo tem custo proibitivo para pessoas comuns;
+- conectar alguém sem permissão da Guilda é prática proibida e criminosa.
+
+#### **Celestiais, Overgrown e o Null (o que se sabe nos círculos internos)**
+As Fendas de Energia Primordial abertas em 2020 alteraram as leis do mundo e permitiram manifestações celestiais. Em 4521, o **Null** surge como a Energia Impossível: um fenômeno que consome mana e amplia a instabilidade do sobrenatural. Alguns Celestiais e entidades superiores **pereceram** em liberações violentas de energia; outros **sobreviveram** e tornaram-se mais perigosos e influentes.
+
+#### **A Renovação (regeneração divina) e vulnerabilidades**
+Entre os poucos que conhecem a verdade, existe o registro de um mecanismo ancestral de sobrevivência conhecido como **A Renovação**: quando uma entidade superior sofre danos críticos, mas não fatais, sua essência pode reconstruir uma nova forma.
+
+- **Morte definitiva:** danos fatais diretos (aniquilação da essência, destruição completa do corpo) podem encerrar a existência de forma permanente.
+- **Efeitos colaterais:** o processo pode gerar perda seletiva de memória, alterações de personalidade e mudanças físicas.
+- **Interferência do Null:** em regiões fortemente contaminadas, a Renovação pode falhar, ser corrompida ou produzir efeitos imprevisíveis.
+
+---
+
+**Este é o mundo de Overgrown. Um mundo ferido por deuses, moldado por destruição e sustentado por escolhas. Aqui, cada aventura deixa marcas na própria realidade.**
 
