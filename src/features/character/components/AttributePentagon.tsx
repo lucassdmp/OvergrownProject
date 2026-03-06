@@ -1,4 +1,4 @@
-import type { AttributeName } from '../../../types/game'
+import type { AttributeName, Character } from '../../../types/game'
 import { useCharacterStore, remainingAttributePoints, totalAttributePoints } from '../store/characterStore'
 
 // ── Pentagon geometry ─────────────────────────────────────────────────────────
@@ -30,21 +30,42 @@ const starOrder = [0, 2, 4, 1, 3]
 const starPath =
   starOrder.map((i, j) => `${j === 0 ? 'M' : 'L'} ${V[i].x},${V[i].y}`).join(' ') + ' Z'
 
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Sum of attributeBonus effects from active inventory items for each attribute. */
+function getItemAttrBonuses(character: Character): Partial<Record<AttributeName, number>> {
+  const bonuses: Partial<Record<AttributeName, number>> = {}
+  const activeItems = (character.inventory ?? []).filter((it) =>
+    it.type === 'weapon' || it.type === 'armor' ? it.equipped === true : it.quantity > 0
+  )
+  for (const item of activeItems) {
+    for (const ef of item.effects) {
+      if (ef.type === 'attributeBonus' && ef.attribute && ef.value != null) {
+        bonuses[ef.attribute] = (bonuses[ef.attribute] ?? 0) + ef.value
+      }
+    }
+  }
+  return bonuses
+}
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 interface AttrControlProps {
   id: AttributeName
   label: string
+  /** Base value (allocated points) */
   value: number
+  /** Bonus coming from equipped/active items */
+  itemBonus: number
   canIncrease: boolean
   onChange: (v: number) => void
-  /** % positions for absolute layout */
   leftPct: number
   topPct: number
 }
 
-function AttributeControl({ id, label, value, canIncrease, onChange, leftPct, topPct }: AttrControlProps) {
+function AttributeControl({ id, label, value, itemBonus, canIncrease, onChange, leftPct, topPct }: AttrControlProps) {
   void id
+  const total = value + itemBonus
   return (
     <div
       className="absolute flex flex-col items-center gap-0.5"
@@ -60,7 +81,7 @@ function AttributeControl({ id, label, value, canIncrease, onChange, leftPct, to
           −
         </button>
         <div className="flex h-8 w-8 items-center justify-center rounded-full border border-amber-400/60 dark:border-amber-700/50 bg-white dark:bg-gray-900/90 text-xl font-bold text-gray-900 dark:text-white shadow">
-          {value}
+          {total}
         </div>
         <button
           disabled={!canIncrease}
@@ -70,6 +91,9 @@ function AttributeControl({ id, label, value, canIncrease, onChange, leftPct, to
           +
         </button>
       </div>
+      {itemBonus > 0 && (
+        <span className="text-[10px] font-bold text-violet-500 dark:text-violet-400">+{itemBonus} item</span>
+      )}
     </div>
   )
 }
@@ -83,6 +107,7 @@ export default function AttributePentagon() {
 
   const remaining = remainingAttributePoints(character.attributes, character.divinity)
   const total = totalAttributePoints(character.divinity)
+  const itemBonuses = getItemAttrBonuses(character)
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -141,6 +166,7 @@ export default function AttributePentagon() {
             id={attr.id}
             label={attr.label}
             value={character.attributes[attr.id]}
+            itemBonus={itemBonuses[attr.id] ?? 0}
             canIncrease={remaining > 0}
             onChange={(v) => setAttribute(attr.id, v)}
             leftPct={(V[i].x / 500) * 100}

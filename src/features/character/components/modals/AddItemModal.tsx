@@ -174,7 +174,13 @@ export default function AddItemModal({ onClose }: Props) {
               <div key={i} className="flex items-start gap-2 rounded-lg bg-gray-800 p-2">
                 <select
                   value={ef.type}
-                  onChange={(e) => updateEffect(i, { type: e.target.value as ItemEffect['type'] })}
+                  onChange={(e) => {
+                    const newType = e.target.value as ItemEffect['type']
+                    const patch: Partial<ItemEffect> = { type: newType }
+                    if (newType === 'statBonus') patch.stat = (ef.stat ?? 'vida')
+                    if (newType === 'attributeBonus') patch.attribute = (ef.attribute ?? 'might')
+                    updateEffect(i, patch)
+                  }}
                   className="rounded bg-gray-700 border border-gray-600 px-1.5 py-1 text-xs text-gray-200 focus:outline-none"
                 >
                   <option value="heal">Curar Vida</option>
