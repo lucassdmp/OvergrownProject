@@ -86,6 +86,7 @@ interface CharacterState {
   addItem: (item: InventoryItem) => void
   removeItem: (id: string) => void
   updateItemQuantity: (id: string, delta: number) => void
+  toggleEquipped: (id: string) => void
   useItem: (id: string) => void
   useItemWithValues: (id: string, values: { vida?: number; iep?: number }) => void
 
@@ -234,6 +235,16 @@ export const useCharacterStore = create<CharacterState>()(
               ),
             },
           }), false, 'updateItemQuantity'),
+
+        toggleEquipped: (id) =>
+          set((s) => ({
+            character: {
+              ...s.character,
+              inventory: (s.character.inventory ?? []).map((it) =>
+                it.id === id ? { ...it, equipped: !it.equipped } : it,
+              ),
+            },
+          }), false, 'toggleEquipped'),
 
         useItem: (id) => {
           const { character, gameConfig } = get()

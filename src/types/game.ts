@@ -246,6 +246,8 @@ export interface InventoryItem {
   quantity: number
   type: ItemType
   effects: ItemEffect[]
+  /** Only relevant for weapon/armor – whether it is currently equipped */
+  equipped?: boolean
 }
 
 // ── Character ─────────────────────────────────────────────────────────────────

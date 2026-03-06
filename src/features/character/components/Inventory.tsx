@@ -15,10 +15,12 @@ const TYPE_STYLE: Record<ItemType, { icon: string; color: string }> = {
 function ItemCard({ item }: { item: InventoryItem }) {
   const removeItem = useCharacterStore((s) => s.removeItem)
   const updateItemQuantity = useCharacterStore((s) => s.updateItemQuantity)
+  const toggleEquipped = useCharacterStore((s) => s.toggleEquipped)
   const [expanded, setExpanded] = useState(false)
   const [usingItem, setUsingItem] = useState(false)
 
   const style = TYPE_STYLE[item.type]
+  const isEquippable = item.type === 'weapon' || item.type === 'armor'
   const isConsumable = item.type === 'potion-vida' || item.type === 'potion-iep'
   const hasActiveEffects = item.effects.some((e) => e.type === 'heal' || e.type === 'restoreIep')
 
@@ -27,29 +29,50 @@ function ItemCard({ item }: { item: InventoryItem }) {
       {usingItem && (
         <UseItemModal item={item} onClose={() => setUsingItem(false)} />
       )}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60 overflow-hidden">
+      <div className={`rounded-xl border overflow-hidden ${
+        isEquippable && item.equipped
+          ? 'border-amber-400/60 dark:border-amber-600/50 bg-amber-50/60 dark:bg-amber-950/20'
+          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60'
+      }`}>
         <div className="flex items-center gap-2 px-3 py-2">
           <span className="text-lg" title={item.type}>{style.icon}</span>
           <span className="flex-1 font-semibold text-gray-900 dark:text-white text-sm truncate">{item.name}</span>
 
-          {/* Quantity controls */}
-          <div className="flex items-center gap-1 text-sm">
+          {/* Equip toggle for weapons/armor */}
+          {isEquippable && (
             <button
-              onClick={() => updateItemQuantity(item.id, -1)}
-              className="h-5 w-5 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition hover:bg-gray-300 dark:hover:bg-gray-600"
+              onClick={() => toggleEquipped(item.id)}
+              title={item.equipped ? 'Desequipar' : 'Equipar'}
+              className={`rounded px-2 py-0.5 text-xs font-bold transition border ${
+                item.equipped
+                  ? 'border-amber-500 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-400 hover:border-amber-400 hover:text-amber-500'
+              }`}
             >
-              −
+              {item.equipped ? '✦ Equipado' : '◇ Equipar'}
             </button>
-            <span className={`w-6 text-center font-bold ${item.quantity === 0 ? 'text-gray-600' : style.color}`}>
-              {item.quantity}
-            </span>
-            <button
-              onClick={() => updateItemQuantity(item.id, +1)}
-              className="h-5 w-5 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition hover:bg-gray-300 dark:hover:bg-gray-600"
-            >
-              +
-            </button>
-          </div>
+          )}
+
+          {/* Quantity controls for non-equippable */}
+          {!isEquippable && (
+            <div className="flex items-center gap-1 text-sm">
+              <button
+                onClick={() => updateItemQuantity(item.id, -1)}
+                className="h-5 w-5 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition hover:bg-gray-300 dark:hover:bg-gray-600"
+              >
+                −
+              </button>
+              <span className={`w-6 text-center font-bold ${item.quantity === 0 ? 'text-gray-600' : style.color}`}>
+                {item.quantity}
+              </span>
+              <button
+                onClick={() => updateItemQuantity(item.id, +1)}
+                className="h-5 w-5 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition hover:bg-gray-300 dark:hover:bg-gray-600"
+              >
+                +
+              </button>
+            </div>
+          )}
 
           {/* Use button for consumables */}
           {isConsumable && hasActiveEffects && (
