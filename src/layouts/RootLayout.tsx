@@ -1,21 +1,20 @@
 import { Outlet } from 'react-router-dom'
+import { useDarkMode } from '../hooks/useDarkMode'
 
 export default function RootLayout() {
+  const [isDark, toggleDark] = useDarkMode()
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b px-6 py-4">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between">
-          <span className="text-lg font-semibold">Overgrown Project</span>
-        </nav>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <Outlet />
-      </main>
-
-      <footer className="border-t px-6 py-4 text-center text-sm text-muted-foreground">
-        © {new Date().getFullYear()} Overgrown Project
-      </footer>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+      {/* Dark mode toggle */}
+      <button
+        onClick={toggleDark}
+        title={isDark ? 'Modo claro' : 'Modo escuro'}
+        className="fixed top-3 right-3 z-40 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-base shadow transition hover:border-amber-400 hover:text-amber-600 dark:hover:text-amber-400"
+      >
+        {isDark ? '☀' : '🌙'}
+      </button>
+      <Outlet />
     </div>
   )
 }

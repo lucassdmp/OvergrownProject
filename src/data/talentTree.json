@@ -1,0 +1,217 @@
+{
+  "trees": [
+    {
+      "id": "guerreiro",
+      "name": "Guerreiro",
+      "description": "Árvore de talentos focada em combate corpo a corpo, resistência e poder físico bruto.",
+      "nodes": [
+        {
+          "id": "guerreiro-furia-1",
+          "name": "Fúria Contida",
+          "description": "Reduz o custo de PC de Fúria em 1.",
+          "requires": [],
+          "cost": 1,
+          "tier": 1,
+          "position": { "x": 0, "y": 0 },
+          "effects": [
+            { "type": "upgradeSkill", "skillId": "furia", "upgradeKey": "costReduction" }
+          ]
+        },
+        {
+          "id": "guerreiro-furia-2",
+          "name": "Fúria Prolongada",
+          "description": "Fúria dura 1D8+1 rodadas ao invés de 1D6+1.",
+          "requires": ["guerreiro-furia-1"],
+          "cost": 2,
+          "tier": 2,
+          "position": { "x": 0, "y": 1 },
+          "effects": [
+            { "type": "upgradeSkill", "skillId": "furia", "upgradeKey": "extendedDuration" }
+          ]
+        },
+        {
+          "id": "guerreiro-furia-descontrolada",
+          "name": "Ascensão da Fúria",
+          "description": "Fúria Descontrolada não cobra custo de vida por rodada enquanto você ainda tiver mais de metade dos pontos de vida.",
+          "requires": ["guerreiro-furia-2"],
+          "cost": 3,
+          "tier": 3,
+          "position": { "x": 0, "y": 2 },
+          "effects": [
+            { "type": "upgradeSkill", "skillId": "furia-descontrolada", "upgradeKey": "noLifeCostAboveHalf" }
+          ]
+        },
+        {
+          "id": "guerreiro-might-1",
+          "name": "Corpo de Ferro",
+          "description": "+2 em Fortitude.",
+          "requires": [],
+          "cost": 2,
+          "tier": 1,
+          "position": { "x": 1, "y": 0 },
+          "effects": [
+            { "type": "attributeBonus", "attribute": "fortitude", "value": 2 }
+          ]
+        },
+        {
+          "id": "guerreiro-might-2",
+          "name": "Força Bruta",
+          "description": "+2 em Might.",
+          "requires": ["guerreiro-might-1"],
+          "cost": 2,
+          "tier": 2,
+          "position": { "x": 1, "y": 1 },
+          "effects": [
+            { "type": "attributeBonus", "attribute": "might", "value": 2 }
+          ]
+        },
+        {
+          "id": "guerreiro-sede-sangue",
+          "name": "Sedentos de Sangue",
+          "description": "Sede de Sangue cura 25% a mais.",
+          "requires": ["guerreiro-might-2"],
+          "cost": 2,
+          "tier": 3,
+          "position": { "x": 1, "y": 2 },
+          "effects": [
+            { "type": "upgradeSkill", "skillId": "sede-de-sangue", "upgradeKey": "bonusHeal" }
+          ]
+        },
+        {
+          "id": "guerreiro-marcar-upg",
+          "name": "Morte Marcada",
+          "description": "Remove penalidades de Marcar para a Morte (primeiro estágio).",
+          "requires": ["guerreiro-furia-2", "guerreiro-might-2"],
+          "cost": 3,
+          "tier": 3,
+          "position": { "x": 2, "y": 2 },
+          "effects": [
+            { "type": "upgradeSkill", "skillId": "marcar-para-a-morte", "upgradeKey": "removePenaltyTier1" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arqueiro",
+      "name": "Arqueiro",
+      "description": "Árvore de talentos focada em combate à distância, precisão e mobilidade.",
+      "nodes": [
+        {
+          "id": "arqueiro-mira-1",
+          "name": "Olho Firme",
+          "description": "Mira Focada também ignora cobertura total.",
+          "requires": [],
+          "cost": 2,
+          "tier": 1,
+          "position": { "x": 0, "y": 0 },
+          "effects": [
+            { "type": "upgradeSkill", "skillId": "mira-focada", "upgradeKey": "fullCoverIgnore" }
+          ]
+        },
+        {
+          "id": "arqueiro-grace-1",
+          "name": "Passos Silenciosos",
+          "description": "+2 em Grace.",
+          "requires": [],
+          "cost": 2,
+          "tier": 1,
+          "position": { "x": 1, "y": 0 },
+          "effects": [
+            { "type": "attributeBonus", "attribute": "grace", "value": 2 }
+          ]
+        },
+        {
+          "id": "arqueiro-ricochete-upg",
+          "name": "Tiro Ricochete Aprimorado",
+          "description": "Tiro Ricochete pode resultar em crítico normalmente.",
+          "requires": ["arqueiro-mira-1"],
+          "cost": 3,
+          "tier": 2,
+          "position": { "x": 0, "y": 1 },
+          "effects": [
+            { "type": "upgradeSkill", "skillId": "tiro-ricochete", "upgradeKey": "critEnabled" }
+          ]
+        },
+        {
+          "id": "arqueiro-lobo-upg",
+          "name": "O Lobo Uiva",
+          "description": "Lobo Solitário: o bônus de dano aumenta para +3D6.",
+          "requires": ["arqueiro-grace-1"],
+          "cost": 4,
+          "tier": 2,
+          "position": { "x": 1, "y": 1 },
+          "effects": [
+            { "type": "upgradeSkill", "skillId": "lobo-solitario", "upgradeKey": "bonusDamageUpgrade" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mago",
+      "name": "Mago",
+      "description": "Árvore de talentos focada em magias, IEP e poder arcano.",
+      "nodes": [
+        {
+          "id": "mago-wisdom-1",
+          "name": "Mente Afiada",
+          "description": "+2 em Wisdom.",
+          "requires": [],
+          "cost": 2,
+          "tier": 1,
+          "position": { "x": 0, "y": 0 },
+          "effects": [
+            { "type": "attributeBonus", "attribute": "wisdom", "value": 2 }
+          ]
+        },
+        {
+          "id": "mago-iep-1",
+          "name": "Reserva Arcana",
+          "description": "+10 de IEP máximo.",
+          "requires": ["mago-wisdom-1"],
+          "cost": 2,
+          "tier": 2,
+          "position": { "x": 0, "y": 1 },
+          "effects": [
+            { "type": "resourceBonus", "resource": "iep", "value": 10 }
+          ]
+        },
+        {
+          "id": "mago-iep-2",
+          "name": "Poço Sem Fundo",
+          "description": "+20 de IEP máximo.",
+          "requires": ["mago-iep-1"],
+          "cost": 3,
+          "tier": 3,
+          "position": { "x": 0, "y": 2 },
+          "effects": [
+            { "type": "resourceBonus", "resource": "iep", "value": 20 }
+          ]
+        },
+        {
+          "id": "mago-sense-1",
+          "name": "Sentidos Mágicos",
+          "description": "+2 em Sense.",
+          "requires": [],
+          "cost": 2,
+          "tier": 1,
+          "position": { "x": 1, "y": 0 },
+          "effects": [
+            { "type": "attributeBonus", "attribute": "sense", "value": 2 }
+          ]
+        },
+        {
+          "id": "mago-spell-level",
+          "name": "Domínio Arcano",
+          "description": "Você pode conjurar magias de nível 1 acima do permitido pelo seu nível de personagem, uma vez por descanso longo.",
+          "requires": ["mago-wisdom-1", "mago-sense-1"],
+          "cost": 4,
+          "tier": 2,
+          "position": { "x": 2, "y": 1 },
+          "effects": [
+            { "type": "custom", "description": "Conjura magias do próximo nível uma vez por descanso longo." }
+          ]
+        }
+      ]
+    }
+  ]
+}
