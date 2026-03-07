@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import type { AttributeName, Character } from '../../../types/game'
 import { useCharacterStore, remainingAttributePoints, totalAttributePoints } from '../store/characterStore'
 
@@ -105,6 +106,14 @@ export default function AttributePentagon() {
   const setAttribute = useCharacterStore((s) => s.setAttribute)
   const setDivinity = useCharacterStore((s) => s.setDivinity)
 
+  // Local string state so the user can clear the field freely before typing
+  const [divinityRaw, setDivinityRaw] = useState(String(character.divinity))
+  // Keep in sync if the store value changes externally (e.g. reset)
+  useEffect(() => { setDivinityRaw(String(character.divinity)) }, [character.divinity])
+
+  const divinityNum = Number(divinityRaw)
+  const divinityInvalid = divinityRaw === '' || isNaN(divinityNum) || divinityNum < 1
+
   const remaining = remainingAttributePoints(character.attributes, character.divinity)
   const total = totalAttributePoints(character.divinity)
   const itemBonuses = getItemAttrBonuses(character)
@@ -182,14 +191,30 @@ export default function AttributePentagon() {
           <span className="text-[9px] font-bold uppercase tracking-wider text-amber-600/90 dark:text-amber-600/80">
             Divindade
           </span>
-          <input
-            type="number"
-            min={1}
-            max={20}
-            value={character.divinity}
-            onChange={(e) => setDivinity(Math.max(1, Number(e.target.value)))}
-            className="w-10 rounded bg-transparent text-center text-lg font-bold text-amber-700 dark:text-amber-300 focus:outline-none"
-          />
+          <div className="relative flex flex-col items-center">
+            <input
+              type="number"
+              min={1}
+              value={divinityRaw}
+              onChange={(e) => setDivinityRaw(e.target.value)}
+              onBlur={() => {
+                const n = Number(divinityRaw)
+                const clamped = isNaN(n) || n < 1 ? 1 : Math.floor(n)
+                setDivinity(clamped)
+                setDivinityRaw(String(clamped))
+              }}
+              className={`w-10 rounded bg-transparent text-center text-lg font-bold focus:outline-none ${
+                divinityInvalid
+                  ? 'text-red-500 dark:text-red-400'
+                  : 'text-amber-700 dark:text-amber-300'
+              }`}
+            />
+            {divinityInvalid && (
+              <span className="absolute top-full mt-0.5 whitespace-nowrap text-[9px] font-semibold text-red-500">
+                mín. 1
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

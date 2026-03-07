@@ -22,6 +22,7 @@ export function useCharacter() {
       character.attributes.sense,
       character.attributes.fortitude,
       character.inventory,
+      character.skills,
       gameConfig,
     ],
   )

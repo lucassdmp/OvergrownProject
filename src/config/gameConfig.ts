@@ -130,5 +130,11 @@ export function calculateEffectiveDerivedStats(
     }
   }
 
+  // 4. Perícia Reflexos adds +5 to Esquiva per mastery level
+  const reflexosMastery = (character.skills?.['reflexos'] ?? 0) as number
+  if (reflexosMastery > 0) {
+    stats.esquiva += reflexosMastery * 5
+  }
+
   return stats
 }
