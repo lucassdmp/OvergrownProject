@@ -40,17 +40,17 @@ export interface GameConfig {
 export const defaultGameConfig: GameConfig = {
   resources: {
     iep: {
-      base: 0,
+      base: 10,
       attributes: ['wisdom'],
       rate: 5,
     },
     pc: {
-      base: 0,
+      base: 2,
       attributes: ['might', 'grace'],
       rate: 1,
     },
     vida: {
-      base: 0,
+      base: 10,
       attributes: ['fortitude'],
       rate: 5,
     },
