@@ -50,8 +50,13 @@ function SkillRow({
   const displayBonus = MASTERY_BONUS[effectiveMastery] + itemBonus
 
   function isButtonDisabled(lvl: MasteryLevel): boolean {
+    // hard minimums: origin/item-unlocked skills can't go below I
     if (lvl === 0 && (isOriginSkill || itemUnlocked)) return true
+    // divinity cap: can't go above allowed mastery
     if (lvl > maxMastery) return true
+    // going DOWN (or staying) is always allowed – player must be able to free up points
+    if (lvl <= mastery) return false
+    // going UP: check budget
     return getSkillCost(lvl, isOriginSkill) > budgetForSkill
   }
 
