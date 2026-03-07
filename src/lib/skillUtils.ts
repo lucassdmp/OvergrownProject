@@ -34,13 +34,17 @@ export function getSkillBudget(divinity: number): number {
 }
 
 /**
- * Point cost of a given mastery level for a single skill:
- *  – Origin skills get the first Mastery I for free (cost = mastery - 1)
- *  – All other skills pay 1 point per mastery level (I=1, II=2, III=3, IV=4)
+ * Point cost of a given mastery level for a single skill (cumulative total):
+ *  – Acquiring Mastery I costs 1 pt; each subsequent upgrade (I→II, II→III, III→IV) costs 2 pts
+ *  – Total: I=1, II=3, III=5, IV=7
+ *  – Origin skills get Mastery I for free; upgrades still cost 2 pts each
+ *  – Origin total: I=0, II=2, III=4, IV=6
  */
 export function getSkillCost(mastery: MasteryLevel, isOriginSkill: boolean): number {
   if (mastery === 0) return 0
-  return isOriginSkill ? Math.max(0, mastery - 1) : mastery
+  if (isOriginSkill) return Math.max(0, mastery - 1) * 2
+  // I costs 1; each level above I costs an additional 2
+  return 1 + (mastery - 1) * 2
 }
 
 /**
