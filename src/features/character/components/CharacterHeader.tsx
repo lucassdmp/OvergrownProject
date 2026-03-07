@@ -51,6 +51,7 @@ export default function CharacterHeader() {
   const store = useCharacterStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [importError, setImportError] = useState<string | null>(null)
+  const [confirmReset, setConfirmReset] = useState(false)
 
   // ── Export ──────────────────────────────────────────────────────────────────
   function handleExport() {
@@ -210,6 +211,36 @@ export default function CharacterHeader() {
           >
             ↑ Importar
           </button>
+
+          {/* Divider */}
+          <div className="h-5 w-px bg-gray-200 dark:bg-gray-700" />
+
+          {/* Reset */}
+          {confirmReset ? (
+            <span className="flex items-center gap-1.5">
+              <span className="text-xs text-red-500 dark:text-red-400 font-semibold">Apagar ficha?</span>
+              <button
+                onClick={() => { store.resetCharacter(); setConfirmReset(false) }}
+                className="rounded-lg border border-red-400 bg-red-50 dark:bg-red-950/40 px-2.5 py-1.5 text-xs font-semibold text-red-600 dark:text-red-400 transition hover:bg-red-100 dark:hover:bg-red-900/60"
+              >
+                Sim
+              </button>
+              <button
+                onClick={() => setConfirmReset(false)}
+                className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 px-2.5 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 transition hover:border-gray-400"
+              >
+                Não
+              </button>
+            </span>
+          ) : (
+            <button
+              onClick={() => setConfirmReset(true)}
+              title="Resetar ficha para o estado inicial"
+              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 transition hover:border-red-500 hover:text-red-500 dark:hover:text-red-400"
+            >
+              ✕ Resetar
+            </button>
+          )}
 
           {/* Hidden file input */}
           <input
