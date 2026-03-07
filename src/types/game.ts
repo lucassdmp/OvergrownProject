@@ -225,16 +225,39 @@ export interface CharacterAttack {
   category: CombatCategory
 }
 
+// ── Perícias (Skills) ────────────────────────────────────────────────────────
+
+/** 0 = untrained; 1-4 = Maestria I–IV */
+export type MasteryLevel = 0 | 1 | 2 | 3 | 4
+
+export const MASTERY_LABELS: Record<MasteryLevel, string> = {
+  0: '—',
+  1: 'I',
+  2: 'II',
+  3: 'III',
+  4: 'IV',
+}
+
+export const MASTERY_BONUS: Record<MasteryLevel, number> = {
+  0: 0,
+  1: 5,
+  2: 10,
+  3: 15,
+  4: 20,
+}
+
 // ── Inventory ─────────────────────────────────────────────────────────────────
 
 export type ItemType = 'weapon' | 'armor' | 'potion-vida' | 'potion-iep' | 'misc'
 
 export interface ItemEffect {
-  type: 'attributeBonus' | 'statBonus' | 'heal' | 'restoreIep' | 'custom'
+  type: 'attributeBonus' | 'statBonus' | 'skillBonus' | 'skillUnlock' | 'heal' | 'restoreIep' | 'custom'
   /** For attributeBonus */
   attribute?: AttributeName
   /** For statBonus: which derived stat to add to */
   stat?: keyof DerivedStats
+  /** For skillBonus / skillUnlock: target skill id */
+  skillId?: string
   value?: number
   description?: string
 }
@@ -269,6 +292,10 @@ export interface Character {
   characterAttacks: CharacterAttack[]
   /** Inventory items */
   inventory: InventoryItem[]
+  /** Skill mastery levels – key = skill id, value = MasteryLevel (0 = untrained) */
+  skills: Record<string, MasteryLevel>
+  /** Selected origin id – grants 1 free skill at Mastery I */
+  origin?: string
   /** Current resource values (can be below max during play) */
   currentResources: {
     vida: number

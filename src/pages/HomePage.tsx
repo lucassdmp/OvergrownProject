@@ -3,6 +3,7 @@ import AttributePentagon from '../features/character/components/AttributePentago
 import SpellList from '../features/character/components/SpellList'
 import AttackList from '../features/character/components/AttackList'
 import Inventory from '../features/character/components/Inventory'
+import SkillList from '../features/character/components/SkillList'
 
 export default function HomePage() {
   return (
@@ -25,6 +26,11 @@ export default function HomePage() {
             <AttackList />
           </section>
         </div>
+
+        {/* ── Perícias ── */}
+        <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 px-4 py-4">
+          <SkillList />
+        </section>
 
         {/* ── Inventory ── */}
         <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 px-4 py-4">

@@ -4,6 +4,7 @@ import type { InventoryItem, ItemEffect, ItemType, AttributeName } from '../../.
 import { ATTRIBUTE_LABELS } from '../../../../types/game'
 import type { DerivedStats } from '../../../../types/game'
 import { useCharacterStore } from '../../store/characterStore'
+import { ALL_SKILLS } from '../../../../data/skills'
 
 const STAT_LABELS: Record<keyof DerivedStats, string> = {
   vida: 'Vida',
@@ -179,6 +180,8 @@ export default function AddItemModal({ onClose }: Props) {
                     const patch: Partial<ItemEffect> = { type: newType }
                     if (newType === 'statBonus') patch.stat = (ef.stat ?? 'vida')
                     if (newType === 'attributeBonus') patch.attribute = (ef.attribute ?? 'might')
+                    if (newType === 'skillBonus') patch.skillId = ef.skillId ?? ALL_SKILLS[0].id
+                    if (newType === 'skillUnlock') patch.skillId = ef.skillId ?? ALL_SKILLS[0].id
                     updateEffect(i, patch)
                   }}
                   className="rounded bg-gray-700 border border-gray-600 px-1.5 py-1 text-xs text-gray-200 focus:outline-none"
@@ -187,6 +190,8 @@ export default function AddItemModal({ onClose }: Props) {
                   <option value="restoreIep">Restaurar IEP</option>
                   <option value="statBonus">★ Bônus de Stat (passivo)</option>
                   <option value="attributeBonus">⬆ Bônus de Atributo (passivo)</option>
+                  <option value="skillBonus">⬡ Bônus de Perícia (passivo)</option>
+                  <option value="skillUnlock">⬡ Desbloquear Perícia (passivo)</option>
                   <option value="custom">Personalizado</option>
                 </select>
 
@@ -240,6 +245,39 @@ export default function AddItemModal({ onClose }: Props) {
                       className="w-16 rounded bg-gray-700 border border-gray-600 px-1.5 py-1 text-xs text-white focus:outline-none"
                     />
                   </>
+                )}
+
+                {ef.type === 'skillBonus' && (
+                  <>
+                    <select
+                      value={ef.skillId ?? ALL_SKILLS[0].id}
+                      onChange={(e) => updateEffect(i, { skillId: e.target.value })}
+                      className="rounded bg-gray-700 border border-gray-600 px-1.5 py-1 text-xs text-gray-200 focus:outline-none"
+                    >
+                      {ALL_SKILLS.map((sk) => (
+                        <option key={sk.id} value={sk.id}>{sk.name}</option>
+                      ))}
+                    </select>
+                    <input
+                      type="number"
+                      value={ef.value ?? ''}
+                      onChange={(e) => updateEffect(i, { value: Number(e.target.value) })}
+                      placeholder="+Valor"
+                      className="w-16 rounded bg-gray-700 border border-gray-600 px-1.5 py-1 text-xs text-white focus:outline-none"
+                    />
+                  </>
+                )}
+
+                {ef.type === 'skillUnlock' && (
+                  <select
+                    value={ef.skillId ?? ALL_SKILLS[0].id}
+                    onChange={(e) => updateEffect(i, { skillId: e.target.value })}
+                    className="rounded bg-gray-700 border border-gray-600 px-1.5 py-1 text-xs text-gray-200 focus:outline-none"
+                  >
+                    {ALL_SKILLS.map((sk) => (
+                      <option key={sk.id} value={sk.id}>{sk.name}</option>
+                    ))}
+                  </select>
                 )}
 
                 <button

@@ -6,12 +6,13 @@ import type {
   CustomSpell,
   CharacterAttack,
   InventoryItem,
+  MasteryLevel,
 } from '../../../types/game'
 import { calculateDerivedStats, calculateEffectiveDerivedStats, defaultGameConfig, type GameConfig } from '../../../config/gameConfig'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-export const BASE_ATTRIBUTE_POINTS = 10
+export const BASE_ATTRIBUTE_POINTS = 5
 export const POINTS_PER_DIVINITY = 5
 
 export function totalAttributePoints(divinity: number) {
@@ -48,6 +49,7 @@ const DEFAULT_CHARACTER: Character = {
   customSpells: [],
   characterAttacks: [],
   inventory: [],
+  skills: {},
   currentResources: {
     vida: calculateDerivedStats(DEFAULT_ATTRIBUTES).vida,
     iep: calculateDerivedStats(DEFAULT_ATTRIBUTES).iep,
@@ -89,6 +91,9 @@ interface CharacterState {
   toggleEquipped: (id: string) => void
   useItem: (id: string) => void
   useItemWithValues: (id: string, values: { vida?: number; iep?: number }) => void
+
+  setSkillMastery: (skillId: string, mastery: MasteryLevel) => void
+  setOrigin: (originId: string) => void
 
   loadCharacter: (character: Character) => void
   resetCharacter: () => void
@@ -291,6 +296,19 @@ export const useCharacterStore = create<CharacterState>()(
           }), false, 'useItemWithValues')
         },
 
+        setSkillMastery: (skillId, mastery) =>
+          set((s) => ({
+            character: {
+              ...s.character,
+              skills: { ...(s.character.skills ?? {}), [skillId]: mastery },
+            },
+          }), false, 'setSkillMastery'),
+
+        setOrigin: (originId) =>
+          set((s) => ({
+            character: { ...s.character, origin: originId || undefined },
+          }), false, 'setOrigin'),
+
         loadCharacter: (character) =>
           set(() => ({ character }), false, 'loadCharacter'),
 
@@ -315,6 +333,8 @@ export const useCharacterStore = create<CharacterState>()(
               characterAttacks: ps.character?.characterAttacks ?? [],
               inventory: ps.character?.inventory ?? [],
               acquiredTalents: ps.character?.acquiredTalents ?? [],
+              skills: ps.character?.skills ?? {},
+              origin: ps.character?.origin,
               currentResources: ps.character?.currentResources ?? current.character.currentResources,
             },
           }
