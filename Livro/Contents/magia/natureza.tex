@@ -1,0 +1,188 @@
+\spellCard{Transformação Natural}
+{\elementTag{Natureza}}
+{0}
+{
+Canaliza IEP para alterar temporariamente a estrutura física do usuário, mudando seu esqueleto, musculatura e pele para imitar
+características naturais, como a resistência de uma árvore ou a agilidade de um felino. 
+Essa transformação concede habilidades especiais baseadas na transformação escolhida.
+É necessário conhecer a forma desejada para se transformar nela. 
+Ataque com formas são considerado ataques naturais e acredido de Wisdom.
+}
+{
+    0   & 20  IEP   & 1D6   & -- \\ \hline
+    1   & 40  IEP   & 2D6   & -- \\ \hline
+    2   & 60  IEP   & 3D6   & -- \\ \hline
+    3   & 80  IEP   & 3D6   & \textbf{Transformação Aprimorada} \\ \hline
+    4   & 100 IEP   & 4D6   & -- \\ \hline
+    5   & 120 IEP   & 5D6   & -- \\ \hline
+    6   & 140 IEP   & 6D8   & -- \\ \hline
+    7   & 160 IEP   & 7D8   & -- \\ \hline
+    8   & 180 IEP   & 9D8   & -- \\ \hline
+    9   & 200 IEP   & 10D8  & -- \\ \hline
+    Div & 220 IEP   & 12D10 & \textbf{Transformação Violenta}
+}{
+\textbf{Vida Aprimorada:} A transformação tem os atributos da transformação somados pelo Wisdom do usuário.
+\textbf{Transformação Violenta:} Para ataques soma 1D4*Wisdom de dano.
+}
+{Distância}
+{\typeTag{SELF}}
+
+\spellCard{Crescimento Espontâneo}
+{\elementTag{Natureza}}
+{0}
+{O usuário aplica raizes envolta do alvo que crescem e reparam feridas, curando seus ferimentos por 1D4 Rodadas.}
+{
+    0   & 6 IEP     & 1d4 + WIS         &  -- \\ \hline
+    1   & 12 IEP    & 2D4 + WIS         &  \textbf{Esporos} \\ \hline
+    2   & 18 IEP    & 3D4 + WIS         &  -- \\ \hline
+    3   & 24 IEP    & 4D4 + WIS         &  \textbf{Raizes Aprimoradas} \\ \hline
+    4   & 36 IEP    & 5D4 + WIS         &  -- \\ \hline
+    5   & 48 IEP    & 6D4 + WIS         &  -- \\ \hline
+    6   & 60 IEP    & 7D4 + WIS         &  -- \\ \hline
+    7   & 72 IEP    & 8D4 + WIS         &  -- \\ \hline
+    8   & 84 IEP    & 9D4 + WIS         &  -- \\ \hline
+    9   & 96 IEP    & 10D4 + WIS        &  -- \\ \hline
+    Div & 108 IEP   & 12D6 + (1D6*WIS)  &  \textbf{Nuvem de Esporos}  
+}{
+\textbf{Raizes Aprimoradas:} Sobe para 1D6 a duração da cura.
+\textbf{Esporos:} Aliados corpo a corpo também recebem a mesma cura.
+\textbf{Nuvem de Esporos:} Cura aliados em um raio de 3 metros ao redor do alvo.
+}
+{Cura}
+{\typeTag{CURA}\typeTag{SINGLE}}
+
+\spellCard{Broto Revitalizante}
+{\elementTag{Natureza}}
+{0}
+{O usuário planta um broto mágico no alvo que cresce lentamente, aplicando cura ao longo do tempo. Dura 3 Turnos.}
+{
+    0   & 12 IEP    & 1D6 + WIS por turno  & -- \\ \hline
+    1   & 18 IEP    & 2D6 + WIS por turno  & -- \\ \hline
+    2   & 24 IEP    & 3D6 + WIS por turno  & \textbf{Broto Resiliente} \\ \hline
+    3   & 30 IEP    & 4D6 + WIS por turno  & -- \\ \hline
+    4   & 36 IEP    & 5D6 + WIS por turno  & -- \\ \hline
+    5   & 42 IEP    & 6D6 + WIS por turno  & -- \\ \hline
+    6   & 48 IEP    & 7D6 + WIS por turno  & -- \\ \hline
+    7   & 54 IEP    & 8D6 + WIS por turno  & -- \\ \hline
+    8   & 60 IEP    & 9D6 + WIS por turno  & -- \\ \hline
+    9   & 66 IEP    & 10D6 + WIS por turno & -- \\ \hline
+    Div & 80 IEP    & 12D8 + (1D8*WIS) por turno & \textbf{Broto Eterno}
+}{
+\textbf{Broto Resiliente:} +2 de resistência contra debuffs durante a duração.
+\textbf{Broto Eterno:} Cura continua até o alvo morrer ou ser curado completamente.
+}
+{Cura}
+{\typeTag{CURA}\typeTag{SINGLE}}
+
+\spellCard{Vinhas Restritivas}
+{\elementTag{Natureza}}
+{0}
+{O usuário invoca vinhas espessas do solo que crescem rapidamente, enrolando-se nos alvos para restringir seus movimentos. Alvos presos sofrem penalidades em ações e podem tentar escapar com testes de Atletismo.}
+{
+    0   & 8 IEP     & DT15 para escapar & -- \\ \hline
+    1   & 16 IEP    & DT17 para escapar & -- \\ \hline
+    2   & 24 IEP    & DT19 para escapar & -- \\ \hline
+    3   & 32 IEP    & DT21 para escapar & \textbf{Vinhas Aprimoradas} \\ \hline
+    4   & 40 IEP    & DT23 para escapar & -- \\ \hline
+    5   & 48 IEP    & DT25 para escapar & -- \\ \hline
+    6   & 56 IEP    & DT27 para escapar & -- \\ \hline
+    7   & 64 IEP    & DT29 para escapar & -- \\ \hline
+    8   & 72 IEP    & DT31 para escapar & -- \\ \hline
+    9   & 80 IEP    & DT33 para escapar & -- \\ \hline
+    Div & 100 IEP   & DT35 para escapar & \textbf{Vinhas Devoradoras}
+}{
+\textbf{Vinhas Aprimoradas:} Alvos presos sofrem 1D4 por nível de dano por turno devido aos espinhos.
+\textbf{Vinhas Devoradoras:} Vinhas causam dano adicional igual a WIS por turno e aplicam \link{status:sangramento}{Sangramento}.
+}
+{Efeito}
+{\typeTag{DEBUFF}\typeTag{AOE}}
+
+\spellCard{Ligação Natural}
+{\elementTag{Natureza}}
+{0}
+{O usuário sintoniza com o fluxo natural ao redor, ganhando bônus em percepção e permitindo comunicação básica com plantas/animais próximos.}
+{
+    0   & 15 IEP    & +3 de Percepção & -- \\ \hline
+    1   & 25 IEP    & +4 de Percepção & -- \\ \hline
+    2   & 35 IEP    & +5 de Percepção & -- \\ \hline
+    3   & 45 IEP    & +6 de Percepção & \textbf{Comunicação Aprimorada} \\ \hline
+    4   & 55 IEP    & +7 de Percepção & -- \\ \hline
+    5   & 65 IEP    & +8 de Percepção & -- \\ \hline
+    6   & 75 IEP    & +9 de Percepção & -- \\ \hline
+    7   & 85 IEP    & +10 de Percepção & -- \\ \hline
+    8   & 95 IEP    & +11 de Percepção & -- \\ \hline
+    9   & 105 IEP   & +12 de Percepção & -- \\ \hline
+    Div & 125 IEP   & +15 de Percepção & \textbf{Comunicação Divina}
+}{
+\textbf{Comunicação Aprimorada:} Permite comandos simples a animais/planta.
+\textbf{Comunicação Divina:} Detecta presenças invisíveis e prevê ataques surpresas.
+}
+{Efeito}
+{\typeTag{BUFF}\typeTag{SINGLE}}
+
+\spellCard{Espinhos Venenosos}
+{\elementTag{Natureza}}
+{0}
+{O usuário faz brotar espinhos afiados do solo ou de plantas próximas, perfurando alvos e aplicando veneno que drena vida ao longo do tempo.}
+{
+    0   & 6 IEP     & 1D8 + WIS & 1 Stack de Veneno \\ \hline
+    1   & 12 IEP    & 2D8 + WIS & 2 Stacks de Veneno \\ \hline
+    2   & 18 IEP    & 3D8 + WIS & 3 Stacks de Veneno \\ \hline
+    3   & 24 IEP    & 4D8 + WIS & \textbf{Espinhos Tóxicos} \\ \hline
+    4   & 30 IEP    & 5D8 + WIS & 5 Stacks de Veneno \\ \hline
+    5   & 36 IEP    & 6D8 + WIS & 6 Stacks de Veneno \\ \hline
+    6   & 42 IEP    & 7D8 + WIS & 7 Stacks de Veneno \\ \hline
+    7   & 48 IEP    & 8D8 + WIS & 8 Stacks de Veneno \\ \hline
+    8   & 54 IEP    & 9D8 + WIS & 9 Stacks de Veneno \\ \hline
+    9   & 60 IEP    & 10D8 + WIS & 10 Stacks de Veneno \\ \hline
+    Div & 75 IEP    & 12D10 + (1D10*WIS) & \textbf{Espinhos Debilitante}
+}{
+\textbf{Espinhos Tóxicos:} Cada stack causa 1D4 de dano por turno.
+\textbf{Espinhos Debilitante:} Veneno reduz movimento pela metade.
+}
+{Ataque}
+{\typeTag{AOE}}
+
+\spellCard{Polimorfia Selvagem}
+{\elementTag{Natureza}}
+{2}
+{O usuário força uma transformação completa no alvo, mudando sua forma para uma criatura viva, impedindo ações normais e aplicando penalidades. O alvo pode tentar resistir ou sair com um teste de Wisdom (DT = 15 + Nível) no início de cada turno.}
+{
+    2   & 40    IEP & Duração: 1 rodada     & -- \ \hline
+    3   & 50    IEP & Duração: 2 rodadas    & -- \ \hline
+    4   & 60    IEP & Duração: 3 rodadas    & \textbf{Polimorfia Aprimorada} \ \hline
+    5   & 70    IEP & Duração: 4 rodadas    & -- \ \hline
+    6   & 80    IEP & Duração: 5 rodadas    & -- \ \hline
+    7   & 90    IEP & Duração: 6 rodadas    & -- \ \hline
+    8   & 100   IEP & Duração: 7 rodadas    & -- \ \hline
+    9   & 110   IEP & Duração: 8 rodadas    & -- \ \hline
+    10  & 120   IEP & Duração: 9 rodadas    & -- \ \hline
+    11  & 130   IEP & Duração: 10 rodadas   & -- \ \hline
+    Div & 160   IEP & Duração: Ilimitada    & \textbf{Polimorfia Eterna}
+}{
+\textbf{Polimorfia Aprimorada:} Forma reduz atributos do alvo em -WIS/2 (mínimo 1).
+\textbf{Polimorfia Eterna:} Alvo fica permanentemente transformado até curado magicamente.
+}
+{Efeito}
+{\typeTag{DEBUFF}\typeTag{SINGLE}}
+
+\spellCard{Florescer Natural}
+{\elementTag{Natureza}}
+{0}
+{Consome um efeito de cura por tempo, fazendo ela curar toda a duração dela em um turno, mais todos os ticks que ela tem normalmente.}
+{
+    0   & 50 IEP    & Cura do turno + cura total da magia original & -- \\ \hline
+    1   & 45 IEP    & -- & -- \\ \hline
+    2   & 95 IEP    & Adiciona seu WIS na cura & -- \\ \hline
+    3   & 90 IEP    & -- & -- \\ \hline
+    4   & 85 IEP    & -- & -- \\ \hline
+    5   & 135 IEP   & Adiciona +1d8 de cura & -- \\ \hline
+    6   & 130 IEP   & -- & -- \\ \hline
+    7   & 125 IEP   & -- & -- \\ \hline
+    8   & 120 IEP   & -- & -- \\ \hline
+    9   & 115 IEP   & -- & -- \\ \hline
+    Div & 110 IEP   & -- & --
+}{
+}
+{Efeito}
+{\typeTag{BUFF}\typeTag{SINGLE}}

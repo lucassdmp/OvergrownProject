@@ -1,0 +1,136 @@
+% Contents/status_e_condicoes.tex
+\midsectiontitle{Estados e Condições}
+
+\begin{rpgboxtips}
+    {Nota para o Aventureiro} \textbf{Fique Atento:} Se você não lembra dos
+    status aplicados do seu personagem, o Mestre não tem a obrigação de lembrá-los
+    por você. Condições são provenientes de magias, ataques, poções e elixires, e
+    podem exigir rolamentos específicos dependendo da situação.
+\end{rpgboxtips}
+
+\section*{Status Negativos}
+
+\pericia{Abalado}{O espírito do alvo está fraquejado. Todos os testes realizados pelo personagem sofrem \textbf{Desvantagem}. O alvo deve realizar um teste de \link{att:sense}{Sense} para quebrar o efeito.}
+
+\pericia{Atordoado}{O alvo fica incapacitado de agir e reagir. Após sofrer este efeito, o alvo torna-se imune a novos atordoamentos de mesma origem até o fim da cena. Caso tenha resistido ao atordoamento, recebe \textbf{1D4} rodadas de imunidade contra esta condição.}
+
+\pericia{Aterrorizado}{O alvo vai gastar todas as suas ações para fugir da fonte do medo por \textbf{1D4} rodadas. Exige um teste de \link{att:sense}{Sense} para quebrar o efeito.}
+
+\pericia{Cegueira}{A escuridão toma os olhos. O alvo recebe \textbf{Desvantagem} em todos os testes de Ataque, Magia e Percepção.}
+
+\originlink{status:concussionado} 
+\pericia{Concussão}{O impacto desorientou os sentidos. O alvo deve escolher entre manter sua \textbf{Ação de Movimento} ou sua \textbf{Reação}. Exige um teste de \link{att:fortitude}{Fortitude} contra o valor do ataque sofrido.}
+
+\pericia{Congelado / Petrificado}{O corpo está rígido como gelo ou rocha. O alvo deve gastar sua \textbf{Ação de Movimento} para se libertar, ou ficará impossibilitado de esquivar, apenas bloquear.}
+
+\pericia{Controlado}{A vontade do atacante sobrepuja a do alvo. O personagem agirá conforme os comandos de quem o controla. Exige um teste de \link{att:sense}{Sense} para quebrar o encantamento.}
+
+\pericia{Debilitado}{Causado ao sofrer um dano massivo (\textbf{90\% da Vida Máxima} em um único golpe). O alvo deve escolher entre realizar uma Ação Padrão ou uma Ação de Movimento no seu turno.}
+\originlink{status:derrubado} \pericia{Derrubado}{O alvo foi ao chão. Deve gastar sua \textbf{Ação de Movimento} para se levantar.}
+
+\pericia{Desprevenido}{A guarda está baixa. Alvos nesta condição permitem que o primeiro ataque recebido utilize regras de \textit{Furtividade} (Ataque Furtivo).}
+
+\pericia{Doente}{O personagem sofre de enfermidades mágicas ou biológicas, sofrendo penalidades constantes definidas pela doença.}
+
+\pericia{Encantado}{O alvo obedece à pessoa que causou o efeito. Exige um teste de \link{att:sense}{Sense} para resistir inicialmente e para quebrar o efeito nas rodadas seguintes.}
+
+\pericia{Exaurido}{O oposto de Revigorado. O alvo perde o dobro de IEP ao usar habilidades e não recupera IEP passivamente.}
+
+\originlink{status:encharcado} \pericia{Encharcado}{O alvo está coberto por água. Recebe \textbf{Resistência (Dano pela metade)} contra Fogo, mas sofre \textbf{Dano Multiplicado (x1.5)} contra Raio e Eletricidade.}
+
+\pericia{Envenenado}{O alvo sofre os efeitos do veneno a cada início de turno. Deve realizar um teste de \link{att:fortitude}{Fortitude} contra a toxicidade do veneno em cada rodada, ou consumir antídotos para tratar.}
+
+\pericia{Flanqueado}{Cercado por inimigos. Reduz a Defesa em \textbf{5 pontos} e o alvo é considerado \textbf{Desprevenido}.}
+\pericia{Lento}{Alvos lentos não podem saltar ou voar. Sua \textbf{Ação de Movimento} é reduzida pela metade.}
+\pericia{Inconsciente}{O alvo está indefeso e totalmente incapaz de agir ou reagir.}
+
+\pericia{Perplexo}{O choque mental impede ações ofensivas. O alvo não pode agir, mas consegue se defender normalmente.}
+
+\pericia{Provocado}{A fúria cega o julgamento. O alvo deve atacar quem o provocou até a morte. Exige um teste de \link{att:sense}{Sense} + \link{per:temperanca}{Temperança} para resistir.}
+\originlink{status:queimado} \pericia{Queimado}{O alvo está em chamas. Deve gastar sua \textbf{Ação de Movimento} para apagar o fogo ou sofrerá dano contínuo até o efeito ser cessado.}
+\originlink{status:ardiloso} \pericia{Sangramento Ardiloso}{Dano contínuo por acúmulo. Para cada \textit{stack}, o alvo sofre $1D4 + \text{Grace/Wisdom}- \text{Fortitude}$. A remoção de cargas depende da sua robustez física:}
+
+\pericia{Vulnerável}{O alvo perde sua Redução de Dano (Armadura) por uma rodada.}
+
+\begin{center}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}
+        {\columnwidth}{|X|c|c|c|c|c|} \hline \rowcolor{overgrownRed!10} \multicolumn{6}{|c|}{\textbf{Escalonamento
+        por Grace/Wisdom}} \\
+        \hline \textbf{Gra/Wis} & 10 & 20 & 40 & 80 & 100 \\
+        \hline \textbf{Dano} & $1 \times D4$ & $1 \times D8$ & $1 \times D10$ & $1
+        \times 12$ & $1 \times D20$ \\
+        \hline
+    \end{tabularx}
+\end{center}
+
+\begin{center}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.3}
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabularx}
+        {\columnwidth}{l @{\extracolsep{\fill}} ccccccc} \toprule \rowcolor{gray!20}
+        \textbf{Fortitude} & 15 & 30 & 45 & 60 & 75 & 90 & 100 \\
+        \midrule \textbf{Stacks Removidos} & 2 & 4 & 6 & 8 & 10 & 12 & 14 \\
+        \bottomrule
+    \end{tabularx}
+\end{center}
+\originlink{status:brutal} \pericia{Sangramento Brutal}{Um ferimento profundo e único. Em ataques bem-sucedidos, causa $2D8 + \text{Might/Wisdom}- \text{Fortitude}$. O dano bruto escala conforme a maestria do atacante:}
+
+\begin{center}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.4} % Aumenta levemente a altura das linhas
+    \begin{tabularx}
+        {\columnwidth}{|l|X|X|X|X|} \hline \rowcolor{overgrownRed!10} \multicolumn{5}{|c|}{\textbf{Escalonamento
+        por Might/Wisdom}} \\
+        \hline \textbf{Might/Wisdom} &
+        \centering
+        25 &
+        \centering
+        50 &
+        \centering
+        75 &
+        \centering
+        100 \tabularnewline \hline \textbf{Dano} &
+        \centering
+        $2 \times D8$ &
+        \centering
+        $3 \times D10$ &
+        \centering
+        $4 \times D10$ &
+        \centering
+        $8 \times D12$ \tabularnewline \hline
+    \end{tabularx}
+\end{center}
+\originlink{status:segurado} \pericia{Segurado / Preso}{O movimento é impossibilitado. O alvo deve realizar um teste para se libertar.}
+
+\pericia{Silenciado}{O fluxo de energia foi interrompido. O alvo não pode conjurar magias, mas ainda pode utilizar itens mágicos. Exige teste de \link{att:wisdom}{Wisdom} para parar}
+
+\pericia{Sobrecarregado}{O alvo sobrecarregado tem desvantagem em testes de luta e movimentação reduzida.}
+\originlink{status:sufocado} \pericia{Sufocado}{O alvo sufocado tem desvantagem em testes de luta, esquiva e movimentação reduzida.}
+
+\section*{Status Positivos}
+
+As vantagens abaixo são provenientes de fontes de \textit{buff} (magias, itens
+ou habilidades).
+
+\pericia{Aprimorado}{Sentidos aguçados ao extremo. O alvo tem \textbf{Vantagem} em testes de \link{att:sense}{Sense} até o fim da cena.}
+
+\pericia{Celeridade}{O corpo move-se além dos limites. O alvo tem \textbf{Vantagem} em testes de \link{att:grace}{Grace} até o fim da cena.}
+
+\pericia{Esclarecido}{Compreensão absoluta do ambiente. O alvo tem \textbf{Vantagem} em testes de \link{att:wisdom}{Wisdom} até o fim da cena.}
+
+\pericia{Fortalecido}{Músculos levados ao limite superior. O alvo tem \textbf{Vantagem} em testes de \link{att:might}{Might} até o fim da cena.}
+
+\pericia{Inspirado}{O alvo recebe um bônus de \textbf{1D8} em uma rolagem à sua escolha ou pode adicionar um dado extra de dano.}
+
+\pericia{Invisível}{Presença indetectável. Todos os ataques são considerados furtivos e atingem alvos \textbf{Desprevenidos}.}
+
+\pericia{Passo Leve}{Movimentação silenciosa e fluida. O alvo tem \textbf{Vantagem} em testes de \link{per:furtividade}{Furtividade}.}
+
+\pericia{Respiração Submersa}{Capacidade mágica ou biológica de respirar debaixo d'água.}
+
+\pericia{Revigorado}{Capacidade física aumentada. O alvo tem \textbf{Vantagem} em testes de \link{att:fortitude}{Fortitude}.}
+
+\pericia{Acelerado}{Ganha 1 ação padrão.}

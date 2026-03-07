@@ -1,0 +1,91 @@
+%  Contents/dados_no_overgrown.tex
+\midsectiontitle{Dados no Overgrown}
+
+\section*{A Manifestação Numérica}
+No universo de \textit{Overgrown}, os dados transcendem a mera casualidade, eles representam a manifestação das capacidades inatas e divinas de um personagem. Cada rolagem é o encontro entre o potencial do aventureiro, os conhecimentos do Pináculo e a pressão do momento presente.
+
+\section*{Os Três Pilares das Rodadas}
+Toda interação significativa com o mundo é regida por uma estrutura de três fundamentos que ditam o destino de uma jogada:
+
+\begin{description}
+    \item[\ringm{Potencial Inato (Atributos)}:] Refletem a força bruta, agilidade ou a sabedoria divina. No sistema \textit{Overgrown}, o valor do seu atributo não é apenas um bônus, mas o que determina o volume de poder, ou seja, a quantidade de dados, que você pode manifestar em uma ação.
+    
+    \item[\ringm{Modificadores de Fluxo}:] São as variáveis externas. Bônus provenientes de equipamentos, bênçãos de magias, trilhas da Árvore de Talentos ou vantagens táticas situacionais concedidas pelo mestre.
+    
+    \item[\ringm{A Resultante Final}:] O ápice da jogada. É a soma do melhor resultado obtido nos dados com os modificadores, definindo se as ações do personagem se empoem sobre a realidade ou se foi superada pelos desafios encontrados.
+\end{description}
+
+\section*{Mecânica de Resolução}
+O sistema utiliza principalmente o dado de vinte lados (\textbf{d20}) para testes de perícia, ataques e salvaguardas. Dados de outras faces, do \textbf{d2} (Moeda) ao \textbf{d100}, são reservados para calcular o impacto de danos, efeitos de magias e eventos aleatórios do destino.
+
+\subsection*{Ascensão de Atributos}
+A maestria em um atributo concede ao personagem uma vantagem grandiosa. A cada \textbf{5 pontos} investidos em um atributo, o aventureiro ganha o direito de arremessar um dado adicional, escolhendo o maior resultado entre eles. Esta progressão não apenas eleva a média dos resultados, mas expande exponencialmente as chances de manifestar um Sucesso Crítico.
+
+\begin{rpgboxtips}{Intervenção Crítica}
+Um resultado \textbf{20} natural é um Sucesso Crítico: um acerto garantido que ignora qualquer tentativa de esquiva, podendo ser mitigado apenas por bloqueios. Por outro lado, um \textbf{1} natural é uma Falha Crítica, um erro catastrófico que rompe o fluxo da ação. Lembre-se: cada ataque e magia possui efeitos críticos únicos em suas descrições.
+\end{rpgboxtips}
+
+% Tabela de Progressão de Poder
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{} cc @{}}
+\toprule
+\rowcolor{gray!15} \textbf{\ringm{Magnitude do Atributo}} & \textbf{\ringm{Reserva de Dados (d20)}} \\ 
+\midrule
+1 -- 5   & 1d20 \\
+6 -- 10   & 2d20 \\
+11 -- 15 & 3d20 \\
+15 -- 20 & 4d20 \\
+\textbf{21+} & \textbf{5d20} \\ 
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{rpgboxtips}{Além do Limite Mortal}
+O limite natural de um aventureiro é a reserva de \textbf{5 dados}. Contudo, aqueles que portam Selos de Divindade ou acessam estados de superiores através de \textbf{Nós Supremos} podem quebrar esta barreira, manifestando reservas de poder que desafiam a compreensão humana. Ter 0 atributos resulta em desvantagem rolando dois dados e pegando o menos.
+\end{rpgboxtips}
+
+\begin{comment}
+    
+
+\begin{armaCard}{ESPADA DO PINÁCULO}
+    \textit{\small Uma lâmina forjada em Verdun, banhada em energia primordial que ressoa com a vontade do portador.}
+    
+    \vspace{8pt}
+    
+    % Linha 1 de Atributos
+    \attrField{Base Damage}{2D8}
+    \attrField{Attribute}{FOR}
+    
+    \vspace{2pt}
+    
+    % Linha 2 de Atributos
+    \attrField{Multiplier}{2*}
+    \attrField{Total DMG}{2D8 + 2*FOR}
+    
+    \vspace{8pt}
+    \overRule
+    \vspace{4pt}
+    
+    % Bloco de MIG, GRA, FOR, WIS, SEN
+    \statBox{MIG}{12}
+    \statBox{GRA}{08}
+    \statBox{FOR}{10}
+    \statBox{WIS}{05}
+    \statBox{SEN}{06}
+    
+    \vspace{8pt}
+    \overRule
+    \vspace{4pt}
+    
+    % Efeitos Mágicos
+    \textbf{\textit{Lâmina de Éter.}} O dano desta arma ignora resistências físicas de seres não-divinos.
+    
+    \vspace{10pt}
+    {\ringmfamily\Large\color{overgrownRed} ACTIONS}
+    \overRule
+    
+    \textbf{\textit{Corte Dimensional (2 Ações).}} O jogador realiza um ataque em área (cone de 3m). Inimigos atingidos devem realizar um teste de \textbf{GRA} ou sofrerão o dano total da arma.
+    
+\end{armaCard}
+\end{comment}

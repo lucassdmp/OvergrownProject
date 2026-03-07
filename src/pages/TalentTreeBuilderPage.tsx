@@ -33,6 +33,11 @@ export default function TalentTreeBuilderPage() {
   const [editingName, setEditingName] = useState(false)
   const [editingDesc, setEditingDesc] = useState(false)
 
+  // Grid & snap
+  const [gridEnabled, setGridEnabled] = useState(false)
+  const [gridSize, setGridSize] = useState(50)
+  const [snapEnabled, setSnapEnabled] = useState(false)
+
   // ── Export ─────────────────────────────────────────────────────────────────
 
   function handleExport() {
@@ -156,6 +161,54 @@ export default function TalentTreeBuilderPage() {
 
           {/* Action buttons */}
           <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
+
+            {/* Grid controls */}
+            {gridEnabled && (
+              <div className="flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1 text-[11px] text-gray-500 dark:text-gray-400">
+                <span className="font-mono w-5 text-right">{gridSize}</span>
+                <input
+                  type="range" min={20} max={200} step={10}
+                  value={gridSize}
+                  onChange={(e) => setGridSize(Number(e.target.value))}
+                  className="w-20 accent-blue-500"
+                />
+              </div>
+            )}
+            {gridEnabled && (
+              <button
+                title={snapEnabled ? 'Desativar snap' : 'Ativar snap'}
+                onClick={() => setSnapEnabled((v) => !v)}
+                className={`flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition select-none ${
+                  snapEnabled
+                    ? 'bg-blue-500 border-blue-500 text-white'
+                    : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-blue-400'
+                }`}
+              >
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <circle cx="1.5" cy="1.5" r="1.3" fill="currentColor"/><circle cx="6" cy="1.5" r="1.3" fill="currentColor"/><circle cx="10.5" cy="1.5" r="1.3" fill="currentColor"/>
+                  <circle cx="1.5" cy="6" r="1.3" fill="currentColor"/><circle cx="6" cy="6" r="1.8" fill="currentColor"/><circle cx="10.5" cy="6" r="1.3" fill="currentColor"/>
+                  <circle cx="1.5" cy="10.5" r="1.3" fill="currentColor"/><circle cx="6" cy="10.5" r="1.3" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.3" fill="currentColor"/>
+                </svg>
+                Snap
+              </button>
+            )}
+            <button
+              title={gridEnabled ? 'Ocultar grid' : 'Mostrar grid'}
+              onClick={() => { setGridEnabled((v) => !v); if (gridEnabled) setSnapEnabled(false) }}
+              className={`flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition select-none ${
+                gridEnabled
+                  ? 'bg-blue-500 border-blue-500 text-white'
+                  : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-blue-400'
+              }`}
+            >
+              <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
+                <path d="M0 4.5h13M0 8.5h13M4.5 0v13M8.5 0v13" stroke="currentColor" strokeWidth="1.3"/>
+              </svg>
+              Grid
+            </button>
+
+            <div className="h-4 w-px bg-gray-200 dark:bg-gray-700" />
+
             <button onClick={handleExport} className="rounded-lg border border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-sky-950/30 px-2.5 py-1 text-xs font-semibold text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition">
               ↓ Exportar
             </button>
@@ -241,7 +294,7 @@ export default function TalentTreeBuilderPage() {
 
           {/* Hint */}
           <span className="text-[10px] text-gray-300 dark:text-gray-700">
-            Scroll = zoom · Arrastar fundo = mover · Del = remover selecionado · Click direito = menu
+            Scroll = zoom · Arrastar fundo = mover · Del = remover · Ctrl+Click = multi-selecionar · Ctrl+C/V = copiar/colar · Ctrl+Bot.Dir = conectar rápido
           </span>
         </div>
 
@@ -255,6 +308,9 @@ export default function TalentTreeBuilderPage() {
               setMode={setMode}
               selectedNodeId={selectedNodeId}
               setSelectedNodeId={(id) => { setSelectedNodeId(id) }}
+              gridEnabled={gridEnabled}
+              gridSize={gridSize}
+              snapEnabled={snapEnabled}
             />
           </div>
 

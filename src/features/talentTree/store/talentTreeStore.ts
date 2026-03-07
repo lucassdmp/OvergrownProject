@@ -47,6 +47,13 @@ interface TalentTreeState {
   removeEdge: (id: string) => void
   toggleEdge: (from: string, to: string) => void
 
+  /** Move several nodes at once (used for multi-drag) */
+  moveNodes: (moves: { id: string; x: number; y: number }[]) => void
+  /** Bulk-add nodes (used for paste) */
+  addNodes: (nodes: TalentTreeNode[]) => void
+  /** Remove multiple nodes and their edges at once */
+  removeNodes: (ids: string[]) => void
+
   importTree: (tree: TalentTree) => void
   resetTree: () => void
 }
@@ -150,6 +157,41 @@ export const useTalentTreeStore = create<TalentTreeState>()(
             )
           }
         },
+
+        moveNodes: (moves) =>
+          set(
+            (s) => ({
+              tree: {
+                ...s.tree,
+                nodes: s.tree.nodes.map((n) => {
+                  const m = moves.find((mv) => mv.id === n.id)
+                  return m ? { ...n, x: m.x, y: m.y } : n
+                }),
+              },
+            }),
+            false,
+            'moveNodes',
+          ),
+
+        addNodes: (nodes) =>
+          set(
+            (s) => ({ tree: { ...s.tree, nodes: [...s.tree.nodes, ...nodes] } }),
+            false,
+            'addNodes',
+          ),
+
+        removeNodes: (ids) =>
+          set(
+            (s) => ({
+              tree: {
+                ...s.tree,
+                nodes: s.tree.nodes.filter((n) => !ids.includes(n.id)),
+                edges: s.tree.edges.filter((e) => !ids.includes(e.from) && !ids.includes(e.to)),
+              },
+            }),
+            false,
+            'removeNodes',
+          ),
 
         importTree: (tree) =>
           set(() => ({ tree }), false, 'importTree'),

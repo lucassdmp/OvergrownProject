@@ -1,0 +1,75 @@
+% ==============================================================================
+% OVERGROWN PROJECT - MAIN OTIMIZADO (VERSÃO CORRIGIDA)
+% ==============================================================================
+\documentclass[10pt, a4paper, oneside]{book} 
+
+% --- O SEGREDO DO TEMPO DE COMPILAÇÃO ---
+% Descomente a linha abaixo e coloque o nome do arquivo para compilar só ele.
+% \includeonly{Contents/magia/fogo}
+
+% Importa as configurações
+\input{config}
+
+
+\begin{document}
+
+% --- INÍCIO DA CAPA ---
+\begin{titlepage} 
+    \newcommand{\titleHeader}{\fontsize{60}{70}\selectfont \ringmfamily \color{black}}
+    \newcommand{\tituloPosicaoVertical}{3cm}
+    \newcommand{\opacityOverlay}{0.10}
+
+    \centering 
+    \vspace*{\tituloPosicaoVertical}
+    {\titleHeader Overgrown Project \par}
+    \vspace{1cm}
+    {\Large \textbf{Lucas} \par}
+    \vfill 
+    {\large Sistema de RPG v1.0 \par}
+    \vspace{2cm}
+\end{titlepage}
+% --- FIM DA CAPA ---
+
+\clearpage
+\newgeometry{top=2cm, bottom=2cm, left=1.5cm, right=1.5cm}
+\thispagestyle{fancy} 
+
+
+
+    % Sugestão: Use \include para capítulos que começam em nova página
+    % Use \input para seções que devem continuar na mesma página
+    \input{Contents/introducao}
+    \input{Contents/world}
+    \input{Contents/attributes}
+    \input{Contents/dados_no_overgrown}
+    \input{Contents/lutas_e_combate}
+    \input{Contents/arvore_de_habilidade_e_talentos}
+    \input{Contents/inventory}
+    \input{Contents/armas_e_armaduras}
+    \input{Contents/pericias_e_maestrias}
+    \input{Contents/origens}
+    \input{Contents/descanso}
+    \input{Contents/status_e_condicoes}
+    \input{Contents/terrenos}
+    \input{Contents/magias_e_feitiços}
+        % Magias
+        \input{Contents/magia/fogo}
+        \input{Contents/magia/agua}
+        \input{Contents/magia/ar}
+        \input{Contents/magia/pedra}
+        \input{Contents/magia/luz}
+        % \input{Contents/magia/natureza}
+        \input{Contents/magia/sombras}
+        \input{Contents/magia/raio}
+        \input{Contents/magia/mental}
+        \input{Contents/magia/tempo}
+        \input{Contents/magia/espacial}
+    
+
+    \input{Contents/melee}
+    \input{Contents/ranged}
+
+    
+
+\restoregeometry
+\end{document}

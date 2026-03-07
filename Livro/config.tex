@@ -1,0 +1,371 @@
+% config.tex
+\usepackage[portuguese]{babel}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{multicol}
+% \usepackage{lipsum}   % removido: lorem ipsum não vai para produção
+\usepackage{graphicx}
+\usepackage{fontspec}
+\usepackage{fancyhdr}
+\usepackage{lettrine}
+\usepackage{titlesec}
+\usepackage{comment}
+\usepackage{tabularx}
+\usepackage{needspace}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+% --- OTIMIZAÇÃO: apenas a lib 'skins' (para o enhanced de \attrField).
+% [most] carregava ~10 bibliotecas extras desnecessárias.
+
+ \usepackage{amsmath}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{etoolbox}         % para \ifstrempty em \spellCard
+% \usepackage[pages=all]{background}  % removido: \backgroundsetup está comentado,
+%   mas [pages=all] ainda hookava cada página, custando tempo de compilação.
+\usepackage[hidelinks]{hyperref} 
+
+% --- OTIMIZAÇÃO DE IMAGEM REPETITIVA ---
+% Carrega o dado uma vez na memória em vez de ler o disco toda vez
+\begin{comment}
+\newsavebox{\diceicon}
+\savebox{\diceicon}{\includegraphics[height=1.2em]{Images/dado.png}}
+
+\newcommand{\dado}[2]{%
+    \textbf{#1}\,%
+    \begin{tikzpicture}[baseline=(ICONE.base)]
+        \node[inner sep=0pt] (ICONE) {\usebox{\diceicon}};
+        \node[text=white, font=\color{white}\footnotesize\bfseries] at (ICONE.center) {#2};
+    \end{tikzpicture}
+}
+
+% --- BACKGROUND OTIMIZADO ---
+% Se o PDF final ficar lento para rolar as páginas, o culpado é esse background.
+% DICA: Converta background.png para um PDF de baixa resolução (72dpi)
+\backgroundsetup{
+    scale=1, color=black, opacity=1, angle=0,
+    contents={\includegraphics[width=\paperwidth,height=\paperheight]{Images/background}}
+}
+\end{comment}
+
+% --- FONTES ---
+% 1. Define the font families (the switches)
+\newfontfamily\baskerfamily[Path=Fonts/, Extension=.ttf]{BASKER}
+\newfontfamily\ringmfamily[Path=Fonts/, Extension=.ttf]{RINGM}
+
+% 2. Define the text commands (the \command{text} versions)
+\DeclareTextFontCommand{\basker}{\baskerfamily}
+\DeclareTextFontCommand{\ringm}{\ringmfamily}
+
+% 3. Set the main document font
+\setmainfont[Path=Fonts/, Extension=.ttf]{BASKER}
+
+% --- Estilos de Página ---
+\fancypagestyle{fancy}{
+    \fancyhf{}
+    \fancyfoot[R]{\ringmfamily\Large\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[R]{\ringmfamily\Large\thepage}
+}
+\pagestyle{fancy}
+
+% --- Cores e Réguas RPG ---
+\definecolor{armorGold}{HTML}{fdf1d3}
+\definecolor{overgrownRed}{HTML}{8b0000}
+
+\newcommand{\weaponRule}{%
+    \begin{tikzpicture}[node distance=0pt]
+        \fill[overgrownRed] (0,0) -- (0.2,0.05) -- (\linewidth-0.2cm,0.05) -- (\linewidth,0) -- (\linewidth-0.2cm,-0.05) -- (0.2,-0.05) -- cycle;
+    \end{tikzpicture}%
+}
+
+\newcommand{\overRule}{%
+    \par\noindent\centering
+    \begin{tikzpicture}
+        \fill[overgrownRed] (0,0) -- (0.1,0.03) -- (\linewidth-0.1cm,0.03) -- (\linewidth,0) -- (\linewidth-0.1cm,-0.03) -- (0.1,-0.03) -- cycle;
+    \end{tikzpicture}
+    \par
+}
+
+\newcommand{\blackoverRule}{%
+    \par\noindent\centering
+    \begin{tikzpicture}
+        \fill[black] (0,0) -- (0.1,0.03) -- (\linewidth-0.1cm,0.03) -- (\linewidth,0) -- (\linewidth-0.1cm,-0.03) -- (0.1,-0.03) -- cycle;
+    \end{tikzpicture}
+    \par
+}
+
+% --- Widgets RPG ---
+\newtcolorbox{rpgboxtips}[1]{colback=gray!10, colframe=black!70, fonttitle=\bfseries, title=#1, arc=0mm}
+
+\newcommand{\attrField}[2]{%
+    \begin{tcolorbox}[enhanced, colback=black, coltext=white, sharp corners, boxrule=0pt, width=0.485\linewidth, nobeforeafter, left=4pt, right=4pt, top=3pt, bottom=3pt, fontupper=\sffamily\bfseries\footnotesize]
+    #1 \hfill \normalfont\footnotesize #2
+    \end{tcolorbox}\hfill
+}
+
+\newcommand{\statBox}[2]{%
+    \begin{tcolorbox}[colback=black, coltext=white, sharp corners, boxrule=0pt, width=0.18\linewidth, nobeforeafter, left=0pt, right=0pt, top=4pt, bottom=4pt, halign=center, fontupper=\sffamily\bfseries\scriptsize]
+    #1 \\ \vspace{1pt} \large #2
+    \end{tcolorbox}\hfill
+}
+
+% --- Espaçamentos e Títulos ---
+\setlength{\parskip}{0.2cm}
+\setlength{\parindent}{0pt}
+\setlength{\columnsep}{1cm}
+\newcommand{\column}{\columnbreak}
+
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{8pt}{4pt}
+\titleformat{\section}{\ringmfamily\fontsize{14}{22}\selectfont}{\thesection}{1em}{}
+\titleformat{\subsection}{\ringmfamily\fontsize{13}{18}\selectfont}{\thesubsection}{1em}{}
+
+\newcommand{\midsectiontitle}[1]{%
+    \needspace{5\baselineskip}%
+    \begin{flushleft}%
+        {\ringmfamily\fontsize{24}{32}\selectfont #1}\par
+        \blackoverRule
+    \end{flushleft}%
+    \phantomsection
+    \addcontentsline{toc}{section}{#1}%
+}
+
+% --- Sistema de Armas ---
+\makeatletter
+\define@key{arma}{nome}{\def\arma@nome{#1}}
+\define@key{arma}{desc}{\def\arma@desc{#1}}
+\define@key{arma}{ameaca}{\def\arma@ameaca{#1}}
+\define@key{arma}{tipo}{\def\arma@tipo{#1}}
+\define@key{arma}{peso}{\def\arma@peso{#1}}
+
+\newcommand{\exibirPeso}[1]{#1\ Unidade\ifnum#1>1 s\fi\ de Peso}
+
+\newcommand{\armaCard}[1]{%
+    \setkeys{arma}{nome={Nome},desc={},ameaca={20},tipo={Item},peso={1},#1}%
+    \vspace{3pt}\noindent
+    \begin{minipage}{\linewidth}
+        {\ringmfamily\Large\color{overgrownRed}\arma@nome} \hfill {\small\color{overgrownRed}AMEAÇA \arma@ameaca}\par
+        \vspace{1pt}
+        {\scriptsize\scshape \arma@tipo \hfill \exibirPeso{\arma@peso}}\par
+        \vspace{-2pt}
+        \overRule 
+        \vspace{2pt}
+        \ifx\arma@desc\@empty\else
+            \noindent\textit{\footnotesize \arma@desc}\par
+            \vspace{8pt}
+        \fi
+        {\ringmfamily\footnotesize\color{overgrownRed} ATAQUES E MANOBRAS}
+        \vspace{2pt}
+        \hrule height 0.6pt 
+        \vspace{4pt}
+}
+
+\newcommand{\addAtaque}[3]{%
+    \noindent\textbf{\small #1} \hfill \textbf{\small #3}\\%
+    \textit{\scriptsize #2}\par\vspace{4pt}%
+}
+
+\newcommand{\finishArma}{%
+    \vspace{2pt}
+    \hrule height 0.4pt
+    \end{minipage}
+    \vspace{15pt}
+}
+\makeatother
+
+% --- Hyperlinks ---
+
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=cyan}
+\newcommand{\originlink}[1]{\phantomsection{\hypertarget{#1}{}}}
+\newcommand{\link}[2]{\hyperlink{#1}{#2}}
+
+% --- Comando de Perícias ---
+\newcommand{\pericia}[2]{%
+    \needspace{3\baselineskip}
+    \vspace{6pt}
+    \noindent
+    {\ringmfamily\color{overgrownRed} #1:}\hspace{5pt}#2\par
+    \vspace{4pt}
+}
+
+% --- Comando de Habilidades de Combate ---
+% #1 = Nome, #2 = Custo (ex: "2" ou "X"), #3 = Descrição
+\newcommand{\combatSkill}[3]{%
+    \needspace{4\baselineskip}%
+    \vspace{5pt}%
+    \noindent%
+    {\ringmfamily\color{overgrownRed}\large #1}\hfill%
+    {\setlength{\fboxsep}{2pt}\small\scshape\fbox{#2\ PC}}\par%
+    \vspace{2pt}%
+    \noindent{\small #3}\par%
+    \vspace{4pt}%
+}
+
+% --- Sistema de Armaduras (Ajustado para Armour/Bloqueio) ---
+\makeatletter
+\define@key{armor}{nome}{\def\armor@nome{#1}}
+\define@key{armor}{tipo}{\def\armor@tipo{#1}}
+\define@key{armor}{peso}{\def\armor@peso{#1}}
+\define@key{armor}{vida}{\def\armor@vida{#1}}
+\define@key{armor}{armour}{\def\armor@armour{#1}} % Atributo para Bloqueio
+
+\newcommand{\armorCard}[1]{%
+    \setkeys{armor}{nome={Armadura},tipo={Traje},peso={1},vida={10},armour={0},#1}%
+    \vspace{12pt}\noindent
+    \begin{minipage}{\linewidth}
+        {\ringmfamily\Large\color{overgrownRed}\armor@nome} \hfill {\small\color{overgrownRed}ARMOUR \armor@armour}\par
+        \vspace{1pt}
+        {\scriptsize\scshape \armor@tipo \hfill \exibirPeso{\armor@peso}}\par
+        \vspace{-2pt}
+        \overRule 
+        \vspace{2pt}
+        \noindent\textbf{\small Vida de Armadura:} \armor@vida\ PV\par
+        \vspace{4pt}
+        {\ringmfamily\footnotesize\color{overgrownRed} PROPRIEDADES E EFEITOS}
+        \vspace{2pt}
+        \hrule height 0.6pt 
+        \vspace{4pt}
+}
+
+\newcommand{\addEfeito}[2]{%
+    \noindent\textbf{\small #1:} {\scriptsize #2}\par\vspace{4pt}%
+}
+
+\newcommand{\finishArmor}{%
+    \vspace{2pt}
+    \hrule height 0.4pt
+    \end{minipage}
+    \vspace{15pt}
+}
+\makeatother
+
+
+% balões de elementos
+\definecolor{elemFogo}{HTML}{E63946}
+\definecolor{elemAgua}{HTML}{457B9D}
+\definecolor{elemAr}{HTML}{A8DADC}
+\definecolor{elemTerra}{HTML}{767522}
+\definecolor{elemNatureza}{HTML}{2B9348}
+\definecolor{elemLuz}{HTML}{FFB703}
+\definecolor{elemSombra}{HTML}{3D348B}
+\definecolor{elemEletricidade}{HTML}{8338EC}
+\definecolor{elemTempo}{HTML}{FB5607}
+\definecolor{elemMental}{HTML}{FF006E}
+\definecolor{elemEspacial}{HTML}{023047}
+\definecolor{elemInvocacao}{HTML}{8D99AE}
+
+ 
+% --- OTIMIZAÇÃO CRÍTICA: \elementTag e \typeTag
+% Antes: cada tag criava um tcolorbox completo (~200+ instâncias só nas spell cards).
+% Agora: usa \fcolorbox nativo — mesma aparência, custo praticamente zero.
+
+% Tag de Elemento (ex: Fogo, Agua)
+\newcommand{\elementTag}[1]{%
+    {\setlength{\fboxsep}{1.5pt}\setlength{\fboxrule}{0.6pt}%
+    \leavevmode\hbox{\fontsize{7pt}{7pt}\selectfont\bfseries\sffamily%
+    \fcolorbox{elem#1}{elem#1!15}{\color{elem#1!80!black}\MakeUppercase{#1}}}}%
+    \hspace{2pt}%
+}
+
+% Tag de Tipo (ex: PROJ, AOE, BUFF)
+\newcommand{\typeTag}[1]{%
+    {\setlength{\fboxsep}{1.2pt}\setlength{\fboxrule}{0.6pt}%
+    \leavevmode\hbox{\fontsize{6pt}{6pt}\selectfont\bfseries\sffamily%
+    \fcolorbox{black!60}{white}{\color{black!90}#1}}}%
+    \hspace{2pt}%
+}
+
+% Card de Magia Atualizado
+% Parâmetros: 
+% #1 Nome, #2 Elementos, #3 DIV+, #4 Descrição, #5 Tabela, #6 Notas, #7 Título Coluna 3, #8 Tipos
+
+    
+
+\newcommand{\spellCard}[8]{% 
+    \vspace{8pt}
+    \begin{tcolorbox}[
+        colframe=black!85, colback=white, 
+        arc=0pt, boxrule=1pt, 
+        left=4pt, right=4pt, top=4pt, bottom=4pt
+    ]
+        \noindent
+        {\Large\bfseries\scshape #1} \hfill \textbf{\small DIV:} \fbox{\small #3+} 
+        
+        \medskip 
+        
+        \noindent #2 \hfill #8 % Elementos à esquerda, Tipos à direita
+        
+        \vspace{4pt}\hrule height 0.6pt\vspace{4pt}
+        
+        \textit{\small #4}
+        
+        \vspace{6pt}
+        \renewcommand{\arraystretch}{1.3}
+        \scriptsize
+        \begin{tabularx}{\linewidth}{|c|c|c|X|}
+            \hline
+            \rowcolor{gray!15} \textbf{Nív.} & \textbf{Custo} & \textbf{#7} & \textbf{Efeito Adicional} \\ \hline
+            #5 \\ \hline 
+        \end{tabularx}
+        
+        \ifstrempty{#6}{}{%
+            \vspace{5pt}
+            \begin{tcolorbox}[
+                colback=orange!5, colframe=orange!70, 
+                boxrule=0.5pt, left=4pt, right=4pt, top=3pt, bottom=3pt, arc=1pt
+            ]
+                \textit{\scriptsize #6}
+            \end{tcolorbox}
+        }
+    \end{tcolorbox}
+}
+
+\begin{comment}
+
+
+\newcommand{\spellCard}[8]{% 
+    \needspace{6\baselineskip}
+    \vspace{8pt}
+    \noindent
+    \begingroup % Mantém as mudanças de fonte locais
+    \hrule height 1pt
+    \vspace{4pt}
+    \noindent {\ringmfamily\Large\scshape #1} \hfill \textbf{DIV:} \fbox{#3+} 
+    
+    \noindent #2 \hfill #8 
+    
+    \vspace{2pt}\hrule height 0.4pt\vspace{4pt}
+    
+    {\small\textit{#4}}
+    
+    \vspace{6pt}
+    \renewcommand{\arraystretch}{1.2}
+    \scriptsize
+    \noindent
+    \begin{tabular}{p{0.8cm} | p{1.2cm} | p{2cm} | p{8cm}} % Larguras fixas são mais rápidas
+        \rowcolor{gray!15} \textbf{Nív.} & \textbf{Custo} & \textbf{#7} & \textbf{Efeito Adicional} \\ \hline
+        #5 \\ \hline 
+    \end{tabular}
+    
+    \ifstrempty{#6}{}{%
+        \vspace{4pt}
+        \par\noindent\fbox{%
+            \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{%
+                \textit{\scriptsize #6}%
+            }%
+        }
+    }
+    \vspace{4pt}
+    \hrule height 1pt
+    \endgroup
+    \vspace{10pt}
+}
+
+
+\end{comment}
