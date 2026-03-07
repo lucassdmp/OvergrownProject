@@ -326,6 +326,9 @@ export const useCharacterStore = create<CharacterState>()(
           return {
             ...current,
             ...ps,
+            // Always use the code-defined config – never restore from localStorage,
+            // so that changes to defaultGameConfig take effect immediately.
+            gameConfig: current.gameConfig,
             character: {
               ...DEFAULT_CHARACTER,
               ...(ps.character ?? {}),

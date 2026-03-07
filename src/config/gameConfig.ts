@@ -13,9 +13,9 @@ import type { AttributeName } from '../types/game'
  * result = base + (sum of attributes) * rate
  *
  * Examples from the rulebook:
- *   IEP         = 0  + Wisdom        * 5     →  base:0, attrs:['wisdom'],             rate:5
- *   PC          = 0  + (Might+Grace) * 1     →  base:0, attrs:['might','grace'],      rate:1
- *   Vida        = 0  + Fortitude     * 5     →  base:0, attrs:['fortitude'],          rate:5
+ *   IEP         = 10 + Wisdom        * 5     →  base:10, attrs:['wisdom'],             rate:5
+ *   PC          = 2  + (Might+Grace) * 1     →  base:2,  attrs:['might','grace'],      rate:1
+ *   Vida        = 10 + Fortitude     * 5     →  base:10, attrs:['fortitude'],          rate:5
  *   Resistência = 5  + Fortitude     * 0.5   →  base:5, attrs:['fortitude'],          rate:0.5
  *   Esquiva     = 5  + Grace         * 0.5   →  base:5, attrs:['grace'],              rate:0.5
  */
