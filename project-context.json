@@ -1,0 +1,297 @@
+{
+  "_meta": {
+    "purpose": "Context handoff for OverGrown RPG Character Sheet project",
+    "generated": "2025-07-15",
+    "tsc_status": "clean (exit 0)"
+  },
+
+  "project": {
+    "name": "OverGrown RPG Character Sheet",
+    "workspace": "c:\\Users\\lucas\\OneDrive\\Documents\\Code\\Overgrown Project",
+    "stack": {
+      "bundler": "Vite",
+      "framework": "React 19",
+      "language": "TypeScript",
+      "styling": "Tailwind CSS v4 – @import 'tailwindcss' in globals.css; dark mode via @custom-variant dark (&:where(.dark, .dark *))",
+      "state": "Zustand v5 – devtools + persist, localStorage key: 'overgrown-character'",
+      "router": "React Router v7"
+    },
+    "entry": "src/main.tsx → App.tsx → RootLayout (Outlet) → HomePage"
+  },
+
+  "file_tree": {
+    "src/types/game.ts": "ALL type definitions (AttributeName, MasteryLevel, DerivedStats, Spell, CharacterAttack, InventoryItem, ItemEffect, Character, etc.)",
+    "src/config/gameConfig.ts": "Resource formulas + calculateDerivedStats() + calculateEffectiveDerivedStats()",
+    "src/lib/skillUtils.ts": "getMasteryCapForDivinity, getSkillBudget, getSkillCost, getSkillPointsSpent, getItemSkillEffects",
+    "src/lib/utils.ts": "Shadcn cn() utility",
+    "src/data/skills.ts": "ALL_SKILLS – 30 SkillDefinition objects",
+    "src/data/origins.ts": "ALL_ORIGINS – 27 OriginDefinition objects",
+    "src/data/spells.ts": "ALL_SPELLS – built-in spell list",
+    "src/data/elements.ts": "ALL_ELEMENTS – 11 elements with label/color/textColor",
+    "src/data/magicTypes.ts": "ALL_MAGIC_TYPES – 8 magic type tags",
+    "src/data/combatSkills.ts": "ALL_COMBAT_SKILLS – melee/ranged/effort PC abilities",
+    "src/data/index.ts": "Re-exports all data",
+    "src/features/character/store/characterStore.ts": "Zustand store – all actions, persist merge, constants",
+    "src/features/character/hooks/useCharacter.ts": "useCharacter() + useDerivedStats() hooks",
+    "src/features/character/components/CharacterHeader.tsx": "Header bar: name/player/race/origin, resource inputs, import/export/rest",
+    "src/features/character/components/AttributePentagon.tsx": "SVG pentagram attribute controls with item bonus display",
+    "src/features/character/components/SpellList.tsx": "Custom spell cards + AddSpellModal",
+    "src/features/character/components/AttackList.tsx": "Character attack cards + AddAttackModal",
+    "src/features/character/components/SkillList.tsx": "Perícias grid with budget bar, mastery buttons, origin/item highlights, search",
+    "src/features/character/components/Inventory.tsx": "Inventory item cards – equip, quantity, use, effect labels",
+    "src/features/character/components/modals/AddSpellModal.tsx": "Modal to add a custom spell with levels table",
+    "src/features/character/components/modals/AddAttackModal.tsx": "Modal to add a combat attack",
+    "src/features/character/components/modals/AddItemModal.tsx": "Modal to add inventory item; supports 7 effect types including skillBonus/skillUnlock",
+    "src/features/character/components/modals/UseItemModal.tsx": "Modal for potion use – manual roll input per heal/restoreIep effect",
+    "src/features/character/types/index.ts": "Feature-level type re-exports",
+    "src/components/ui/Modal.tsx": "Reusable modal wrapper",
+    "src/components/ui/index.ts": "UI component exports",
+    "src/hooks/useDarkMode.ts": "useDarkMode() – toggles .dark class on <html>",
+    "src/hooks/index.ts": "Hook re-exports",
+    "src/layouts/RootLayout.tsx": "App shell with dark mode toggle; renders <Outlet />",
+    "src/pages/HomePage.tsx": "Page layout: CharacterHeader → AttributePentagon → [SpellList, AttackList] → SkillList → Inventory",
+    "src/pages/NotFoundPage.tsx": "404 fallback",
+    "src/routes/index.tsx": "React Router route definitions",
+    "src/styles/globals.css": "Tailwind v4 import + dark mode custom variant",
+    "src/store/appStore.ts": "App-level Zustand store (UI state)",
+    "src/store/index.ts": "Store re-exports"
+  },
+
+  "types": {
+    "file": "src/types/game.ts",
+    "AttributeName": "'might' | 'grace' | 'wisdom' | 'sense' | 'fortitude'",
+    "ATTRIBUTE_LABELS": { "might": "Might", "grace": "Grace", "wisdom": "Wisdom", "sense": "Sense", "fortitude": "Fortitude" },
+    "MasteryLevel": "0 | 1 | 2 | 3 | 4",
+    "MASTERY_LABELS": { "0": "—", "1": "I", "2": "II", "3": "III", "4": "IV" },
+    "MASTERY_BONUS": { "0": 0, "1": 5, "2": 10, "3": 15, "4": 20 },
+    "DerivedStats": "{ iep: number; pc: number; vida: number; resistencia: number; esquiva: number }",
+    "ItemType": "'weapon' | 'armor' | 'potion-vida' | 'potion-iep' | 'misc'",
+    "ItemEffect": {
+      "type": "'attributeBonus' | 'statBonus' | 'skillBonus' | 'skillUnlock' | 'heal' | 'restoreIep' | 'custom'",
+      "optional_fields": "attribute?: AttributeName | stat?: keyof DerivedStats | skillId?: string | value?: number | description?: string"
+    },
+    "InventoryItem": "{ id, name, description, quantity, type: ItemType, effects: ItemEffect[], equipped?: boolean }",
+    "Character": {
+      "fields": "id, name, playerName, race, level, divinity, attributes: Attributes, acquiredTalents: string[], customSpells: CustomSpell[], characterAttacks: CharacterAttack[], inventory: InventoryItem[], skills: Record<string, MasteryLevel>, origin?: string, currentResources: { vida, iep, pc }"
+    },
+    "SpellLevel": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 'divino'",
+    "CombatCategory": "'melee' | 'ranged' | 'effort'"
+  },
+
+  "formulas": {
+    "file": "src/config/gameConfig.ts",
+    "iep":         "floor(0  + Wisdom     × 5)",
+    "pc":          "floor(0  + (Might + Grace) × 1)",
+    "vida":        "floor(0  + Fortitude  × 5)",
+    "resistencia": "floor(5  + Fortitude  × 0.5)",
+    "esquiva":     "floor(5  + Grace      × 0.5)",
+    "attribute_points_total": "5 + divinity × 5  →  Div1=10, Div2=15, …",
+    "passive_item_bonus_logic": {
+      "active_condition": "weapon/armor: equipped===true | all others: quantity > 0",
+      "attributeBonus": "Added to attribute BEFORE formula (boosts vida/iep/etc)",
+      "statBonus": "Added AFTER formula directly to derived stat"
+    }
+  },
+
+  "skill_system": {
+    "file": "src/lib/skillUtils.ts",
+    "budget_formula": "5 + floor(divinity / 5) × 2",
+    "budget_examples": { "div1": 5, "div5": 7, "div10": 9, "div20": 13, "div40": 21 },
+    "mastery_cost": "I=1pt total, II=3pt total, III=5pt total, IV=7pt total – acquiring Mastery I costs 1pt, each upgrade step (I→II, II→III, III→IV) costs 2pt. Origin skill's I is free; upgrades cost 2pt each (origin total: II=2, III=4, IV=6)",
+    "mastery_cap_by_divinity": { "div_0_to_19": "max II", "div_20_to_39": "max III", "div_40_plus": "max IV" },
+    "origin_skill": "Selected origin grants 1 skill at minimum Mastery I; that first I doesn't consume budget",
+    "item_skill_effects": {
+      "skillBonus": "Adds flat test bonus to the skill (shown as +X badge in SkillList)",
+      "skillUnlock": "Forces skill to minimum Mastery I regardless of budget (sky-blue highlight)"
+    }
+  },
+
+  "skills_data": {
+    "file": "src/data/skills.ts",
+    "count": 30,
+    "interface": "SkillDefinition { id, name, description, requiresTraining: boolean }",
+    "requires_training_ids": ["conducao", "chef", "engenharia", "manutencao", "medicina", "navegacao", "xilografia"],
+    "all_ids": [
+      "adestramento", "arcanismo", "atletismo", "conducao", "constituicao", "crime",
+      "chef", "cultura", "discernimento", "eloquencia", "enganacao", "engenharia",
+      "estrategia", "furtividade", "intimidacao", "investigacao", "luta",
+      "manutencao", "medicina", "navegacao", "natureza", "percepcao", "performance",
+      "pontaria", "provocacao", "reflexos", "seducao", "sobrevivencia", "temperanca", "xilografia"
+    ]
+  },
+
+  "origins_data": {
+    "file": "src/data/origins.ts",
+    "count": 27,
+    "interface": "OriginDefinition { id, name, description, skillId }",
+    "all_origins": [
+      { "id": "andarilho",     "skillId": "conducao" },
+      { "id": "atento",        "skillId": "percepcao" },
+      { "id": "bestial",       "skillId": "adestramento" },
+      { "id": "curativo",      "skillId": "medicina" },
+      { "id": "diplomatico",   "skillId": "eloquencia" },
+      { "id": "dissimulado",   "skillId": "enganacao" },
+      { "id": "engenhoso",     "skillId": "engenharia" },
+      { "id": "erudito",       "skillId": "cultura" },
+      { "id": "estoico",       "skillId": "temperanca" },
+      { "id": "exibicionista", "skillId": "performance" },
+      { "id": "gastronomico",  "skillId": "chef" },
+      { "id": "imponente",     "skillId": "intimidacao" },
+      { "id": "instintivo",    "skillId": "reflexos" },
+      { "id": "invisivel",     "skillId": "furtividade" },
+      { "id": "irritante",     "skillId": "provocacao" },
+      { "id": "marginal",      "skillId": "crime" },
+      { "id": "metodico",      "skillId": "investigacao" },
+      { "id": "naturalista",   "skillId": "natureza" },
+      { "id": "navegante",     "skillId": "navegacao" },
+      { "id": "perspicaz",     "skillId": "discernimento" },
+      { "id": "resiliente",    "skillId": "constituicao" },
+      { "id": "runico",        "skillId": "xilografia" },
+      { "id": "rustico",       "skillId": "sobrevivencia" },
+      { "id": "sedutor",       "skillId": "seducao" },
+      { "id": "tatico",        "skillId": "estrategia" },
+      { "id": "vigoroso",      "skillId": "atletismo" },
+      { "id": "zeloso",        "skillId": "manutencao" }
+    ]
+  },
+
+  "store": {
+    "file": "src/features/character/store/characterStore.ts",
+    "persist_key": "overgrown-character",
+    "constants": {
+      "BASE_ATTRIBUTE_POINTS": 5,
+      "POINTS_PER_DIVINITY": 5,
+      "totalAttributePoints": "(divinity) => 5 + divinity * 5"
+    },
+    "default_character": {
+      "divinity": 1,
+      "attributes": { "might": 1, "grace": 1, "wisdom": 1, "sense": 1, "fortitude": 1 },
+      "skills": {},
+      "inventory": [],
+      "customSpells": [],
+      "characterAttacks": [],
+      "acquiredTalents": []
+    },
+    "actions": [
+      "setCharacterName", "setPlayerName", "setRace", "setLevel", "setDivinity",
+      "setAttribute",
+      "setCurrentVida", "setCurrentIep", "setCurrentPc", "restoreAllResources",
+      "acquireTalent", "removeTalent",
+      "addSpell", "removeSpell", "updateSpell",
+      "addAttack", "removeAttack",
+      "addItem", "removeItem", "updateItemQuantity", "toggleEquipped",
+      "useItem", "useItemWithValues",
+      "setSkillMastery", "setOrigin",
+      "loadCharacter", "resetCharacter"
+    ],
+    "persist_merge_backfills": {
+      "customSpells": "[]",
+      "characterAttacks": "[]",
+      "inventory": "[]",
+      "acquiredTalents": "[]",
+      "skills": "{}",
+      "origin": "undefined",
+      "currentResources": "current.character.currentResources"
+    },
+    "notes": {
+      "setAttribute": "Clamps currentResources to new max after attribute change",
+      "useItem": "Applies fixed effect.value directly; decrements quantity by 1",
+      "useItemWithValues": "Applies user-provided roll values; decrements quantity by 1; called by UseItemModal"
+    }
+  },
+
+  "hooks": {
+    "useCharacter": {
+      "file": "src/features/character/hooks/useCharacter.ts",
+      "returns": "{ character, derivedStats }",
+      "memoization": "useMemo on attributes + inventory + gameConfig"
+    },
+    "useDarkMode": {
+      "file": "src/hooks/useDarkMode.ts",
+      "behavior": "Toggles .dark class on <html> element"
+    }
+  },
+
+  "ui_color_coding": {
+    "amber":     "equipped item border highlight / standard mastery button active state",
+    "violet":    "origin skill row background + ★ Origem badge + origin preview in CharacterHeader",
+    "sky_blue":  "item-unlocked skill row background + ⬡ Item badge",
+    "rose":      "✦ training-required marker on skill name",
+    "red":       "budget overflow warning / attribute point deficit"
+  },
+
+  "component_details": {
+    "CharacterHeader": {
+      "fields": ["Nome", "Jogador", "Raça", "Origem (select → 27 options, shows '→ SkillName' preview in violet)"],
+      "resources": ["Vida (current/max)", "IEP (current/max)", "PC (current/max)", "Resistência (badge)", "Esquiva (badge)"],
+      "buttons": ["⟳ Descanso (restoreAllResources)", "↓ Exportar (JSON download)", "↑ Importar (JSON file input)"]
+    },
+    "AttributePentagon": {
+      "svg_pentagram": "5 vertices, each with +/- controls",
+      "item_bonus_display": "Shows total = base + item in circle; +X item tag in violet below vertex when > 0",
+      "remaining_points": "Shown in center of pentagon",
+      "note": "getItemAttrBonuses() helper reads active attributeBonus item effects"
+    },
+    "SkillList": {
+      "budget_bar": "spent / budget with red overflow text",
+      "mastery_buttons": "5 buttons per skill: — I II III IV; disabled if over budget or above divinity cap",
+      "origin_skill": "violet bg, ★ Origem badge, cannot go below Mastery I",
+      "item_unlocked_skill": "sky-blue bg, ⬡ Item badge, cannot go below Mastery I",
+      "item_bonus": "+X⬡ badge shown; added to displayed total roll bonus",
+      "layout": "Two-column responsive grid + text search filter"
+    },
+    "Inventory": {
+      "item_card": "name, description, type badge, quantity +/-, equip toggle (amber border when equipped)",
+      "use_button": "Opens UseItemModal for consumable types",
+      "effect_labels": {
+        "heal": "❤ Curar Vida +X",
+        "restoreIep": "✦ Restaurar IEP +X",
+        "statBonus": "★ Stat passivo: +X statName",
+        "attributeBonus": "⬆ Atributo passivo: +X attrName",
+        "skillBonus": "⬡ Perícia bônus: +X skillName",
+        "skillUnlock": "⬡ Desbloqueia: skillName",
+        "custom": "description text"
+      }
+    },
+    "AddItemModal": {
+      "effect_types": [
+        "heal (Curar Vida)",
+        "restoreIep (Restaurar IEP)",
+        "statBonus (★ Bônus de Stat)",
+        "attributeBonus (⬆ Bônus de Atributo)",
+        "skillBonus (⬡ Bônus de Perícia)",
+        "skillUnlock (⬡ Desbloquear Perícia)",
+        "custom (Personalizado)"
+      ],
+      "bug_fix": "Effect type select resets defaults on type change to avoid silent skillId/stat=undefined"
+    },
+    "UseItemModal": {
+      "behavior": "Shows a number input for each heal/restoreIep effect; calls useItemWithValues with the entered values"
+    }
+  },
+
+  "tailwind_notes": {
+    "version": "v4",
+    "import": "@import 'tailwindcss' in src/styles/globals.css",
+    "dark_mode": "@custom-variant dark (&:where(.dark, .dark *))",
+    "class_application": "Add/remove .dark class on <html> – handled by useDarkMode hook"
+  },
+
+  "completed_systems": [
+    "Character header (name, player, race, origin select, resources)",
+    "Attribute pentagon (SVG, point allocation, item bonus display)",
+    "Derived stats with passive item bonus (attributeBonus + statBonus)",
+    "Custom spell management (add/edit/remove, full level table)",
+    "Combat attack management (add/remove)",
+    "Inventory (add/remove, equip toggle, quantity, potion use modal)",
+    "Item effects: heal, restoreIep, attributeBonus, statBonus, skillBonus, skillUnlock, custom",
+    "Perícias (Skills) system: 30 skills, mastery buttons, budget bar",
+    "27 Origins – free Mastery I for origin skill (not in budget)",
+    "Skill budget scaling: 5 + floor(divinity/5) × 2",
+    "Mastery caps: II max until div 20, III max until div 40, IV at div 40+",
+    "Item-driven skill effects: bonus (+X) and unlock (forced Mastery I)",
+    "Dark/light mode toggle",
+    "Export/import character JSON",
+    "Zustand persist with backward-compatible merge"
+  ]
+}
