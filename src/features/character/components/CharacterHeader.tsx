@@ -2,6 +2,8 @@ import { useRef, useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
 import { useCharacter } from '../hooks/useCharacter'
 import type { Character } from '../../../types/game'
+import { ALL_ORIGINS } from '../../../data/origins'
+import { ALL_SKILLS } from '../../../data/skills'
 
 function ResourcePip({
   label,
@@ -110,6 +112,32 @@ export default function CharacterHeader() {
             placeholder="Raça"
             className="rounded bg-gray-100 dark:bg-gray-800 px-2 py-1 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none"
           />
+        </div>
+
+        {/* Origin */}
+        <div className="flex flex-col gap-0.5 min-w-[150px]">
+          <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+            Origem
+            {character.origin && (() => {
+              const originDef = ALL_ORIGINS.find((o) => o.id === character.origin)
+              const skillName = originDef ? (ALL_SKILLS.find((s) => s.id === originDef.skillId)?.name ?? originDef.skillId) : null
+              return skillName ? (
+                <span className="ml-1.5 normal-case font-normal text-violet-500 dark:text-violet-400">
+                  → {skillName}
+                </span>
+              ) : null
+            })()}
+          </label>
+          <select
+            value={character.origin ?? ''}
+            onChange={(e) => store.setOrigin(e.target.value)}
+            className="rounded bg-gray-100 dark:bg-gray-800 px-2 py-1 text-sm font-medium text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none"
+          >
+            <option value="">Sem origem</option>
+            {ALL_ORIGINS.map((o) => (
+              <option key={o.id} value={o.id}>{o.name}</option>
+            ))}
+          </select>
         </div>
 
         {/* Divider */}

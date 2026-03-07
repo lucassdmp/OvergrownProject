@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
+import { ALL_SKILLS } from '../../../data/skills'
 import type { InventoryItem, ItemType } from '../../../types/game'
 import AddItemModal from './modals/AddItemModal'
 import UseItemModal from './modals/UseItemModal'
@@ -115,6 +116,12 @@ function ItemCard({ item }: { item: InventoryItem }) {
                     )}
                     {ef.type === 'attributeBonus' && (
                       <span className="text-amber-400">⬆ +{ef.value} em {ef.attribute} (passivo)</span>
+                    )}
+                    {ef.type === 'skillBonus' && (
+                      <span className="text-sky-400">⬡ +{ef.value} em {ALL_SKILLS.find((s) => s.id === ef.skillId)?.name ?? ef.skillId} (passivo)</span>
+                    )}
+                    {ef.type === 'skillUnlock' && (
+                      <span className="text-sky-400">⬡ Desbloqueia {ALL_SKILLS.find((s) => s.id === ef.skillId)?.name ?? ef.skillId} (passivo)</span>
                     )}
                     {ef.type === 'custom' && <span className="text-gray-400">{ef.description}</span>}
                   </p>
