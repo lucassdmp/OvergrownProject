@@ -209,7 +209,6 @@ export default function Inventory() {
                 ? 'border-red-500/60 bg-red-100/60 dark:bg-red-900/20 text-red-600 dark:text-red-400'
                 : 'border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400'
             }`}>
-              <span>⚖</span>
               <span>{totalWeight} / {carryCapacity}</span>
               {isOverencumbered && <span className="text-[10px] font-bold uppercase tracking-wide">Sobrecarregado</span>}
             </div>
