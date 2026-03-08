@@ -271,6 +271,12 @@ export interface InventoryItem {
   effects: ItemEffect[]
   /** Only relevant for weapon/armor – whether it is currently equipped */
   equipped?: boolean
+  /** Weapon only: critical threat range, e.g. "19-20" or "18-20" */
+  threat?: string
+  /** Weapon/armor only: if true, the item is broken and provides no passive bonuses */
+  broken?: boolean
+  /** Item weight in load units (carga); optional for backward compatibility */
+  weight?: number
 }
 
 // ── Character ─────────────────────────────────────────────────────────────────

@@ -79,7 +79,9 @@ export function getItemSkillEffects(character: Character): {
   const unlocked = new Set<string>()
 
   const activeItems = (character.inventory ?? []).filter((it) =>
-    it.type === 'weapon' || it.type === 'armor' ? it.equipped === true : it.quantity > 0,
+    it.type === 'weapon' || it.type === 'armor'
+      ? it.equipped === true && !it.broken
+      : it.quantity > 0,
   )
 
   for (const item of activeItems) {

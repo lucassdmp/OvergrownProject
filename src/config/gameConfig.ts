@@ -102,10 +102,12 @@ export function calculateEffectiveDerivedStats(
   config: GameConfig = defaultGameConfig,
 ): DerivedStats {
   // Only include passive bonuses from items that are "active":
-  // - weapons/armor must be equipped
+  // - weapons/armor must be equipped AND not broken
   // - everything else must have quantity > 0
   const activeItems = (character.inventory ?? []).filter((it) =>
-    it.type === 'weapon' || it.type === 'armor' ? it.equipped === true : it.quantity > 0
+    it.type === 'weapon' || it.type === 'armor'
+      ? it.equipped === true && !it.broken
+      : it.quantity > 0
   )
 
   // 1. Sum attributeBonus effects into a copy of the attributes

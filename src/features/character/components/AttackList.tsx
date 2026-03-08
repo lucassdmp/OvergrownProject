@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
 import type { CharacterAttack, CombatCategory } from '../../../types/game'
 import AddAttackModal from './modals/AddAttackModal'
@@ -13,6 +13,16 @@ const CATEGORY_LABELS: Record<CombatCategory, string> = {
   melee: 'Corpo a Corpo',
   ranged: 'Distância',
   effort: 'Esforço',
+}
+
+function exportOne(item: object, filename: string) {
+  const blob = new Blob([JSON.stringify(item, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
 }
 
 function AttackCard({ attack }: { attack: CharacterAttack }) {
@@ -42,6 +52,13 @@ function AttackCard({ attack }: { attack: CharacterAttack }) {
               ⚔ {attack.damage}
             </span>
           )}
+          <button
+            onClick={() => exportOne(attack, `${attack.name}.json`)}
+            title="Exportar este ataque"
+            className="text-gray-400 dark:text-gray-500 transition hover:text-red-400"
+          >
+            ↓
+          </button>
           <button onClick={() => setExpanded((v) => !v)} className="text-gray-500 dark:text-gray-400 transition hover:text-gray-900 dark:hover:text-white">
             {expanded ? '▲' : '▼'}
           </button>
@@ -62,10 +79,40 @@ function AttackCard({ attack }: { attack: CharacterAttack }) {
 
 export default function AttackList() {
   const attacks = useCharacterStore((s) => s.character.characterAttacks)
+  const importAttacks = useCharacterStore((s) => s.importAttacks)
   const [showModal, setShowModal] = useState(false)
   const [filter, setFilter] = useState<CombatCategory | 'all'>('all')
+  const importRef = useRef<HTMLInputElement>(null)
 
   const visible = filter === 'all' ? attacks : attacks.filter((a) => a.category === filter)
+
+  function handleExport() {
+    const json = JSON.stringify(attacks, null, 2)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'ataques.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target?.result as string)
+        const list: CharacterAttack[] = Array.isArray(data) ? data : [data]
+        importAttacks(list)
+      } catch {
+        alert('Arquivo JSON inválido.')
+      }
+    }
+    reader.readAsText(file)
+    e.target.value = ''
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -73,12 +120,30 @@ export default function AttackList() {
         <h2 className="text-sm font-bold uppercase tracking-widest text-red-400/80">
           ⚔ Lista de Ataques
         </h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="rounded-full border border-red-400/70 dark:border-red-800/50 px-3 py-0.5 text-xs font-semibold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/30"
-        >
-          + Adicionar
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            disabled={attacks.length === 0}
+            title="Exportar ataques"
+            className="rounded-full border border-red-400/50 dark:border-red-800/40 px-2.5 py-0.5 text-xs font-semibold text-red-400/70 transition hover:text-red-400 hover:border-red-400 disabled:opacity-30"
+          >
+            ↓ Exportar
+          </button>
+          <button
+            onClick={() => importRef.current?.click()}
+            title="Importar ataques"
+            className="rounded-full border border-red-400/50 dark:border-red-800/40 px-2.5 py-0.5 text-xs font-semibold text-red-400/70 transition hover:text-red-400 hover:border-red-400"
+          >
+            ↑ Importar
+          </button>
+          <input ref={importRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
+          <button
+            onClick={() => setShowModal(true)}
+            className="rounded-full border border-red-400/70 dark:border-red-800/50 px-3 py-0.5 text-xs font-semibold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/30"
+          >
+            + Adicionar
+          </button>
+        </div>
       </div>
 
       {/* Filters */}

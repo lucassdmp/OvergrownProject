@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import Modal from '../../../../components/ui/Modal'
 import type { InventoryItem, ItemEffect, ItemType, AttributeName } from '../../../../types/game'
 import { ATTRIBUTE_LABELS } from '../../../../types/game'
@@ -51,16 +51,20 @@ const PRESETS: { label: string; type: ItemType; effects: ItemEffect[]; descripti
 
 interface Props {
   onClose: () => void
+  existing?: InventoryItem
 }
 
-export default function AddItemModal({ onClose }: Props) {
+export default function AddItemModal({ onClose, existing }: Props) {
   const addItem = useCharacterStore((s) => s.addItem)
+  const updateItem = useCharacterStore((s) => s.updateItem)
 
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [quantity, setQuantity] = useState(1)
-  const [type, setType] = useState<ItemType>('misc')
-  const [effects, setEffects] = useState<ItemEffect[]>([])
+  const [name, setName] = useState(existing?.name ?? '')
+  const [description, setDescription] = useState(existing?.description ?? '')
+  const [quantity, setQuantity] = useState(existing?.quantity ?? 1)
+  const [type, setType] = useState<ItemType>(existing?.type ?? 'misc')
+  const [effects, setEffects] = useState<ItemEffect[]>(existing?.effects ?? [])
+  const [threat, setThreat] = useState(existing?.threat ?? '')
+  const [weight, setWeight] = useState<number>(existing?.weight ?? 0)
 
   function applyPreset(preset: (typeof PRESETS)[0]) {
     setName(preset.label)
@@ -83,15 +87,20 @@ export default function AddItemModal({ onClose }: Props) {
 
   function handleSave() {
     if (!name.trim()) return
-    const item: InventoryItem = {
-      id: crypto.randomUUID(),
+    const base = {
       name: name.trim(),
       description: description.trim(),
       quantity,
       type,
       effects,
+      weight: weight || undefined,
+      threat: type === 'weapon' && threat.trim() ? threat.trim() : undefined,
     }
-    addItem(item)
+    if (existing) {
+      updateItem({ ...existing, ...base })
+    } else {
+      addItem({ id: crypto.randomUUID(), equipped: false, ...base })
+    }
     onClose()
   }
 
@@ -99,22 +108,24 @@ export default function AddItemModal({ onClose }: Props) {
     'w-full rounded bg-gray-800 border border-gray-700 px-2 py-1.5 text-sm text-white focus:border-amber-600 focus:outline-none'
 
   return (
-    <Modal title="Adicionar Item" onClose={onClose} size="lg">
-      {/* Presets */}
-      <div className="mb-4">
-        <p className="mb-2 text-xs text-gray-500">Presets rápidos</p>
-        <div className="flex flex-wrap gap-2">
-          {PRESETS.map((p) => (
-            <button
-              key={p.label}
-              onClick={() => applyPreset(p)}
-              className="rounded-full border border-gray-700 bg-gray-800 px-3 py-0.5 text-xs text-gray-300 transition hover:border-amber-600 hover:text-amber-400"
-            >
-              {p.label}
-            </button>
-          ))}
+    <Modal title={existing ? 'Editar Item' : 'Adicionar Item'} onClose={onClose} size="lg">
+      {/* Presets – only show when creating */}
+      {!existing && (
+        <div className="mb-4">
+          <p className="mb-2 text-xs text-gray-500">Presets rápidos</p>
+          <div className="flex flex-wrap gap-2">
+            {PRESETS.map((p) => (
+              <button
+                key={p.label}
+                onClick={() => applyPreset(p)}
+                className="rounded-full border border-gray-700 bg-gray-800 px-3 py-0.5 text-xs text-gray-300 transition hover:border-amber-600 hover:text-amber-400"
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-col gap-3">
         <div>
@@ -149,6 +160,32 @@ export default function AddItemModal({ onClose }: Props) {
           </div>
         </div>
 
+        {/* Peso + Ameaça na mesma linha */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-xs text-gray-400">Peso (carga)</label>
+            <input
+              type="number"
+              min={0}
+              step={0.5}
+              value={weight}
+              onChange={(e) => setWeight(Math.max(0, Number(e.target.value)))}
+              className={inputClass}
+            />
+          </div>
+          {type === 'weapon' && (
+            <div>
+              <label className="mb-1 block text-xs text-gray-400">⚡ Ameaça (crítico)</label>
+              <input
+                value={threat}
+                onChange={(e) => setThreat(e.target.value)}
+                placeholder="ex: 19-20"
+                className={inputClass}
+              />
+            </div>
+          )}
+        </div>
+
         <div>
           <label className="mb-1 block text-xs text-gray-400">Descrição</label>
           <textarea
@@ -159,7 +196,7 @@ export default function AddItemModal({ onClose }: Props) {
           />
         </div>
 
-        {/* Effects */}
+        {/* Efeitos */}
         <div>
           <div className="mb-2 flex items-center justify-between">
             <label className="text-xs text-gray-400">Efeitos</label>
@@ -188,10 +225,10 @@ export default function AddItemModal({ onClose }: Props) {
                 >
                   <option value="heal">Curar Vida</option>
                   <option value="restoreIep">Restaurar IEP</option>
-                  <option value="statBonus">★ Bônus de Stat (passivo)</option>
-                  <option value="attributeBonus">⬆ Bônus de Atributo (passivo)</option>
-                  <option value="skillBonus">⬡ Bônus de Perícia (passivo)</option>
-                  <option value="skillUnlock">⬡ Desbloquear Perícia (passivo)</option>
+                  <option value="statBonus">Bônus de Stat (passivo)</option>
+                  <option value="attributeBonus">Bônus de Atributo (passivo)</option>
+                  <option value="skillBonus">Bônus de Perícia (passivo)</option>
+                  <option value="skillUnlock">Desbloquear Perícia (passivo)</option>
                   <option value="custom">Personalizado</option>
                 </select>
 
@@ -280,6 +317,15 @@ export default function AddItemModal({ onClose }: Props) {
                   </select>
                 )}
 
+                {ef.type === 'custom' && (
+                  <input
+                    value={ef.description ?? ''}
+                    onChange={(e) => updateEffect(i, { description: e.target.value })}
+                    placeholder="Descrição do efeito"
+                    className="flex-1 rounded bg-gray-700 border border-gray-600 px-1.5 py-1 text-xs text-white focus:outline-none"
+                  />
+                )}
+
                 <button
                   onClick={() => removeEffect(i)}
                   className="ml-auto text-gray-600 transition hover:text-red-400"
@@ -304,7 +350,7 @@ export default function AddItemModal({ onClose }: Props) {
           disabled={!name.trim()}
           className="rounded-lg bg-amber-800 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:opacity-40"
         >
-          Adicionar
+          {existing ? 'Salvar' : 'Adicionar'}
         </button>
       </div>
     </Modal>

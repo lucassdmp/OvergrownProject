@@ -87,10 +87,15 @@ interface CharacterState {
 
   addItem: (item: InventoryItem) => void
   removeItem: (id: string) => void
+  updateItem: (item: InventoryItem) => void
   updateItemQuantity: (id: string, delta: number) => void
   toggleEquipped: (id: string) => void
+  toggleBroken: (id: string) => void
   useItem: (id: string) => void
   useItemWithValues: (id: string, values: { vida?: number; iep?: number }) => void
+
+  importSpells: (spells: CustomSpell[]) => void
+  importAttacks: (attacks: CharacterAttack[]) => void
 
   setSkillMastery: (skillId: string, mastery: MasteryLevel) => void
   setOrigin: (originId: string) => void
@@ -231,6 +236,14 @@ export const useCharacterStore = create<CharacterState>()(
             },
           }), false, 'removeItem'),
 
+        updateItem: (item) =>
+          set((s) => ({
+            character: {
+              ...s.character,
+              inventory: (s.character.inventory ?? []).map((it) => (it.id === item.id ? item : it)),
+            },
+          }), false, 'updateItem'),
+
         updateItemQuantity: (id, delta) =>
           set((s) => ({
             character: {
@@ -250,6 +263,16 @@ export const useCharacterStore = create<CharacterState>()(
               ),
             },
           }), false, 'toggleEquipped'),
+
+        toggleBroken: (id) =>
+          set((s) => ({
+            character: {
+              ...s.character,
+              inventory: (s.character.inventory ?? []).map((it) =>
+                it.id === id ? { ...it, broken: !it.broken } : it,
+              ),
+            },
+          }), false, 'toggleBroken'),
 
         useItem: (id) => {
           const { character, gameConfig } = get()
@@ -295,6 +318,28 @@ export const useCharacterStore = create<CharacterState>()(
             },
           }), false, 'useItemWithValues')
         },
+
+        importSpells: (spells) =>
+          set((s) => ({
+            character: {
+              ...s.character,
+              customSpells: [
+                ...(s.character.customSpells ?? []),
+                ...spells.map((sp) => ({ ...sp, id: crypto.randomUUID() })),
+              ],
+            },
+          }), false, 'importSpells'),
+
+        importAttacks: (attacks) =>
+          set((s) => ({
+            character: {
+              ...s.character,
+              characterAttacks: [
+                ...(s.character.characterAttacks ?? []),
+                ...attacks.map((a) => ({ ...a, id: crypto.randomUUID() })),
+              ],
+            },
+          }), false, 'importAttacks'),
 
         setSkillMastery: (skillId, mastery) =>
           set((s) => ({
