@@ -187,11 +187,24 @@ function ItemCard({ item }: { item: InventoryItem }) {
 }
 
 export default function Inventory() {
-  const inventory = useCharacterStore((s) => s.character.inventory)
-  const might = useCharacterStore((s) => s.character.attributes.might)
+  const character = useCharacterStore((s) => s.character)
+  const inventory = character.inventory
   const [showModal, setShowModal] = useState(false)
 
-  const carryCapacity = 10 + might
+  // Effective Might = base + attributeBonus('might') from active non-broken items.
+  // Calculated once here so it is never double-counted.
+  const baseMight = character.attributes.might
+  const mightBonus = (inventory ?? [])
+    .filter((it) =>
+      it.type === 'weapon' || it.type === 'armor'
+        ? it.equipped === true && !it.broken
+        : it.quantity > 0,
+    )
+    .flatMap((it) => it.effects)
+    .filter((ef) => ef.type === 'attributeBonus' && ef.attribute === 'might')
+    .reduce((sum, ef) => sum + (ef.value ?? 0), 0)
+  const effectiveMight = baseMight + mightBonus
+  const carryCapacity = 10 + effectiveMight
   const totalWeight = inventory.reduce((sum, item) => sum + (item.weight ?? 0) * item.quantity, 0)
   const isOverencumbered = totalWeight > carryCapacity
   const hasWeight = inventory.some((it) => (it.weight ?? 0) > 0)
