@@ -13,7 +13,7 @@ import { calculateDerivedStats, calculateEffectiveDerivedStats, defaultGameConfi
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 export const BASE_ATTRIBUTE_POINTS = 5
-export const POINTS_PER_DIVINITY = 5
+export const POINTS_PER_DIVINITY = 3
 
 export function totalAttributePoints(divinity: number) {
   return BASE_ATTRIBUTE_POINTS + divinity * POINTS_PER_DIVINITY
