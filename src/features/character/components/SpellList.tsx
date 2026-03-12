@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
 import { ELEMENTS_MAP } from '../../../data/elements'
 import { MAGIC_TYPES_MAP } from '../../../data/magicTypes'
 import type { CustomSpell, SpellLevel } from '../../../types/game'
 import AddSpellModal from './modals/AddSpellModal'
+import ImportContentModal from './modals/ImportContentModal'
 
 const LEVEL_LABEL: Record<SpellLevel, string> = {
   0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', divino: 'Div',
@@ -311,7 +312,7 @@ export default function SpellList() {
   const spells = useCharacterStore((s) => s.character.customSpells)
   const importSpells = useCharacterStore((s) => s.importSpells)
   const [showModal, setShowModal] = useState(false)
-  const importRef = useRef<HTMLInputElement>(null)
+  const [showImport, setShowImport] = useState(false)
 
   function handleExport() {
     const json = JSON.stringify(spells, null, 2)
@@ -324,33 +325,25 @@ export default function SpellList() {
     URL.revokeObjectURL(url)
   }
 
-  function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = (ev) => {
-      try {
-        const raw = ev.target?.result as string
-        let list: CustomSpell[]
+  function handleImport(raw: string) {
+    try {
+      let list: CustomSpell[]
 
-        if (raw.includes('\\spellCard')) {
-          list = parseOverleafSpellCards(raw)
-        } else {
-          const data = JSON.parse(raw)
-          list = Array.isArray(data) ? data : [data]
-        }
-
-        if (list.length === 0) {
-          throw new Error('Nenhuma magia encontrada.')
-        }
-
-        importSpells(list)
-      } catch {
-        alert('Arquivo inválido. Use JSON ou a sintaxe \\spellCard do Overleaf.')
+      if (raw.includes('\\spellCard')) {
+        list = parseOverleafSpellCards(raw)
+      } else {
+        const data = JSON.parse(raw)
+        list = Array.isArray(data) ? data : [data]
       }
+
+      if (list.length === 0) {
+        throw new Error('Nenhuma magia encontrada.')
+      }
+
+      importSpells(list)
+    } catch {
+      alert('Conteúdo inválido. Use JSON ou a sintaxe \\spellCard do Overleaf.')
     }
-    reader.readAsText(file)
-    e.target.value = ''
   }
 
   return (
@@ -369,13 +362,12 @@ export default function SpellList() {
             ↓ Exportar
           </button>
           <button
-            onClick={() => importRef.current?.click()}
+            onClick={() => setShowImport(true)}
             title="Importar mágias de JSON ou Overleaf"
             className="rounded-full border border-amber-400/50 dark:border-amber-800/40 px-2.5 py-0.5 text-xs font-semibold text-amber-600/70 dark:text-amber-500/70 transition hover:text-amber-600 hover:border-amber-400"
           >
             ↑ Importar
           </button>
-          <input ref={importRef} type="file" accept=".json,.tex,.txt" className="hidden" onChange={handleImport} />
           <button
             onClick={() => setShowModal(true)}
             className="rounded-full border border-amber-400/70 dark:border-amber-800/50 px-3 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-500 transition hover:bg-amber-100 dark:hover:bg-amber-900/30"
@@ -398,6 +390,14 @@ export default function SpellList() {
       )}
 
       {showModal && <AddSpellModal onClose={() => setShowModal(false)} />}
+      {showImport && (
+        <ImportContentModal
+          title="Importar Magias"
+          onClose={() => setShowImport(false)}
+          onImport={handleImport}
+          acceptedFormats=".json,.tex,.txt"
+        />
+      )}
     </div>
   )
 }

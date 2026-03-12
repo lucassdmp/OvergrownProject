@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
 import type { CharacterAttack, CombatCategory } from '../../../types/game'
 import AddAttackModal from './modals/AddAttackModal'
+import ImportContentModal from './modals/ImportContentModal'
 
 const CATEGORY_COLORS: Record<CombatCategory, string> = {
   melee: 'text-red-400 border-red-800/50 bg-red-900/10',
@@ -81,8 +82,8 @@ export default function AttackList() {
   const attacks = useCharacterStore((s) => s.character.characterAttacks)
   const importAttacks = useCharacterStore((s) => s.importAttacks)
   const [showModal, setShowModal] = useState(false)
+  const [showImport, setShowImport] = useState(false)
   const [filter, setFilter] = useState<CombatCategory | 'all'>('all')
-  const importRef = useRef<HTMLInputElement>(null)
 
   const visible = filter === 'all' ? attacks : attacks.filter((a) => a.category === filter)
 
@@ -97,21 +98,15 @@ export default function AttackList() {
     URL.revokeObjectURL(url)
   }
 
-  function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = (ev) => {
-      try {
-        const data = JSON.parse(ev.target?.result as string)
-        const list: CharacterAttack[] = Array.isArray(data) ? data : [data]
-        importAttacks(list)
-      } catch {
-        alert('Arquivo JSON inválido.')
-      }
+  function handleImport(raw: string) {
+    try {
+      const data = JSON.parse(raw)
+      const list: CharacterAttack[] = Array.isArray(data) ? data : [data]
+      if (list.length === 0) throw new Error('Nenhum ataque encontrado.')
+      importAttacks(list)
+    } catch {
+      alert('Conteúdo JSON inválido.')
     }
-    reader.readAsText(file)
-    e.target.value = ''
   }
 
   return (
@@ -130,13 +125,12 @@ export default function AttackList() {
             ↓ Exportar
           </button>
           <button
-            onClick={() => importRef.current?.click()}
+            onClick={() => setShowImport(true)}
             title="Importar ataques"
             className="rounded-full border border-red-400/50 dark:border-red-800/40 px-2.5 py-0.5 text-xs font-semibold text-red-400/70 transition hover:text-red-400 hover:border-red-400"
           >
             ↑ Importar
           </button>
-          <input ref={importRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
           <button
             onClick={() => setShowModal(true)}
             className="rounded-full border border-red-400/70 dark:border-red-800/50 px-3 py-0.5 text-xs font-semibold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/30"
@@ -179,6 +173,14 @@ export default function AttackList() {
       )}
 
       {showModal && <AddAttackModal onClose={() => setShowModal(false)} />}
+      {showImport && (
+        <ImportContentModal
+          title="Importar Ataques"
+          onClose={() => setShowImport(false)}
+          onImport={handleImport}
+          acceptedFormats=".json"
+        />
+      )}
     </div>
   )
 }
