@@ -196,7 +196,15 @@ export default function AttributePentagon() {
               type="number"
               min={1}
               value={divinityRaw}
-              onChange={(e) => setDivinityRaw(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value
+                setDivinityRaw(val)
+                const n = Number(val)
+                // Update store immediately if valid, so arrows work in real-time
+                if (!isNaN(n) && n >= 1) {
+                  setDivinity(Math.floor(n))
+                }
+              }}
               onBlur={() => {
                 const n = Number(divinityRaw)
                 const clamped = isNaN(n) || n < 1 ? 1 : Math.floor(n)
