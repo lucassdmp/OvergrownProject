@@ -30,11 +30,11 @@ export function remainingAttributePoints(attrs: Attributes, divinity: number) {
 // ── Default character ─────────────────────────────────────────────────────────
 
 const DEFAULT_ATTRIBUTES: Attributes = {
-  might: 1,
-  grace: 1,
-  wisdom: 1,
-  sense: 1,
-  fortitude: 1,
+  might: 0,
+  grace: 0,
+  wisdom: 0,
+  sense: 0,
+  fortitude: 0,
 }
 
 const DEFAULT_CHARACTER: Character = {
