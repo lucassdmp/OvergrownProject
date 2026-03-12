@@ -53,17 +53,9 @@ export default function ImportContentModal({ title, onClose, onImport, acceptedF
   }
 
   return (
-    <Modal onClose={onClose}>
-      <div className="w-full max-w-lg rounded-xl bg-white dark:bg-gray-900 p-6 shadow-2xl">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
-            ✕
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          {/* Drop Zone */}
+    <Modal title={title} onClose={onClose}>
+      <div className="space-y-4">
+        {/* Drop Zone */}
           <div
             className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-6 transition hover:bg-gray-100 dark:hover:bg-gray-800"
             onDragOver={(e) => { e.preventDefault(); e.stopPropagation() }}
@@ -119,7 +111,6 @@ export default function ImportContentModal({ title, onClose, onImport, acceptedF
             </button>
           </div>
         </div>
-      </div>
     </Modal>
   )
 }
