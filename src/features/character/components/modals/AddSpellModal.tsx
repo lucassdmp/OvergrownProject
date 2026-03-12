@@ -25,7 +25,6 @@ export default function AddSpellModal({ onClose, existing }: Props) {
   const updateSpell = useCharacterStore((s) => s.updateSpell)
 
   const [name, setName] = useState(existing?.name ?? '')
-  const [category, setCategory] = useState(existing?.category ?? '')
   const [description, setDescription] = useState(existing?.description ?? '')
   const [notes, setNotes] = useState(existing?.notes ?? '')
   const [elements, setElements] = useState<ElementId[]>(existing?.elements ?? [])
@@ -78,7 +77,7 @@ export default function AddSpellModal({ onClose, existing }: Props) {
     const spell: CustomSpell = {
       id: existing?.id ?? crypto.randomUUID(),
       name: name.trim(),
-      category: category.trim(),
+      category: existing?.category?.trim() ?? '',
       description: description.trim(),
       notes: notes.trim() || undefined,
       elements,
@@ -105,16 +104,7 @@ export default function AddSpellModal({ onClose, existing }: Props) {
             className="input-field"
           />
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-gray-400">Categoria</label>
-          <input
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            placeholder="ex: Alcance, Ataque, Cura"
-            className="input-field"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
+        <div className="col-span-2 flex flex-col gap-1">
           <label className="text-xs text-gray-400">Notas (escala)</label>
           <input
             value={notes}

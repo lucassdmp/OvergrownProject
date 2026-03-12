@@ -50,6 +50,7 @@ const DEFAULT_CHARACTER: Character = {
   characterAttacks: [],
   inventory: [],
   skills: {},
+  notes: '',
   currentResources: {
     vida: calculateDerivedStats(DEFAULT_ATTRIBUTES).vida,
     iep: calculateDerivedStats(DEFAULT_ATTRIBUTES).iep,
@@ -73,6 +74,7 @@ interface CharacterState {
   setCurrentVida: (value: number) => void
   setCurrentIep: (value: number) => void
   setCurrentPc: (value: number) => void
+  setNotes: (notes: string) => void
   restoreAllResources: () => void
 
   acquireTalent: (talentId: string) => void
@@ -159,6 +161,11 @@ export const useCharacterStore = create<CharacterState>()(
           set((s) => ({
             character: { ...s.character, currentResources: { ...s.character.currentResources, pc: value } },
           }), false, 'setCurrentPc'),
+
+        setNotes: (notes) =>
+          set((s) => ({
+            character: { ...s.character, notes },
+          }), false, 'setNotes'),
 
         restoreAllResources: () =>
           set((s) => {
@@ -383,6 +390,7 @@ export const useCharacterStore = create<CharacterState>()(
               acquiredTalents: ps.character?.acquiredTalents ?? [],
               skills: ps.character?.skills ?? {},
               origin: ps.character?.origin,
+              notes: ps.character?.notes ?? '',
               currentResources: ps.character?.currentResources ?? current.character.currentResources,
             },
           }

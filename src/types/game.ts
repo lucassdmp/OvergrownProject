@@ -308,4 +308,5 @@ export interface Character {
     iep: number
     pc: number
   }
+  notes?: string
 }

@@ -19,6 +19,160 @@ function exportOne(item: object, filename: string) {
   URL.revokeObjectURL(url)
 }
 
+function slugifyFilename(name: string, fallback: string) {
+  const sanitized = name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+
+  return `${sanitized || fallback}.json`
+}
+
+function extractBraceBlock(source: string, startIndex: number) {
+  if (source[startIndex] !== '{') return null
+
+  let depth = 0
+  let value = ''
+
+  for (let i = startIndex; i < source.length; i += 1) {
+    const char = source[i]
+
+    if (char === '{') {
+      depth += 1
+      if (depth > 1) value += char
+      continue
+    }
+
+    if (char === '}') {
+      depth -= 1
+      if (depth === 0) {
+        return { value, endIndex: i + 1 }
+      }
+      value += char
+      continue
+    }
+
+    value += char
+  }
+
+  return null
+}
+
+function normalizeText(value: string) {
+  return value.replace(/\r/g, '').trim()
+}
+
+function normalizeLookupKey(value: string) {
+  return normalizeText(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+}
+
+function parseOverleafSpellCards(raw: string): CustomSpell[] {
+  const spells: CustomSpell[] = []
+  let cursor = 0
+
+  while (cursor < raw.length) {
+    const start = raw.indexOf('\\spellCard', cursor)
+    if (start === -1) break
+
+    let index = start + '\\spellCard'.length
+    const args: string[] = []
+
+    while (args.length < 8 && index < raw.length) {
+      while (/\s/.test(raw[index] ?? '')) index += 1
+      const block = extractBraceBlock(raw, index)
+      if (!block) throw new Error('Bloco de magia do Overleaf inválido.')
+      args.push(block.value)
+      index = block.endIndex
+    }
+
+    if (args.length < 8) {
+      throw new Error('Quantidade de argumentos insuficiente em \\spellCard.')
+    }
+
+    const [nameRaw, elementsRaw, minLevelRaw, descriptionRaw, levelsRaw, notesRaw, categoryRaw, typesRaw] = args
+
+    const levelMap: Record<string, SpellLevel> = {
+      '0': 0,
+      '1': 1,
+      '2': 2,
+      '3': 3,
+      '4': 4,
+      '5': 5,
+      '6': 6,
+      '7': 7,
+      '8': 8,
+      '9': 9,
+      div: 'divino',
+      divino: 'divino',
+    }
+
+    const elements = [...elementsRaw.matchAll(/\\elementTag\{([^}]+)\}/g)]
+      .map((match) => normalizeText(match[1]))
+      .map((label) => {
+        const normalized = normalizeLookupKey(label)
+        return Object.values(ELEMENTS_MAP).find((el) => {
+          return normalizeLookupKey(el.label) === normalized || normalizeLookupKey(el.id) === normalized
+        })?.id
+      })
+      .filter((id): id is CustomSpell['elements'][number] => Boolean(id))
+
+    const types = [...typesRaw.matchAll(/\\typeTag\{([^}]+)\}/g)]
+      .map((match) => normalizeText(match[1]))
+      .map((label) => {
+        const normalized = normalizeLookupKey(label)
+        return Object.values(MAGIC_TYPES_MAP).find((mt) => {
+          return normalizeLookupKey(mt.label) === normalized || normalizeLookupKey(mt.id) === normalized
+        })?.id
+      })
+      .filter((id): id is CustomSpell['types'][number] => Boolean(id))
+
+    const levels = levelsRaw
+      .split('\\\\')
+      .map((line) => line.replace(/\\hline/g, '').trim())
+      .filter(Boolean)
+      .map((line) => line.split('&').map((cell) => normalizeText(cell)))
+      .filter((cells) => cells.length >= 4)
+      .map((cells) => {
+        const level = levelMap[cells[0].toLowerCase()]
+        if (level == null) return null
+
+        return {
+          level,
+          cost: cells[1],
+          scaling: cells[2],
+          special: cells.slice(3).join(' & ') || null,
+        }
+      })
+      .filter((entry): entry is CustomSpell['levels'][number] => Boolean(entry))
+
+    const minLevel = normalizeText(minLevelRaw)
+    const notes = [
+      minLevel ? `Nível mínimo: ${minLevel}` : '',
+      normalizeText(notesRaw),
+    ].filter(Boolean).join('\n')
+
+    spells.push({
+      id: crypto.randomUUID(),
+      name: normalizeText(nameRaw),
+      description: normalizeText(descriptionRaw),
+      notes: notes || undefined,
+      category: normalizeText(categoryRaw),
+      elements,
+      types,
+      levels,
+      specialDescriptions: {},
+    })
+
+    cursor = index
+  }
+
+  return spells
+}
+
 function SpellCard({ spell }: { spell: CustomSpell }) {
   const removeSpell = useCharacterStore((s) => s.removeSpell)
   const [expanded, setExpanded] = useState(false)
@@ -42,7 +196,7 @@ function SpellCard({ spell }: { spell: CustomSpell }) {
                 {expanded ? '▲' : '▼'}
               </button>
               <button
-                onClick={() => exportOne(spell, `${spell.name}.json`)}
+                onClick={() => exportOne(spell, slugifyFilename(spell.name, 'magia'))}
                 title="Exportar esta magia"
                 className="text-xs text-gray-400 dark:text-gray-500 transition hover:text-amber-400"
               >
@@ -58,33 +212,37 @@ function SpellCard({ spell }: { spell: CustomSpell }) {
           </div>
           {/* Row 2: element + type tags */}
           {(spell.elements.length > 0 || spell.types.length > 0) && (
-            <div className="flex flex-wrap items-center gap-1 mt-1">
-              {spell.elements.map((eid) => {
-                const el = ELEMENTS_MAP[eid]
-                if (!el) return null
-                return (
-                  <span
-                    key={eid}
-                    className="rounded-full px-2 py-0.5 text-[10px] font-bold"
-                    style={{ background: el.color, color: el.textColor }}
-                  >
-                    {el.label}
-                  </span>
-                )
-              })}
-              {spell.types.map((tid) => {
-                const mt = MAGIC_TYPES_MAP[tid]
-                if (!mt) return null
-                return (
-                  <span
-                    key={tid}
-                    className="rounded-full px-2 py-0.5 text-[10px] font-bold"
-                    style={{ background: mt.color, color: mt.textColor }}
-                  >
-                    {mt.label}
-                  </span>
-                )
-              })}
+            <div className="mt-1 flex items-start justify-between gap-3">
+              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+                {spell.elements.map((eid) => {
+                  const el = ELEMENTS_MAP[eid]
+                  if (!el) return null
+                  return (
+                    <span
+                      key={eid}
+                      className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                      style={{ background: el.color, color: el.textColor }}
+                    >
+                      {el.label}
+                    </span>
+                  )
+                })}
+              </div>
+              <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-1">
+                {spell.types.map((tid) => {
+                  const mt = MAGIC_TYPES_MAP[tid]
+                  if (!mt) return null
+                  return (
+                    <span
+                      key={tid}
+                      className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                      style={{ background: mt.color, color: mt.textColor }}
+                    >
+                      {mt.label}
+                    </span>
+                  )
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -172,11 +330,23 @@ export default function SpellList() {
     const reader = new FileReader()
     reader.onload = (ev) => {
       try {
-        const data = JSON.parse(ev.target?.result as string)
-        const list: CustomSpell[] = Array.isArray(data) ? data : [data]
+        const raw = ev.target?.result as string
+        let list: CustomSpell[]
+
+        if (raw.includes('\\spellCard')) {
+          list = parseOverleafSpellCards(raw)
+        } else {
+          const data = JSON.parse(raw)
+          list = Array.isArray(data) ? data : [data]
+        }
+
+        if (list.length === 0) {
+          throw new Error('Nenhuma magia encontrada.')
+        }
+
         importSpells(list)
       } catch {
-        alert('Arquivo JSON inválido.')
+        alert('Arquivo inválido. Use JSON ou a sintaxe \\spellCard do Overleaf.')
       }
     }
     reader.readAsText(file)
@@ -200,12 +370,12 @@ export default function SpellList() {
           </button>
           <button
             onClick={() => importRef.current?.click()}
-            title="Importar mágias"
+            title="Importar mágias de JSON ou Overleaf"
             className="rounded-full border border-amber-400/50 dark:border-amber-800/40 px-2.5 py-0.5 text-xs font-semibold text-amber-600/70 dark:text-amber-500/70 transition hover:text-amber-600 hover:border-amber-400"
           >
             ↑ Importar
           </button>
-          <input ref={importRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
+          <input ref={importRef} type="file" accept=".json,.tex,.txt" className="hidden" onChange={handleImport} />
           <button
             onClick={() => setShowModal(true)}
             className="rounded-full border border-amber-400/70 dark:border-amber-800/50 px-3 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-500 transition hover:bg-amber-100 dark:hover:bg-amber-900/30"
