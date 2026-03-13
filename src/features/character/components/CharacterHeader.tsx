@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
 import { useCharacter } from '../hooks/useCharacter'
-import type { Character } from '../../../types/game'
 import { ALL_ORIGINS } from '../../../data/origins'
 import { ALL_SKILLS } from '../../../data/skills'
 
