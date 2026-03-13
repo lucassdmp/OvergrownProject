@@ -77,8 +77,11 @@ export default function CharacterHeader() {
     const reader = new FileReader()
     reader.onload = (ev) => {
       try {
-        const parsed = JSON.parse(ev.target?.result as string) as Character
-        if (!parsed.name || !parsed.attributes) throw new Error('Formato inválido')
+        const parsed = JSON.parse(ev.target?.result as string)
+        if (!parsed || typeof parsed !== 'object') throw new Error('JSON inválido')
+        // Basic validation of required fields for a character file
+        if (!parsed.name && !parsed.attributes) throw new Error('Formato inválido: nome ou atributos faltando')
+        
         store.loadCharacter(parsed)
         setImportError(null)
       } catch {

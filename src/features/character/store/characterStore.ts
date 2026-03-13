@@ -104,7 +104,7 @@ interface CharacterState {
   setSkillMastery: (skillId: string, mastery: MasteryLevel) => void
   setOrigin: (originId: string) => void
 
-  loadCharacter: (character: Character) => void
+  loadCharacter: (character: Partial<Character>) => void
   resetCharacter: () => void
 }
 
@@ -366,8 +366,21 @@ export const useCharacterStore = create<CharacterState>()(
             character: { ...s.character, origin: originId || undefined },
           }), false, 'setOrigin'),
 
-        loadCharacter: (character) =>
-          set(() => ({ character }), false, 'loadCharacter'),
+        loadCharacter: (loadedCharacter) =>
+          set(() => ({
+            character: {
+              ...DEFAULT_CHARACTER,
+              ...loadedCharacter,
+              // Ensure array/object fields are at least empty if missing in loaded file
+              customSpells: loadedCharacter.customSpells ?? [],
+              characterAttacks: loadedCharacter.characterAttacks ?? [],
+              inventory: loadedCharacter.inventory ?? [],
+              acquiredTalents: loadedCharacter.acquiredTalents ?? [],
+              skills: loadedCharacter.skills ?? {},
+              attributes: { ...DEFAULT_CHARACTER.attributes, ...(loadedCharacter.attributes ?? {}) },
+              currentResources: { ...DEFAULT_CHARACTER.currentResources, ...(loadedCharacter.currentResources ?? {}) },
+            },
+          }), false, 'loadCharacter'),
 
         resetCharacter: () =>
           set(() => ({
