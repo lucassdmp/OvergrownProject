@@ -63,7 +63,7 @@ export default function AddItemModal({ onClose, existing }: Props) {
   const [quantity, setQuantity] = useState(existing?.quantity ?? 1)
   const [type, setType] = useState<ItemType>(existing?.type ?? 'misc')
   const [effects, setEffects] = useState<ItemEffect[]>(existing?.effects ?? [])
-  const [threat, setThreat] = useState(existing?.threat ?? '')
+  // old threat field removed from UI, keeping logic for compatibility below
   const [weight, setWeight] = useState<number>(existing?.weight ?? 0)
 
   // Weapon Details State
@@ -112,6 +112,11 @@ export default function AddItemModal({ onClose, existing }: Props) {
       maxHealth: armorMaxHealth,
     } : undefined
 
+    // Calculate derived threat string for displaybadge
+    const derivedThreat = type === 'weapon'
+      ? `${critRangeMin < 20 ? critRangeMin + '-20' : '20'}/x${critMult}`
+      : undefined
+
     const base = {
       name: name.trim(),
       description: description.trim(),
@@ -119,7 +124,7 @@ export default function AddItemModal({ onClose, existing }: Props) {
       type,
       effects,
       weight: weight || undefined,
-      threat: type === 'weapon' && threat.trim() ? threat.trim() : undefined,
+      threat: derivedThreat,
       weaponDetails,
       armorDetails,
     }

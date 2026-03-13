@@ -164,11 +164,13 @@ function ItemCard({ item }: { item: InventoryItem }) {
                     </span>
                   )}
 
-                  {/* Critical */}
-                  <span className="rounded border border-orange-200 bg-orange-50 px-1.5 py-0.5 text-orange-700 dark:border-orange-900/30 dark:bg-orange-900/10 dark:text-orange-400">
-                    Crit: {item.weaponDetails.critical.rangeMin < 20 ? `${item.weaponDetails.critical.rangeMin}-20` : '20'} / x
-                    {item.weaponDetails.critical.multiplier}
-                  </span>
+                  {/* Critical - Only show if critical details exist */}
+                  {item.weaponDetails.critical && (
+                    <span className="rounded border border-orange-200 bg-orange-50 px-1.5 py-0.5 text-orange-700 dark:border-orange-900/30 dark:bg-orange-900/10 dark:text-orange-400">
+                      Crit: {item.weaponDetails.critical.rangeMin < 20 ? `${item.weaponDetails.critical.rangeMin}-20` : '20'} / x
+                      {item.weaponDetails.critical.multiplier}
+                    </span>
+                  )}
 
                   {/* Scaling */}
                   {item.weaponDetails.scaling.length > 0 && (
