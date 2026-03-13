@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
 import { ALL_SKILLS } from '../../../data/skills'
-import type { InventoryItem, ItemType } from '../../../types/game'
+import { ATTRIBUTE_LABELS, type InventoryItem, type ItemType } from '../../../types/game'
 import AddItemModal from './modals/AddItemModal'
 import UseItemModal from './modals/UseItemModal'
 
@@ -150,9 +150,68 @@ function ItemCard({ item }: { item: InventoryItem }) {
 
         {expanded && (
           <div className="px-3 pb-3 pt-0 border-t border-gray-200 dark:border-gray-700/40 space-y-1.5">
-            {item.description && (
-              <p className="text-xs text-gray-600 dark:text-gray-400 italic">{item.description}</p>
+            {item.description && <p className="text-xs text-gray-600 dark:text-gray-400 italic">{item.description}</p>}
+
+            {/* Weapon Details */}
+            {item.type === 'weapon' && item.weaponDetails && (
+              <div className="rounded bg-gray-50/50 p-2 dark:bg-gray-800/50">
+                <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">Combate</div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {/* Damage */}
+                  {item.weaponDetails.damage.length > 0 && (
+                    <span className="rounded border border-red-200 bg-red-50 px-1.5 py-0.5 text-red-700 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400">
+                      {item.weaponDetails.damage.map((d) => `${d.count}d${d.die}`).join(' + ')}
+                    </span>
+                  )}
+
+                  {/* Critical */}
+                  <span className="rounded border border-orange-200 bg-orange-50 px-1.5 py-0.5 text-orange-700 dark:border-orange-900/30 dark:bg-orange-900/10 dark:text-orange-400">
+                    Crit: {item.weaponDetails.critical.rangeMin < 20 ? `${item.weaponDetails.critical.rangeMin}-20` : '20'} / x
+                    {item.weaponDetails.critical.multiplier}
+                  </span>
+
+                  {/* Scaling */}
+                  {item.weaponDetails.scaling.length > 0 && (
+                    <span className="rounded border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-amber-700 dark:border-amber-900/30 dark:bg-amber-900/10 dark:text-amber-400">
+                      {item.weaponDetails.scaling
+                        .map((s) => `${s.multiplier}×${ATTRIBUTE_LABELS[s.attribute].slice(0, 3)}`)
+                        .join(' + ')}
+                    </span>
+                  )}
+                </div>
+              </div>
             )}
+
+            {/* Armor Details */}
+            {item.type === 'armor' && item.armorDetails && (
+              <div className="rounded bg-gray-50/50 p-2 dark:bg-gray-800/50">
+                <div className="mb-1 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                  <span>Integridade</span>
+                  <span
+                    className={
+                      item.armorDetails.currentHealth === 0 ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'
+                    }
+                  >
+                    {item.armorDetails.currentHealth} / {item.armorDetails.maxHealth}
+                  </span>
+                </div>
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                  <div
+                    className={`h-full transition-all ${
+                      item.armorDetails.currentHealth === 0
+                        ? 'bg-transparent'
+                        : item.armorDetails.currentHealth < item.armorDetails.maxHealth * 0.3
+                          ? 'bg-red-500'
+                          : 'bg-blue-500'
+                    }`}
+                    style={{
+                      width: `${Math.min(100, (item.armorDetails.currentHealth / item.armorDetails.maxHealth) * 100)}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
             {item.effects.length > 0 && (
               <div className="space-y-1">
                 {item.effects.map((ef, i) => (
@@ -160,16 +219,24 @@ function ItemCard({ item }: { item: InventoryItem }) {
                     {ef.type === 'heal' && <span className="text-rose-400">❤ Restaura {ef.value} Vida</span>}
                     {ef.type === 'restoreIep' && <span className="text-sky-400">✦ Restaura {ef.value} IEP</span>}
                     {ef.type === 'statBonus' && (
-                      <span className="text-violet-400">★ +{ef.value} {ef.stat?.toUpperCase()} (passivo)</span>
+                      <span className="text-violet-400">
+                        ★ +{ef.value} {ef.stat?.toUpperCase()} (passivo)
+                      </span>
                     )}
                     {ef.type === 'attributeBonus' && (
-                      <span className="text-amber-400">⬆ +{ef.value} em {ef.attribute} (passivo)</span>
+                      <span className="text-amber-400">
+                        ⬆ +{ef.value} em {ef.attribute} (passivo)
+                      </span>
                     )}
                     {ef.type === 'skillBonus' && (
-                      <span className="text-sky-400">⬡ +{ef.value} em {ALL_SKILLS.find((s) => s.id === ef.skillId)?.name ?? ef.skillId} (passivo)</span>
+                      <span className="text-sky-400">
+                        ⬡ +{ef.value} em {ALL_SKILLS.find((s) => s.id === ef.skillId)?.name ?? ef.skillId} (passivo)
+                      </span>
                     )}
                     {ef.type === 'skillUnlock' && (
-                      <span className="text-sky-400">⬡ Desbloqueia {ALL_SKILLS.find((s) => s.id === ef.skillId)?.name ?? ef.skillId} (passivo)</span>
+                      <span className="text-sky-400">
+                        ⬡ Desbloqueia {ALL_SKILLS.find((s) => s.id === ef.skillId)?.name ?? ef.skillId} (passivo)
+                      </span>
                     )}
                     {ef.type === 'custom' && <span className="text-gray-400">{ef.description}</span>}
                   </p>
@@ -177,7 +244,7 @@ function ItemCard({ item }: { item: InventoryItem }) {
               </div>
             )}
             {isBroken && (
-              <p className="text-xs text-gray-500 italic">⚠ Item quebrado — bônus passivos desativados.</p>
+              <p className="text-xs italic text-gray-500">⚠ Item quebrado — bônus passivos desativados.</p>
             )}
           </div>
         )}

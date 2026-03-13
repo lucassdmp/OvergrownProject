@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react'
 import Modal from '../../../../components/ui/Modal'
-import type { InventoryItem, ItemEffect, ItemType, AttributeName } from '../../../../types/game'
+import type { InventoryItem, ItemEffect, ItemType, AttributeName, WeaponDetails, ArmorDetails, WeaponDamageRoll, WeaponAttributeScaling } from '../../../../types/game'
 import { ATTRIBUTE_LABELS } from '../../../../types/game'
 import type { DerivedStats } from '../../../../types/game'
 import { useCharacterStore } from '../../store/characterStore'
@@ -66,6 +66,16 @@ export default function AddItemModal({ onClose, existing }: Props) {
   const [threat, setThreat] = useState(existing?.threat ?? '')
   const [weight, setWeight] = useState<number>(existing?.weight ?? 0)
 
+  // Weapon Details State
+  const [weaponDamage, setWeaponDamage] = useState<WeaponDamageRoll[]>(existing?.weaponDetails?.damage ?? [])
+  const [weaponScaling, setWeaponScaling] = useState<WeaponAttributeScaling[]>(existing?.weaponDetails?.scaling ?? [])
+  const [critMult, setCritMult] = useState<number>(existing?.weaponDetails?.critical?.multiplier ?? 2)
+  const [critRangeMin, setCritRangeMin] = useState<number>(existing?.weaponDetails?.critical?.rangeMin ?? 20)
+
+  // Armor Details State
+  const [armorHealth, setArmorHealth] = useState<number>(existing?.armorDetails?.currentHealth ?? 0)
+  const [armorMaxHealth, setArmorMaxHealth] = useState<number>(existing?.armorDetails?.maxHealth ?? 0)
+
   function applyPreset(preset: (typeof PRESETS)[0]) {
     setName(preset.label)
     setDescription(preset.description)
@@ -87,6 +97,21 @@ export default function AddItemModal({ onClose, existing }: Props) {
 
   function handleSave() {
     if (!name.trim()) return
+
+    const weaponDetails: WeaponDetails | undefined = type === 'weapon' ? {
+      damage: weaponDamage,
+      scaling: weaponScaling,
+      critical: {
+        multiplier: critMult,
+        rangeMin: critRangeMin,
+      },
+    } : undefined
+
+    const armorDetails: ArmorDetails | undefined = type === 'armor' ? {
+      currentHealth: armorHealth,
+      maxHealth: armorMaxHealth,
+    } : undefined
+
     const base = {
       name: name.trim(),
       description: description.trim(),
@@ -95,6 +120,8 @@ export default function AddItemModal({ onClose, existing }: Props) {
       effects,
       weight: weight || undefined,
       threat: type === 'weapon' && threat.trim() ? threat.trim() : undefined,
+      weaponDetails,
+      armorDetails,
     }
     if (existing) {
       updateItem({ ...existing, ...base })
@@ -160,31 +187,182 @@ export default function AddItemModal({ onClose, existing }: Props) {
           </div>
         </div>
 
-        {/* Peso + Ameaça na mesma linha */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="mb-1 block text-xs text-gray-400">Peso (carga)</label>
-            <input
-              type="number"
-              min={0}
-              step={0.5}
-              value={weight}
-              onChange={(e) => setWeight(Math.max(0, Number(e.target.value)))}
-              className={inputClass}
-            />
-          </div>
-          {type === 'weapon' && (
-            <div>
-              <label className="mb-1 block text-xs text-gray-400">⚡ Ameaça (crítico)</label>
-              <input
-                value={threat}
-                onChange={(e) => setThreat(e.target.value)}
-                placeholder="ex: 19-20"
-                className={inputClass}
-              />
-            </div>
-          )}
+        <div>
+          <label className="mb-1 block text-xs text-gray-400">Peso (carga)</label>
+          <input
+            type="number"
+            min="0"
+            step="0.5"
+            value={weight}
+            onChange={(e) => setWeight(Math.max(0, parseFloat(e.target.value)))}
+            className={inputClass}
+          />
         </div>
+
+
+        {/* Weapon Details Editor */}
+        {type === 'weapon' && (
+          <div className="space-y-3 rounded-lg border border-red-900/40 bg-red-950/20 p-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-red-500">Detalhes de Combate</h3>
+
+            {/* Damage Rolls */}
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <label className="text-xs text-gray-400">Dados de Dano</label>
+                <button
+                  onClick={() => setWeaponDamage([...weaponDamage, { count: 1, die: 6 }])}
+                  className="text-xs text-amber-500 hover:text-amber-400"
+                >
+                  + Dado
+                </button>
+              </div>
+
+              {weaponDamage.map((dmg, idx) => (
+                <div key={idx} className="mb-2 flex items-center gap-2">
+                  <input
+                    type="number"
+                    min="1"
+                    className="w-12 rounded bg-gray-700 px-2 py-1 text-xs text-white"
+                    value={dmg.count}
+                    onChange={(e) => {
+                      const newDmg = [...weaponDamage]
+                      newDmg[idx].count = Math.max(1, parseInt(e.target.value))
+                      setWeaponDamage(newDmg)
+                    }}
+                  />
+                  <span className="text-xs text-gray-400">d</span>
+                  <select
+                    className="w-16 rounded bg-gray-700 px-2 py-1 text-xs text-white"
+                    value={dmg.die}
+                    onChange={(e) => {
+                      const newDmg = [...weaponDamage]
+                      newDmg[idx].die = parseInt(e.target.value)
+                      setWeaponDamage(newDmg)
+                    }}
+                  >
+                    {[4, 6, 8, 10, 12, 20, 100].map((d) => (
+                      <option key={d} value={d}>
+                        d{d}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => setWeaponDamage(weaponDamage.filter((_, i) => i !== idx))}
+                    className="ml-auto text-red-500 hover:text-red-400"
+                  >
+                    🗑
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Scaling */}
+            <div className="mt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <label className="text-xs text-gray-400">Escala (V * Atributo)</label>
+                <button
+                  onClick={() => setWeaponScaling([...weaponScaling, { attribute: 'might', multiplier: 1 }])}
+                  className="text-xs text-amber-500 hover:text-amber-400"
+                >
+                  + Atributo
+                </button>
+              </div>
+
+              {weaponScaling.map((scale, idx) => (
+                <div key={idx} className="mb-2 flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.1"
+                    className="w-16 rounded bg-gray-700 px-2 py-1 text-xs text-white"
+                    value={scale.multiplier}
+                    onChange={(e) => {
+                      const newScale = [...weaponScaling]
+                      newScale[idx].multiplier = parseFloat(e.target.value)
+                      setWeaponScaling(newScale)
+                    }}
+                  />
+                  <span className="text-xs text-gray-400">×</span>
+                  <select
+                    className="flex-1 rounded bg-gray-700 px-2 py-1 text-xs text-white"
+                    value={scale.attribute}
+                    onChange={(e) => {
+                      const newScale = [...weaponScaling]
+                      newScale[idx].attribute = e.target.value as AttributeName
+                      setWeaponScaling(newScale)
+                    }}
+                  >
+                    {Object.entries(ATTRIBUTE_LABELS).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => setWeaponScaling(weaponScaling.filter((_, i) => i !== idx))}
+                    className="ml-auto text-red-500 hover:text-red-400"
+                  >
+                    🗑
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Critical */}
+            <div className="mt-4 grid grid-cols-2 gap-4">
+               <div>
+                  <label className="mb-1 block text-xs text-gray-400">Margem de Ameaça (≥ X)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={critRangeMin}
+                    onChange={(e) => setCritRangeMin(Math.max(1, Math.min(20, parseInt(e.target.value))))}
+                    className={inputClass}
+                  />
+               </div>
+               <div>
+                  <label className="mb-1 block text-xs text-gray-400">Multiplicador Crítico (× X)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="0.5"
+                    value={critMult}
+                    onChange={(e) => setCritMult(Math.max(1, parseFloat(e.target.value)))}
+                    className={inputClass}
+                  />
+               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Armor Health Editor */}
+        {type === 'armor' && (
+          <div className="space-y-3 rounded-lg border border-blue-900/40 bg-blue-950/20 p-3">
+             <h3 className="text-xs font-bold uppercase tracking-wider text-blue-500">Integridade da Armadura</h3>
+             <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="mb-1 block text-xs text-gray-400">Vida Atual</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={armorHealth}
+                    onChange={(e) => setArmorHealth(Math.max(0, parseInt(e.target.value)))}
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-gray-400">Vida Máxima</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={armorMaxHealth}
+                    onChange={(e) => setArmorMaxHealth(Math.max(1, parseInt(e.target.value)))}
+                    className={inputClass}
+                  />
+                </div>
+             </div>
+          </div>
+        )}
 
         <div>
           <label className="mb-1 block text-xs text-gray-400">Descrição</label>

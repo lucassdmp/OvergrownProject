@@ -51,6 +51,7 @@ const DEFAULT_CHARACTER: Character = {
   inventory: [],
   skills: {},
   notes: '',
+  money: 0,
   currentResources: {
     vida: calculateDerivedStats(DEFAULT_ATTRIBUTES).vida,
     iep: calculateDerivedStats(DEFAULT_ATTRIBUTES).iep,
@@ -71,6 +72,7 @@ interface CharacterState {
   setDivinity: (divinity: number) => void
   setAttribute: (attr: keyof Attributes, value: number) => void
 
+  setMoney: (amount: number) => void
   setCurrentVida: (value: number) => void
   setCurrentIep: (value: number) => void
   setCurrentPc: (value: number) => void
@@ -161,6 +163,9 @@ export const useCharacterStore = create<CharacterState>()(
           set((s) => ({
             character: { ...s.character, currentResources: { ...s.character.currentResources, pc: value } },
           }), false, 'setCurrentPc'),
+
+        setMoney: (amount) =>
+          set((s) => ({ character: { ...s.character, money: amount } }), false, 'setMoney'),
 
         setNotes: (notes) =>
           set((s) => ({

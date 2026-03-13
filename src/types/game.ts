@@ -262,6 +262,30 @@ export interface ItemEffect {
   description?: string
 }
 
+export interface WeaponDamageRoll {
+  count: number
+  die: number
+}
+
+export interface WeaponAttributeScaling {
+  attribute: AttributeName
+  multiplier: number
+}
+
+export interface WeaponDetails {
+  damage: WeaponDamageRoll[]
+  scaling: WeaponAttributeScaling[]
+  critical?: {
+    multiplier: number
+    rangeMin: number
+  }
+}
+
+export interface ArmorDetails {
+  currentHealth: number
+  maxHealth: number
+}
+
 export interface InventoryItem {
   id: string
   name: string
@@ -273,6 +297,10 @@ export interface InventoryItem {
   equipped?: boolean
   /** Weapon only: critical threat range, e.g. "19-20" or "18-20" */
   threat?: string
+  /** Weapon only: detailed damage stats */
+  weaponDetails?: WeaponDetails
+  /** Armor only: health stats */
+  armorDetails?: ArmorDetails
   /** Weapon/armor only: if true, the item is broken and provides no passive bonuses */
   broken?: boolean
   /** Item weight in load units (carga); optional for backward compatibility */
@@ -308,5 +336,6 @@ export interface Character {
     iep: number
     pc: number
   }
+  money: number
   notes?: string
 }

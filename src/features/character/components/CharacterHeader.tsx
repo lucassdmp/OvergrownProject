@@ -180,6 +180,24 @@ export default function CharacterHeader() {
           onCurrentChange={store.setCurrentPc}
         />
 
+        {/* Divider */}
+        <div className="hidden h-10 w-px bg-gray-200 dark:bg-gray-700 sm:block" />
+
+        {/* Money */}
+        <div className="flex flex-col items-center gap-0.5 min-w-0">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-amber-500 dark:text-amber-400">Ouro</span>
+          <div className="relative flex items-center">
+            <span className="absolute left-2 text-sm">🪙</span>
+            <input
+              type="number"
+              min={0}
+              value={character.money || 0}
+              onChange={(e) => store.setMoney(Math.max(0, Number(e.target.value)))}
+              className="w-20 rounded-full bg-amber-50 dark:bg-amber-950/30 pl-7 pr-2 py-0.5 text-center text-lg font-bold text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 focus:border-amber-500 focus:outline-none"
+            />
+          </div>
+        </div>
+
         {/* Action buttons */}
         <div className="ml-auto flex items-center gap-2 flex-wrap">
           {/* Restore */}
