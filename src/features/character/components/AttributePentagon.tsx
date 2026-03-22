@@ -67,6 +67,15 @@ interface AttrControlProps {
 function AttributeControl({ id, label, value, itemBonus, canIncrease, onChange, leftPct, topPct }: AttrControlProps) {
   void id
   const total = value + itemBonus
+
+  const getDiceValue = (val: number) => {
+    if (val <= 5) return '1D20'
+    if (val <= 10) return '2D20'
+    if (val <= 15) return '3D20'
+    if (val <= 20) return '4D20'
+    return '5D20'
+  }
+
   return (
     <div
       className="absolute flex flex-col items-center gap-0.5"
@@ -92,6 +101,7 @@ function AttributeControl({ id, label, value, itemBonus, canIncrease, onChange, 
           +
         </button>
       </div>
+      <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 mt-0.5">{getDiceValue(total)}</span>
       {itemBonus > 0 && (
         <span className="text-[10px] font-bold text-violet-500 dark:text-violet-400">+{itemBonus} item</span>
       )}
