@@ -138,10 +138,10 @@ export const useCharacterStore = create<CharacterState>()(
                   ...baseCharacters,
                   [newChar.id]: newChar,
                 },
-              }
+              } as Partial<CharacterState>
             }
-            return nextState
-          }, replace, action as any) // fix for overload types
+            return nextState as Partial<CharacterState>
+          }, replace as false, action as any) // fix for overload types
         }
 
         return {
