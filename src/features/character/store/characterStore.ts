@@ -62,8 +62,13 @@ const DEFAULT_CHARACTER: Character = {
 // ── Store shape ───────────────────────────────────────────────────────────────
 
 interface CharacterState {
+  characters: Record<string, Character>
   character: Character
   gameConfig: GameConfig
+
+  createNewCharacter: () => void
+  switchCharacter: (id: string) => void
+  deleteCharacter: (id: string) => void
 
   setCharacterName: (name: string) => void
   setPlayerName: (name: string) => void
@@ -113,9 +118,73 @@ interface CharacterState {
 export const useCharacterStore = create<CharacterState>()(
   devtools(
     persist(
-      (set, get) => ({
+      (rawSet, get) => {
+        // Intercept set to sync the active character into the characters registry
+        const set: typeof rawSet = (updater, replace, action) => {
+          rawSet((state) => {
+            const nextState = typeof updater === 'function' ? updater(state) : updater
+            if (nextState && nextState.character) {
+              const newChar = nextState.character
+              
+              // If the action explicitly updates 'characters' (like deleteCharacter does),
+              // use the new characters map as the base, otherwise use current state's map
+              const baseCharacters = nextState.characters !== undefined 
+                ? nextState.characters 
+                : (state.characters || {})
+
+              return {
+                ...nextState,
+                characters: {
+                  ...baseCharacters,
+                  [newChar.id]: newChar,
+                },
+              }
+            }
+            return nextState
+          }, replace, action as any) // fix for overload types
+        }
+
+        return {
+        characters: { [DEFAULT_CHARACTER.id]: DEFAULT_CHARACTER },
         character: DEFAULT_CHARACTER,
         gameConfig: defaultGameConfig,
+
+        createNewCharacter: () => {
+          const newChar = { ...DEFAULT_CHARACTER, id: crypto.randomUUID() }
+          set((s) => ({
+            character: newChar,
+            characters: { ...(s.characters || {}), [newChar.id]: newChar },
+          }), false, 'createNewCharacter')
+        },
+
+        switchCharacter: (id) => {
+          set((s) => {
+            const char = (s.characters || {})[id]
+            return char ? { character: char } : {}
+          }, false, 'switchCharacter')
+        },
+
+        deleteCharacter: (id) => {
+          set((s) => {
+            const chars = { ...(s.characters || {}) }
+            delete chars[id]
+            const remainingIds = Object.keys(chars)
+            // If deleting the active char, pick the first available or create a new one
+            let nextChar = s.character
+            if (s.character.id === id) {
+              if (remainingIds.length > 0) {
+                nextChar = chars[remainingIds[0]]
+              } else {
+                nextChar = { ...DEFAULT_CHARACTER, id: crypto.randomUUID() }
+                chars[nextChar.id] = nextChar
+              }
+            }
+            return {
+              characters: chars,
+              character: nextChar,
+            }
+          }, false, 'deleteCharacter')
+        },
 
         setCharacterName: (name) =>
           set((s) => ({ character: { ...s.character, name } }), false, 'setCharacterName'),
@@ -386,31 +455,40 @@ export const useCharacterStore = create<CharacterState>()(
           set(() => ({
             character: { ...DEFAULT_CHARACTER, id: crypto.randomUUID() },
           }), false, 'resetCharacter'),
-      }),
-      {
-        name: 'overgrown-character',
+      }
+    },
+    {
+      name: 'overgrown-character',
         // Ensure old persisted characters missing new array fields don't break
         merge: (persisted, current) => {
           const ps = persisted as Partial<typeof current>
           if (!ps) return current
+          
+          const mergedCharacter = {
+            ...DEFAULT_CHARACTER,
+            ...(ps.character ?? {}),
+            customSpells: ps.character?.customSpells ?? [],
+            characterAttacks: ps.character?.characterAttacks ?? [],
+            inventory: ps.character?.inventory ?? [],
+            acquiredTalents: ps.character?.acquiredTalents ?? [],
+            skills: ps.character?.skills ?? {},
+            origin: ps.character?.origin,
+            notes: ps.character?.notes ?? '',
+            currentResources: ps.character?.currentResources ?? current.character.currentResources,
+          }
+
+          let mergedCharacters = ps.characters || {}
+          // If no characters map exists from older state, init it with the mapped character
+          if (Object.keys(mergedCharacters).length === 0) {
+            mergedCharacters = { [mergedCharacter.id]: mergedCharacter }
+          }
+          
           return {
             ...current,
             ...ps,
-            // Always use the code-defined config – never restore from localStorage,
-            // so that changes to defaultGameConfig take effect immediately.
             gameConfig: current.gameConfig,
-            character: {
-              ...DEFAULT_CHARACTER,
-              ...(ps.character ?? {}),
-              customSpells: ps.character?.customSpells ?? [],
-              characterAttacks: ps.character?.characterAttacks ?? [],
-              inventory: ps.character?.inventory ?? [],
-              acquiredTalents: ps.character?.acquiredTalents ?? [],
-              skills: ps.character?.skills ?? {},
-              origin: ps.character?.origin,
-              notes: ps.character?.notes ?? '',
-              currentResources: ps.character?.currentResources ?? current.character.currentResources,
-            },
+            character: mergedCharacter,
+            characters: mergedCharacters,
           }
         },
       },

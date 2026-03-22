@@ -94,6 +94,42 @@ export default function CharacterHeader() {
 
   return (
     <div className="rounded-xl border border-amber-200 dark:border-amber-900/30 bg-white dark:bg-gray-900/80 px-4 py-3 shadow-sm dark:shadow-lg">
+      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-800">
+        <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Selecionar Ficha</label>
+        <select
+          value={character.id}
+          onChange={(e) => {
+            const val = e.target.value
+            if (val === 'NEW') {
+              store.createNewCharacter()
+            } else {
+              store.switchCharacter(val)
+            }
+          }}
+          className="rounded bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none min-w-[200px]"
+        >
+          {Object.values(store.characters || {}).map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name || 'Sem Nome'} {c.race ? `(${c.race})` : ''} - Nível {c.level}
+            </option>
+          ))}
+          <option value="NEW">+ Criar Novo Personagem</option>
+        </select>
+        
+        {Object.keys(store.characters || {}).length > 1 && (
+          <button
+            onClick={() => {
+              if (window.confirm('Tem certeza que deseja apagar esta ficha?')) {
+                store.deleteCharacter(character.id)
+              }
+            }}
+            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-semibold transition"
+          >
+            Excluir Ficha
+          </button>
+        )}
+      </div>
+
       <div className="flex flex-wrap items-end gap-4">
         {/* Name */}
         <div className="flex flex-col gap-0.5 min-w-[160px] flex-1">
