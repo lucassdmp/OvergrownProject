@@ -110,7 +110,7 @@ export default function CharacterHeader() {
         >
           {Object.values(store.characters || {}).map((c) => (
             <option key={c.id} value={c.id}>
-              {c.name || 'Sem Nome'} {c.race ? `(${c.race})` : ''} - Nível {c.level}
+              {c.name || 'Sem Nome'} {c.race ? `(${c.race})` : ''} - Nível {c.divinity}
             </option>
           ))}
           <option value="NEW">+ Criar Novo Personagem</option>
