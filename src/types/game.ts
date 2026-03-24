@@ -338,4 +338,10 @@ export interface Character {
   }
   money: number
   notes?: string
+  /** Base64 encoded avatar image */
+  avatarBase64?: string
+  /** Image position within the avatar container (e.g. "50% 50%") */
+  avatarPosition?: string
+  /** Image scale relative to container (e.g. 1.0 for cover) */
+  avatarScale?: number
 }

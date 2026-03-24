@@ -51,6 +51,8 @@ const DEFAULT_CHARACTER: Character = {
   inventory: [],
   skills: {},
   notes: '',
+  avatarPosition: '50% 50%',
+  avatarScale: 1,
   money: 0,
   currentResources: {
     vida: calculateDerivedStats(DEFAULT_ATTRIBUTES).vida,
@@ -72,6 +74,9 @@ interface CharacterState {
 
   setCharacterName: (name: string) => void
   setPlayerName: (name: string) => void
+  setAvatarBase64: (base64: string) => void
+  setAvatarPosition: (position: string) => void
+  setAvatarScale: (scale: number) => void
   setRace: (race: string) => void
   setLevel: (level: number) => void
   setDivinity: (divinity: number) => void
@@ -191,6 +196,15 @@ export const useCharacterStore = create<CharacterState>()(
 
         setPlayerName: (playerName) =>
           set((s) => ({ character: { ...s.character, playerName } }), false, 'setPlayerName'),
+
+        setAvatarBase64: (avatarBase64) =>
+          set((s) => ({ character: { ...s.character, avatarBase64 } }), false, 'setAvatarBase64'),
+
+        setAvatarPosition: (avatarPosition) =>
+          set((s) => ({ character: { ...s.character, avatarPosition } }), false, 'setAvatarPosition'),
+
+        setAvatarScale: (avatarScale) =>
+          set((s) => ({ character: { ...s.character, avatarScale } }), false, 'setAvatarScale'),
 
         setRace: (race) =>
           set((s) => ({ character: { ...s.character, race } }), false, 'setRace'),
@@ -448,6 +462,9 @@ export const useCharacterStore = create<CharacterState>()(
               skills: loadedCharacter.skills ?? {},
               attributes: { ...DEFAULT_CHARACTER.attributes, ...(loadedCharacter.attributes ?? {}) },
               currentResources: { ...DEFAULT_CHARACTER.currentResources, ...(loadedCharacter.currentResources ?? {}) },
+              avatarBase64: loadedCharacter.avatarBase64,
+              avatarPosition: loadedCharacter.avatarPosition ?? DEFAULT_CHARACTER.avatarPosition,
+              avatarScale: loadedCharacter.avatarScale ?? DEFAULT_CHARACTER.avatarScale,
             },
           }), false, 'loadCharacter'),
 
@@ -475,6 +492,9 @@ export const useCharacterStore = create<CharacterState>()(
             origin: ps.character?.origin,
             notes: ps.character?.notes ?? '',
             currentResources: ps.character?.currentResources ?? current.character.currentResources,
+            avatarBase64: ps.character?.avatarBase64,
+            avatarPosition: ps.character?.avatarPosition ?? '50% 50%',
+            avatarScale: ps.character?.avatarScale ?? 1.0,
           }
 
           let mergedCharacters = ps.characters || {}
