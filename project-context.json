@@ -83,8 +83,8 @@
     "iep":         "floor(0  + Wisdom     × 5)",
     "pc":          "floor(0  + (Might + Grace) × 1)",
     "vida":        "floor(0  + Fortitude  × 5)",
-    "resistencia": "floor(5  + Fortitude  × 0.5)",
-    "esquiva":     "floor(5  + Grace      × 0.5)",
+    "resistencia": "floor(5  + Fortitude  / 7)",
+    "esquiva":     "floor(5  + Grace      / 5)",
     "attribute_points_total": "5 + divinity × 5  →  Div1=10, Div2=15, …",
     "passive_item_bonus_logic": {
       "active_condition": "weapon/armor: equipped===true | all others: quantity > 0",

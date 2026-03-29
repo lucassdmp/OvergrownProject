@@ -16,8 +16,8 @@ import type { AttributeName } from '../types/game'
  *   IEP         = 10 + Wisdom        * 5     →  base:10, attrs:['wisdom'],             rate:5
  *   PC          = 2  + (Might+Grace) * 1     →  base:2,  attrs:['might','grace'],      rate:1
  *   Vida        = 10 + Fortitude     * 5     →  base:10, attrs:['fortitude'],          rate:5
- *   Resistência = 5  + Fortitude     * 0.5   →  base:5, attrs:['fortitude'],          rate:0.5
- *   Esquiva     = 5  + Grace         * 0.5   →  base:5, attrs:['grace'],              rate:0.5
+ *   Resistência = 5  + Fortitude     * (1/7) →  base:5, attrs:['fortitude'],          rate:1/7
+ *   Esquiva     = 5  + Grace         * (1/5) →  base:5, attrs:['grace'],              rate:1/5
  */
 export interface ResourceFormula {
   base: number
@@ -57,12 +57,12 @@ export const defaultGameConfig: GameConfig = {
     resistencia: {
       base: 5,
       attributes: ['fortitude'],
-      rate: 0.5,
+      rate: 1 / 7,
     },
     esquiva: {
       base: 5,
       attributes: ['grace'],
-      rate: 0.5,
+      rate: 1 / 5,
     },
   },
 }
