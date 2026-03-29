@@ -198,7 +198,7 @@ export default function SkillList() {
         )}
         <p className="text-[10px] text-gray-400 dark:text-gray-600">
           A cada 5 Divindades: +2 novas perícias (I) ou +1 nível em uma existente.
-          Maestria III requer Div.&nbsp;20 · IV requer Div.&nbsp;40.
+          Maestria II requer Div.&nbsp;20 · III requer Div.&nbsp;30 · IV requer Div.&nbsp;40.
         </p>
       </div>
 

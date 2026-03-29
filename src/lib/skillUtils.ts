@@ -9,14 +9,16 @@ import type { Character, MasteryLevel } from '../types/game'
 /**
  * Returns the highest Mastery level the character is allowed to have,
  * gated by their Divinity level:
- *  I–II : any divinity
- *  III  : divinity ≥ 20
- *  IV   : divinity ≥ 40
+ *  I    : divinity < 20 (limit is 1 at level 10)
+ *  II   : divinity >= 20
+ *  III  : divinity >= 30
+ *  IV   : divinity >= 40
  */
 export function getMasteryCapForDivinity(divinity: number): MasteryLevel {
   if (divinity >= 40) return 4
-  if (divinity >= 20) return 3
-  return 2
+  if (divinity >= 30) return 3
+  if (divinity >= 20) return 2
+  return 1
 }
 
 // ── Skill point budget ────────────────────────────────────────────────────────
