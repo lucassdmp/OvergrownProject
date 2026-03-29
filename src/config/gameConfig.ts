@@ -57,12 +57,12 @@ export const defaultGameConfig: GameConfig = {
     resistencia: {
       base: 5,
       attributes: ['fortitude'],
-      rate: 1 / 7,
+      rate: 1 / 8,
     },
     esquiva: {
       base: 5,
       attributes: ['grace'],
-      rate: 1 / 5,
+      rate: 1 / 7,
     },
   },
 }
