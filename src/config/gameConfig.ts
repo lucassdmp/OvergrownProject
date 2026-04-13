@@ -25,6 +25,11 @@ export interface ResourceFormula {
   rate: number
 }
 
+export interface AttributeModifierFormula {
+  base: number
+  rate: number
+}
+
 export interface GameConfig {
   resources: {
     iep: ResourceFormula
@@ -33,6 +38,7 @@ export interface GameConfig {
     resistencia: ResourceFormula
     esquiva: ResourceFormula
   }
+  attributeModifiers: Record<AttributeName, AttributeModifierFormula>
 }
 
 // ── Default (rulebook) values ─────────────────────────────────────────────────
@@ -65,11 +71,33 @@ export const defaultGameConfig: GameConfig = {
       rate: 1 / 7,
     },
   },
+  attributeModifiers: {
+    might: { base: 0, rate: 1 / 4 },
+    grace: { base: 0, rate: 1 / 4 },
+    wisdom: { base: 0, rate: 1 / 4 },
+    sense: { base: 0, rate: 1 / 4 },
+    fortitude: { base: 0, rate: 1 / 4 },
+  },
 }
 
 // ── Calculator ────────────────────────────────────────────────────────────────
 
 import type { Attributes, DerivedStats, Character } from '../types/game'
+
+export function calculateAttributeModifiers(
+  attributes: Attributes,
+  config: GameConfig = defaultGameConfig,
+): Record<AttributeName, number> {
+  const modifierConfig = config.attributeModifiers ?? defaultGameConfig.attributeModifiers
+
+  return {
+    might: Math.floor(modifierConfig.might.base + attributes.might * modifierConfig.might.rate),
+    grace: Math.floor(modifierConfig.grace.base + attributes.grace * modifierConfig.grace.rate),
+    wisdom: Math.floor(modifierConfig.wisdom.base + attributes.wisdom * modifierConfig.wisdom.rate),
+    sense: Math.floor(modifierConfig.sense.base + attributes.sense * modifierConfig.sense.rate),
+    fortitude: Math.floor(modifierConfig.fortitude.base + attributes.fortitude * modifierConfig.fortitude.rate),
+  }
+}
 
 /**
  * Computes all derived resource values from a character's raw attributes

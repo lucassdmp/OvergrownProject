@@ -1,5 +1,6 @@
 import CharacterHeader from '../features/character/components/CharacterHeader'
 import AttributePentagon from '../features/character/components/AttributePentagon'
+import AttributeModifiersPanel from '../features/character/components/AttributeModifiersPanel'
 import SpellList from '../features/character/components/SpellList'
 import AttackList from '../features/character/components/AttackList'
 import Inventory from '../features/character/components/Inventory'
@@ -17,6 +18,8 @@ export default function HomePage() {
         <section className="rounded-xl border border-amber-200 dark:border-amber-900/20 bg-amber-50/40 dark:bg-gray-900/50 px-4 py-6">
           <AttributePentagon />
         </section>
+
+        <AttributeModifiersPanel />
 
         {/* ── Spells & Attacks ── */}
         <div className="grid gap-6 md:grid-cols-2">
