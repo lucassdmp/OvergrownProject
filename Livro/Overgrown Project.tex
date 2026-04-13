@@ -1,6 +1,7 @@
 % ==============================================================================
 % OVERGROWN PROJECT - MAIN OTIMIZADO (VERSÃO CORRIGIDA)
 % ==============================================================================
+% !TeX program = xelatex
 \documentclass[10pt, a4paper, oneside]{book} 
 
 % --- O SEGREDO DO TEMPO DE COMPILAÇÃO ---
@@ -15,6 +16,11 @@
 
 % --- INÍCIO DA CAPA ---
 \begin{titlepage} 
+    \begin{tikzpicture}[remember picture,overlay]
+        \node at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{Images/background.jpg}};
+        \node[opacity=0.20] at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{Images/OGTREE.png}};
+    \end{tikzpicture}
+
     \newcommand{\titleHeader}{\fontsize{60}{70}\selectfont \ringmfamily \color{black}}
     \newcommand{\tituloPosicaoVertical}{3cm}
     \newcommand{\opacityOverlay}{0.10}
@@ -41,11 +47,11 @@
     \input{Contents/1-introducao}
     
     \input{Contents/2-attributes}
-    \input{Contents/dados_no_overgrown}
-    \input{Contents/lutas_e_combate}
-    \input{Contents/arvore_de_habilidade_e_talentos}
-    \input{Contents/inventory}
-    \input{Contents/armas_e_armaduras}
+    \input{Contents/3-dados_no_overgrown}
+    \input{Contents/4-lutas_e_combate}
+    %\input{Contents/arvore_de_habilidade_e_talentos}
+    \input{Contents/5-inventory}
+    \input{Contents/6-armas_e_armaduras}
     \input{Contents/pericias_e_maestrias}
     \input{Contents/origens}
     \input{Contents/descanso}

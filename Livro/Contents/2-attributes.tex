@@ -112,25 +112,30 @@ gualitária dela para quem participar do abate. Considere a tabela para represen
 Além dos atributos, jogadores tem algum recursos que são usado durante sua aventura: HP, IEP, Resistência e Esquiva.
 
 HP, Health Points ou Pontos de Vida, representam a vida total do jogador, o quanto de dano ele consegue aguentar e 
-é diretamente atrelado a sua \link{att:fortitude}{Fortitude}, cada ponto de Fortitude garante ao jogador 5 de vida. 
+é diretamente atrelado a sua \link{att:fortitude}{Fortitude}, cada ponto de Fortitude garante ao jogador 5 de vida e o jogador começa com 10 pontos de vida base. 
 Um jogador com 10 de Fortitude terá 60 de vida, excluindo bônus e reduções de vida provenientes da árvore de talentos 
 e de itens equipados.
 
 IEP, Impossible Energy Points ou Pontos de Energia Impossível \link{res:null}{(Null)}, 
 representa a capacidade do jogador de fazer feitos impossíveis, como usar Magias e Maldições. 
 O IEP é diretamente ligado ao \link{att:wisdom}{Wisdom} do jogador, para cada ponto de Wisdom 
-garante 5 pontos de IEP ao jogador. Um jogador com 10 de Wisdom terá 60 de IEP, excluindo bônus 
+garante 5 pontos de IEP ao jogador, e o jogador começa com 10 pontos de IEP base. Um jogador com 10 de Wisdom terá 60 de IEP, excluindo bônus 
 e reduções de IEP provenientes da árvore de talentos e de itens equipados.
 
 Resistência define a capacidade do jogador de resistir a ataques, sua classe de armadura. 
 É diretamente baseada também na \link{att:fortitude}{Fortitude} 
-do jogador. A cada 5 Pontos de Fortitude o jogador ganha 1 ponto de Resistência. 
-Um jogador com 21 pontos de Fortitude terá 12 de resistência (5 base + 7 proveniente de Atributos), 
+do jogador. A cada 8 Pontos de Fortitude o jogador ganha 1 ponto de Resistência, tendo 5 pontos base. 
+Um jogador com 24 pontos de Fortitude terá 8 de resistência (5 base + 3 vindo dos Atributos), 
 excluindo bônus e reduções provenientes da da árvore de talentos e de itens equipados.
 
+\begin{rpgboxtips}
+    Resistência é um atributo passivo, ele é usado para calcular se o ataque ou magia acerta o jogador, mas ele não é usado para calcular o dano recebido.
+    Um jogador que usa escudo pode usar a reação de Bloqueio, para aumentar sua resistência baseada nos atributos do escudo.
+\end{rpgboxtips}
+
 Esquiva define a proficiência em desviar do jogador. Ela é baseada diretamente ao atributo de \link{att:grace}{Grace}. 
-A cada 5 Pontos de Grace, o jogador ganha 1 ponto de Esquiva. Todos os jogadores tem Esquiva base em 5. 
-Um jogador com 20 de Grace, tem 9 de esquiva (5 base + 4 dos Pontos de Atributo), 
+A cada 7 Pontos de Grace, o jogador ganha 1 ponto de Esquiva. Todos os jogadores tem Esquiva base em 5. 
+Um jogador com 21 de Grace, tem 8 de esquiva (5 base + 3 dos Pontos de Atributo), 
 excluindo bônus e reduções provenientes da árvore de talentos e de itens equipados. 
 Caso o rolamento de ataque seja menor que a esquiva do jogador, todo o dano é negado.
 
@@ -138,3 +143,8 @@ Caso o rolamento de ataque seja menor que a esquiva do jogador, todo o dano é n
 Esquivar de um ataque é considerado uma reação, alvos que esquivam perdem a reação na rodada. 
 Falhar na esquiva ainda gasta sua reação.
 \end{rpgboxtips}
+
+Pontos de Combate é um recurso que representa a capacidade do jogador de realizar ações em combate, como ataques extras ou usar habilidades de combate.
+Um jogador com 10 de Grace e 10 de Might, tem 22 pontos de combate (2 base + 10 de Grace + 10 de Might), excluindo bônus e reduções provenientes da árvore de talentos e de itens equipados.
+
+

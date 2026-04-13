@@ -10,6 +10,7 @@
 \usepackage{titlesec}
 \usepackage{comment}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{needspace}
 \usepackage{booktabs}
 \usepackage[table]{xcolor}
@@ -21,12 +22,17 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{skins}
 \usepackage{etoolbox}         % para \ifstrempty em \spellCard
-% \usepackage[pages=all]{background}  % removido: \backgroundsetup está comentado,
-%   mas [pages=all] ainda hookava cada página, custando tempo de compilação.
+\usepackage{eso-pic}
 \usepackage[hidelinks]{hyperref} 
 
 % --- OTIMIZAÇÃO DE IMAGEM REPETITIVA ---
 % Carrega o dado uma vez na memória em vez de ler o disco toda vez
+\AddToShipoutPictureBG{%
+    \AtPageLowerLeft{%
+        \includegraphics[width=\paperwidth,height=\paperheight]{Images/background.jpg}%
+    }%
+}
+
 \begin{comment}
 \newsavebox{\diceicon}
 \savebox{\diceicon}{\includegraphics[height=1.2em]{Images/dado.png}}
@@ -49,16 +55,40 @@
 \end{comment}
 
 % --- FONTES ---
+\defaultfontfeatures{Ligatures=TeX}
+
 % 1. Define the font families (the switches)
-\newfontfamily\baskerfamily[Path=Fonts/, Extension=.ttf]{BASKER}
-\newfontfamily\ringmfamily[Path=Fonts/, Extension=.ttf]{RINGM}
+\newfontfamily\baskerfamily[
+    Path=Fonts/,
+    Extension=.ttf,
+    BoldFont=BASKER,
+    ItalicFont=BASKER,
+    BoldItalicFont=BASKER
+]{BASKER}
+\newfontfamily\ringmfamily[
+    Path=Fonts/,
+    Extension=.ttf,
+    BoldFont=RINGM,
+    ItalicFont=RINGM,
+    BoldItalicFont=RINGM
+]{RINGM}
 
 % 2. Define the text commands (the \command{text} versions)
 \DeclareTextFontCommand{\basker}{\baskerfamily}
 \DeclareTextFontCommand{\ringm}{\ringmfamily}
 
 % 3. Set the main document font
-\setmainfont[Path=Fonts/, Extension=.ttf]{BASKER}
+\setmainfont[
+    Path=Fonts/,
+    Extension=.ttf,
+    BoldFont=BASKER,
+    ItalicFont=BASKER,
+    BoldItalicFont=BASKER
+]{BASKER}
+
+\hbadness=10000
+\vbadness=10000
+\emergencystretch=2em
 
 % --- Estilos de Página ---
 \fancypagestyle{fancy}{

@@ -7,7 +7,7 @@ No universo de \textit{Overgrown}, cada objeto tem sua propria unidade de peso. 
 
 Este limite é ampliado pela força física do aventureiro: para cada ponto investido em \link{att:might}{Might (Poder)}, o aventureiro expande sua capacidade de carga em \textbf{1 unidade}. Embora o Pináculo não imponha um limite absoluto para o que se pode carregar, o excesso de peso além da capacidade total resultará em penalidades severas de movimento e ações. Pra cada 1 unidade de Peso acima da carga do aventureiro, este perde 5 de movimento.
 
-\begin{rpgboxtips}{Bonificações Efêmeras}
+\begin{rpgboxtips}{Bonificações Temporárias}
 Bônus temporários de atributos ou estados de fúria momentânea não expandem sua capacidade de carga máxima. Apenas melhorias permanentes provenientes da \textbf{Árvore de Talentos} ou artefatos  alteram o limite de transporte do personagem.
 \end{rpgboxtips}
 
@@ -19,7 +19,7 @@ O manejo de recursos é vital para a sobrevivência. Armas que dependem de muni�
 Armas de fogo, como pistolas, rifles e fuzis são maravilhas da engenharia rúnica. Elas não são meramente mecânicas, mas forjadas com gravuras que estabilizam a combustão da \textbf{Munição de Pólvora}. 
 \begin{itemize}
     \item \textbf{Consumo:} Cada unidade de munição de pólvora é preparada para sustentar o aventureiro por uma \textbf{Cena} inteira de combate.
-    \item \textbf{Carga:} Cada suprimento de cena pesa \textbf{1 unidade}.
+    \item \textbf{Carga:} Cada suprimento de cena pesa baseado no tipo de arma.
     \item \textbf{Natureza:} Embora sejam armas mágicas por fabricação, elas são focadas na entrega de dano físico bruto e, por regra geral, não servem como canalizadores para magias ativas.
 \end{itemize}
 
@@ -27,18 +27,19 @@ Armas de fogo, como pistolas, rifles e fuzis são maravilhas da engenharia rúni
 Diferente das armas de fogo, os arcos são extensões da alma do arqueiro e excelentes condutores de energia primordial. 
 \begin{itemize}
     \item \textbf{Consumo:} Flechas básicas não são contabilizadas por combate, mas sim por \textbf{Aventura}, tendo que ser repostas em períodos de descanso ou em mercadores.
+    \item \textbf{Carga:} Cada suprimento de flechas pesa 1 unidade, independentemente do tipo, mas o peso total pode variar conforme a qualidade e material da flecha.
     \item \textbf{Canalização:} Arcos podem ser usados como canalizadores mágicos, permitindo disparar feitiços como se fossem flechas. Nesta forma, a magia herda as propriedades do arco, como o \link{stats:crit}{Nível de Ameaça (Crítico)} e bônus de distância.
 \end{itemize}
 
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{lc}
+\begin{tabular}{lcc}
 \toprule
-\rowcolor{gray!15} \textbf{\ringm{Tipo de Projétil}} & \textbf{\ringm{Peso de Carga}} \\ 
+\rowcolor{gray!15} \textbf{\ringm{Tipo de Projétil}} & \textbf{\ringm{Peso de Carga}} & \textbf{\ringm{Dano Extra}} \\ 
 \midrule
-Flechas de Ferro ou Aço & 1 \\
-Flechas de Aetherium (Vastidrum) & 2 \\
-Flechas Rúnicas (Engravadas) & 3 \\
+Flechas de Ferro ou Aço & 1 & --- \\
+Flechas de Aetherium (Vastidrum) & 3 & +2d6 Perfurante \\
+Flechas Rúnicas (Engravadas) & 5 & +2d8 Perfurante \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -48,15 +49,12 @@ Flechas Rúnicas (Engravadas) & 3 \\
 As armaduras são classificadas por sua densidade e material, afetando diretamente o fardo do usuário. Armaduras especiais podem ter pesos alterados conforme suas especificações técnicas.
 
 \begin{description}
-    \item[\ringm{Pano (Peso 1)}:] Vestes leves geralmente usada por magos.
-    \item[\ringm{Couro (Peso 2)}:] Proteção flexível e leve.
-    \item[\ringm{Malha (Peso 4)}:] O equilíbrio entre defesa e peso.
-    \item[\ringm{Metal (Peso 6)}:] Proteção pesada para a linha de frente.
-    \item[\ringm{Placas (Peso 8)}:] A fortaleza intransponível do guerreiro.
+    \item[\ringm{Pano (Peso 2)}:] Vestes leves geralmente usada por magos.
+    \item[\ringm{Couro (Peso 4)}:] Proteção flexível e leve.
+    \item[\ringm{Malha (Peso 7)}:] O equilíbrio entre defesa e peso.
+    \item[\ringm{Metal (Peso 10)}:] Proteção pesada para a linha de frente.
+    \item[\ringm{Placas (Peso 15)}:] A fortaleza intransponível do guerreiro.
 \end{description}
 
-Alguns itens de consumo imediato, como poções de cura, são leves o suficiente para não ocuparem carga individualmente. No entanto, ferramentas complexas como \textbf{Kits Médicos} ocupam \textbf{1 unidade} de carga devido à sua composição de suprimentos.
-
-\begin{rpgboxtips}{Conselho aos Mestres}
-Utilize a lista de \link{data:itens}{itens preexistentes} como base de equilíbrio. Ao criar novos artefatos, compare sua utilidade e material com as categorias acima para atribuir um peso justo.
-\end{rpgboxtips}
+Poções para uso rapido são guardadas em um cinto de poções do aventureiro, que tem capacidade para 5 frascos. Cada frasco pesa 0.4 unidade, totalizando 2 unidades. Existem cintos de poções maiores, no entanto devem ser adquiridos ou comprados.
+Poções no cinto de poção podem ser tomadas como ação livre, e deve ser reabastecido durante descanso ou em ação padrão durante o combate. Poções guardadas no inventário não podem ser usadas durante o combate, e devem ser transferidas para o cinto de poções para serem utilizadas.
