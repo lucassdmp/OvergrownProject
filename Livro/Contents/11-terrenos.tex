@@ -1,0 +1,70 @@
+\midsectiontitle{Terrenos em Combate}
+
+Em \textit{Overgrown}, o campo de batalha não é um palco neutro. O terreno é uma força ativa que pressiona, recompensa e pune. Dominar o ambiente ao redor é tão crucial quanto dominar a arma na mão — aventureiros que ignoram onde pisam morrem antes de aventureiros que não sabem como lutar.
+
+\begin{rpgboxtips}{Movimento no Sistema}
+Todo personagem possui \textbf{7 unidades de movimento} base. Para cada \textbf{10 pontos de Grace}, ganha \textbf{+1 unidade adicional}, até o máximo de \textbf{15 unidades}. Terrenos adversos podem reduzir, complicar ou tornar esse movimento perigoso.
+\end{rpgboxtips}
+
+\titlesection{Tipos de Terreno}
+
+% ==============================================================================
+\originlink{terr:abrasado}
+\pericia{Abrasado}{O terreno está em chamas. Todo personagem que \textbf{iniciar} ou \textbf{terminar} seu turno sobre terreno abrasado sofre \textbf{1D8 de dano de Fogo}. Permanecer por mais de 1 rodada seguida aplica \link{status:queimado}{Queimado} automaticamente. Terrenos abrasados \textbf{consomem munição inflamável} (flechas com penas, pólvora) ao entrar neles, destruindo-as. Ataques de Fogo feitos a partir deste terreno ganham \textbf{+1D4 de dano} pela intensidade ambiente.
+
+\begin{rpgboxtips}{Combatendo em Chamas}
+Sair do terreno abrasado exige apenas movimento normal — mas \link{status:queimado}{Queimado} persiste até ser apagado ativamente, mesmo após sair da área.
+\end{rpgboxtips}}
+
+% ==============================================================================
+\originlink{terr:alagado}
+\pericia{Alagado}{Água cobre o terreno até os joelhos ou mais. Todo personagem dentro sofre \link{status:lento}{Lento} (movimento reduzido à metade). Ataques corpo a corpo sofrem \textbf{Desvantagem} pela resistência da água. Todos os alvos dentro são considerados \link{status:encharcado}{Encharcados}: \textbf{Resistência} contra Fogo e \textbf{Dano $\times$1,5} contra Raio e Eletricidade. Magias de Água e Gelo têm \textbf{alcance e área aumentados em 2 unidades} quando conjuradas dentro ou a partir de um terreno alagado.}
+
+% ==============================================================================
+\originlink{terr:congelado}
+\pericia{Congelado}{O chão está coberto de gelo. A cada rodada em que um personagem se \textbf{mover}, deve realizar um teste de \textbf{Grace + Atletismo} (DT 15). Se falhar, recebe \link{status:derrubado}{Derrubado} onde está. Personagens que \textbf{não se moverem} naquele turno estão seguros. Alvos \link{status:derrubado}{Derrubados} sobre gelo \textbf{deslizam 1D4 unidades} na direção do último movimento antes de parar. Ataques corpo a corpo de quem está em pé contra alvos caídos no gelo ganham \textbf{Vantagem}.}
+
+% ==============================================================================
+\originlink{terr:comprometido}
+\pericia{Comprometido}{Lama profunda, escombros, vegetação densa ou qualquer outro obstáculo que dificulte a locomoção. O movimento de todo personagem dentro é \textbf{reduzido à metade}. Testes de \textbf{Acrobacia} e \textbf{Atletismo} dentro do terreno sofrem \textbf{Desvantagem}. Personagens com \textbf{peso de equipamento máximo} ficam completamente \textbf{imobilizados} neste terreno e devem gastar sua ação padrão para avançar 1 unidade.}
+
+% ==============================================================================
+\originlink{terr:profanado}
+\pericia{Profanado}{O terreno está impregnado de energia negativa corrupta. Ficar neste terreno \textbf{consome IEP passivamente}: todo personagem perde \textbf{2 de IEP por rodada} que permanecer na área. Habilidades e magias que dependem de \textbf{luz, cura ou DIV} têm sua eficácia \textbf{reduzida à metade}. Em contrapartida, magias de Sombras e habilidades de natureza sombria ganham \textbf{+1D6 de dano ou efeito} enquanto o conjurador estiver dentro da área.
+
+\begin{rpgboxtips}{Resistindo ao Profanado}
+Personagens com alto \textbf{Divinity (DIV)} reduzem o consumo passivo de IEP: para cada 20 pontos de DIV, reduz a perda em 1 (mínimo 0).
+\end{rpgboxtips}}
+
+% ==============================================================================
+\originlink{terr:sagrado}
+\pericia{Sagrado}{Terreno abençoado por forças divinas ou mágicas positivas. Todo personagem dentro \textbf{regenera 1D4 de HP por rodada} ao início de seu turno. Habilidades de cura têm sua eficácia \textbf{aumentada em 50\%}. Status negativos \textbf{com duração de turno} têm sua duração reduzida em 1 rodada por turno passado no terreno sagrado. Magias e ataques de natureza sombria ou corrompida sofrem \textbf{Desvantagem} enquanto dentro da área.}
+
+% ==============================================================================
+\originlink{terr:nulo}
+\pericia{Nulo}{O terreno emana energia pura, regenerando as reservas arcanas. Todo personagem dentro \textbf{recupera 1D6 de IEP por rodada} ao início de seu turno. Alvos \link{status:exaurido}{Exauridos} recuperam IEP normalmente enquanto estiverem no terreno nulo. Magias conjuradas dentro da área têm seu \textbf{custo de IEP reduzido em 2} (mínimo 1). Ataques físicos comuns não recebem nenhum benefício ou penalidade desta área.}
+
+% ==============================================================================
+\originlink{terr:nevoa}
+\pericia{Névoa Espessa}{Visibilidade extremamente baixa. Todos os ataques — corpo a corpo e à distância — sofrem \textbf{Desvantagem}. Testes de \textbf{Percepção} (visual) sofrem \textbf{Desvantagem}. Testes de \textbf{Furtividade} ganham \textbf{Vantagem}. Alvos a mais de \textbf{4 unidades de distância} são considerados \textbf{cobertos por névoa total} e não podem ser alvejados por ataques normais — apenas magias de área ou habilidades que não exijam linha de visão. Magias de Vento dispersam a névoa em \textbf{2D4 unidades de raio} por rodada de efeito.}
+
+% ==============================================================================
+\originlink{terr:fragil}
+\pericia{Frágil}{O terreno é instável: pontes de madeira apodrecida, pisos rachados, plataformas suspensas, superfícies sobrevoando abismos ou vales. Pode ser destruído com \textbf{ataques físicos de dano alto} (Mestre determina o limiar com base no contexto). Personagens \link{status:derrubado}{Derrubados} sobre terreno frágil devem realizar um teste de \textbf{Fortitude} (DT 13) ou o terreno \textbf{cede sob eles}, causando queda para o nível inferior. Ataques que causem \textbf{Sangramento Brutal} sobre este terreno sempre forçam o teste de integridade, independente do dano causado.
+
+\begin{rpgboxtips}{Queda Estratégica}
+Derrubar um inimigo sobre terreno frágil pode ser uma das manobras mais letais do sistema. Combine \textbf{Rasteira} (Melee) com posicionamento adequado para forçar quedas devastadoras.
+\end{rpgboxtips}}
+
+% ==============================================================================
+\originlink{terr:elevado}
+\pericia{Elevado}{Plataformas altas, morros, telhados, galhos de árvore — qualquer posição acima do nível dos oponentes. Ataques à distância feitos \textbf{de cima para baixo} ganham \textbf{+1D4 de dano} e ignoram a penalidade de cobertura parcial causada por obstáculos no mesmo nível. Ataques corpo a corpo feitos \textbf{de cima para baixo} (salto sobre o inimigo, ataque mergulhante) ganham \textbf{+2 de acerto}. Ataques \textbf{de baixo para cima} contra um alvo em posição elevada sofrem \textbf{$-$2 de acerto}. Inimigos tentando alcançar um alvo elevado devem gastar \textbf{ação de movimento adicional} para subir ao mesmo nível.}
+
+% ==============================================================================
+\originlink{terr:submergido}
+\pericia{Submergido}{O personagem está totalmente debaixo d'água. Todo movimento é reduzido a \textbf{3 unidades por turno} independente de atributos, exceto para personagens com \link{status:respiracaosubmersa}{Respiração Submersa}. Ataques físicos sofrem \textbf{Desvantagem} e têm o dano \textbf{reduzido à metade} pela resistência da água. Magias de Fogo \textbf{falham automaticamente}. Magias de Água e Gelo são conjuradas \textbf{sem custo de IEP} enquanto submergido. Personagens sem \link{status:respiracaosubmersa}{Respiração Submersa} devem realizar teste de \textbf{Fortitude} (DT 12, aumentando em +2 por rodada) ou receber \link{status:sufocado}{Sufocado}.}
+
+% ==============================================================================
+\begin{rpgboxtips}{Combinando Terrenos}
+O Mestre pode combinar tipos de terreno para criar situações únicas. Um terreno \textbf{Alagado + Abrasado} resulta em vapor denso (funciona como Névoa Espessa enquanto durar). Um terreno \textbf{Congelado + Elevado} torna a descida extremamente perigosa. Use criatividade — o Pináculo não tem piedade de quem não presta atenção ao chão.
+\end{rpgboxtips}

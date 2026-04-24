@@ -15,7 +15,7 @@
 \begin{document}
 
 % --- INÍCIO DA CAPA ---
-\begin{titlepage} 
+\begin{titlepage}
     \begin{tikzpicture}[remember picture,overlay]
         \node at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{Images/background.jpg}};
         \node[opacity=0.20] at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{Images/OGTREE.png}};
@@ -25,12 +25,12 @@
     \newcommand{\tituloPosicaoVertical}{3cm}
     \newcommand{\opacityOverlay}{0.10}
 
-    \centering 
+    \centering
     \vspace*{\tituloPosicaoVertical}
     {\titleHeader Overgrown Project \par}
     \vspace{1cm}
     {\Large \textbf{João Lucas e Tales Andre} \par}
-    \vfill 
+    \vfill
     {\large Sistema de RPG v1.0 \par}
     \vspace{2cm}
 \end{titlepage}
@@ -38,44 +38,40 @@
 
 \clearpage
 \newgeometry{top=2cm, bottom=2cm, left=1.5cm, right=1.5cm}
-\thispagestyle{fancy} 
+\thispagestyle{fancy}
 
+% Sugestão: Use \include para capítulos que começam em nova página
+% Use \input para seções que devem continuar na mesma página
+\input{Contents/1-introducao}
 
+\input{Contents/2-attributes}
+\input{Contents/3-dados_no_overgrown}
+\input{Contents/4-lutas_e_combate}
+%\input{Contents/arvore_de_habilidade_e_talentos}
+\input{Contents/5-inventory}
+\input{Contents/6-armas_e_armaduras}
+\input{Contents/7-pericias_e_maestrias}
+\input{Contents/8-origens}
+\input{Contents/9-descanso}
+\input{Contents/10-status_e_condicoes}
+\input{Contents/11-terrenos}
+\input{Contents/12-melee}
+\input{Contents/13-ranged}
+\input{Contents/14-magias_e_feitiços}
+% Magias
+\input{Contents/magia/fogo}
+\input{Contents/magia/agua}
+\input{Contents/magia/ar}
+\input{Contents/magia/pedra}
+\input{Contents/magia/luz}
+% \input{Contents/magia/natureza}
+\input{Contents/magia/sombras}
+\input{Contents/magia/raio}
+\input{Contents/magia/mental}
+\input{Contents/magia/tempo}
+\input{Contents/magia/espacial}
 
-    % Sugestão: Use \include para capítulos que começam em nova página
-    % Use \input para seções que devem continuar na mesma página
-    \input{Contents/1-introducao}
-    
-    \input{Contents/2-attributes}
-    \input{Contents/3-dados_no_overgrown}
-    \input{Contents/4-lutas_e_combate}
-    %\input{Contents/arvore_de_habilidade_e_talentos}
-    \input{Contents/5-inventory}
-    \input{Contents/6-armas_e_armaduras}
-    \input{Contents/pericias_e_maestrias}
-    \input{Contents/origens}
-    \input{Contents/descanso}
-    \input{Contents/status_e_condicoes}
-    \input{Contents/terrenos}
-    \input{Contents/magias_e_feitiços}
-        % Magias
-        \input{Contents/magia/fogo}
-        \input{Contents/magia/agua}
-        \input{Contents/magia/ar}
-        \input{Contents/magia/pedra}
-        \input{Contents/magia/luz}
-        % \input{Contents/magia/natureza}
-        \input{Contents/magia/sombras}
-        \input{Contents/magia/raio}
-        \input{Contents/magia/mental}
-        \input{Contents/magia/tempo}
-        \input{Contents/magia/espacial}
-    
-
-    \input{Contents/melee}
-    \input{Contents/ranged}
-    \input{Contents/world}
-    
+%\input{Contents/world}
 
 \restoregeometry
 \end{document}
