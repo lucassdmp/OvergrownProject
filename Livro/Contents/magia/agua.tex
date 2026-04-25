@@ -5,46 +5,46 @@
 {0}
 {O usuário condensa a umidade do ar em uma esfera de água pura, que explode no contato, deixando os alvos completamente encharcados.}
 {
-    0   & 2 IEP     & 1m Raio   /       & --                                     \\ \hline
-    1   & 4 IEP     & 2m Raio   /       & --                                     \\ \hline
-    2   & 6 IEP     & 3m Raio   /       & \textbf{Invocação Livre}               \\ \hline
-    3   & 8 IEP     & 4m Raio   /       & --                                     \\ \hline
-    4   & 10 IEP    & 5m Raio   /       & \textbf{Purificação Mística}           \\ \hline
-    5   & 12 IEP    & 6m Raio   /       & --                                     \\ \hline
-    6   & 14 IEP    & 7m Raio   /       & --                                     \\ \hline
-    7   & 16 IEP    & 8m Raio   /       & --                                     \\ \hline
-    8   & 18 IEP    & 9m Raio   /       & --                                     \\ \hline
-    9   & 20 IEP    & 10m Raio  /       & --                                     \\ \hline
-    Div & 22 IEP    & 20m Raio  /       & \textbf{Dilúvio}
+    0   & 4 IEP   & 1m Raio    & -- \\ \hline
+    1   & 8 IEP   & 2m Raio    & -- \\ \hline
+    2   & 12 IEP  & 3m Raio    & \textbf{Invocação Livre} \\ \hline
+    3   & 16 IEP  & 4m Raio    & -- \\ \hline
+    4   & 20 IEP  & 5m Raio    & \textbf{Purificação Mística} \\ \hline
+    5   & 26 IEP  & 6m Raio    & -- \\ \hline
+    6   & 32 IEP  & 7m Raio    & -- \\ \hline
+    7   & 38 IEP  & 8m Raio    & -- \\ \hline
+    8   & 44 IEP  & 9m Raio    & -- \\ \hline
+    9   & 50 IEP  & 10m Raio   & -- \\ \hline
+    Div & 60 IEP  & 20m Raio   & \textbf{Dilúvio}
 }{
-Aplica \link{status:encharcado}{Encharcado}.\\
-\textbf{Invocação Livre}: Conjura a até 9m.\\
-\textbf{Purificação Mística}: Extingue chamas mágicas.\\
-\textbf{Dilúvio}: Transforma o terreno em \link{terr:alagado}.
+Aplica \link{status:encharcado}{Encharcado} em todos os alvos na área.\\
+\textbf{Invocação Livre:} Conjura a até 9 metros de distância.\\
+\textbf{Purificação Mística:} Extingue chamas mágicas de nível inferior dentro da área.\\
+\textbf{Dilúvio:} Transforma o terreno em \link{terr:alagado}{Alagado}.
 }
 {Alcance}
 {\typeTag{AOE}\typeTag{DEBUFF}}
 
 \spellCard{Estalactite}
-{\elementTag{Agua} \elementTag{Ar}}
+{\elementTag{Agua}\elementTag{Ar}}
 {0}
 {O usuário forma um projétil de gelo aguçado a partir de IEP congelado, que voa em alta velocidade para perfurar o alvo.}
 {
-    0   & 6 IEP  & 2D8 + WIS      & -- \\ \hline
-    1   & 10 IEP & 2D10 + WIS     & -- \\ \hline
-    2   & 14 IEP & 3D10 + WIS     & -- \\ \hline
-    3   & 18 IEP & 3D12 + WIS     & \textbf{Penetração Mágica Básica} \\ \hline
-    4   & 22 IEP & 4D12 + WIS     & -- \\ \hline
-    5   & 30 IEP & 5D12 + WIS     & \textbf{Penetração Mágica Avançada} \\ \hline
-    6   & 38 IEP & 6D12 + WIS     & -- \\ \hline
-    7   & 46 IEP & 6D12+3D6+WIS   & -- \\ \hline
-    8   & 54 IEP & 6D12+5D6+WIS   & -- \\ \hline
-    9   & 62 IEP & 6D12+7D6+WIS   & --  \\ \hline
-    Div & 70 IEP & 6D12+9D6+(1D20*WIS) & \textbf{Penetração Total}
+    0   & 6 IEP   & 2D6 + WIS            & -- \\ \hline
+    1   & 10 IEP  & 2D8 + WIS            & -- \\ \hline
+    2   & 14 IEP  & 3D8 + WIS            & -- \\ \hline
+    3   & 18 IEP  & 3D10 + WIS           & \textbf{Penetração Mágica Básica} \\ \hline
+    4   & 24 IEP  & 4D10 + WIS           & -- \\ \hline
+    5   & 32 IEP  & 5D10 + WIS           & \textbf{Penetração Mágica Avançada} \\ \hline
+    6   & 40 IEP  & 6D10 + WIS           & -- \\ \hline
+    7   & 48 IEP  & 6D10 + 3D6 + WIS     & -- \\ \hline
+    8   & 56 IEP  & 6D10 + 5D6 + WIS     & -- \\ \hline
+    9   & 64 IEP  & 6D10 + 7D6 + WIS     & -- \\ \hline
+    Div & 74 IEP  & 6D10 + 9D6 + (1D20*WIS) & \textbf{Penetração Total}
 }{
-\textbf{Penetração Mágica Básica}: Ignora 5 de Resistência Mágica.\\
-\textbf{Penetração Mágica Avançada}: Ignora 10 de Resistência Mágica.\\
-\textbf{Penetração Total}: Ignora toda Resistência a Água.
+\textbf{Penetração Mágica Básica:} Ignora 5 pontos de Resistência Mágica do alvo.\\
+\textbf{Penetração Mágica Avançada:} Ignora 10 pontos de Resistência Mágica do alvo.\\
+\textbf{Penetração Total:} Ignora toda Resistência a dano de Água e Gelo.
 }
 {Ataque}
 {\typeTag{PROJ}\typeTag{SINGLE}}
@@ -54,43 +54,43 @@ Aplica \link{status:encharcado}{Encharcado}.\\
 {0}
 {O usuário invoca uma onda de energia aquática curativa, que banha o alvo em uma luz revitalizante e limpa impurezas.}
 {
-    0   & 6 IEP     & 2D6 + WIS         & 4 no D4 para remover 1 Efeito Negativo    \\ \hline
-    1   & 12 IEP    & 3D6 + WIS         & 3/4 no D4 para remover 1 Efeito Negativo  \\ \hline
-    2   & 18 IEP    & 3D6 + WIS         & Remove 1 Efeito Negativo                  \\ \hline
-    3   & 24 IEP    & 4D6 + WIS         & Remove 1 Efeito Negativo                  \\ \hline
-    4   & 36 IEP    & 4D6 + WIS         & Remove 2 Efeitos Negativos                \\ \hline
-    5   & 48 IEP    & 5D8 + WIS         & Remove 2 Efeitos Negativos                \\ \hline
-    6   & 60 IEP    & 5D8 + WIS         & Remove 3 Efeitos Negativos                \\ \hline
-    7   & 72 IEP    & 6D8 + WIS         & Remove 3 Efeitos Negativos                \\ \hline
-    8   & 84 IEP    & 6D8 + WIS         & Remove 4 Efeitos Negativos                 \\ \hline
-    9   & 96 IEP    & 7D10 + WIS        & Remove 4 Efeitos Negativos                 \\ \hline
-    Div & 108 IEP   & 8D10 + (1D10*WIS) & Remove Todos os Efeitos Negativos 
+    0   & 8 IEP   & 2D6 + WIS         & Remove 1 Efeito Negativo (teste D4, 4=sucesso) \\ \hline
+    1   & 14 IEP  & 3D6 + WIS         & Remove 1 Efeito Negativo \\ \hline
+    2   & 20 IEP  & 4D6 + WIS         & Remove 1 Efeito Negativo \\ \hline
+    3   & 28 IEP  & 5D6 + WIS         & Remove 2 Efeitos Negativos \\ \hline
+    4   & 38 IEP  & 5D8 + WIS         & Remove 2 Efeitos Negativos \\ \hline
+    5   & 50 IEP  & 6D8 + WIS         & Remove 3 Efeitos Negativos \\ \hline
+    6   & 64 IEP  & 6D10 + WIS        & Remove 3 Efeitos Negativos \\ \hline
+    7   & 78 IEP  & 7D10 + WIS        & Remove 4 Efeitos Negativos \\ \hline
+    8   & 92 IEP  & 8D10 + WIS        & Remove 4 Efeitos Negativos \\ \hline
+    9   & 108 IEP & 8D12 + WIS        & Remove 5 Efeitos Negativos \\ \hline
+    Div & 124 IEP & 9D12 + (1D10*WIS) & Remove Todos os Efeitos Negativos
 }{
-Nível Divino: 1D10 multiplicador de Wisdom.
+A identidade desta magia está na remoção de efeitos negativos — cada nível permite limpar mais condições em um único lançamento.
 }
 {Cura}
 {\typeTag{CURA}\typeTag{SINGLE}}
 
 \spellCard{Sopro Invernal}
-{\elementTag{Agua} \elementTag{Ar}}
+{\elementTag{Agua}\elementTag{Ar}}
 {0}
 {O usuário exala um vento gélido carregado de IEP congelante, transformando a umidade do ar em agulhas de gelo cortantes.}
 {
-    0   & 8 IEP     & 1D6  + 1D4  + WIS                  & \textbf{Congelamento Crítico}  \\ \hline
-    1   & 16 IEP    & 1D8 + 1D4  + WIS                   & \textbf{Congelamento Crítico} \\ \hline
-    2   & 24 IEP    & 2D8 + 2D4  + WIS                   & \textbf{Congelamento Crítico}  \\ \hline
-    3   & 32 IEP    & 2D10 + 2D4  + WIS                  & \textbf{Congelamento Crítico}  \\ \hline
-    4   & 40 IEP    & 3D10 + 3D4  + WIS                  & \textbf{Congelamento Crítico}   \\ \hline
-    5   & 56 IEP    & 4D10 + 3D4  + WIS                  & \textbf{Congelamento Crítico}   \\ \hline
-    6   & 72 IEP    & 5D10 + 4D4  + WIS                  & \textbf{Congelamento Crítico}   \\ \hline
-    7   & 88 IEP    & 5D12 + 4D4  + 2D6  +   WIS         & \textbf{Congelamento Crítico}   \\ \hline
-    8   & 104 IEP   & 5D12 + 5D4  + 4D6  +   WIS         & \textbf{Congelamento Crítico}   \\ \hline
-    9   & 120 IEP   & 5D12 + 5D4  + 6D6  +   WIS         & \textbf{Congelamento Crítico}   \\ \hline
-    Div & 132 IEP   & 5D12 + 8D4  + 8D6  +  (1D20*WIS)   & \textbf{Congelamento Absoluto}
+    0   & 8 IEP   & 1D6 + 1D4 + WIS              & \textbf{Congelamento Crítico} \\ \hline
+    1   & 16 IEP  & 1D8 + 1D4 + WIS              & \textbf{Congelamento Crítico} \\ \hline
+    2   & 24 IEP  & 2D8 + 2D4 + WIS              & \textbf{Congelamento Crítico} \\ \hline
+    3   & 32 IEP  & 2D10 + 2D4 + WIS             & \textbf{Congelamento Crítico} \\ \hline
+    4   & 40 IEP  & 3D10 + 3D4 + WIS             & \textbf{Congelamento Crítico} \\ \hline
+    5   & 56 IEP  & 4D10 + 3D4 + WIS             & \textbf{Congelamento Crítico} \\ \hline
+    6   & 72 IEP  & 5D10 + 4D4 + WIS             & \textbf{Congelamento Crítico} \\ \hline
+    7   & 88 IEP  & 5D12 + 4D4 + 2D6 + WIS       & \textbf{Congelamento Crítico} \\ \hline
+    8   & 104 IEP & 5D12 + 5D4 + 4D6 + WIS       & \textbf{Congelamento Crítico} \\ \hline
+    9   & 120 IEP & 5D12 + 5D4 + 6D6 + WIS       & \textbf{Congelamento Crítico} \\ \hline
+    Div & 138 IEP & 5D12 + 8D4 + 8D6 + (1D20*WIS) & \textbf{Congelamento Absoluto}
 }{
-Alcance: 3m. DT para resistir: 20 + Nível.\\
-\textbf{Congelamento Crítico}: Acertos críticos congelam.\\
-\textbf{Congelamento Absoluto}: Qualquer acerto congela.
+Alcance em cone de 3 metros. DT para resistir: 20 + Nível.\\
+\textbf{Congelamento Crítico:} Acertos críticos congelam o alvo por 1 turno.\\
+\textbf{Congelamento Absoluto:} Qualquer acerto bem-sucedido congela o alvo por 1 turno.
 }
 {Ataque}
 {\typeTag{PROJ}\typeTag{AOE}}
@@ -100,17 +100,19 @@ Alcance: 3m. DT para resistir: 20 + Nível.\\
 {10}
 {O usuário canaliza uma maré de energia curativa mais potente, que envolve o alvo em uma aura regenerativa intensa.}
 {
-    1   & 18 IEP    & 3D8 + WIS         & --   \\ \hline
-    2   & 27 IEP    & 4D8 + WIS         & --   \\ \hline
-    3   & 36 IEP    & 5D8 + WIS         & --   \\ \hline
-    4   & 45 IEP    & 6D8 + WIS         & --   \\ \hline
-    5   & 54 IEP    & 6D10 + WIS        & --   \\ \hline
-    6   & 63 IEP    & 7D10 + WIS        & --   \\ \hline
-    7   & 72 IEP    & 8D10 + WIS        & --   \\ \hline
-    8   & 81 IEP    & 9D10 + WIS        & --   \\ \hline
-    9   & 90 IEP    & 9D12 + WIS        & --   \\ \hline
-    Div & 99 IEP    & 10D12 + (1D10*WIS)  & Remove Todos os Efeitos Negativos 
-}{Nível Divino: 1D10 multiplicador de Wisdom.}
+    1   & 22 IEP  & 3D8 + WIS           & -- \\ \hline
+    2   & 32 IEP  & 4D8 + WIS           & -- \\ \hline
+    3   & 43 IEP  & 5D8 + WIS           & -- \\ \hline
+    4   & 54 IEP  & 6D8 + WIS           & -- \\ \hline
+    5   & 66 IEP  & 6D10 + WIS          & -- \\ \hline
+    6   & 79 IEP  & 7D10 + WIS          & -- \\ \hline
+    7   & 93 IEP  & 8D10 + WIS          & -- \\ \hline
+    8   & 108 IEP & 9D10 + WIS          & -- \\ \hline
+    9   & 124 IEP & 9D12 + WIS          & -- \\ \hline
+    Div & 140 IEP & 10D12 + (1D10*WIS)  & Remove Todos os Efeitos Negativos
+}{
+Maré Curativa é a cura de alto volume de Água. Divino remove todos os efeitos negativos além de curar.
+}
 {Cura}
 {\typeTag{CURA}\typeTag{SINGLE}}
 
@@ -119,42 +121,42 @@ Alcance: 3m. DT para resistir: 20 + Nível.\\
 {0}
 {O usuário extrai o calor do ar para erguer uma parede sólida de gelo translúcido, que bloqueia ataques e impede a passagem.}
 {
-    0   & 24  IEP    & 1D4*WIS de Vida          &  --  \\ \hline
-    1   & 48  IEP    & 1D4*WIS de Vida          &  Alcance: 3m  \\ \hline
-    2   & 72  IEP    & 2D4*WIS de Vida         &  --  \\ \hline
-    3   & 96  IEP    & 2D4*WIS de Vida         &  Alcance: 6m \\ \hline
-    4   & 120 IEP    & 3D4*WIS de Vida         &  --  \\ \hline
-    5   & 144 IEP    & 3D4*WIS de Vida         &  Alcance: 9m  \\ \hline
-    6   & 168 IEP    & 4D4*WIS de Vida         &  --  \\ \hline
-    7   & 192 IEP    & 4D4*WIS de Vida         &  Alcance: 12m  \\ \hline
-    8   & 216 IEP    & 5D4*WIS de Vida         &  --  \\ \hline
-    9   & 240 IEP    & 6D4*WIS  de Vida        &  --  \\ \hline
-    Div & 264 IEP    & 7D6 + (1D10*WIS) de Vida  &  \textbf{Controle de Forma}
+    0   & 24 IEP  & 1D4*WIS de Vida  & -- \\ \hline
+    1   & 48 IEP  & 1D4*WIS de Vida  & Alcance: 3m \\ \hline
+    2   & 72 IEP  & 2D4*WIS de Vida  & -- \\ \hline
+    3   & 96 IEP  & 2D4*WIS de Vida  & Alcance: 6m \\ \hline
+    4   & 120 IEP & 3D4*WIS de Vida  & -- \\ \hline
+    5   & 144 IEP & 3D4*WIS de Vida  & Alcance: 9m \\ \hline
+    6   & 168 IEP & 4D4*WIS de Vida  & -- \\ \hline
+    7   & 192 IEP & 4D4*WIS de Vida  & Alcance: 12m \\ \hline
+    8   & 216 IEP & 5D4*WIS de Vida  & -- \\ \hline
+    9   & 240 IEP & 6D4*WIS de Vida  & -- \\ \hline
+    Div & 264 IEP & 7D6 + (1D10*WIS) de Vida & \textbf{Controle de Forma}
 }{
-Cada 5 pontos de Wisdom adicionam 1m de extensão.\\
-\textbf{Controle de Forma}: Molda o gelo em formas complexas.
+Cada 5 pontos de Wisdom adicionam 1 metro de extensão à parede.\\
+\textbf{Controle de Forma:} Molda o gelo em formas complexas à escolha do conjurador.
 }
 {Efeito}
 {\typeTag{AOE}}
 
 \spellCard{Nevasca Glacial}
-{\elementTag{Agua} \elementTag{Ar}}
+{\elementTag{Agua}\elementTag{Ar}}
 {20}
 {O usuário invoca uma tempestade de gelo e vento cortante, que transforma o campo de batalha em um deserto congelado.}
 {
-    2   & 75 IEP    & 4D10       + WIS         &   \textbf{Congelamento Crítico}   \\ \hline
-    3   & 100 IEP   & 4D10 + 1D4 + WIS         &   \textbf{Congelamento Crítico}   \\ \hline
-    4   & 120 IEP   & 5D10 + 1D4 + WIS         &   \textbf{Congelamento Crítico}    \\ \hline
-    5   & 150 IEP   & 5D10 + 2D4 + WIS         &   \textbf{Congelamento Crítico}    \\ \hline
-    6   & 175 IEP   & 6D10 + 2D6 + WIS         &   \textbf{Congelamento Crítico}  \\ \hline
-    7   & 200 IEP   & 6D10 + 3D6 + WIS         &   \textbf{Congelamento Crítico}    \\ \hline
-    8   & 225 IEP   & 7D10 + 3D6 + WIS         &   \textbf{Congelamento Crítico}    \\ \hline
-    9   & 250 IEP   & 7D10 + 4D6 + WIS         &   \textbf{Congelamento Crítico}    \\ \hline
-    Div & 275 IEP   & 8D10 + 5D6 + (1D20*WIS)  &   \textbf{Congelamento Absoluto}
+    2   & 80 IEP  & 4D10 + WIS           & \textbf{Congelamento Crítico} \\ \hline
+    3   & 108 IEP & 4D10 + 1D4 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    4   & 136 IEP & 5D10 + 1D4 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    5   & 168 IEP & 5D10 + 2D4 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    6   & 200 IEP & 6D10 + 2D6 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    7   & 232 IEP & 6D10 + 3D6 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    8   & 265 IEP & 7D10 + 3D6 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    9   & 298 IEP & 7D10 + 4D6 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    Div & 332 IEP & 8D10 + 5D6 + (1D20*WIS) & \textbf{Congelamento Absoluto}
 }{
-Transforma o terreno em \link{terr:congelado}{Congelado}.\\
-\textbf{Congelamento Crítico}: Acertos críticos congelam.\\
-\textbf{Congelamento Absoluto}: Qualquer acerto congela.
+Transforma o terreno em \link{terr:congelado}{Congelado} enquanto a magia durar.\\
+\textbf{Congelamento Crítico:} Acertos críticos congelam o alvo por 1 turno.\\
+\textbf{Congelamento Absoluto:} Qualquer acerto bem-sucedido congela o alvo por 1 turno.
 }
 {Ataque}
 {\typeTag{AOE}}
@@ -164,36 +166,62 @@ Transforma o terreno em \link{terr:congelado}{Congelado}.\\
 {20}
 {O usuário faz descer uma chuva suave e curativa, que restaura a saúde dos aliados tocados por suas gotas luminosas.}
 {
-    2   & 45 IEP    & 4D4 + WIS            & --   \\ \hline
-    3   & 63 IEP    & 5D4 + WIS            & 1D4 Rodadas   \\ \hline
-    4   & 81 IEP    & 6D4 + WIS            & 1D4 Rodadas   \\ \hline
-    5   & 99 IEP    & 6D6 + WIS            & 1D6 Rodadas   \\ \hline
-    6   & 117 IEP   & 7D6 + WIS            & 1D6 Rodadas   \\ \hline
-    7   & 135 IEP   & 8D6 + WIS            & 1D6 Rodadas   \\ \hline
-    8   & 153 IEP   & 9D6 + WIS            & 1D8 Rodadas   \\ \hline
-    9   & 171 IEP   & 9D8 + WIS            & 1D8 Rodadas   \\ \hline
-    Div & 189 IEP   & 10D10 + (1D10*WIS)  & Dura o combate 
-}{Nível Divino: 1D10 multiplicador de Wisdom.}
+    2   & 50 IEP  & 4D4 + WIS            & -- \\ \hline
+    3   & 70 IEP  & 5D4 + WIS            & Dura 1D4 Rodadas \\ \hline
+    4   & 92 IEP  & 6D4 + WIS            & Dura 1D4 Rodadas \\ \hline
+    5   & 114 IEP & 6D6 + WIS            & Dura 1D6 Rodadas \\ \hline
+    6   & 138 IEP & 7D6 + WIS            & Dura 1D6 Rodadas \\ \hline
+    7   & 163 IEP & 8D6 + WIS            & Dura 1D6 Rodadas \\ \hline
+    8   & 190 IEP & 9D6 + WIS            & Dura 1D8 Rodadas \\ \hline
+    9   & 218 IEP & 9D8 + WIS            & Dura 1D8 Rodadas \\ \hline
+    Div & 246 IEP & 10D10 + (1D10*WIS)   & Dura todo o combate
+}{
+Cura todos os aliados na área a cada rodada. Inimigos com o status \link{status:encharcado}{Encharcado} na área sofrem 1D4 de dano de gelo por rodada.
+}
 {Cura}
 {\typeTag{AOE}\typeTag{CURA}}
 
+\spellCard{Prisão de Água}
+{\elementTag{Agua}}
+{0}
+{O usuário manipula a tensão superficial da água para envolver o alvo em uma esfera suspensa e pressurizada, restringindo seus movimentos e fôlego.}
+{
+    0   & 10 IEP  & DT 17  & Alvo fica \textbf{Preso} \\ \hline
+    1   & 18 IEP  & DT 19  & Dano por Afogamento (1D6/turno) \\ \hline
+    2   & 26 IEP  & DT 21  & \textbf{Invocação Livre} \\ \hline
+    3   & 36 IEP  & DT 23  & Dano por Afogamento (2D6/turno) \\ \hline
+    4   & 48 IEP  & DT 25  & Dano por Afogamento (3D6/turno) \\ \hline
+    5   & 62 IEP  & DT 27  & Dano por Afogamento (3D8/turno) \\ \hline
+    6   & 78 IEP  & DT 29  & Dano por Sufocamento (3D8/turno) \\ \hline
+    7   & 96 IEP  & DT 31  & Dano por Sufocamento (4D8/turno) \\ \hline
+    8   & 116 IEP & DT 35  & Dano por Sufocamento (4D10/turno) \\ \hline
+    9   & 138 IEP & DT 37  & Dano por Sufocamento (5D10/turno) \\ \hline
+    Div & 162 IEP & DT 40  & \textbf{Casulo de Proteção}
+}{
+\textbf{Status Preso:} O alvo não pode se mover e tem Desvantagem em ataques. Pode tentar escapar no início de cada turno com teste de Atletismo (DT = 17 + Nível).\\
+\textbf{Invocação Livre:} Conjura a até 9 metros de distância.\\
+\textbf{Casulo de Proteção:} Se conjurado em um aliado, a bolha concede Vida Temporária igual a $1D20 \times WIS$ e absorve magias enquanto durar.
+}
+{Resistência de Fôlego}
+{\typeTag{SINGLE}\typeTag{DEBUFF}}
+
 \spellCard{Invernia de Bóreas}
-{\elementTag{Agua} \elementTag{Ar}}
+{\elementTag{Agua}\elementTag{Ar}}
 {30}
 {O usuário invoca o poder dos ventos glaciais do norte, congelando tudo em seu caminho com um frio absoluto e implacável.}
 {
-    3   & 170 IEP   & 5D10 + 4D4    + WIS        &   \textbf{Congelamento Crítico}  \\ \hline
-    4   & 200 IEP   & 6D10 + 4D6    + WIS        &   \textbf{Congelamento Crítico}  \\ \hline
-    5   & 230 IEP   & 6D10 + 5D6    + WIS        &   \textbf{Congelamento Crítico}  \\ \hline
-    6   & 260 IEP   & 7D10 + 5D8   + WIS         &   \textbf{Congelamento Crítico}  \\ \hline
-    7   & 290 IEP   & 7D10 + 6D8   + WIS         &   \textbf{Congelamento Crítico}  \\ \hline
-    8   & 320 IEP   & 8D10 + 7D8   + WIS         &   \textbf{Congelamento Crítico}  \\ \hline
-    9   & 350 IEP   & 8D10 + 8D8   + WIS         &   \textbf{Congelamento Crítico}  \\ \hline
-    Div & 380 IEP   & 9D10 + 9D8  + (1D20*WIS)   &   \textbf{Congelamento Absoluto}
+    3   & 180 IEP & 5D10 + 4D4 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    4   & 215 IEP & 6D10 + 4D6 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    5   & 250 IEP & 6D10 + 5D6 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    6   & 286 IEP & 7D10 + 5D8 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    7   & 323 IEP & 7D10 + 6D8 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    8   & 362 IEP & 8D10 + 7D8 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    9   & 402 IEP & 8D10 + 8D8 + WIS     & \textbf{Congelamento Crítico} \\ \hline
+    Div & 444 IEP & 9D10 + 9D8 + (1D20*WIS) & \textbf{Congelamento Absoluto}
 }{
-Transforma o terreno em \link{status:congelado}{Congelado}.\\
-\textbf{Congelamento Crítico}: Acertos críticos congelam.\\
-\textbf{Congelamento Absoluto}: Qualquer acerto congela.
+Transforma o terreno em \link{terr:congelado}{Congelado} enquanto a magia durar.\\
+\textbf{Congelamento Crítico:} Acertos críticos congelam o alvo por 1 turno.\\
+\textbf{Congelamento Absoluto:} Qualquer acerto bem-sucedido congela o alvo por 1 turno.
 }
 {Ataque}
 {\typeTag{AOE}}
@@ -203,40 +231,15 @@ Transforma o terreno em \link{status:congelado}{Congelado}.\\
 {40}
 {O usuário libera a fúria do deus dos mares, fazendo com que ondas gigantes ataquem os inimigos e curem os aliados simultaneamente.}
 {
-    4   & 200 IEP   & (8D10 de Dano  | 4D10 de Cura) + WIS          &  --  \\ \hline
-    5   & 250 IEP   & (8D10 de Dano  | 5D10 de Cura) + WIS          &  --  \\ \hline
-    6   & 300 IEP   & (9D10 de Dano  | 5D10 de Cura) + WIS          &  --  \\ \hline
-    7   & 350 IEP   & (9D10 de Dano  | 6D10 de Cura) + WIS          &  --  \\ \hline
-    8   & 400 IEP   & (10D10 de Dano | 7D12 de Cura) + WIS          &  --  \\ \hline
-    9   & 450 IEP   & (10D10 de Dano | 8D12 de Cura) + WIS          &  --  \\ \hline
-    Div & 500 IEP   & (10D10 de Dano | 9D12 de Cura) + WIS          &  -- 
+    4   & 220 IEP & 8D10 de Dano / 4D10 de Cura + WIS  & -- \\ \hline
+    5   & 274 IEP & 8D10 de Dano / 5D10 de Cura + WIS  & -- \\ \hline
+    6   & 330 IEP & 9D10 de Dano / 5D10 de Cura + WIS  & -- \\ \hline
+    7   & 388 IEP & 9D10 de Dano / 6D10 de Cura + WIS  & -- \\ \hline
+    8   & 449 IEP & 10D10 de Dano / 7D12 de Cura + WIS & -- \\ \hline
+    9   & 512 IEP & 10D10 de Dano / 8D12 de Cura + WIS & -- \\ \hline
+    Div & 576 IEP & 10D10 de Dano / 9D12 + (1D20*WIS) de Cura & --
 }{
-Transforma o terreno em \link{terr:alagado}{Alagado}.\\
-\textbf{Sobrecarga Divina}: Nível Divino adiciona 1D20 * Wisdom.
+Transforma o terreno em \link{terr:alagado}{Alagado}. O dano atinge inimigos e a cura restaura aliados simultaneamente dentro do raio de efeito.
 }
-{Ataque | Cura}
+{Ataque / Cura}
 {\typeTag{AOE}\typeTag{CURA}}
-
-\spellCard{Prisão de Água}
-{\elementTag{Agua}}
-{0}
-{O usuário manipula a tensão superficial da água para envolver o alvo em uma esfera suspensa e pressurizada, restringindo seus movimentos e fôlego.}
-{
-    0   & 10 IEP   & DT17  & Alvo fica \textbf{Preso} \\ \hline
-    1   & 18 IEP   & DT19  & Dano por Afogamento (1D6) \\ \hline
-    2   & 26 IEP   & DT21  & \textbf{Invocação Livre} \\ \hline
-    3   & 34 IEP   & DT23  & Dano por Afogamento (2D6) \\ \hline
-    4   & 42 IEP   & DT25  & Dano por Afogamento (3D6) \\ \hline
-    5   & 58 IEP   & DT27  & Dano por Afogamento (3D8) \\ \hline
-    6   & 74 IEP   & DT29  & Dano por Sufocamento (3D8) \\ \hline
-    7   & 90 IEP   & DT31  & Dano por Sufocamento (4D8) \\ \hline
-    8   & 106 IEP  & DT35  & Dano por Sufocamento (4D10) \\ \hline
-    9   & 122 IEP  & DT37  & Dano por Sufocamento (5D10) \\ \hline
-    Div & 140 IEP  & DT40  & \textbf{Casulo de Proteção}
-}{
-\textbf{Status Preso}: O alvo não pode se mover e tem desvantagem em ataques. Pode tentar escapar no início de cada turno (DT = 20 + Nível).\\
-\textbf{Invocação Livre}: Conjura a até 9m.\\
-\textbf{Casulo de Proteção}: Se conjurado em um aliado, a bolha concede uma barreira de Vida Temporária igual a $1D20 \times WIS$ e o absorve magias enquanto durar.
-}
-{Resistência de Folego}
-{\typeTag{SINGLE}\typeTag{DEBUFF}}

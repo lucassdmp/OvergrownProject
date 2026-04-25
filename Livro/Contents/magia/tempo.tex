@@ -3,37 +3,37 @@
 \spellCard{Acelerar}
 {\elementTag{Tempo}}
 {20}
-{O usuário cria uma zona de luz pura com sua IEP, fornecendo resistência global a todos os aliados presentes nela, tendo seu custo cobrado a cada rodada ativa}
+{O usuário dilata o fluxo temporal ao redor do alvo, concedendo-lhe uma ação extra por turno. O custo é cobrado a cada rodada ativa.}
 {
-    2   & 60 IEP    & +1 ação extra &  --  \\ \hline
-    3   & 70 IEP    & +1 ação extra &    \\ \hline
-    4   & 80 IEP   & +1 ação extra & +1 adcional custando o dobro de IEP \\ \hline
-    5   & 90 IEP   & +1 ação extra &  --  \\ \hline
-    6   & 100 IEP   & +1 ação extra &  +2 adcionais aumentando o custo em PG de 2 \\ \hline
-    7   & 110 IEP   & +1 ação extra &  --  \\ \hline
-    8   & 120 IEP   & +1 ação extra & +3 adcionais aumentando o custo em PG de 2   \\ \hline
-    9   & 130 IEP   & +1 ação extra &  --  \\ \hline
-    Div & 140 IEP   & +1 ação extra & +4 adcionais aumentando o custo em PG de 2 
-}{A cada rodada o custo de IEP é cobrado}
+    2   & 100 IEP   & +1 ação extra  &  --  \\ \hline
+    3   & 115 IEP   & +1 ação extra  &  --  \\ \hline
+    4   & 130 IEP   & +1 ação extra  & +1 adicional: custo dobrado \\ \hline
+    5   & 145 IEP   & +1 ação extra  &  --  \\ \hline
+    6   & 160 IEP   & +1 ação extra  & +2 adicionais: +20 IEP cada \\ \hline
+    7   & 175 IEP   & +1 ação extra  &  --  \\ \hline
+    8   & 190 IEP   & +1 ação extra  & +3 adicionais: +20 IEP cada \\ \hline
+    9   & 205 IEP   & +1 ação extra  &  --  \\ \hline
+    Div & 220 IEP   & +1 ação extra  & +4 adicionais: +20 IEP cada
+}{A cada rodada o custo de IEP é cobrado. Ações extras adicionais aumentam o custo cumulativamente.}
 {Efeito}
-{\typeTag{BUFF}\typeTag{Single}}
+{\typeTag{BUFF}\typeTag{SINGLE}}
 
 \spellCard{Reverter Tempo}
 {\elementTag{Tempo}}
 {20}
-{O usuário invoca uma onda de energia aquática curativa, que banha o alvo em uma luz revitalizante e limpa impurezas, caso seja usada em um aliado que não si mesmo, recupera IEP também.}
+{O usuário reverte o fluxo temporal em torno de um alvo, reparando ferimentos recentes. Se usado em aliado, também recupera IEP.}
 {
-    2   & 18 IEP    & 3D4 + WIS         & 1D4 + WIS \\ \hline
-    3   & 24 IEP    & 4D4 + WIS         & 2D4 + WIS \\ \hline
-    4   & 36 IEP    & 4D4 + WIS         & 2D4 + WIS \\ \hline
-    5   & 48 IEP    & 5D6 + WIS         & 3D4 + WIS \\ \hline
-    6   & 60 IEP    & 5D6 + WIS         & 3D4 + WIS \\ \hline
-    7   & 72 IEP    & 6D6 + WIS         & 4D4 + WIS \\ \hline
-    8   & 84 IEP    & 6D6 + WIS         & 4D4 + WIS \\ \hline
-    9   & 96 IEP    & 7D8 + WIS        & 5D4 + WIS \\ \hline
-    Div & 108 IEP   & 8D8 + (1D10*WIS) & 6D4 + WIS
+    2   & 18 IEP    & 3D4 + WIS          & 1D4 + WIS de IEP \\ \hline
+    3   & 24 IEP    & 4D4 + WIS          & 2D4 + WIS de IEP \\ \hline
+    4   & 36 IEP    & 4D4 + WIS          & 2D4 + WIS de IEP \\ \hline
+    5   & 48 IEP    & 5D6 + WIS          & 3D4 + WIS de IEP \\ \hline
+    6   & 60 IEP    & 5D6 + WIS          & 3D4 + WIS de IEP \\ \hline
+    7   & 72 IEP    & 6D6 + WIS          & 4D4 + WIS de IEP \\ \hline
+    8   & 84 IEP    & 6D6 + WIS          & 4D4 + WIS de IEP \\ \hline
+    9   & 96 IEP    & 7D8 + WIS          & 5D4 + WIS de IEP \\ \hline
+    Div & 108 IEP   & 8D8 + (1D10*WIS)   & 6D4 + WIS de IEP
 }{
-Nível Divino: 1D10 multiplicador de Wisdom.
+Nível Divino: WIS multiplicado por 1D10 na cura.
 }
 {Cura}
 {\typeTag{CURA}\typeTag{SINGLE}}
@@ -41,102 +41,105 @@ Nível Divino: 1D10 multiplicador de Wisdom.
 \spellCard{Desacelerar}
 {\elementTag{Tempo}}
 {20}
-{O usuário cria uma zona de luz pura com sua IEP, fornecendo resistência global a todos os aliados presentes nela, tendo seu custo cobrado a cada rodada ativa}
+{O usuário comprime o fluxo temporal ao redor do alvo, reduzindo drasticamente sua capacidade de ação. O custo é cobrado a cada rodada.}
 {
-    2   & 80 IEP    & Metade do Movimento &  -- \\ \hline
-    3   & 90 IEP    & Escolhe Movimento ou Reação & -- \\ \hline
-    4   & 100 IEP   & Escolhe Movimento ou Reação & Pode ser usado como reação para impedir uma reação \\ \hline
-    5   & 90 IEP   & Escolhe Movimento ou Reação & Pode ser usado como reação para impedir uma reação \\ \hline
-    6   & 80 IEP   & Escolhe Movimento ou Reação & Pode ser usado como reação para impedir uma reação \\ \hline
-    7   & 70 IEP   & Escolhe Movimento ou Reação & Pode ser usado como reação para impedir uma reação \\ \hline
-    8   & 60 IEP   & Escolhe Movimento ou Reação & Pode ser usado como reação para impedir uma reação \\ \hline
-    9   & 50 IEP   & Escolhe Movimento ou Reação & Pode ser usado como reação para impedir uma reação \\ \hline
-    Div & 40 IEP   & Escolhe Movimento ou Reação & Pode ser usado como reação para impedir uma reação  
-}{A cada rodada o custo de IEP é cobrado}
+    2   & 60 IEP    & Metade do Movimento     & -- \\ \hline
+    3   & 70 IEP    & Escolhe: Movimento \textit{ou} Reação & -- \\ \hline
+    4   & 80 IEP    & Escolhe: Movimento \textit{ou} Reação & Pode ser usado como Reação para impedir uma Reação \\ \hline
+    5   & 90 IEP    & Escolhe: Movimento \textit{ou} Reação & -- \\ \hline
+    6   & 100 IEP   & Escolhe: Movimento \textit{ou} Reação & -- \\ \hline
+    7   & 110 IEP   & Escolhe: Movimento \textit{ou} Reação & -- \\ \hline
+    8   & 120 IEP   & Escolhe: Movimento \textit{ou} Reação & -- \\ \hline
+    9   & 130 IEP   & Escolhe: Movimento \textit{ou} Reação & -- \\ \hline
+    Div & 140 IEP   & Escolhe: Movimento \textit{ou} Reação & --
+}{A cada rodada o custo de IEP é cobrado.}
 {Efeito}
-{\typeTag{DEBUFF}\typeTag{Single}}
+{\typeTag{DEBUFF}\typeTag{SINGLE}}
 
 \spellCard{Conserto Rápido}
 {\elementTag{Tempo}}
 {20}
-{O usuário cria uma zona de luz pura com sua IEP, fornecendo resistência global a todos os aliados presentes nela, tendo seu custo cobrado a cada rodada ativa}
+{O usuário acelera o tempo ao redor de um aliado, concedendo-lhe uma Reação adicional no turno. O custo é cobrado a cada rodada.}
 {
-    2   & 120 IEP    & +1 Reação para 1 aliado &  --  \\ \hline
-    3   & 115 IEP    & +1 Reação para 1 aliado &    \\ \hline
-    4   & 125 IEP   & +1 Reação para 1 aliado & +1 adcional custando o dobro de IEP \\ \hline
-    5   & 120 IEP   & +1 Reação para 1 aliado &  --  \\ \hline
-    6   & 130 IEP   & +1 Reação para 1 aliado &  +2 adcionais aumentando o custo em PG de 2 \\ \hline
-    7   & 125 IEP   & +1 Reação para 1 aliado &  --  \\ \hline
-    8   & 135 IEP   & +1 Reação para 1 aliado & +3 adcionais aumentando o custo em PG de 2   \\ \hline
-    9   & 130 IEP   & +1 Reação para 1 aliado &  --  \\ \hline
-    Div & 140 IEP   & +1 Reação para 1 aliado & +4 adcionais aumentando o custo em PG de 2 
-}{A cada rodada o custo de IEP é cobrado}
+    2   & 100 IEP   & +1 Reação para 1 aliado  &  --  \\ \hline
+    3   & 112 IEP   & +1 Reação para 1 aliado  &  --  \\ \hline
+    4   & 124 IEP   & +1 Reação para 1 aliado  & +1 adicional: custo dobrado \\ \hline
+    5   & 136 IEP   & +1 Reação para 1 aliado  &  --  \\ \hline
+    6   & 148 IEP   & +1 Reação para 1 aliado  & +2 adicionais: +20 IEP cada \\ \hline
+    7   & 160 IEP   & +1 Reação para 1 aliado  &  --  \\ \hline
+    8   & 172 IEP   & +1 Reação para 1 aliado  & +3 adicionais: +20 IEP cada \\ \hline
+    9   & 184 IEP   & +1 Reação para 1 aliado  &  --  \\ \hline
+    Div & 200 IEP   & +1 Reação para 1 aliado  & +4 adicionais: +20 IEP cada
+}{A cada rodada o custo de IEP é cobrado.}
 {Efeito}
-{\typeTag{BUFF}\typeTag{Single}}
+{\typeTag{BUFF}\typeTag{SINGLE}}
 
 \spellCard{Marco Temporal}
 {\elementTag{Tempo}}
 {30}
-{O usuário coloca um marco de retorno e pode que vai ativar depois de um número específicos de ações, fazendo ele retornar para o marco feito, pode ser ativado antes do fim das ações.}
+{O usuário coloca um marco de retorno que ativa após um número específico de ações, fazendo-o rebobinar para o ponto marcado.}
 {
-    3   & 24 IEP    & 1d6 Ações antes de rebobinar & -- \\ \hline
-    4   & 36 IEP    & 2d6+1 Ações antes de rebobinar & Pode ser usado em aliados \\ \hline
-    5   & 48 IEP    & 3d6+2 Ações antes de rebobinar & Pode ser cancelado e manter a posição \\ \hline
-    6   & 60 IEP    & 4d6+3 Ações antes de rebobinar & -- \\ \hline
-    7   & 72 IEP    & 5d6+4 Ações antes de rebobinar & -- \\ \hline
-    8   & 84 IEP    & 6d6+5 Ações antes de rebobinar & -- \\ \hline
-    9   & 96 IEP    & 7d6+6 Ações antes de rebobinar & -- \\ \hline
-    Div & 108 IEP   & 8d6+6 Ações antes de rebobinar & --
+    3   & 24 IEP    & 1D6 Ações antes de rebobinar          & -- \\ \hline
+    4   & 36 IEP    & 2D6+1 Ações antes de rebobinar        & Pode ser usado em aliados \\ \hline
+    5   & 48 IEP    & 3D6+2 Ações antes de rebobinar        & Pode ser cancelado para manter a posição \\ \hline
+    6   & 60 IEP    & 4D6+3 Ações antes de rebobinar        & -- \\ \hline
+    7   & 72 IEP    & 5D6+4 Ações antes de rebobinar        & -- \\ \hline
+    8   & 84 IEP    & 6D6+5 Ações antes de rebobinar        & -- \\ \hline
+    9   & 96 IEP    & 7D6+6 Ações antes de rebobinar        & -- \\ \hline
+    Div & 108 IEP   & 8D6+6 Ações antes de rebobinar        & --
 }{
 }
-{Cura}
+{Efeito}
 {\typeTag{BUFF}\typeTag{SINGLE}}
 
 \spellCard{Quebra Temporal}
 {\elementTag{Tempo}}
 {30}
-{Cria uma zona onde todos que estiverem dentro são considerados debilitados}
+{Cria uma zona onde todos os alvos dentro ficam \link{status:debilitado}{Debilitados}, incapazes de agir normalmente.}
 {
-    3   & 160 IEP    & 3m de raio & -- \\ \hline
-    4   & 180 IEP   & 4m de raio & Não afeta a si mesmo \\ \hline
-    5   & 200 IEP   & 5m de raio &  Não afeta aliados  \\ \hline
-    6   & 220 IEP   & 6m de raio & -- \\ \hline
-    7   & 240 IEP   & 7m de raio &  --  \\ \hline
-    8   & 260 IEP   & 8m de raio & -- \\ \hline
-    9   & 280 IEP   & 9m de raio &  --  \\ \hline
-    Div & 300 IEP   & 10m de raio & --  
-}{}
+    3   & 160 IEP   & 3m de raio  & -- \\ \hline
+    4   & 180 IEP   & 4m de raio  & Não afeta o conjurador \\ \hline
+    5   & 200 IEP   & 5m de raio  & Não afeta aliados \\ \hline
+    6   & 220 IEP   & 6m de raio  & -- \\ \hline
+    7   & 240 IEP   & 7m de raio  & -- \\ \hline
+    8   & 260 IEP   & 8m de raio  & -- \\ \hline
+    9   & 280 IEP   & 9m de raio  & -- \\ \hline
+    Div & 300 IEP   & 10m de raio & --
+}{
+}
 {Efeito}
 {\typeTag{DEBUFF}\typeTag{AOE}}
 
-\spellCard{Armamentos Retardatário}
+\spellCard{Armamentos Retardatários}
 {\elementTag{Tempo}}
 {30}
-{O usuário invoca selos mágicos envolta do alvo. Esses selos buscam conhecimentos abstratos do Pináculo melhorando o desempenho do alvo.}
+{O usuário comprime o tempo ao redor dos reflexos do alvo, reduzindo drasticamente sua capacidade de desviar.}
 {
-    3   & 80 IEP    & -5 de Reflexos    & -- \\ \hline
-    4   & 96 IEP    & -7 de Reflexos    & -- \\ \hline
-    5   & 112 IEP    & -10 de Reflexos   & -- \\ \hline
-    6   & 128 IEP    & -12 de Reflexos   & -- \\ \hline
-    7   & 144 IEP    & -15 de Reflexos   & -- \\ \hline
-    8   & 160 IEP    & -17 de Reflexos   & -- \\ \hline
-    9   & 176 IEP    & -20 de Reflexos   & -- \\ \hline
-    Div & 200 IEP   & Impede a pessoa de desviar   & 
+    3   & 80 IEP    & $-$5 de Reflexos    & -- \\ \hline
+    4   & 96 IEP    & $-$7 de Reflexos    & -- \\ \hline
+    5   & 112 IEP   & $-$10 de Reflexos   & -- \\ \hline
+    6   & 128 IEP   & $-$12 de Reflexos   & -- \\ \hline
+    7   & 144 IEP   & $-$15 de Reflexos   & -- \\ \hline
+    8   & 160 IEP   & $-$17 de Reflexos   & -- \\ \hline
+    9   & 176 IEP   & $-$20 de Reflexos   & -- \\ \hline
+    Div & 200 IEP   & Impede o alvo de desviar & --
 }{Dura uma cena inteira.}
 {Efeito}
-{\typeTag{BUFF}\typeTag{SINGLE}}
+{\typeTag{DEBUFF}\typeTag{SINGLE}}
 
 \spellCard{Fratura Temporal de Kairós}
 {\elementTag{Tempo}}
 {50}
-{Fragmenta as linhas temporais dos alvos escolhidos, deixando eles incapazes de agir por uma rodada}
+{Fragmenta as linhas temporais dos alvos escolhidos, deixando-os incapazes de agir. Acima do nível 50, tende a ser poderosa — o Mestre deve considerar o contexto.}
 {
-    5   & 400 IEP   & 1 Rodada & -- \\ \hline
-    6   & 380 IEP   & 1 Rodada & -- \\ \hline
-    7   & 360 IEP   & 1 Rodada & -- \\ \hline
-    8   & 340 IEP   & 1 Rodada & -- \\ \hline
-    9   & 320 IEP   & 1 Rodada & -- \\ \hline
-    Div & 500 IEP   & 1D8 Rodadas & --  
-}{}
+    5   & 400 IEP   & 1 Rodada  & -- \\ \hline
+    6   & 420 IEP   & 1 Rodada  & -- \\ \hline
+    7   & 440 IEP   & 1 Rodada  & -- \\ \hline
+    8   & 460 IEP   & 1 Rodada  & -- \\ \hline
+    9   & 480 IEP   & 1 Rodada  & -- \\ \hline
+    Div & 500 IEP   & 1D4 Rodadas & Alvos testam FOR (DT 30) por turno para agir
+}{
+Nível Divino reduzido para 1D4 rodadas (antes 1D8). Alvos têm chance de resistir por turno.
+}
 {Efeito}
 {\typeTag{DEBUFF}\typeTag{AOE}}

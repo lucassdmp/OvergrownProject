@@ -12,58 +12,83 @@
     4   & 20 IEP & 3D12 + WIS           & \textbf{Incêndio Crítico} \\ \hline
     5   & 28 IEP & 4D12 + WIS           & \textbf{Incêndio Crítico} \\ \hline
     6   & 36 IEP & 5D12 + WIS           & \textbf{Incêndio Crítico} \\ \hline
-    7   & 44 IEP & 5D12+2D6+WIS         & \textbf{Incêndio Crítico} \\ \hline
-    8   & 52 IEP & 5D12+4D6+WIS         & \textbf{Incêndio Crítico} \\ \hline
-    9   & 60 IEP & 5D12+6D6+WIS         & \textbf{Incêndio Crítico} \\ \hline
-    Div & 68 IEP & 5D12+8D6+(1D20*WIS)  & \textbf{Incêndio Absoluto}
+    7   & 44 IEP & 5D12 + 2D6 + WIS     & \textbf{Incêndio Crítico} \\ \hline
+    8   & 52 IEP & 5D12 + 4D6 + WIS     & \textbf{Incêndio Crítico} \\ \hline
+    9   & 60 IEP & 5D12 + 6D6 + WIS     & \textbf{Incêndio Crítico} \\ \hline
+    Div & 68 IEP & 5D12 + 8D6 + (1D20*WIS) & \textbf{Incêndio Absoluto}
 }{
-\textbf{Incêndio Crítico:} Rolagens críticas incendeiam o oxigênio em volta do alvo, aplicando o status \link{status:queimado}{Queimado} (1D4 de dano por nível da magia).
-\textbf{Incêndio Absoluto:} Todo ataque bem sucedido aplica o status \link{status:queimado}{Queimado} por 10D10 de dano por Rodada.
+\textbf{Incêndio Crítico:} Acertos críticos aplicam \link{status:queimado}{Queimado} (1D4 de dano por nível da magia por rodada).\\
+\textbf{Incêndio Absoluto:} Todo acerto aplica \link{status:queimado}{Queimado} (10D10 de dano por rodada, por 3 rodadas).
 }
 {Ataque}
-{\typeTag{PROJ}
-\typeTag{SINGLE}}
+{\typeTag{PROJ}\typeTag{SINGLE}}
 
 \spellCard{Bola de Fogo}
 {\elementTag{Fogo}}
 {0}
 {O usuário condensa IEP em uma esfera de combustão pura, que explode no impacto criando uma onda expansiva de calor devastador.}
 {
-    0   & 8 IEP     & 1D8  + 1D4  + WIS                  & \textbf{Incêndio Crítico}  \\ \hline
-    1   & 16 IEP    & 1D10 + 1D4  + WIS                  & \textbf{Incêndio Crítico}  \\ \hline
-    2   & 24 IEP    & 2D10 + 2D4  + WIS                  & \textbf{Incêndio Crítico}  \\ \hline
-    3   & 32 IEP    & 2D12 + 2D4  + WIS                  & \textbf{Incêndio Crítico}  \\ \hline
-    4   & 40 IEP    & 3D12 + 4D4  + WIS                  & \textbf{Incêndio Crítico}  \\ \hline
-    5   & 56 IEP    & 4D12 + 4D4  + WIS                  & \textbf{Incêndio Crítico}  \\ \hline
-    6   & 72 IEP    & 5D12 + 6D4  + WIS                  & \textbf{Incêndio Crítico}  \\ \hline
-    7   & 88 IEP    & 5D12 + 6D4  + 2D6  +   WIS         & \textbf{Incêndio Crítico}  \\ \hline
-    8   & 104 IEP   & 5D12 + 8D4  + 4D6  +   WIS         & \textbf{Incêndio Crítico}  \\ \hline
-    9   & 120 IEP   & 5D12 + 8D4  + 6D6  +   WIS         & \textbf{Incêndio Crítico}  \\ \hline
-    Div & 132 IEP   & 5D12 + 10D4  + 8D6  +  (1D20*WIS)  & \textbf{Incêndio Absoluto}
+    0   & 8 IEP   & 1D8 + 1D4 + WIS              & \textbf{Incêndio Crítico} \\ \hline
+    1   & 16 IEP  & 1D10 + 1D4 + WIS             & \textbf{Incêndio Crítico} \\ \hline
+    2   & 24 IEP  & 2D10 + 2D4 + WIS             & \textbf{Incêndio Crítico} \\ \hline
+    3   & 32 IEP  & 2D12 + 2D4 + WIS             & \textbf{Incêndio Crítico} \\ \hline
+    4   & 40 IEP  & 3D12 + 4D4 + WIS             & \textbf{Incêndio Crítico} \\ \hline
+    5   & 56 IEP  & 4D12 + 4D4 + WIS             & \textbf{Incêndio Crítico} \\ \hline
+    6   & 72 IEP  & 5D12 + 6D4 + WIS             & \textbf{Incêndio Crítico} \\ \hline
+    7   & 88 IEP  & 5D12 + 6D4 + 2D6 + WIS       & \textbf{Incêndio Crítico} \\ \hline
+    8   & 104 IEP & 5D12 + 8D4 + 4D6 + WIS       & \textbf{Incêndio Crítico} \\ \hline
+    9   & 120 IEP & 5D12 + 8D4 + 6D6 + WIS       & \textbf{Incêndio Crítico} \\ \hline
+    Div & 136 IEP & 5D12 + 10D4 + 8D6 + (1D20*WIS) & \textbf{Incêndio Absoluto}
 }{
-Alvos na área de efeito devem rolar teste de esquiva ou bloqueio (DT = 20 + Nível da Habilidade).
+Alvos na área de efeito devem rolar teste de esquiva ou bloqueio (DT = 20 + Nível da Magia).\\
+\textbf{Incêndio Crítico:} Acertos críticos aplicam \link{status:queimado}{Queimado} (1D4 por nível por rodada).\\
+\textbf{Incêndio Absoluto:} Todo acerto aplica \link{status:queimado}{Queimado} (10D10/rodada, por 3 rodadas).
 }
 {Ataque}
 {\typeTag{PROJ}\typeTag{AOE}}
 
+\spellCard{Cauterizar}
+{\elementTag{Fogo}}
+{0}
+{O usuário concentra IEP em chamas precisas e controladas, selando feridas com calor cauterizante e estancando sangramentos.}
+{
+    0   & 8 IEP   & 1D6 + WIS         & \textbf{Cicatrização} \\ \hline
+    1   & 16 IEP  & 2D6 + WIS         & \textbf{Cicatrização} \\ \hline
+    2   & 24 IEP  & 3D6 + WIS         & \textbf{Cicatrização} \\ \hline
+    3   & 32 IEP  & 4D6 + WIS         & \textbf{Cicatrização} \\ \hline
+    4   & 40 IEP  & 4D8 + WIS         & \textbf{Cicatrização} \\ \hline
+    5   & 56 IEP  & 5D8 + WIS         & \textbf{Cicatrização} \\ \hline
+    6   & 72 IEP  & 5D10 + WIS        & \textbf{Cicatrização} \\ \hline
+    7   & 88 IEP  & 6D10 + WIS        & \textbf{Cicatrização} \\ \hline
+    8   & 104 IEP & 6D12 + WIS        & \textbf{Cicatrização} \\ \hline
+    9   & 120 IEP & 7D12 + WIS        & \textbf{Cicatrização} \\ \hline
+    Div & 136 IEP & 8D12 + (1D10*WIS) & \textbf{Cicatrização Perfeita}
+}{
+\textbf{Cicatrização:} Remove 1 acúmulo de \link{status:ardiloso}{Sangramento Ardiloso} ou \link{status:brutal}{Sangramento Brutal} por nível da magia.\\
+\textbf{Cicatrização Perfeita:} Remove todos os acúmulos de ambos os tipos de sangramento.
+}
+{Cura}
+{\typeTag{CURA}\typeTag{SINGLE}}
+
 \spellCard{Armadura de Lava}
-{\elementTag{Fogo} \elementTag{Terra}}
+{\elementTag{Fogo}\elementTag{Terra}}
 {0}
 {O usuário funde IEP com elementos terrosos, criando uma armadura de rocha derretida que brilha com calor intenso e repele ataques.}
 {
-    0   & 20 IEP    & WIS               &  5 de Resistência Global  \\ \hline
-    1   & 32 IEP    & WIS + 5           &  5 de Resistência Global  \\ \hline
-    2   & 44 IEP    & WIS + 7           &  7 de Resistência Global  \\ \hline
-    3   & 56 IEP    & WIS + 10          &  7 de Resistência Global  \\ \hline
-    4   & 68 IEP    & WIS + 12          &  10 de Resistência Global  \\ \hline
-    5   & 80 IEP    & WIS + 15          &  10 de Resistência Global  \\ \hline
-    6   & 92 IEP    & WIS + 17          &  12 de Resistência Global  \\ \hline
-    7   & 104 IEP   & WIS + 20          &  12 de Resistência Global  \\ \hline
-    8   & 116 IEP   & WIS + 22          &  15 de Resistência Global  \\ \hline
-    9   & 128 IEP   & WIS + 25          &  15 de Resistência Global  \\ \hline
-    Div & 140 IEP   & (1D20*WIS) + 30   &  20 de Resistência Global
+    0   & 20 IEP  & 5 de Resistência Global   & -- \\ \hline
+    1   & 32 IEP  & 7 de Resistência Global   & -- \\ \hline
+    2   & 44 IEP  & 9 de Resistência Global   & -- \\ \hline
+    3   & 56 IEP  & 11 de Resistência Global  & -- \\ \hline
+    4   & 68 IEP  & 13 de Resistência Global  & -- \\ \hline
+    5   & 80 IEP  & 15 de Resistência Global  & -- \\ \hline
+    6   & 92 IEP  & 17 de Resistência Global  & -- \\ \hline
+    7   & 104 IEP & 19 de Resistência Global  & -- \\ \hline
+    8   & 116 IEP & 21 de Resistência Global  & -- \\ \hline
+    9   & 128 IEP & 23 de Resistência Global  & -- \\ \hline
+    Div & 140 IEP & 25 de Resistência Global  & \textbf{Núcleo Incandescente}
 }{
-Aumenta resistência contra Água/Gelo e causa dano de Fogo por contato. Dura uma cena.
+Dura uma cena. Confere resistência adicional contra dano de Água e Gelo. Inimigos que acertarem ataques corpo a corpo sofrem \textbf{1D6 de dano de Fogo} por contato.\\
+\textbf{Núcleo Incandescente:} O dano de retorno sobe para 1D10 e aplica \link{status:queimado}{Queimado}.
 }
 {Dano Refletido}
 {\typeTag{BUFF}\typeTag{SINGLE}}
@@ -73,153 +98,133 @@ Aumenta resistência contra Água/Gelo e causa dano de Fogo por contato. Dura um
 {0}
 {O usuário traça um anel de IEP incandescente ao seu redor, criando uma barreira de chamas dançantes que queima intrusos.}
 {
-    0   & 12  IEP    & 1D4  + WIS          &  --  \\ \hline
-    1   & 24  IEP    & 1D6  + WIS          &  --  \\ \hline
-    2   & 36  IEP    & 2D6  + WIS          &  --  \\ \hline
-    3   & 54  IEP    & 2D8  + WIS          &  \textbf{Invocação Livre} \\ \hline
-    4   & 72  IEP    & 3D8  + WIS          &  --  \\ \hline
-    5   & 90  IEP    & 3D10 + WIS          &  --  \\ \hline
-    6   & 108 IEP    & 4D10 + WIS          &  --  \\ \hline
-    7   & 126 IEP    & 4D12 + WIS          &  --  \\ \hline
-    8   & 144 IEP    & 5D12 + WIS          &  --  \\ \hline
-    9   & 162 IEP    & 6D12 + WIS          &  --  \\ \hline
-    Div & 180 IEP    & 7D12 + (1D10*WIS)   &  \textbf{Controle de Forma}
+    0   & 12 IEP  & 1D4 + WIS           & -- \\ \hline
+    1   & 24 IEP  & 1D6 + WIS           & -- \\ \hline
+    2   & 36 IEP  & 2D6 + WIS           & -- \\ \hline
+    3   & 54 IEP  & 2D8 + WIS           & \textbf{Invocação Livre} \\ \hline
+    4   & 72 IEP  & 3D8 + WIS           & -- \\ \hline
+    5   & 90 IEP  & 3D10 + WIS          & -- \\ \hline
+    6   & 108 IEP & 4D10 + WIS          & -- \\ \hline
+    7   & 126 IEP & 4D12 + WIS          & -- \\ \hline
+    8   & 144 IEP & 5D12 + WIS          & -- \\ \hline
+    9   & 162 IEP & 6D12 + WIS          & -- \\ \hline
+    Div & 180 IEP & 7D12 + (1D10*WIS)   & \textbf{Controle de Forma}
 }{
-\textbf{Invocação Livre}: Manifesta o círculo a até 9m de distância.\\
-\textbf{Controle de Forma}: Molda as chamas em diferentes formas.
+Qualquer inimigo que entrar na área sofre o dano da magia. Aplica \link{status:queimado}{Queimado} em acertos críticos.\\
+\textbf{Invocação Livre:} Manifesta o círculo a até 9 metros de distância.\\
+\textbf{Controle de Forma:} Molda as chamas em diferentes formas geométricas à escolha do conjurador.
 }
 {Ataque}
 {\typeTag{AOE}}
-
-\spellCard{Cauterizar}
-{\elementTag{Fogo}}
-{0}
-{O usuário concentra IEP em chamas precisas e controladas, selando feridas com calor cautelizante e estancando sangramentos.}
-{
-    0   & 8 IEP     & 1D6 + WIS         & \textbf{Cicatrização}        \\ \hline
-    1   & 16 IEP    & 2D6 + WIS         & \textbf{Cicatrização}        \\ \hline
-    2   & 24 IEP    & 2D6 + WIS         & \textbf{Cicatrização}        \\ \hline
-    3   & 32 IEP    & 3D6 + WIS         & \textbf{Cicatrização}        \\ \hline
-    4   & 40 IEP    & 3D6 + WIS         & \textbf{Cicatrização}        \\ \hline
-    5   & 56 IEP    & 3D8 + WIS         & \textbf{Cicatrização}        \\ \hline
-    6   & 72 IEP    & 3D8 + WIS         & \textbf{Cicatrização}        \\ \hline
-    7   & 88 IEP    & 4D8 + WIS         & \textbf{Cicatrização}        \\ \hline
-    8   & 104 IEP   & 4D8 + WIS         & \textbf{Cicatrização}        \\ \hline
-    9   & 120 IEP   & 4D10 + WIS        & \textbf{Cicatrização}        \\ \hline
-    Div & 132 IEP   & 5D10 + (1D10*WIS) & \textbf{Cicatrização Perfeita}
-}{
-\textbf{Cicatrização}: Remove 1 acúmulo de sangramento por nível.\\
-\textbf{Cicatrização Perfeita}: Remove todos os acúmulos de sangramento.
-}
-{Cura}
-{\typeTag{CURA}\typeTag{SINGLE}}
 
 \spellCard{Lâmina Iridescente}
 {\elementTag{Fogo}}
 {0}
 {O usuário imbui uma arma com IEP incandescente, fazendo-a brilhar com calor extremo e cortar como se estivesse em brasa.}
 {
-    0   & 20 IEP    & 1D4  + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    1   & 32 IEP    & 1D6  + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    2   & 44 IEP    & 1D8  + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    3   & 56 IEP    & 1D10 + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    4   & 68 IEP    & 1D12 + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    5   & 80 IEP    & 2D12 + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    6   & 92 IEP    & 3D12 + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    7   & 104 IEP   & 4D12 + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    8   & 116 IEP   & 5D12 + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    9   & 128 IEP   & 6D12 + WIS         &   \textbf{Incêndio Crítico} \\ \hline
-    Div & 140 IEP   & 7D12 + (1D20*WIS)  &   \textbf{Incêndio Absoluto}
+    0   & 20 IEP  & 1D4 + WIS          & \textbf{Incêndio Crítico} \\ \hline
+    1   & 32 IEP  & 1D6 + WIS          & \textbf{Incêndio Crítico} \\ \hline
+    2   & 44 IEP  & 1D8 + WIS          & \textbf{Incêndio Crítico} \\ \hline
+    3   & 56 IEP  & 1D10 + WIS         & \textbf{Incêndio Crítico} \\ \hline
+    4   & 68 IEP  & 1D12 + WIS         & \textbf{Incêndio Crítico} \\ \hline
+    5   & 80 IEP  & 2D12 + WIS         & \textbf{Incêndio Crítico} \\ \hline
+    6   & 92 IEP  & 3D12 + WIS         & \textbf{Incêndio Crítico} \\ \hline
+    7   & 104 IEP & 4D12 + WIS         & \textbf{Incêndio Crítico} \\ \hline
+    8   & 116 IEP & 5D12 + WIS         & \textbf{Incêndio Crítico} \\ \hline
+    9   & 128 IEP & 6D12 + WIS         & \textbf{Incêndio Crítico} \\ \hline
+    Div & 140 IEP & 7D12 + (1D20*WIS)  & \textbf{Incêndio Absoluto}
 }{
-\textbf{Incêndio Crítico}: Acertos críticos aplicam \link{status:queimado}{Queimado} (1D4 por nível).\\
-\textbf{Incêndio Absoluto}: Todo acerto aplica \link{status:queimado}{Queimado} (10D10/rodada).
+\textbf{Incêndio Crítico:} Acertos críticos aplicam \link{status:queimado}{Queimado} (1D4 por nível por rodada). Dura uma cena.\\
+\textbf{Incêndio Absoluto:} Todo acerto aplica \link{status:queimado}{Queimado} (10D10/rodada, por 3 rodadas).
 }
 {Dano Adicional}
 {\typeTag{BUFF}}
 
+\spellCard{Cortina de Fumaça}
+{\elementTag{Fogo}\elementTag{Ar}}
+{0}
+{O usuário manipula a combustão do IEP para gerar uma densa cortina de fumaça, obscurecendo a visão e confundindo os sentidos.}
+{
+    0   & 8 IEP   & 3m Raio   & -- \\ \hline
+    1   & 16 IEP  & 4m Raio   & -- \\ \hline
+    2   & 24 IEP  & 5m Raio   & \textbf{Invocação Livre} \\ \hline
+    3   & 32 IEP  & 6m Raio   & -- \\ \hline
+    4   & 40 IEP  & 7m Raio   & \textbf{Fumaça Irritante} \\ \hline
+    5   & 56 IEP  & 8m Raio   & -- \\ \hline
+    6   & 72 IEP  & 9m Raio   & -- \\ \hline
+    7   & 88 IEP  & 10m Raio  & -- \\ \hline
+    8   & 104 IEP & 12m Raio  & \textbf{Expulsar Oxigênio} \\ \hline
+    9   & 120 IEP & 15m Raio  & -- \\ \hline
+    Div & 136 IEP & 20m Raio  & \textbf{Vácuo Sensorial}
+}{
+Visibilidade zero na área. \textbf{Desvantagem em Ataques e Percepção}, \textbf{Vantagem em Furtividade}.\\
+\textbf{Invocação Livre:} Conjura a até 9 metros.\\
+\textbf{Fumaça Irritante:} $-$5 em testes de Percepção e Atletismo para todos na área.\\
+\textbf{Expulsar Oxigênio:} Apaga chamas de nível inferior na área.\\
+\textbf{Vácuo Sensorial:} Testes de Percepção e Esquiva ficam impossíveis dentro da área.
+}
+{Alcance}
+{\typeTag{AOE}\typeTag{DEBUFF}}
+
 \spellCard{Meteoro}
-{\elementTag{Fogo} \elementTag{Terra}}
+{\elementTag{Fogo}\elementTag{Terra}}
 {20}
 {O usuário canaliza uma enorme quantidade de IEP para invocar uma massa celeste de fogo e rocha, que desce dos céus com força avassaladora.}
 {
-    2   & 75 IEP    & 4D12       + WIS         &   \textbf{Incêndio Garantido}   \\ \hline
-    3   & 100 IEP   & 4D12 + 1D6 + WIS         &   \textbf{Incêndio Garantido}  \\ \hline
-    4   & 120 IEP   & 5D12 + 1D6 + WIS         &   \textbf{Incêndio Garantido}   \\ \hline
-    5   & 150 IEP   & 5D12 + 2D6 + WIS         &   \textbf{Incêndio Garantido}   \\ \hline
-    6   & 175 IEP   & 6D12 + 2D6 + WIS         &   \textbf{Incêndio Garantido}   \\ \hline
-    7   & 200 IEP   & 6D12 + 3D6 + WIS         &   \textbf{Incêndio Garantido}   \\ \hline
-    8   & 225 IEP   & 7D12 + 3D6 + WIS         &   \textbf{Incêndio Garantido}   \\ \hline
-    9   & 250 IEP   & 7D12 + 4D6 + WIS         &   \textbf{Incêndio Garantido}  \\ \hline
-    Div & 275 IEP   & 8D12 + 5D6 + (1D20*WIS)  &   \textbf{Incêndio Absoluto}
+    2   & 80 IEP  & 4D12 + WIS           & \textbf{Incêndio Garantido} \\ \hline
+    3   & 105 IEP & 4D12 + 1D6 + WIS     & \textbf{Incêndio Garantido} \\ \hline
+    4   & 130 IEP & 5D12 + 1D6 + WIS     & \textbf{Incêndio Garantido} \\ \hline
+    5   & 160 IEP & 5D12 + 2D6 + WIS     & \textbf{Incêndio Garantido} \\ \hline
+    6   & 190 IEP & 6D12 + 2D6 + WIS     & \textbf{Incêndio Garantido} \\ \hline
+    7   & 220 IEP & 6D12 + 3D6 + WIS     & \textbf{Incêndio Garantido} \\ \hline
+    8   & 250 IEP & 7D12 + 3D6 + WIS     & \textbf{Incêndio Garantido} \\ \hline
+    9   & 280 IEP & 7D12 + 4D6 + WIS     & \textbf{Incêndio Garantido} \\ \hline
+    Div & 310 IEP & 8D12 + 5D6 + (1D20*WIS) & \textbf{Incêndio Absoluto}
 }{
-Raio de 4m. DT para esquiva: 25 + Nível (34 no Divino).\\
-\textbf{Incêndio Garantido}: Atingidos sofrem \link{status:queimado}{Queimado} (1D4/nível).
+Raio de 4 metros. DT para esquiva: 25 + Nível (34 no Divino).\\
+\textbf{Incêndio Garantido:} Todo acerto aplica \link{status:queimado}{Queimado} (1D4 por nível por rodada).\\
+\textbf{Incêndio Absoluto:} Todo acerto aplica \link{status:queimado}{Queimado} (10D10/rodada, por 3 rodadas).
 }
 {Ataque}
 {\typeTag{PROJ}\typeTag{AOE}}
 
 \spellCard{Fogo Infernal}
-{\elementTag{Fogo} \elementTag{Sombra}}
+{\elementTag{Fogo}\elementTag{Sombra}}
 {20}
 {O usuário invoca um selo rúnico que emana chamas sombrias e corrompidas, queimando tanto a matéria quanto a essência vital.}
 {
-    2   & 50 IEP    & 3D12 + 1d6    + WIS         &   \textbf{Incêndio Verdadeiro}   \\ \hline
-    3   & 75 IEP    & 3D12 + 2D6    + WIS         &   \textbf{Incêndio Verdadeiro}   \\ \hline
-    4   & 100 IEP   & 4D12 + 2D8    + WIS         &   \textbf{Incêndio Verdadeiro}   \\ \hline
-    5   & 125 IEP   & 4D12 + 3D8    + WIS         &   \textbf{Incêndio Verdadeiro}   \\ \hline
-    6   & 150 IEP   & 5D12 + 3D10   + WIS         &   \textbf{Incêndio Verdadeiro}   \\ \hline
-    7   & 175 IEP   & 5D12 + 4D10   + WIS         &   \textbf{Incêndio Verdadeiro}   \\ \hline
-    8   & 200 IEP   & 6D12 + 5D10   + WIS         &   \textbf{Incêndio Verdadeiro}   \\ \hline
-    9   & 225 IEP   & 6D12 + 6D10   + WIS         &   \textbf{Incêndio Verdadeiro}   \\ \hline
-    Div & 250 IEP   & 7D12 + 7D10   + (1D20*WIS)  &   \textbf{Incêndio Verdadeiro Absoluto}
+    2   & 55 IEP  & 3D12 + 1D6 + WIS     & \textbf{Incêndio Verdadeiro} \\ \hline
+    3   & 80 IEP  & 3D12 + 2D6 + WIS     & \textbf{Incêndio Verdadeiro} \\ \hline
+    4   & 110 IEP & 4D12 + 2D8 + WIS     & \textbf{Incêndio Verdadeiro} \\ \hline
+    5   & 140 IEP & 4D12 + 3D8 + WIS     & \textbf{Incêndio Verdadeiro} \\ \hline
+    6   & 170 IEP & 5D12 + 3D10 + WIS    & \textbf{Incêndio Verdadeiro} \\ \hline
+    7   & 200 IEP & 5D12 + 4D10 + WIS    & \textbf{Incêndio Verdadeiro} \\ \hline
+    8   & 230 IEP & 6D12 + 5D10 + WIS    & \textbf{Incêndio Verdadeiro} \\ \hline
+    9   & 260 IEP & 6D12 + 6D10 + WIS    & \textbf{Incêndio Verdadeiro} \\ \hline
+    Div & 290 IEP & 7D12 + 7D10 + (1D20*WIS) & \textbf{Incêndio Verdadeiro Absoluto}
 }{
-\textbf{Incêndio Verdadeiro}: Críticos causam \link{status:queimado}{Queimado} permanente (até cura com \elementTag{Agua} ou morte). 
+\textbf{Incêndio Verdadeiro:} Acertos críticos aplicam \link{status:queimado}{Queimado} permanente — só pode ser removido por magias de Água ou Natureza, ou pela morte do alvo.\\
+\textbf{Incêndio Verdadeiro Absoluto:} Todo acerto aplica o Queimado permanente, sem necessidade de crítico.
 }
 {Ataque}
 {\typeTag{AOE}}
 
 \spellCard{Lança de Prometeus}
-{\elementTag{Fogo} \elementTag{Luz}}
+{\elementTag{Fogo}\elementTag{Luz}}
 {30}
-{O usuário forja uma lança de fogo divino a partir de IEP puro, que busca o alvo com precisão implacável e poder incandescente, críticos com essa magia contabilizam o dobro de Wisdom.}
+{O usuário forja uma lança de fogo divino a partir de IEP puro, que busca o alvo com precisão implacável e poder incandescente. Críticos com essa magia contabilizam o dobro de Wisdom.}
 {
-    3   & 175 IEP   & 6D12 + 4D6    + WIS         &   \textbf{Acerto Melhorado}   \\ \hline
-    4   & 200 IEP   & 7D12 + 4D8    + WIS         &   \textbf{Acerto Melhorado}   \\ \hline
-    5   & 220 IEP   & 7D12 + 5D8    + WIS         &   \textbf{Acerto Melhorado}   \\ \hline
-    6   & 250 IEP   & 8D12 + 5D10   + WIS         &   \textbf{Acerto Melhorado}   \\ \hline
-    7   & 275 IEP   & 8D12 + 6D10   + WIS         &   \textbf{Acerto Melhorado}   \\ \hline
-    8   & 300 IEP   & 9D12 + 7D10   + WIS         &   \textbf{Acerto Melhorado}   \\ \hline
-    9   & 325 IEP   & 9D12 + 8D10   + WIS         &   \textbf{Acerto Melhorado}   \\ \hline
-    Div & 350 IEP   & 10D12 + 9D10  + (1D20*WIS)  &   \textbf{Acerto Aprimorado}
+    3   & 160 IEP & 5D12 + 4D6 + WIS     & \textbf{Acerto Melhorado} \\ \hline
+    4   & 190 IEP & 6D12 + 4D8 + WIS     & \textbf{Acerto Melhorado} \\ \hline
+    5   & 220 IEP & 6D12 + 5D8 + WIS     & \textbf{Acerto Melhorado} \\ \hline
+    6   & 250 IEP & 7D12 + 5D10 + WIS    & \textbf{Acerto Melhorado} \\ \hline
+    7   & 280 IEP & 7D12 + 6D10 + WIS    & \textbf{Acerto Melhorado} \\ \hline
+    8   & 310 IEP & 8D12 + 7D10 + WIS    & \textbf{Acerto Melhorado} \\ \hline
+    9   & 340 IEP & 8D12 + 8D10 + WIS    & \textbf{Acerto Melhorado} \\ \hline
+    Div & 370 IEP & 9D12 + 9D10 + (1D20*WIS) & \textbf{Acerto Aprimorado}
 }{
-\textbf{Acerto Melhorado}: Se alvo estiver \link{status:queimado}{Queimado}, seu \link{data:ameaça}{Nível de Ameaça} cai 3. \\
-\textbf{Acerto Aprimorado}: Se alvo estiver \link{status:queimado}{Queimado}, seu \link{data:ameaça}{Nível de Ameaça} cai 9.
+\textbf{Acerto Melhorado:} Se o alvo estiver \link{status:queimado}{Queimado}, sua \link{data:ameaça}{Margem de Ameaça} cai em 3 contra você até o fim da cena.\\
+\textbf{Acerto Aprimorado:} Se o alvo estiver \link{status:queimado}{Queimado}, sua Margem de Ameaça cai em 9 contra você.
 }
 {Ataque}
 {\typeTag{PROJ}\typeTag{SINGLE}}
-
-\spellCard{Cortina de Fumaça}
-{\elementTag{Fogo} \elementTag{Ar}}
-{0}
-{O usuário manipula a combustão do IEP para gerar uma densa cortina de fumaça, obscurecendo a visão e confundindo os sentidos.}
-{
-    0   & 8 IEP     & 3m Raio /     & --                              \\ \hline
-    1   & 16 IEP    & 4m Raio /     & --                              \\ \hline
-    2   & 24 IEP    & 5m Raio /     & \textbf{Invocação Livre}        \\ \hline
-    3   & 32 IEP    & 6m Raio /     & --                              \\ \hline
-    4   & 40 IEP    & 7m Raio /     & \textbf{Fumaça Irritante}       \\ \hline
-    5   & 56 IEP    & 8m Raio /     & --                              \\ \hline
-    6   & 72 IEP    & 9m Raio /     & --                              \\ \hline
-    7   & 88 IEP    & 10m Raio /    & --                              \\ \hline
-    8   & 104 IEP   & 12m Raio /    & \textbf{Expulsar Oxigênio}      \\ \hline
-    9   & 120 IEP   & 15m Raio /    & --                              \\ \hline
-    Div & 132 IEP   & 20m Raio /    & \textbf{Vácuo Sensorial} 
-}{
-Visibilidade zero na área. **Desvantagem em Ataques/Percepção**, **Vantagem em Furtividade**.\\
-\textbf{Invocação Livre}: Conjura a até 9m.\\
-\textbf{Fumaça Irritante}: -5 Destreza/Percepção.\\
-\textbf{Expulsar Oxigênio}: Apaga chamas de nível inferior.\\
-\textbf{Vácuo Sensorial}: Testes de Percepção e Esquiva impossíveis.
-}
-{Alcance}
-{\typeTag{AOE}\typeTag{DEBUFF}}
