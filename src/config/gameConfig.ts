@@ -53,7 +53,7 @@ export const defaultGameConfig: GameConfig = {
     pc: {
       base: 2,
       attributes: ['might', 'grace'],
-      rate: 1,
+      rate: 2,
     },
     vida: {
       base: 10,
