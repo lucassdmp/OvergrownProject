@@ -12,7 +12,7 @@ Toda interação significativa com o mundo é regida por uma estrutura de três 
     
     \item[\ringm{Modificadores de Fluxo}:] São as variáveis externas. Bônus provenientes de equipamentos, bênçãos de magias, trilhas da Árvore de Talentos ou vantagens táticas situacionais concedidas pelo mestre.
     
-    \item[\ringm{A Resultante Final}:] O ápice da jogada. É a soma do melhor resultado obtido nos dados com os modificadores, definindo se as ações do personagem se empoem sobre a realidade ou se foi superada pelos desafios encontrados.
+    \item[\ringm{A Resultante Final}:] O ápice da jogada. É a soma do melhor resultado obtido nos dados com os modificadores, definindo se as ações do personagem se empõem sobre a realidade ou se foram superadas pelos desafios encontrados.
 \end{description}
 
 \titlesection{Mecânica de Resolução}
@@ -33,59 +33,27 @@ Um resultado \textbf{20} natural é um Sucesso Crítico: um acerto garantido que
 \rowcolor{gray!15} \textbf{\ringm{Magnitude do Atributo}} & \textbf{\ringm{Reserva de Dados (d20)}} \\ 
 \midrule
 1 -- 5   & 1d20 \\
-6 -- 10   & 2d20 \\
+6 -- 10  & 2d20 \\
 11 -- 15 & 3d20 \\
-15 -- 20 & 4d20 \\
+16 -- 20 & 4d20 \\
 \textbf{21+} & \textbf{5d20} \\ 
 \bottomrule
 \end{tabular}
 \end{center}
 
 \begin{rpgboxtips}{Além do Limite Mortal}
-O limite natural de um aventureiro é a reserva de \textbf{5 dados}. Contudo, aqueles que portam Selos de Divindade ou acessam estados de superiores através de \textbf{Nós Supremos} podem quebrar esta barreira, manifestando reservas de poder que desafiam a compreensão humana. Ter 0 atributos resulta em desvantagem rolando dois dados e pegando o menos.
+O limite natural de um aventureiro é a reserva de \textbf{5 dados}. Aqueles que portam Selos de Divindade ou acessam estados superiores através de \textbf{Nós Supremos} podem quebrar esta barreira, manifestando reservas de poder que desafiam a compreensão humana. Possuir \textbf{0 pontos} em um atributo impõe \textbf{Desvantagem}: role dois dados e utilize o \textit{menor} resultado.
 \end{rpgboxtips}
 
-\begin{comment}
-    
+\titlesection{Vantagem e Desvantagem}
 
-\begin{armaCard}{ESPADA DO PINÁCULO}
-    \textit{\small Uma lâmina forjada em Verdun, banhada em energia primordial que ressoa com a vontade do portador.}
-    
-    \vspace{8pt}
-    
-    % Linha 1 de Atributos
-    \attrField{Base Damage}{2D8}
-    \attrField{Attribute}{FOR}
-    
-    \vspace{2pt}
-    
-    % Linha 2 de Atributos
-    \attrField{Multiplier}{2*}
-    \attrField{Total DMG}{2D8 + 2*FOR}
-    
-    \vspace{8pt}
-    \overRule
-    \vspace{4pt}
-    
-    % Bloco de MIG, GRA, FOR, WIS, SEN
-    \statBox{MIG}{12}
-    \statBox{GRA}{08}
-    \statBox{FOR}{10}
-    \statBox{WIS}{05}
-    \statBox{SEN}{06}
-    
-    \vspace{8pt}
-    \overRule
-    \vspace{4pt}
-    
-    % Efeitos Mágicos
-    \textbf{\textit{Lâmina de Éter.}} O dano desta arma ignora resistências físicas de seres não-divinos.
-    
-    \vspace{10pt}
-    {\ringmfamily\Large\color{overgrownRed} ACTIONS}
-    \overRule
-    
-    \textbf{\textit{Corte Dimensional (2 Ações).}} O jogador realiza um ataque em área (cone de 3m). Inimigos atingidos devem realizar um teste de \textbf{GRA} ou sofrerão o dano total da arma.
-    
-\end{armaCard}
-\end{comment}
+Certas situações, habilidades e magias conferem \textbf{Vantagem} ou \textbf{Desvantagem} em um teste ou ataque. Essas condições alteram a forma como os dados são rolados e qual resultado é utilizado.
+
+\begin{description}
+    \item[\ringm{Vantagem}:] Role \textbf{dois d20} e utilize o \textbf{maior} resultado. Representa circunstâncias favoráveis: terreno elevado, alvo desprevenido, auxílio de um aliado ou efeito de uma habilidade.
+    \item[\ringm{Desvantagem}:] Role \textbf{dois d20} e utilize o \textbf{menor} resultado. Representa condições adversas: visibilidade nula, ferimento grave, status negativos ou posição tática desfavorável.
+\end{description}
+
+\begin{rpgboxtips}{Múltiplas Fontes}
+Independentemente de quantas fontes de Vantagem ou Desvantagem estejam ativas simultaneamente, seus efeitos \textbf{não se acumulam}. Basta uma fonte de cada para que o efeito seja aplicado. Se o personagem possuir ambos ao mesmo tempo, eles se cancelam mutuamente e o dado é rolado normalmente.
+\end{rpgboxtips}

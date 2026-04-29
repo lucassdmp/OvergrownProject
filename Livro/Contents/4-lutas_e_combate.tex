@@ -3,11 +3,10 @@
 
 \titlesection{A Rolagem de Iniciativa}
 
-No \textit{Overgrown}, o combate não é um mero caos, mas uma sequência de movimentos calculados onde a velocidade e a percepção ditam a sobrevivência. Quando as lâminas se cruzam, a ordem das ações é determinada pelo teste de \link{att:grace}{Graça (Grace)} + Modificador de Iniciativa. Este valor representa a prontidão do aventureiro em resposta à ameaça iminente.
+No \textit{Overgrown}, o combate não é um mero caos, mas uma sequência de movimentos calculados onde a velocidade e a percepção ditam a sobrevivência. Quando as lâminas se cruzam, a ordem das ações é determinada pelo teste de \link{att:grace}{Grace} somado ao Modificador de Iniciativa. Este valor representa a prontidão do aventureiro em resposta à ameaça iminente.
 
-\begin{rpgboxtips}
-A iniciativa é rolada no início de cada combate, e a ordem é estabelecida com base nos resultados. Aquele que obtiver o maior resultado age primeiro, seguido pelos demais em ordem decrescente. Em caso de empate, o personagem com maior Graça age primeiro. Se ainda houver empate, o mestre pode decidir a ordem ou permitir que os jogadores rolem novamente.
-A Iniciativa é baseado em um rolamento de \\link{att:grace}{Grace} do personagem somado ao Modificador de Grace. Por exemplo, um personagem com 12 de Graça teria +3 de iniciativa.
+\begin{rpgboxtips}{Rolagem de Iniciativa}
+A iniciativa é rolada no início de cada combate com base em \link{att:grace}{Grace}. Aquele que obtiver o maior resultado age primeiro, seguido pelos demais em ordem decrescente. Em caso de empate, o personagem com maior \link{att:grace}{Grace} age primeiro; persistindo o empate, o Mestre decide ou permite nova rolagem.
 \end{rpgboxtips}
 
 Aqueles que se destacam agem primeiro, estabelecendo o ritmo do confronto, seguidos pelos demais em ordem decrescente de seus resultados.
@@ -22,22 +21,21 @@ O tempo em combate é uma percepção fragmentada. Cada turno condensa entre 0,5
 
 \subsection*{A Hierarquia das Ações}
 
-A economia de combate em \textit{Overgrown} é baseada na versatilidade. Cada combatente possui uma quantidade limitada de energia e pontos de combate que se traduz em três tipos de ações: \textbf{Padrão (ou Completa)}, \textbf{Movimento} e \textbf{Livre}. 
+A economia de combate em \textit{Overgrown} é baseada na versatilidade. Cada combatente possui uma quantidade limitada de energia e pontos de combate que se traduz em quatro tipos de ações: \textbf{Padrão (ou Completa)}, \textbf{Movimento}, \textbf{Livre} e \textbf{Reação}.
 
 A maestria reside na conversão de esforços. O sistema permite que o jogador sacrifique uma ação de maior complexidade para realizar múltiplas tarefas mais simples.
 
 \begin{itemize}
-    \item \textbf{Ação Padrão:} O núcleo do seu turno. Usada para atacar ou usar mágias. Pode ser convertida em uma ação de Movimento, Livre ou reação.
+    \item \textbf{Ação Padrão:} O núcleo do seu turno. Usada para atacar ou usar magias. Pode ser convertida em uma ação de Movimento, Livre ou Reação.
     \item \textbf{Ação de Movimento:} Utilizada para reposicionamento. Pode ser convertida em uma ação Livre.
     \item \textbf{Ação Livre:} Ações rápidas ou frases curtas. Não pode ser convertida.
-    \item \textbf{Reação:} Uma resposta instintiva fora do seu turno (1 por rodada). Não pode ser convertida ou trocada.
+    \item \textbf{Reação:} Uma resposta instintiva fora do seu turno (1 por rodada). Não pode ser convertida ou trocada. Esquivar de um ataque, bloquear, contra-atacar e interromper conjurações são exemplos de Reações.
 \end{itemize}
 
-% --- NOVO CONTEÚDO ADICIONADO AQUI ---
 \titlesection{Nível de Ameaça e Precisão}
 
 \originlink{stats:crit}
-No mundo de \textit{Overgrown}, o \textbf{Nível de Ameaça} descreve o potencial do aventureiro de encontrar brechas na defesa inimiga e atingir pontos vitais com precisão absoluta. 
+No mundo de \textit{Overgrown}, o \textbf{Nível de Ameaça} descreve o potencial do aventureiro de encontrar brechas na defesa inimiga e atingir pontos vitais com precisão absoluta.
 
 Por padrão, um Crítico ocorre ao obter um \textbf{20 natural} nos dados. Entretanto, através de armas específicas e do avanço nos conhecimentos da \textbf{Árvore de Talentos}, este limiar de precisão pode ser reduzido. Um aventureiro de elite pode expandir sua margem de ameaça para resultados como 19, 18 ou até menores, tornando cada golpe uma ameaça potencialmente letal.
 
@@ -45,4 +43,30 @@ Por padrão, um Crítico ocorre ao obter um \textbf{20 natural} nos dados. Entre
 Não ignore a Árvore de Talentos durante seus treinos. Existem \textbf{Nós de Estatísticas} e \textbf{Nós Supremos} focados especificamente em quebrar as regras de tempo, permitindo que ações de movimento concedam bônus extras ou que reações sejam recuperadas mais rapidamente.
 \end{rpgboxtips}
 
-Um aventureiro por padrão, tem 7 unidades de movimento, mas para cada 10 pontos de grace, ele ganha 1 unidade adicional. Assim, um personagem com 25 de Graça teria 9 unidades de movimento, permitindo-lhe se deslocar mais rapidamente pelo campo de batalha e alcançar posições estratégicas com maior facilidade.
+Um aventureiro por padrão tem 7 unidades de movimento, mas para cada 10 pontos de Grace, ele ganha 1 unidade adicional. Assim, um personagem com 25 de Graça teria 9 unidades de movimento, permitindo-lhe se deslocar mais rapidamente pelo campo de batalha e alcançar posições estratégicas com maior facilidade.
+
+\titlesection{Cobertura}
+
+Obstáculos físicos entre o atirador e o alvo concedem proteção. Em \textit{Overgrown}, a cobertura é classificada em dois graus:
+
+\begin{description}
+    \item[\ringm{Cobertura Parcial}:] O alvo está protegido por um obstáculo que cobre \textbf{metade ou menos} de seu corpo (parapeito, pilar, canto de parede). O atirador sofre \textbf{$-$5 de acerto} nos ataques à distância contra esse alvo. O alvo ainda pode ser atingido normalmente caso o ataque supere essa penalidade.
+    \item[\ringm{Cobertura Total}:] O alvo está completamente atrás de um obstáculo sólido, sem linha de visão direta. Ataques à distância comuns são \textbf{impossíveis} contra alvos em cobertura total. Apenas habilidades específicas (como \textit{Tiro Ricochete} ou \textit{Tiro em Curva}) ou magias de área permitem contornar este impedimento.
+\end{description}
+
+\begin{rpgboxtips}{Cobertura e Corpo a Corpo}
+Cobertura não oferece proteção contra ataques corpo a corpo. Um inimigo que atravessar o obstáculo ou alcançar o alvo fisicamente ignora qualquer bônus de cobertura.
+\end{rpgboxtips}
+
+\titlesection{Canalização Mágica com Armas}
+
+Certas armas possuem afinidade com energias arcanas e podem ser usadas como catalisadores para magias, transformando projéteis comuns em veículos de destruição mágica.
+
+\begin{description}
+    \item[\ringm{Arcos}:] Arcos são excelentes condutores de energia primordial. Ao canalizar uma magia através de um arco, o conjurador dispara a magia como se fosse uma flecha. O ataque utiliza o \link{stats:crit}{Nível de Ameaça} do arco e seus bônus de distância. A magia herda o tipo de dano definido pelo conjurador, mas o teste de acerto usa \textbf{Grace} em vez de Arcanismo.
+    \item[\ringm{Armas de Fogo}:] Por serem forjadas com gravuras de combustão rúnica focadas em dano físico bruto, armas de fogo \textbf{não podem ser usadas como canalizadores mágicos}. Tentar fazê-lo dissipa a magia sem efeito e gasta o IEP normalmente.
+\end{description}
+
+\begin{rpgboxtips}{Flechas Especiais e Magia}
+Flechas de Aetherium e Rúnicas amplificam ainda mais magias canalizadas. O dano extra da flecha é adicionado ao dano da magia disparada, tornando a combinação de arqueria e arcanismo uma especialização poderosa.
+\end{rpgboxtips}
