@@ -4,7 +4,7 @@
     "type": "split",
     "children": [
       {
-        "id": "bdb20eca30391eab",
+        "id": "3d83eae113dd2e1d",
         "type": "tabs",
         "children": [
           {
@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Mundo de Overgrown/Glastradum/Vitalis/Lojas/Casa do Vinho da Memória.md",
+                "file": "Two-Shot - Campanha 1/Campanha 1 1.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Casa do Vinho da Memória"
+              "title": "Campanha 1 1"
             }
           }
         ]
@@ -183,8 +183,14 @@
       "bases:Criar nova base": false
     }
   },
-  "active": "dd0a411c5684747e",
+  "active": "5001b90ab866a97d",
   "lastOpenFiles": [
+    "Mundo de Overgrown/Glastradum/Frostheaven/Frostheaven.md",
+    "Two-Shot - Campanha 1/Campanha 1 1.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Vitalis.md",
+    "Two-Shot - Campanha 1/Campanha 1.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Lojas/Casa do Vinho da Memória.md",
+    "Two-Shot - Campanha 1/Two-Shot - Campanha 1",
     "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Acólitos da Chama.md",
     "Sem título.md",
     "Mundo de Overgrown/Glastradum/Vitalis/Lojas/Vinho dos Ancestrais.md",
@@ -207,11 +213,6 @@
     "Última Esperança.md",
     "Null.md",
     "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Docas de Gelo.md",
-    "Mundo de Overgrown/Glastradum/Frostheaven/Lojas/Forja de Volgar.md",
-    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Exército de Frostheaven.md",
-    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Família Northwind.md",
-    "Mundo de Overgrown/Glastradum/Vitalis/Personagens/Diácono Solene Pé-Cuidadoso.md",
-    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Conselho de Aya.md",
     "Sem título/Sem título",
     "Two-Shot - Campanha 1",
     "Mundo de Overgrown/Glastradum/Frostheaven/Distritos",
@@ -219,7 +220,6 @@
     "Mundo de Overgrown/Glastradum/Frostheaven",
     "Mundo de Overgrown/Glastradum/Vitalis",
     "Mundo de Overgrown/A Guilda",
-    "Mundo de Overgrown/Sorodrum",
-    "Glastradum"
+    "Mundo de Overgrown/Sorodrum"
   ]
 }
