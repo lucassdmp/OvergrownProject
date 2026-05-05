@@ -318,8 +318,54 @@
 % Parâmetros: 
 % #1 Nome, #2 Elementos, #3 DIV+, #4 Descrição, #5 Tabela, #6 Notas, #7 Título Coluna 3, #8 Tipos
 
+\newcommand{\spellCard}[8]{%
+    \needspace{6\baselineskip}%
+    \vspace{3pt}%
+    % Cabeçalho: faixa preta com nome e tags
+    \noindent
+    \begin{tikzpicture}[baseline=(H.base), inner sep=0pt, outer sep=0pt]
+        \fill[black!88] (0,-0.18em) rectangle (\linewidth,1.2em);
+        \node[anchor=west, text=white, font=\bfseries\scshape\small, inner sep=0pt]
+            (H) at (4pt,0.48em) {#1};
+        \node[anchor=east, text=white, font=\fontsize{6.2pt}{6.2pt}\selectfont,
+              inner sep=0pt]
+            at (\linewidth-4pt,0.48em)
+            {#2\enspace#8\enspace{\bfseries| DIV #3+}};
+    \end{tikzpicture}%
+    \par\vspace{1pt}%
+    % Descrição
+    \noindent{\fontsize{7pt}{8.5pt}\selectfont\itshape #4}\par
+    \vspace{1pt}%
+    % Tabela compacta sem bordas laterais
+    {%
+        \renewcommand{\arraystretch}{1.1}%
+        \setlength{\tabcolsep}{3pt}%
+        \fontsize{6.5pt}{7.8pt}\selectfont%
+        \noindent
+        \begin{tabular*}{\linewidth}{@{}
+            >{\centering\bfseries}p{0.5cm}
+            >{\centering}p{0.9cm}
+            p{3.0cm}
+            @{\extracolsep{\fill}}p{4.8cm}
+        @{}}%
+        \noalign{\hrule height 0.7pt}%
+        \rowcolor{black!10}%
+        {\bfseries Nív} & {\bfseries Custo} & {\bfseries #7} & {\bfseries Efeito Adicional}\\
+        \noalign{\hrule height 0.5pt}%
+        #5 \\%
+        \noalign{\hrule height 0.7pt}%
+        \end{tabular*}%
+    }%
+    % Notas
+    \ifstrempty{#6}{}{%
+        \vspace{1pt}%
+        \noindent{\fontsize{6.2pt}{7.5pt}\selectfont\itshape #6}\par%
+        \noindent\rule{\linewidth}{0.4pt}%
+    }%
+    \vspace{4pt}%
+}
     
-
+\begin{comment}
 \newcommand{\spellCard}[8]{% 
     \vspace{8pt}
     \begin{tcolorbox}[
@@ -359,7 +405,7 @@
     \end{tcolorbox}
 }
 
-\begin{comment}
+
 
 
 \newcommand{\spellCard}[8]{% 
