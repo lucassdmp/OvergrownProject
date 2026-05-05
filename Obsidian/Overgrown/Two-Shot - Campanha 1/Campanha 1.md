@@ -83,6 +83,9 @@ Suas vestimentas são completamente estranhas — ninguém jamais viu nada parec
 
 ## Cena 1 — Chegada em Frostheaven
 
+**Trilha:** https://www.youtube.com/watch?v=Q9brSpekRn4&list=RDNknjE2SBPxw&index=5
+*Grandioso, frio e marítimo. Para a chegada épica de navio, enquanto o porto e as montanhas de [[Glastradum]] aparecem no horizonte.*
+
 > *Esta é a terceira missão de vocês.*
 >
 > *Diante do aumento absurdo de contratos chegando todos os dias, a [[A Guilda|Guilda]] decidiu formar grupos fixos para dar conta da demanda crescente — e vocês são um deles. Ainda novos como equipe, já provaram valor suficiente para receber tarefas cada vez mais delicadas.*
@@ -151,6 +154,9 @@ Sem esperar resposta, ela se vira e segue em direção ao capitão Victor.
 
 ## Cena 2 — Caminhando por Frostheaven
 
+**Trilha:** https://www.youtube.com/watch?v=HNEyEWq08kw&list=RDHNEyEWq08kw&start_radio=1
+*Cidade mercantil movimentada, barulhenta, suja e viva. O ritmo descompassado da faixa carrega bem a energia das ruas de [[Frostheaven]] — comércio, furtos e indiferença.*
+
 > *[[Frostheaven]] é uma cidade construída para sobreviver, lucrar e esconder segredos.*
 >
 > *As ruas são largas e surpreendentemente bem planejadas, pavimentadas com blocos de pedra de formatos irregulares encaixados como um quebra-cabeça. Mesmo sob neve, lama e maresia, o chão permanece firme.*
@@ -192,6 +198,9 @@ Sem esperar resposta, ela se vira e segue em direção ao capitão Victor.
 ---
 
 ## Cena 3 — O Salão da Guilda
+
+**Trilha:**  https://www.youtube.com/watch?v=vEQSgyz4haM&list=RDvEQSgyz4haM&start_radio=1
+*Estalagem cheia, lareira acesa, aventureiros mentindo sobre feitos heroicos. Manter no fundo enquanto os jogadores exploram os grupos e conversam com Caelan.*
 
 > *Ao entrarem, o calor de lareiras e vozes toma conta do ambiente.*
 >
@@ -278,6 +287,9 @@ Sem esperar resposta, ela se vira e segue em direção ao capitão Victor.
 
 ## Cena 4 — O Quadro de Missões
 
+**Trilha sugerida:** *A Merchant's Day* — The Witcher 3: Wild Hunt  
+*Contemplativa, com leve tensão. Ideal para o momento de escolha — os jogadores lendo os contratos, pesando risco e recompensa.*
+
 Três contratos disponíveis. **Todas levam a [[Vitalis]].**
 
 ---
@@ -285,7 +297,7 @@ Três contratos disponíveis. **Todas levam a [[Vitalis]].**
 ### Missão 1 — Culto do Inverno
 *Recompensa: 150 Moedas de Ouro Real + espólios recuperados*
 
-Com o surgimento de relíquias despertadas pelo [[Null]], um culto vem crescendo nas sombras. A [[A Guilda|Guilda]] suspeita que estejam em posse do **Artefato do Inverno** — um objeto capaz de congelar tudo ao redor de seu portador em frio absoluto. Se encontrarem alguém apto a usá-lo, pode virar uma catástrofe regional.
+Com o surgimento de relíquias despertadas pelo [[O Null|Null]], um culto vem crescendo nas sombras. A [[A Guilda|Guilda]] suspeita que estejam em posse do **Artefato do Inverno** — um objeto capaz de congelar tudo ao redor de seu portador em frio absoluto. Se encontrarem alguém apto a usá-lo, pode virar uma catástrofe regional.
 
 **Objetivo:** Encontrar o culto e impedir seus planos.
 
@@ -311,9 +323,9 @@ Com o surgimento de relíquias despertadas pelo [[Null]], um culto vem crescendo
 ---
 
 ### Missão 2 — Espólios Roubados
-*Recompensa: 50 Ouro Real + títulos de capital do Banco de Asgheist (5 ouros mensais por 1 ano)*
+*Recompensa: 50 Ouro Real + títulos de capital do [[Banco de Asgheist]] (5 ouros mensais por 1 ano)*
 
-Bandidos assaltaram um banco de [[Frostheaven]] no distrito de Neverwinter. Rastreios indicam fuga para [[Vitalis]], seguindo rumo aos Picos dos Dragões, acima das criptas e mausoléus antigos. Provavelmente estão escondidos em cavernas elevadas. Será necessária autorização da [[Suprema Guardamória Isolde Corvus]] para subir.
+Bandidos assaltaram um banco de [[Frostheaven]] no distrito de [[Neverwinter]]. Rastreios indicam fuga para [[Vitalis]], seguindo rumo aos [[Picos dos Dragões]], acima das criptas e mausoléus antigos. Provavelmente estão escondidos em cavernas elevadas. Será necessária autorização da [[Suprema Guardamória Isolde Corvus]] para subir.
 
 **Objetivo:** Recuperar o ouro e eliminar ou capturar os ladrões.
 
@@ -326,7 +338,7 @@ Bandidos assaltaram um banco de [[Frostheaven]] no distrito de Neverwinter. Rast
 
 #### O que Caelan omite
 - O grupo criminoso é treinado e provavelmente ex-militar
-- Os Picos dos Dragões têm trilhas instáveis, avalanches e criaturas territoriais
+- Os [[Picos dos Dragões]] têm trilhas instáveis, avalanches e criaturas territoriais
 - Algumas cavernas escondem mortos-vivos vindos das criptas abaixo
 - Se houver envolvimento político, capturar os ladrões vivos pode ser mais perigoso que matá-los
 - O banco talvez queira silêncio, não justiça
@@ -370,6 +382,9 @@ Um rei do Norte, da família Vespéria, foi assassinado. Seu corpo chegou a [[Fr
 
 ## Cena 5 — A Viagem a Vitalis
 
+**Trilha:**  https://www.youtube.com/watch?v=pPWVfCtnGyg&list=RDpPWVfCtnGyg&start_radio=1
+*Jornada longa por montanhas frias e paisagens cobertas de neve. Grandioso e melancólico, com peso de destino incerto. Trocar pela trilha de combate ao iniciar a emboscada.*
+
 Independente da missão escolhida, o caminho leva a [[Vitalis]].
 
 ### Opção A — A Pé (4 dias)
@@ -384,6 +399,9 @@ Independente da missão escolhida, o caminho leva a [[Vitalis]].
 
 ### A Emboscada
 
+**Trilha sugerida:** *Fiends of the Forest* — The Witcher 3: Wild Hunt  
+*Combate imprevisível e urgente. Trocar imediatamente ao iniciar o ataque — sem transição suave.*
+
 *Adaptar conforme o nível e composição do grupo.*
 
 **Sugestões de inimigos:**
@@ -395,7 +413,10 @@ Independente da missão escolhida, o caminho leva a [[Vitalis]].
 
 ---
 
-## Cena 6 — Chegada em Vitalis (Fim da Sessão 1)
+## Cena 6 — Chegada em Vitalis
+
+**Trilha :** https://www.youtube.com/watch?v=VWGr_89_xdU
+*Coral sombrio e solene, carregado de morte antiga e beleza fúnebre. Captura o peso de [[Vitalis]] — uma cidade que existe para honrar os mortos e não se desculpa por isso.*
 
 > *Vocês chegam em [[Vitalis]] ao entardecer.*
 >
@@ -413,43 +434,148 @@ Independente da missão escolhida, o caminho leva a [[Vitalis]].
 >
 > *Nada aqui existe sem ser, ao mesmo tempo, um monumento.*
 
+Os [[Ordem dos Guardamórias|Guardamórias]] que acompanharam o cortejo desde [[Frostheaven]] assumem a frente do grupo aqui. Eles conhecem o caminho — e [[Vitalis]] os reconhece. Cidadãos param e inclinam a cabeça enquanto o cortejo passa. Não pelo rei morto. Pelo ritual.
+
+Os aventureiros vieram como escolta registrada. Para avançar qualquer missão dentro de [[Vitalis]] — seja recuperar espólios roubados nos [[Picos dos Dragões]], investigar o culto ou simplesmente transitar pelas zonas protegidas — é necessária **autorização direta da [[Suprema Guardamória Isolde Corvus]]**. Sem ela, a [[A Inquisição do Túmulo]] trata qualquer estrangeiro armado em zona restrita como profanador.
+
+O cortejo se dirige à sede da [[Ordem dos Guardamórias]], nos [[Os Telhados Brancos]].
+
 ---
 
-### Zé Pilintra
+## Cena 7 — A Suprema Guardamória
 
-> *Em uma das praças de entrada de [[Vitalis]], sentado num banco de pedra entre dois altares votivos, há um homem.*
+**Trilha:** https://www.youtube.com/watch?v=-FORn5F_xZ4
+*Poder contido, formalidade fria, institução antiga que não precisa levantar a voz. O silêncio da faixa carrega a mesma autoridade de Isolde.*
+
+A [[Suprema Guardamória Isolde Corvus]] recebe o grupo em uma sala sem ornamentos — apenas arquivos, uma longa mesa de pedra e uma única vela acesa.
+
+Ela tem 67 anos. Cabelos completamente brancos, presos com precisão. Olhos que avaliam tudo e descartam o que não serve. Fala pouco e devagar, como quem sabe que cada palavra fica registrada em algum lugar.
+
+Ela recebe os Guardamórias com um único aceno. Examina os documentos do cortejo. Não pergunta sobre o rei — pergunta sobre o regicida. Quer saber se havia documentação biográfica do assassino. Se houve alguma palavra, qualquer coisa registrada antes de morrer.
+
+Depois, ela olha para os aventureiros.
+
+> *— Estrangeiros armados em Vitalis são uma pergunta. A resposta depende do motivo.*
+
+Ela aguarda. Dependendo do que os aventureiros dizem — e de como dizem — ela:
+
+- **Concede passagem restrita:** autorização para circular nas zonas de acesso dos [[Picos dos Dragões]] e no [[Mausoléu Maior]], com prazo definido
+- **Impõe condição:** pede algo em troca — informação, serviço, ou uma promessa que ela registra formalmente
+- **Nega e negocia:** não barra diretamente, mas deixa claro que a [[A Inquisição do Túmulo]] estará observando
+
+> *Ela não é inimiga. Mas não é aliada gratuita.*
+
+---
+
+## Cena 8 — O Labirinto dos Telhados Brancos
+
+**Trilha:** https://www.youtube.com/watch?v=EApZmmYg_oQ&t=1492s
+*Desorientação crescente e dread contido. A beleza estranha da faixa reflete bem o labirinto — não é ameaçador como um monstro, é perturbador como algo que não deveria ser possível. Aumentar o volume gradualmente conforme o labirinto se fecha.*
+
+Ao saírem da sala de Isolde, os aventureiros entram nas ruas do distrito dos [[Os Telhados Brancos]].
+
+> *O distrito parece simples à primeira vista. Ruas largas de pedra clara, silenciosas como tudo em [[Vitalis]]. Placas de bronze nos passeios. Estátuas nos cruzamentos. Velas em nichos nas paredes.*
 >
-> *Homem negro. Terno todo branco, impecável apesar do ambiente fúnebre. No pescoço, um pano vermelho cai como uma gravata — ninguém aqui usa nada remotamente parecido. Ao redor dele, o cheiro de álcool barato mistura-se com a fumaça de um charuto grosso que queima lentamente entre seus dedos.*
+> *Vocês escolhem uma direção e caminham.*
+
+Deixem os jogadores tomarem decisões livremente por algumas rodadas — qualquer rua que escolham, qualquer desvio. Depois:
+
+> *A placa de bronze na esquina à sua frente tem o mesmo nome da que vocês passaram há dois minutos.*
 >
-> *Na outra mão: um pandeiro.*
+> *Não é a mesma rua. Vocês têm certeza disso. Mas a placa é idêntica. O nicho ao lado tem a mesma vela com a mesma altura de cera queimada. A estátua no cruzamento é o mesmo homem com a mesma expressão.*
+
+Deixem tentarem novamente — mapa mental, marcações, qualquer método. Para cada nova tentativa:
+
+> *A rua dobra onde não deveria dobrar. Uma viela que parecia levar para fora termina numa pequena praça fechada que vocês não viram ao entrar. Vocês olham para trás — o caminho pelo qual vieram não está mais lá. No lugar, outra rua. Outra placa. Outro nome.*
 >
-> *Ele toca. Com força. Com gosto. O som ressoa pelos muros de pedra e quebra o silêncio de [[Vitalis]] de uma forma que parece quase ofensiva.*
+> *[[Os Telhados Brancos]] são um distrito de pedra branca e silêncio. Cada rua parece igual à anterior. Cada monumento, igual ao próximo. Vocês não estão perdidos por distração.*
 >
-> *Ninguém ao redor parece ouvi-lo.*
+> *Estão perdidos porque algo não quer que saiam.*
+
+Não há rolagem que resolva isso. Magia de orientação falha sem efeito visível. O distrito não é hostil — apenas fecha.
+
+Então o som começa.
+
+https://www.youtube.com/watch?v=wabpy9OTrPY
+
+> *Vem de algum lugar. Não de uma direção específica — parece preencher o espaço entre as paredes sem ter origem clara.*
 >
-> *Ou talvez ninguém possa.*
+> *É um instrumento. Mas nenhum de vocês já ouviu nada igual.*
 >
-> *Ele olha para vocês.*
+> *Um aro — madeira ou metal, difícil dizer — com pele animal esticada de um lado, tensa como tambor. Ao redor do aro, pequenas lâminas metálicas finas presas por encaixes, que tilintam e chacoalham a cada batida com um som de moedas e chocalhos misturados. Quem quer que o toque usa a palma, os dedos e o pulso ao mesmo tempo — golpes secos na pele intercalados com o chocalhar das lâminas, criando algo que não é marcha, não é dança, não é nenhum ritmo que vem de nenhum exército ou festa ou ritual que vocês conhecem.*
 >
-> *E acena.*
+> *Em [[Vitalis]], onde os únicos sons são sinos funerários e vozes baixas, aquilo ressoa pelos muros de pedra como uma insolência.*
+>
+> *E — percebem depois de um momento — está ficando mais claro.*
+>
+> *Não porque a fonte está se aproximando.*
+>
+> *Mas porque vocês estão caminhando em direção a ela sem ter decidido fazer isso.*
 
-Quando os aventureiros se aproximam:
+Quando os aventureiros seguem o som conscientemente, o labirinto cede. As ruas passam a fazer sentido. Dois ou três cruzamentos, e eles saem para uma praça aberta.
 
-> *— Vocês são mais alguns capachos daqueles "todos poderosos"...*
+---
 
-Ele traga o charuto lentamente.
+## Cena 9 — Zé Pilintra (Fim da Sessão 1)
 
-> *...ou são algum dos pensantes que tem vontade própria?*
+**Trilha:** 
+*A música ritual do próprio Orixá. Rítmica, mística e estranha para qualquer ouvido que não a conheça — exatamente o que os personagens sentiriam. Pesquisar no YouTube: "ponto de Zé Pilintra umbanda". Começar quando os aventureiros saem do labirinto e veem a praça.*
 
-Pausa. Ele ri — de verdade, do fundo do peito — independente da resposta.
+> *No centro da praça, num banco de pedra entre dois altares votivos, está o dono do som.*
+>
+> *Homem negro. Veste algo que nenhum de vocês jamais viu — e que nenhum de vocês consegue descrever com precisão porque não há palavras certas para isso. Um conjunto de peças de tecido branco cortadas de forma que abraça o corpo inteiro com uma precisão estranha: não é armadura, não é túnica, não é manto, não é nada que qualquer alfaiate deste ou de qualquer outro continente produziria. As peças se encaixam. Têm vincos retos que não existem em roupas feitas à mão. A roupa não parece velha nem nova — parece de outro lugar inteiramente, de uma forma que dói tentar pensar sobre.*
+>
+> *Na cabeça, um chapéu branco de copa alta e abas largas, com um lenço cor-de-rosa dobrado no bolso à altura do peito, pendendo levemente para o lado. No pescoço, um pano vermelho cai solto — nenhum adorno, nenhum amuleto, nenhum símbolo que qualquer um reconheça, apenas tecido vermelho.*
+>
+> *Na mão esquerda: o instrumento — o aro de pele e lâminas que vocês ouviram pelo labirinto. Na direita: uma garrafa sem rótulo, já pela metade.*
+>
+> *Um charuto grosso queima entre seus dentes.*
+>
+> *Ao redor dele, a praça tem outras pessoas — dois homens conversando perto de uma estátua, uma mulher atravessando o espaço com um cesto. Eles passam a metros do banco. Nenhum olha. Nenhum desvia. É como se o banco estivesse vazio — como se os olhos deslizassem pela pedra e não encontrassem nada para registrar.*
+>
+> *Uma criança atravessa a praça correndo, passa direto pela frente do banco, olha para o lugar exato onde ele está sentado.*
+>
+> *E continua correndo, sem diminuir o passo.*
+>
+> *Ele vê vocês.*
+>
+> *E sorri — largo, devagar — como quem reconhece alguém que ainda não se conheceu.*
+>
+> *Acena.*
 
-Puxa uma garrafa sem rótulo. Oferece.
+Quando os aventureiros chegam perto:
 
-> *— Senta aí.*
+> *— Ahhh... *traga longo* ...sim, sim, sim. São vocês. Claro que são vocês.*
 
-Traga de novo.
+Ele inclina o chapéu ligeiramente, com uma reverência torta.
 
-> *— Vou contar pra vocês quem vocês seguem de verdade.*
+> *— Caros caros viajantes de destino ainda... ainda não inteiramente escrito... permitam que um humilde servidor das encruzilhadas os saúde. Muito prazer. Imenso prazer, de fato.*
+
+Ele ri sozinho de algo que não compartilhou. Bate o pandeiro duas vezes sem motivo aparente.
+
+> *— Tive... *olha a garrafa como se consultasse alguém* ...tive a satisfação de observar vocês desde que cruzaram aquela porta lá dentro. A velha Isolde, que Deus a abençoe com mais cem anos de memória... ela sabe muita coisa, sabe? Muita coisa mesmo.*
+
+Pausa. Traga do charuto.
+
+> *— Mas há perguntas que ela não faz. Porque as respostas... *gesticula vagamente com a garrafa* ...as respostas mudam o catálogo inteiro. E ela gosta do catálogo do jeito que está.*
+
+Ele se inclina levemente para frente, cotovelos nos joelhos, garrafa balançando.
+
+> *— Então deixa eu perguntar no lugar dela, com toda a... toda a delicadeza que o momento requer:*
+
+Ele olha para cada um de vocês, um por um.
+
+> *— Vocês seguem alguém de verdade... ou seguem o que foi posto na frente de vocês e chamado de verdade?*
+
+Pausa. Independente da resposta, ele ri — do fundo do peito, genuíno.
+
+Oferece a garrafa.
+
+> *— Senta. Senta aqui comigo um momento.*
+
+Traga de novo, lento.
+
+> *— Vou contar pra vocês quem é que vocês seguem de verdade. Porque... *bate o pandeiro uma vez* ...porque alguém precisa contar. E parece que esse alguém... sou eu.*
 
 ---
 
@@ -465,21 +591,28 @@ Traga de novo.
 - O frio é constante. Noites podem ser fatais sem equipamento adequado
 - Criaturas territoriais habitam as encostas: aranhas de cristal, lobos glaciais, mortos-vivos que escapam das criptas superiores de [[Vitalis]]
 
+## Sobre Isolde Corvus
+- Ela não é antagonista — é burocracia viva com 67 anos de poder
+- Sua pergunta sobre o regicida não é protocolo: ela quer saber se havia algo *diferente* nele — é um gancho que pode ser retomado na Sessão 2
+- A autorização que concede define o que os aventureiros podem acessar em [[Vitalis]]
+- Se os jogadores forem mal na interação: ela concede com condição. Nunca bloqueia totalmente — a missão precisa avançar
+- Ela **sabe** que Zé Pilintra está em [[Vitalis]]. Não mencionará isso. Se perguntada diretamente, dirá que "não há nada nos registros sobre essa pessoa"
+
 ## Sobre Vitalis para a Sessão 2
-- Os aventureiros precisarão interagir com a [[Ordem dos Guardamórias]]
-- A [[Suprema Guardamória Isolde Corvus]] pode aparecer dependendo da missão
-- O [[Mausoléu Maior]] e as [[Catacumbas Profundas]] são locais-chave
-- Existe uma pesquisa secreta da Ordem sobre a resistência ao [[Null]] nos túmulos antigos — gancho potencial para arcos futuros
+- O [[Mausoléu Maior]] e as [[Catacumbas Profundas]] são os locais-chave dependendo da missão
+- Existe uma pesquisa secreta da [[Ordem dos Guardamórias]] sobre a resistência ao [[O Null]] nos túmulos antigos — gancho potencial para arcos futuros
+- A [[A Inquisição do Túmulo]] estará observando os aventureiros durante toda a Sessão 2, independente da autorização concedida
 
 ## Sobre Zé Pilintra
 - Ele é um Orixá. Um deus. Não um NPC comum.
+- As pessoas ao redor **não o veem** — não é invisibilidade, é algo mais estranho. Os olhos deslizam. Apenas os aventureiros (e crianças, e bêbados) conseguem fixá-lo.
 - Não tem motivação convencional — aparece porque quer, some porque quer
-- A bebida que oferece não faz mal. Ou faz. Depende da sessão.
-- Ele sabe coisas sobre a [[A Guilda]] que nem os líderes dela sabem
-- O que ele vai "contar" na Sessão 2 é decisão do mestre
+- A garrafa que oferece não tem rótulo. O que há dentro é decisão do mestre — pode ser cachaça comum, pode ser algo que causa efeito, pode ser algo que revela uma visão
+- Ele sabe coisas sobre a [[A Guilda]] que nem os líderes dela sabem — especialmente sobre o [[Pináculo]] e os [[Selos de Divindade]]
+- A frase "quem vocês seguem de verdade" é a semente da Sessão 2. O que ele revela é decisão do mestre, mas deve abalar pelo menos uma certeza que os personagens tinham sobre a [[A Guilda]]
 
 ## Ligações com o Mundo
 - [[Festival dos Mil Nomes]] — ocorre anualmente em [[Vitalis]], toda a cidade recita os nomes de todos os enterrados por 3 semanas ininterruptas
-- [[Null]] — desde 4521, consome mana e causa instabilidade mágica; os túmulos antigos de [[Vitalis]] parecem imunes (segredo da [[Ordem dos Guardamórias]])
-- [[Selos de Divindade]] — mencionados no sistema eleitoral de [[Frostheaven]]; aventureiros com Selos têm peso de voto maior
+- [[O Null]] — desde 4521, consome mana e causa instabilidade mágica; os túmulos antigos de [[Vitalis]] parecem imunes (segredo da [[Ordem dos Guardamórias]])
+- [[Selos de Divindade]] — sistema com menos de 1 ano; aventureiros com Selos têm peso de voto maior em [[Frostheaven]], mas o sistema ainda está sendo implementado
 - [[A Inquisição do Túmulo]] — braço armado da [[Ordem dos Guardamórias]], opera em [[Frostheaven]] ocasionalmente para capturar coletores de ossos
