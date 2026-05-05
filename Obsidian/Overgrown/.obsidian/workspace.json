@@ -1,0 +1,225 @@
+{
+  "main": {
+    "id": "6ca36a8b43b8626e",
+    "type": "split",
+    "children": [
+      {
+        "id": "bdb20eca30391eab",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5001b90ab866a97d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Mundo de Overgrown/Glastradum/Vitalis/Lojas/Casa do Vinho da Memória.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Casa do Vinho da Memória"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6685d2e4ee4e12ea",
+    "type": "split",
+    "children": [
+      {
+        "id": "ccf2166d7b761ffa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dd0a411c5684747e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": true
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de arquivos"
+            }
+          },
+          {
+            "id": "a56dc2e6abab3f84",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Procurar"
+            }
+          },
+          {
+            "id": "b952c915e3541975",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "683fb054215e02f1",
+    "type": "split",
+    "children": [
+      {
+        "id": "90ccc7cc15e7532a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "341a777413cd9eca",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Cidade da Vigilia.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Cidade da Vigilia"
+            }
+          },
+          {
+            "id": "6d01099b1c8863ba",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Cidade da Vigilia.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Cidade da Vigilia"
+            }
+          },
+          {
+            "id": "d8e95a43557a2f13",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "3a936dd9ed759b8d",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "5eb15593e940fbd9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Cidade da Vigilia.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Cidade da Vigilia"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false
+    }
+  },
+  "active": "dd0a411c5684747e",
+  "lastOpenFiles": [
+    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Acólitos da Chama.md",
+    "Sem título.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Lojas/Vinho dos Ancestrais.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Lojas/Tour das Catacumbas.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Lojas/Florista do Adeus.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Lojas/Pena e Crânio.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Personagens/Coletora Lirien Pena-Longa.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Personagens/Inquisidor-Mor Casvan Osso-Limpo.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Lojas/Forja de Volgar.md.tmp.19180.1777960427842",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Lojas/Taverna do Cão Cinzento.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Lojas/Osso e Lamina.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Irmandade dos Artifices.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Exercito de Frostheaven.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Lojas/Velha Sira, A Vendedora-de-Nomes.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Cidade da Vigilia.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Distrito dos Artifices.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Coração Afundado.md",
+    "Capitão Yarik Olho-de-Vidro.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Vila dos Ratos.md",
+    "Última Esperança.md",
+    "Null.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Distritos/Docas de Gelo.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Lojas/Forja de Volgar.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Exército de Frostheaven.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Família Northwind.md",
+    "Mundo de Overgrown/Glastradum/Vitalis/Personagens/Diácono Solene Pé-Cuidadoso.md",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Organizações/Conselho de Aya.md",
+    "Sem título/Sem título",
+    "Two-Shot - Campanha 1",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Distritos",
+    "Mundo de Overgrown/Glastradum/Frostheaven/Pontos de Interesse",
+    "Mundo de Overgrown/Glastradum/Frostheaven",
+    "Mundo de Overgrown/Glastradum/Vitalis",
+    "Mundo de Overgrown/A Guilda",
+    "Mundo de Overgrown/Sorodrum",
+    "Glastradum"
+  ]
+}
