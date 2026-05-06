@@ -32,3 +32,32 @@ A [[Moeda da Guilda]] é universal aqui, mas o Mercado aceita também moedas con
 
 - [[Loja do Precioso]] — Maior loja de artefatos
 - Inúmeros menores não documentados individualmente
+
+# Barracas e Itens Notáveis (em rotação)
+
+O Mercado Global tem dezenas de barracas que mudam de inventário toda semana. Os itens abaixo são os que apareceram com frequência suficiente para virar referência local:
+
+## Frasco da Mão Quente
+**Tipo:** Consumível
+**Efeito:** Aplique nas mãos antes de combate em ambiente frio: ignora penalidade de frio em testes de manuseio (escalada, manejo de arma) por 4h.
+**Preço:** 8 pratas. Disponibilidade: alta.
+
+## Pó-de-Eco
+**Tipo:** Consumível arcano
+**Efeito:** Aspirado antes de conjurar magia: a magia tem **alcance dobrado**, mas custo de IEP +25%. Uma dose por conjuração.
+**Preço:** 35 pratas por dose.
+
+## Anel do Mensageiro
+**Tipo:** Acessório
+**Efeito:** Permite enviar uma mensagem curta (10 palavras) a qualquer outro portador de Anel do Mensageiro registrado em sua mesma rede. Recarrega após 1h.
+**Preço:** 180 ouros (vendido em par).
+
+## Gravata-Prática
+**Tipo:** Cordão de pescoço
+**Efeito:** +1 em testes sociais em ambientes formais da Capital. Inútil fora dela. A maioria dos diplomatas usa.
+**Preço:** 40 pratas.
+
+## Lupa-do-Honesto
+**Tipo:** Acessório de avaliação
+**Efeito:** Aproxime de um item: a lupa **brilha levemente** se o item for autêntico, escurece se for falsificação. Não detecta encantamento — apenas autenticidade material.
+**Preço:** 250 ouros. Vendida apenas em três barracas confiáveis. Khan considera-as concorrência tolerada.

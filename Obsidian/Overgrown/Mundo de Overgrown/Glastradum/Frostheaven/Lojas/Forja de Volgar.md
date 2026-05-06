@@ -21,9 +21,25 @@ Volgar é um dos seis ferreiros no mundo com domínio completo da técnica. Cada
 
 ## Estoque Limitado (o que há disponível varia)
 
-- **Adaga de Osso** (1D6 + GRA, peso 1) — Balanceada, levíssima. Propriedade natural: não enferruja, não quebra por desgaste comum. 800 moedas de ouro.
-- **Espada de Uma Mão de Osso** (2D6 + MIG, peso 2) — Branco-acinzentada, brilha levemente sob luz mágica. 2.500 moedas de ouro.
-- **Lança de Osso** (2D8 + MIG, peso 3) — A mais rara. Volgar produz no máximo 4 por ano. 3.000 moedas de ouro.
+### Adaga de Osso "Costela-Curta"
+**Ameaça:** 17 — **Peso:** 1 — **Dano Base:** 1D6 + MOD de GRA + 1 perfurante
+**Propriedade Especial — Assassin de Osso:** Mantém Empunhadura Dupla com par. Acertos aplicam Sangramento Ardiloso. **Não enferruja, não quebra por desgaste comum.** Contra criaturas de natureza draconiana, dano base sobe para 1D8.
+**Preço:** 800 ouros. Em estoque: **2**.
+
+### Espada de Uma Mão "Branca de Yroln"
+**Ameaça:** 19 — **Peso:** 2 — **Dano Base:** 2D6 + MOD de MIG + 1 sombras
+**Propriedade Especial — Warden Cristalino:** Use escudo sem penalidade de carga. Branco-acinzentada, brilha levemente sob luz mágica — em escuridão total, ilumina 2 unidades em volta automaticamente. Contra criaturas que dependem de visão escura, dano +1D4.
+**Preço:** 2.500 ouros. Em estoque: **1**.
+
+### Lança de Osso "Vértebra Longa"
+**Ameaça:** 18 — **Peso:** 3 — **Dano Base:** 2D8 + MOD de MIG + 1 perfurante
+**Propriedade Especial — Lancer Dragônido:** Inimigos que avançarem a 1 unidade sofrem ataque de oportunidade. Pode ser arremessada (5 unidades, em vez de 4), causa metade do dano no arremesso. **Em ataques contra criaturas voadoras**, dano integral mesmo arremessada, e a lança "puxa para baixo" o alvo — teste de Equilíbrio sob desvantagem para o alvo manter altitude.
+**Preço:** 3.000 ouros. Em estoque: **0** — Volgar produz no máximo 4 por ano. Próxima entrega prevista para 2 meses.
+
+### Machado de Duas Mãos "Última Janela"
+**Ameaça:** 20 — **Peso:** 5 (em vez de 7) — **Dano Base:** 3D8 + MOD de MIG
+**Propriedade Especial — Berserker de Yroln:** Todo acerto aplica Sangramento Brutal. Com armadura leve ou sem armadura, causa 2D6 adicional. **Após 1 minuto sem atacar**, próximo golpe dispara automaticamente como crítico — Volgar diz que o machado "lembra de Yroln e quer cortar".
+**Preço:** 4.500 ouros. Em estoque: **1**. Volgar a forjou para si mesmo e nunca chegou a usá-la; está a venda com relutância.
 
 ## Encomendas (prazo variável)
 

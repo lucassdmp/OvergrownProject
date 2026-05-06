@@ -22,15 +22,43 @@ Trabalho típico:
 # Produtos Vendidos
 
 ## Armas Rúnicas
-- **Adagas com Runa de Ardiloso**,  Adaga (1D6 + GRA) com runa que estabiliza Sangramento Ardiloso. 600 moedas de ouro.
-- **Cajados Pré-Gravados**,  Cajados (2D6 + WIS) com gravações que melhoram a canalização de magia. 1.200 moedas de ouro.
-- **Maças Cerimoniais com Runa de Concussão**,  Maças (2D6 + MIG) que ampliam a chance de causar Concussão em acertos críticos. 800 moedas de ouro.
-- **Bolas de Cristal Gravadas**,  Canalizadores de magia (1D6 + WIS) com runas que adicionam estabilidade ao fluxo arcano. 1.500 moedas de ouro.
+
+### Adaga "Lâmina-de-Sangue-Lento"
+**Ameaça:** 17 — **Peso:** 1 — **Dano Base:** 1D6 + MOD de GRA + 1 perfurante
+**Propriedade Especial — Assassin de Runa Estável:** Mantém Empunhadura Dupla. **Sangramento Ardiloso aplicado por esta adaga dura o dobro de turnos** e não pode ser interrompido por magia comum de cura. A runa é gravada no fio — não no cabo — e brilha levemente quando há ferida aberta no alvo.
+**Preço:** 600 ouros. Em estoque: **3**.
+
+### Cajado "Voz-do-Pulso"
+**Ameaça:** 19 — **Peso:** 3 — **Dano Base:** 2D6 + MOD de WIS
+**Propriedade Especial — Arcanist Estabilizado:** Ao conjurar magias, gaste 10 IEP para aumentar o dano em 1D10 (mantém base). **Magias canalizadas pelo cajado sofrem 50% menos interferência do [[O Null|Null]]** — em zonas onde magia comum falha 1 em 4, este cajado falha 1 em 8. Pode ser usado em corpo a corpo sem penalidade.
+**Preço:** 1.200 ouros. Em estoque: **2**.
+
+### Maça Cerimonial "Cabeça-Pesada-do-Norte"
+**Ameaça:** 18 — **Peso:** 3 — **Dano Base:** 2D6 + MOD de MIG + 1 contundente
+**Propriedade Especial — Crusader de Runa:** Com escudo, causa 1D8 adicional. Acertos críticos ignoram 2 pontos de Resistência. **Acertos comuns têm chance (1 em 6) de aplicar Concussão mesmo sem crítico** — runa de Concussão expandida.
+**Preço:** 800 ouros. Em estoque: **1**.
+
+### Bola de Cristal "Olho-de-Frostheaven"
+**Ameaça:** 19 — **Peso:** 2 — **Dano Base:** 1D6 + MOD de WIS + 1D4 gelo
+**Propriedade Especial — Channeler do Norte:** Adiciona metade do MOD de WIS aos testes de ataque mágico e o MOD de WIS completo ao dano de magias. **Magias de gelo conjuradas pelo Olho recuperam 5 IEP do conjurador ao acertar.**
+**Preço:** 1.500 ouros. Em estoque: **1**.
 
 ## Armaduras Rúnicas
-- **Vestes de Pano com Espaço Extra**,  Vestes (Resistência 0) com 2 espaços de melhoria rúnica em vez de 1. 1.000 moedas de ouro.
-- **Gambeson Marcado**,  Gambeson (Resistência 3) com runa anti-concussão expandida. 700 moedas de ouro.
-- **Cota de Malha Silenciosa**,  Cota de Malha (Resistência 8) com runa que reduz a penalidade de Furtividade de –3 para –1. 1.500 moedas de ouro.
+
+### Vestes "Tela-Branca" (Vestes de Pano com Espaço Extra)
+**Peso:** 1 — **Resistência:** 0
+**Efeitos — Condutor Rúnico Reforçado:** **+2 Espaços de Melhoria Rúnica** (em vez de +1). Liberdade total: sem limite de Esquiva. Sem penalidade de ruído. Drogan recomenda para magos puros.
+**Preço:** 1.000 ouros. Em estoque: **2**.
+
+### Gambeson "Travesseiro-do-Trovão" (Gambeson Marcado)
+**Peso:** 1 — **Resistência:** 3
+**Efeitos — Amortecida Selada:** Reduz o dano de Concussão em **2D4** (em vez de 1D4). Sem penalidade de Esquiva ou ruído. Imune a ondas sonoras de baixa intensidade (gritos de combate, sino monumental, etc.).
+**Preço:** 700 ouros. Em estoque: **2**.
+
+### Cota de Malha "Silêncio-Trançado"
+**Peso:** 4 — **Resistência:** 8
+**Efeitos — Malha Silenciosa:** +2 RD Puro contra cortes. **Penalidade de Furtividade reduzida de -3 para -1.** Bordas com runa de abafamento — em pé parado, não emite ruído metálico nenhum.
+**Preço:** 1.500 ouros. Em estoque: **1**.
 
 ## Ferramentas
 - **Caixa de Xilografia para Aprendiz**,  Conjunto básico de cinzéis, lupas, tintas. Para alunos da perícia. 200 moedas de ouro.

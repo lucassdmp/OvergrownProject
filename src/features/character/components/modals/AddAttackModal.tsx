@@ -5,28 +5,31 @@ import { useCharacterStore } from '../../store/characterStore'
 
 interface Props {
   onClose: () => void
+  existing?: CharacterAttack
 }
 
-export default function AddAttackModal({ onClose }: Props) {
+export default function AddAttackModal({ onClose, existing }: Props) {
   const addAttack = useCharacterStore((s) => s.addAttack)
+  const updateAttack = useCharacterStore((s) => s.updateAttack)
 
-  const [name, setName] = useState('')
-  const [cost, setCost] = useState('')
-  const [damage, setDamage] = useState('')
-  const [category, setCategory] = useState<CombatCategory>('melee')
-  const [description, setDescription] = useState('')
+  const [name, setName] = useState(existing?.name ?? '')
+  const [cost, setCost] = useState(existing?.cost ?? '')
+  const [damage, setDamage] = useState(existing?.damage ?? '')
+  const [category, setCategory] = useState<CombatCategory>(existing?.category ?? 'melee')
+  const [description, setDescription] = useState(existing?.description ?? '')
 
   function handleSave() {
     if (!name.trim()) return
     const attack: CharacterAttack = {
-      id: crypto.randomUUID(),
+      id: existing?.id ?? crypto.randomUUID(),
       name: name.trim(),
       cost: cost.trim(),
       damage: damage.trim() || undefined,
       category,
       description: description.trim(),
     }
-    addAttack(attack)
+    if (existing) updateAttack(attack)
+    else addAttack(attack)
     onClose()
   }
 
@@ -34,7 +37,7 @@ export default function AddAttackModal({ onClose }: Props) {
     'w-full rounded bg-gray-800 border border-gray-700 px-2 py-1.5 text-sm text-white focus:border-amber-600 focus:outline-none'
 
   return (
-    <Modal title="Adicionar Ataque / Habilidade" onClose={onClose} size="md">
+    <Modal title={existing ? 'Editar Ataque / Habilidade' : 'Adicionar Ataque / Habilidade'} onClose={onClose} size="md">
       <div className="flex flex-col gap-3">
         <div>
           <label className="mb-1 block text-xs text-gray-400">Nome *</label>
@@ -103,7 +106,7 @@ export default function AddAttackModal({ onClose }: Props) {
           disabled={!name.trim()}
           className="rounded-lg bg-amber-800 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:opacity-40"
         >
-          Adicionar
+          {existing ? 'Salvar' : 'Adicionar'}
         </button>
       </div>
     </Modal>

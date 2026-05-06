@@ -61,3 +61,30 @@ Tem sócio silencioso há 20 anos: [[Velha Selina Mãos-Tintas]], que cuida da f
 # Tradição
 
 Cada cliente novo recebe, gratuitamente, uma pequena pena de corvo. "A primeira pena é a primeira página", diz Roric. Tradição mantida há 30 anos. Já presenteou milhares.
+
+# Itens Mecânicos com Personalidade
+
+## Pena-Verdade
+**Tipo:** Pena de escrita encantada
+**Efeito:** Quem assina seu nome com esta pena não consegue mentir sobre o conteúdo do que assinou pelas próximas 24h. Atos de perjúrio causam dor física crescente até a verdade ser dita. Vendida por Roric apenas em pares — uma para o testamenteiro e outra para a testemunha.
+**Preço:** 400 ouros (par).
+
+## Caderno-Sem-Volta
+**Tipo:** Caderno encadernado
+**Efeito:** O que é escrito neste caderno **não pode ser apagado, riscado, queimado ou alterado** — fisicamente ou magicamente. As páginas são imunes ao [[O Null|Null]]. Usado por [[Os Coletores de Histórias]] em coletas que envolvem informação sensível. **150 páginas** numeradas.
+**Preço:** 200 ouros.
+
+## Tinta-da-Última-Hora
+**Tipo:** Tinta consumível especial
+**Efeito:** Tinta especialíssima que **registra-se sozinha**. Mergulhe a pena no frasco e deixe-a sobre o papel: a pena escreverá a última hora vivida pelo escritor com precisão biográfica fria. Usado em testamentos em que o autor não confia em ter tempo. **Uma única dose por frasco.**
+**Preço:** 800 ouros.
+
+## Anel-Selo da Voz Final
+**Tipo:** Anel de metal escuro com selo gravado
+**Efeito:** Pressione o selo em pergaminho recém-escrito: o que estiver assinado torna-se **legalmente reconhecido em toda Vitalis e nos territórios da [[Ordem dos Guardamórias]]** sem necessidade de testemunha. Roric só vende para portadores com carta de [[Suprema Guardamória Isolde Corvus|Isolde Corvus]] ou de um Guardamória-Supremo.
+**Preço:** 1.500 ouros.
+
+## Pergaminho-Memória-Sangrenta
+**Tipo:** Pergaminho mágico raríssimo
+**Efeito:** Sob teste — Selina ainda está aperfeiçoando. Pingue uma gota de sangue do escritor sobre o pergaminho: surgem nas páginas, em letra trêmula, **as cinco lembranças mais fortes da vida do escritor**, em ordem cronológica inversa. **Uso único.** Roric não comercializa abertamente; vende a pedido de Isolde Corvus para casos específicos.
+**Preço:** 1.200 ouros (sob aprovação).

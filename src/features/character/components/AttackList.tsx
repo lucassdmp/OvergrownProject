@@ -26,7 +26,7 @@ function exportOne(item: object, filename: string) {
   URL.revokeObjectURL(url)
 }
 
-function AttackCard({ attack }: { attack: CharacterAttack }) {
+function AttackCard({ attack, onEdit }: { attack: CharacterAttack; onEdit: (attack: CharacterAttack) => void }) {
   const removeAttack = useCharacterStore((s) => s.removeAttack)
   const [expanded, setExpanded] = useState(false)
 
@@ -53,6 +53,13 @@ function AttackCard({ attack }: { attack: CharacterAttack }) {
               ⚔ {attack.damage}
             </span>
           )}
+          <button
+            onClick={() => onEdit(attack)}
+            title="Editar ataque"
+            className="text-gray-400 dark:text-gray-500 transition hover:text-amber-400"
+          >
+            ✎
+          </button>
           <button
             onClick={() => exportOne(attack, `${attack.name}.json`)}
             title="Exportar este ataque"
@@ -83,6 +90,7 @@ export default function AttackList() {
   const importAttacks = useCharacterStore((s) => s.importAttacks)
   const [showModal, setShowModal] = useState(false)
   const [showImport, setShowImport] = useState(false)
+  const [editing, setEditing] = useState<CharacterAttack | null>(null)
   const [filter, setFilter] = useState<CombatCategory | 'all'>('all')
 
   const visible = filter === 'all' ? attacks : attacks.filter((a) => a.category === filter)
@@ -167,12 +175,13 @@ export default function AttackList() {
       ) : (
         <div className="flex flex-col gap-2">
           {visible.map((attack) => (
-            <AttackCard key={attack.id} attack={attack} />
+            <AttackCard key={attack.id} attack={attack} onEdit={(item) => setEditing(item)} />
           ))}
         </div>
       )}
 
       {showModal && <AddAttackModal onClose={() => setShowModal(false)} />}
+      {editing && <AddAttackModal existing={editing} onClose={() => setEditing(null)} />}
       {showImport && (
         <ImportContentModal
           title="Importar Ataques"

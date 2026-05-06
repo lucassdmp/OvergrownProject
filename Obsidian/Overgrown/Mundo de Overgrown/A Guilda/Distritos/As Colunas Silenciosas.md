@@ -20,3 +20,8 @@ A relação não é amistosa. É funcional.
 Estudo permitido, mas regulamentado. Comunicação com espíritos de aventureiros mortos só pode ser feita com consentimento prévio registrado em vida ou autorização do parente direto mais próximo. Praticantes são poucos e altamente formados.
 
 Devon Leinheart é conhecido por visitar o Memorial regularmente desde que sua equipe próxima desapareceu na catástrofe do Null. Não pratica necromancia. Apenas senta diante das colunas.
+
+# Personagens Recorrentes
+
+- [[Guardião Aro Voz-Suave]] — Curador-Mor do Memorial. Grava os nomes à mão.
+- [[Devon Leinheart]] — Visitante regular silencioso.

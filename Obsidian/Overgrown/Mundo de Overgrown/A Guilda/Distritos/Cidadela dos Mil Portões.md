@@ -26,3 +26,7 @@ Não há estilo unificado. Templos com colunas dóricas dividem rua com pagodes 
 - [[A Biblioteca Infinita]] — Arquivo histórico
 - [[Mercado Global]] — Comércio de itens raros
 - [[Estalagem dos Mil Ventos]] — Hub de aventureiros
+
+# Personagens Recorrentes
+
+- [[Mestre Aren Mil-Vozes]] — Mestre do [[Salão do Oculys]], coordena o quadro de missões da Capital.

@@ -98,6 +98,7 @@ interface CharacterState {
 
   addAttack: (attack: CharacterAttack) => void
   removeAttack: (id: string) => void
+  updateAttack: (attack: CharacterAttack) => void
 
   addItem: (item: InventoryItem) => void
   removeItem: (id: string) => void
@@ -317,6 +318,14 @@ export const useCharacterStore = create<CharacterState>()(
               characterAttacks: (s.character.characterAttacks ?? []).filter((a) => a.id !== id),
             },
           }), false, 'removeAttack'),
+
+        updateAttack: (attack) =>
+          set((s) => ({
+            character: {
+              ...s.character,
+              characterAttacks: (s.character.characterAttacks ?? []).map((a) => (a.id === attack.id ? attack : a)),
+            },
+          }), false, 'updateAttack'),
 
         addItem: (item) =>
           set((s) => ({

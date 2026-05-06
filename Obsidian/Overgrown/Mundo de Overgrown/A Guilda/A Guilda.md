@@ -110,6 +110,16 @@ Outros nomes essenciais da Capital:
 - [[Pedro Agor]] — Aprendiz de Klaus
 - [[Khan "Precioso" HammerWrath]] — Dono da [[Loja do Precioso]]
 
+Líderes regionais:
+
+- [[Mestre Aren Mil-Vozes]] — Mestre do [[Salão do Oculys]] (Cidadela)
+- [[Capitã Vorda Punho-de-Ferro]] — Mestra das Arenas ([[Os Campos de Ferro]])
+- [[Arquimaga Selene Vidro-Frio]] — Adivinhação ([[As Doze Agulhas]])
+- [[Guardião Aro Voz-Suave]] — Curador do Memorial ([[As Colunas Silenciosas]])
+- [[Magistrada Hieronyma Equilíbrio]] — Magistrada-Chefe ([[A Balança]])
+- [[Madame Jacira Sete-Cartas]] — Coroa Trincada ([[A Coroa Sem Sono]])
+- [[Mestre Belário Folha-Verde]] — Diretor ([[A Estufa do Mundo]])
+
 # Deuses
 
 A Ilha é o único lugar do mundo onde divindades são vistas com regularidade — e exclusivamente as do panteão **greco-romano**. Detalhes em [[Deuses da Guilda]].

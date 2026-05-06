@@ -20,3 +20,7 @@ Algumas espécies cultivadas aqui — ervas raras, plantas medicinais, flores fu
 # Lendas
 
 Diz-se que existe um **Jardim Décimo** dentro dos Jardins, não listado em nenhum mapa, contendo apenas plantas que extinguiram-se nos cataclismos. Quem entrou e saiu nunca conseguiu apontar de novo onde a entrada estava.
+
+# Personagens Recorrentes
+
+- [[Mestre Belário Folha-Verde]] — Diretor da Estufa, halfling entusiasta, coordena o Projeto de Recatalogação Pós-Null.

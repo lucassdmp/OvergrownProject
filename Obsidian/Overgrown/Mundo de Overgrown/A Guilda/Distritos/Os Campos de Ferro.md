@@ -23,6 +23,7 @@ A maioria dos aventureiros de ranque **Ferro** e **Bronze** passa pelo menos sei
 
 # Personagens Recorrentes
 
+- [[Capitã Vorda Punho-de-Ferro]] — Mestra das Arenas. Lidera os instrutores.
 - [[Klaus "Ruivo" HammerWrath]] — Mestre-ferreiro
 - [[Pedro Agor]] — Aprendiz de Klaus
 - [[Devon Leinheart]] — Aparece para retreinar técnicas, embora não viva aqui

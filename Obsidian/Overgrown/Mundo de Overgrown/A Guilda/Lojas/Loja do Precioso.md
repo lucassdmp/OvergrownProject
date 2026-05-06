@@ -29,3 +29,66 @@ Edifício de três andares no setor mais antigo do [[Mercado Global]]. Fachada b
 # Reputação
 
 A Loja do Precioso é referência. Quando alguém na Ilha quer saber se uma peça é autêntica, leva para Khan. Khan cobra pela avaliação se não houver intenção de venda — taxa fixa em [[Moeda da Guilda]] — e o laudo dele é aceito como definitivo em [[A Balança|Tribunais]].
+
+# Inventário Atual — Térreo (Acessível)
+
+## Talismã do Pulso Firme
+**Tipo:** Acessório (pulso)
+**Efeito:** +1 em todos os testes de Mira Focada. Uma vez por dia, ao falhar um ataque à distância, repita o teste com Vantagem.
+**Preço:** 200 ouros. Estoque: **5**.
+
+## Frasco da Boa Travessia
+**Tipo:** Consumível (poção)
+**Efeito:** Ao beber, ignore os primeiros 2 níveis de fadiga por 8h. Acumula até 3 frascos por viajante por semana — o quarto causa Concussão leve.
+**Preço:** 30 pratas. Estoque: **abundante**.
+
+# Inventário Atual — Segundo Andar (Itens Raros)
+
+## Anel da Voz Que Não Some
+**Tipo:** Acessório (anel)
+**Efeito:** Ao falar, sua voz **chega clara** a até 30 unidades, ignorando vento, multidão e magia que abafa som. Não amplia volume — amplia **inteligibilidade**. Vendido com cláusula: o anel não funciona para mentir. Khan jura que isso não é venda, é fato testado.
+**Preço:** 600 ouros. Estoque: **2**.
+
+## Lâmina-Memória (Espada de Uma Mão)
+**Ameaça:** 19 — **Peso:** 2 — **Dano Base:** 2D6 + MOD de MIG + 1 sombras
+**Propriedade Especial — Warden de Memória:** Use escudo sem penalidade de carga. **A lâmina lembra:** ao acertar um inimigo pela primeira vez, o próximo ataque contra esse mesmo tipo de inimigo (mesma espécie ou facção) tem +1D6 dano até o fim do dia.
+**Preço:** 850 ouros. Estoque: **1**. Procedência documentada — espada de uma aventureira Mithril falecida em 4519.
+
+## Manto-Nuvem-Curta
+**Tipo:** Capa
+**Efeito:** Reduz peso transportado em 5 (efetivamente, item carregado fica mais leve). Uma vez por combate, ao falhar Esquiva, o manto **devolve** o teste — repete-se com Vantagem. Recarrega ao amanhecer.
+**Preço:** 1.100 ouros. Estoque: **1**.
+
+## Bola de Cristal Trincada
+**Ameaça:** 20 — **Peso:** 2 — **Dano Base:** 1D6 + MOD de WIS + 1D4 sombras
+**Propriedade Especial — Channeler Rachado:** Mantém Channeler. **A trinca é vantagem,** não defeito: ao conjurar magia através dela, ganha +2 ao teste de ataque mágico, mas tem 1 em 20 de a magia ricochetear num aliado próximo.
+**Preço:** 700 ouros. Estoque: **1**. Khan adverte os clientes da bola sobre a trinca antes de cada venda.
+
+## Botas-de-Cinco-Passos
+**Tipo:** Botas
+**Efeito:** Uma vez por combate, declare **Cinco Passos** — você se move até 5 unidades como ação livre, sem provocar ataques de oportunidade. Recarrega após descanso curto.
+**Preço:** 750 ouros. Estoque: **1**.
+
+# Inventário Atual — Terceiro Andar (Acesso Restrito)
+
+## Adaga do Pacto-Quebrado
+**Ameaça:** 16 — **Peso:** 1 — **Dano Base:** 1D6 + MOD de GRA + 2D6 contra alvo que tenha mentido ao portador nas últimas 24h
+**Propriedade Especial — Assassin Justiceiro:** Mantém Empunhadura Dupla. A adaga **sabe** quando alguém mentiu ao portador. O dano bônus é automático e é evidente para o atingido. Adaga emite leve som de cristal trincado quando próxima de mentirosos confirmados.
+**Preço:** 2.500 ouros. Estoque: **1**. Khan vende apenas mediante carta de recomendação de aventureiro Prata ou superior.
+
+## Couraça Vão-de-Asa
+**Tipo:** Couraça de Metal Encantada
+**Peso:** 4 (em vez de 6) — **Resistência:** 14 (em vez de 12)
+**Efeitos — Impermeável Refletor:** Imune a Concussão. **Reflete 1D6 contundente** ao atacante quando o portador bloqueia com sucesso. -3 de Esquiva (em vez de -7).
+**Preço:** 3.000 ouros. Estoque: **1**.
+
+## Caderno-de-Quem-Não-Volta
+**Tipo:** Item de personagem (livro encantado)
+**Efeito:** Item de propriedade pessoal de aventureira da equipe perdida de [[Devon Leinheart]]. **Não está à venda.** Em depósito formal. Khan o mostra a Devon sempre que ele entra na loja — é um ritual silencioso entre os dois. O caderno tem páginas em branco que ocasionalmente preenchem-se com escrita por mãos invisíveis.
+**Preço:** Não venal.
+
+# Política da Casa
+
+- Itens de combate exigem registro do Selo do comprador.
+- Khan se reserva o direito de **recusar venda** se julgar o item incompatível com o comprador. A decisão é dele e ninguém apela.
+- Itens de terceiro andar exigem agendamento prévio.

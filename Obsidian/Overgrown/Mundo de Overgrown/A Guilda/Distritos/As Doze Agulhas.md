@@ -19,6 +19,7 @@ A Torre de Runologia, em contraste, **ganhou relevância**. Magia rúnica é men
 
 # Personagens Recorrentes
 
+- [[Arquimaga Selene Vidro-Frio]] — Diretora da Torre de Adivinhação, vice-líder informal da região.
 - [[Eva Leinheart]] — Considerada a maga mais forte viva da Guilda. Mantém escritório no topo da Torre de Evocação, embora suas pesquisas atuais cruzem várias escolas.
 
 # Cultura Local

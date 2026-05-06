@@ -30,10 +30,29 @@ Cada unidade de munição rúnica é preparada para sustentar o aventureiro por 
 
 ## Munições Especiais
 
-- **Munição-Trovão**,  Causa concussão em acertos críticos. +50% sobre o preço padrão.
-- **Munição-Faísca**,  Aplica Queimado em acertos. +30 moedas por suprimento.
-- **Munição-Silenciosa**,  Pólvora especial que diminui ruído de tiro em 80%. Cobiçada pelos [[Os Ratos]]. +100 moedas de ouro por suprimento.
-- **Munição-Sangue**,  Ignora resistência em alvos sangrando. Especialidade da casa. +200 moedas por suprimento.
+### Munição-Trovão
+**Efeito mecânico:** Acertos críticos aplicam **Concussão** automaticamente, mesmo se a arma não tiver propriedade que normalmente a aplique. **Acertos comuns têm 1 em 8 de aplicar Atordoado por 1 turno.** Cada disparo emite estouro audível a 2 unidades de distância — não recomendada para furtividade.
+**Sobretaxa:** +50% sobre o preço da munição padrão.
+
+### Munição-Faísca
+**Efeito mecânico:** Acertos aplicam **Queimado** (1D4 dano contínuo por 3 turnos). **Acertos contra alvo já Queimado renovam o efeito e somam 1D6 fogo imediato.** Útil contra criaturas vulneráveis a fogo, ineficaz contra criaturas resistentes.
+**Sobretaxa:** +30 ouros por suprimento.
+
+### Munição-Silenciosa
+**Efeito mecânico:** Disparos audíveis apenas a 1 unidade (em vez de 5+). **Não revela posição do atirador automaticamente** — alvos atingidos precisam de teste de Percepção para localizar a origem do tiro. **Dano reduzido em 1D4** (custo da supressão).
+**Sobretaxa:** +100 ouros por suprimento. Korrim oficialmente não vende para [[Os Ratos]]. Oficialmente.
+
+### Munição-Sangue
+**Efeito mecânico:** Acertos contra alvo sob Sangramento (Brutal, Ardiloso ou qualquer variante) **ignoram completamente a Resistência do alvo**. Contra alvo sem sangramento, dano é normal. Especialidade da casa — Korrim só vende para portadores credenciados pela [[A Guilda|Guilda]] de **Prata** ou superior.
+**Sobretaxa:** +200 ouros por suprimento.
+
+### Munição-Coração-Frio
+**Efeito mecânico:** Aplica **Resfriado** em acertos: alvo sofre -2 em ataques no próximo turno. **Acertos críticos congelam parcialmente o alvo:** Atordoado por 1 turno e -3 deslocamento até o final do combate. Funciona em qualquer arma de fogo. Especialmente devastadora em alvos já em ambientes frios.
+**Sobretaxa:** +180 ouros por suprimento. Disponível apenas no inverno em [[Frostheaven]].
+
+### Munição-Eco
+**Efeito mecânico:** Após acertar, o alvo fica **marcado** por 3 turnos: o próximo disparo do mesmo atirador contra ele tem **+1D8 dano**. Marca persiste mesmo se atirador trocar de arma.
+**Sobretaxa:** +120 ouros por suprimento.
 
 ## Outros Produtos
 

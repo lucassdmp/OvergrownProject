@@ -23,6 +23,8 @@ A Guilda sabe disso. Tolera. Em muitos casos, planta deliberadamente certas info
 
 A região é territorialmente neutra mesmo dentro da Guilda — aventureiros de filiais inimigas em outros continentes podem se sentar à mesma mesa de pôquer aqui sem que isso conte como ato político. É tradição não-escrita.
 
-# Ligação com Hinata
+# Personagens Recorrentes
 
-[[Hinata Silver Sweet Gestan]] é vista nos cassinos com frequência incomum para alguém de sua reputação. Não joga. Senta no canto, observa, e ocasionalmente sai por uma porta lateral seguindo alguém que ninguém mais notou. Trabalho quieto.
+- [[Madame Jacira Sete-Cartas]] — Proprietária da Coroa Trincada e influência informal sobre todo o circuito de apostas da Ilha.
+- [[Hinata Silver Sweet Gestan]] — Vista nos cassinos com frequência incomum para alguém de sua reputação. Não joga. Senta no canto, observa, e ocasionalmente sai por uma porta lateral seguindo alguém que ninguém mais notou.
+- [[Hermes]] — Cliente recorrente. Joga, perde de propósito, parte cedo.

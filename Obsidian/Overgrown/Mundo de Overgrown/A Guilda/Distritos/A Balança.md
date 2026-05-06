@@ -26,4 +26,5 @@ A Guilda não tem prisão própria. Sentenças vão de:
 
 # Personagens Recorrentes
 
+- [[Magistrada Hieronyma Equilíbrio]] — Magistrada-Chefe do Salão Maior.
 - [[Hinata Silver Sweet Gestan]] — Frequentemente chamada como testemunha em casos de traição. Sua reputação de odiar criminosos e traidores é conhecida o suficiente para que sua presença no banco das testemunhas seja considerada quase uma sentença antecipada.
