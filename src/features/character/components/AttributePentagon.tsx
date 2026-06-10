@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { AttributeName, Character } from '../../../types/game'
 import { useCharacterStore, remainingAttributePoints, totalAttributePoints } from '../store/characterStore'
+import IntegerInput from '../../../components/ui/IntegerInput'
 
 // ── Pentagon geometry ─────────────────────────────────────────────────────────
 // viewBox: 0 0 500 480,  center: (250, 230),  radius: 155
@@ -90,9 +91,12 @@ function AttributeControl({ id, label, value, itemBonus, canIncrease, onChange, 
         >
           −
         </button>
-        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-amber-400/60 dark:border-amber-700/50 bg-white dark:bg-gray-900/90 text-xl font-bold text-gray-900 dark:text-white shadow">
-          {total}
-        </div>
+        <IntegerInput
+          min={0}
+          value={value}
+          onChange={onChange}
+          className="h-8 w-8 rounded-full border border-amber-400/60 dark:border-amber-700/50 bg-white dark:bg-gray-900/90 text-center text-xl font-bold text-gray-900 dark:text-white shadow focus:border-amber-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
         <button
           disabled={!canIncrease}
           onClick={() => onChange(value + 1)}

@@ -1,7 +1,0 @@
-[[Glastradum]]
-[[Nortradum]]
-[[Vastidrum]]
-[[A Guilda]]
-[[Nostradum]]
-[[Sorodrum]]
-[[Sortradum]]

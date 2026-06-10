@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
-type DiceType = 2 | 4 | 6 | 8 | 12 | 20 | 100
+type DiceType = 2 | 4 | 6 | 8 | 10 | 12 | 20 | 100
 
 type RollResult = {
   id: string
@@ -13,6 +13,7 @@ const DICE_TYPES: Array<{ sides: DiceType; label: string }> = [
   { sides: 4, label: 'D4' },
   { sides: 6, label: 'D6' },
   { sides: 8, label: 'D8' },
+  { sides: 10, label: 'D10' },
   { sides: 12, label: 'D12' },
   { sides: 20, label: 'D20' },
   { sides: 100, label: 'D100' },
@@ -23,6 +24,7 @@ const DICE_SHAPES: Record<DiceType, { points?: string; circle?: boolean }> = {
   4: { points: '12 3 21 20 3 20' },
   6: { points: '4 4 20 4 20 20 4 20' },
   8: { points: '12 2 22 12 12 22 2 12' },
+  10: { points: '12 2 20 9 17 22 7 22 4 9' },
   12: { points: '12 2 21 7 21 17 12 22 3 17 3 7' },
   20: { points: '12 2 22 9 18 22 6 22 2 9' },
   100: { points: '12 2 19 4 22 10 19 20 12 22 5 20 2 10 5 4' },
@@ -164,7 +166,7 @@ export default function DiceRoller() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
         {DICE_TYPES.map((type) => {
           const count = counts.get(type.sides) ?? 0
           return (

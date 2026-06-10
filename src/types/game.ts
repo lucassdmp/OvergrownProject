@@ -336,7 +336,12 @@ export interface Character {
     iep: number
     pc: number
   }
-  money: number
+  money: {
+    platina: number
+    ouro: number
+    prata: number
+    bronze: number
+  }
   notes?: string
   /** Base64 encoded avatar image */
   avatarBase64?: string

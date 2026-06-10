@@ -4,6 +4,7 @@ import { useCharacter } from '../hooks/useCharacter'
 import { ALL_ORIGINS } from '../../../data/origins'
 import { ALL_SKILLS } from '../../../data/skills'
 import Modal from '../../../components/ui/Modal'
+import IntegerInput from '../../../components/ui/IntegerInput'
 
 function ResourcePip({
   label,
@@ -22,16 +23,44 @@ function ResourcePip({
     <div className="flex flex-col items-center gap-0.5 min-w-0">
       <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">{label}</span>
       <div className="flex items-center gap-1">
-        <input
-          type="number"
+        <IntegerInput
           min={0}
           max={max}
           value={current}
-          onChange={(e) => onCurrentChange(Math.max(0, Math.min(max, Number(e.target.value))))}
+          onChange={onCurrentChange}
           className={`w-14 rounded bg-gray-100 dark:bg-gray-800 px-1 py-0.5 text-center text-lg font-bold ${color} border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none`}
         />
         <span className="text-gray-500">/</span>
         <span className="text-base font-semibold text-gray-600 dark:text-gray-300">{max}</span>
+      </div>
+    </div>
+  )
+}
+
+function CoinField({
+  label,
+  value,
+  onChange,
+  labelColor,
+  inputColor,
+}: {
+  label: string
+  value: number
+  onChange: (v: number) => void
+  labelColor: string
+  inputColor: string
+}) {
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <span className={`text-[10px] font-semibold uppercase tracking-widest ${labelColor}`}>{label}</span>
+      <div className="relative flex items-center">
+        <span className="absolute left-2 text-sm z-10">🪙</span>
+        <IntegerInput
+          min={0}
+          value={value}
+          onChange={onChange}
+          className={`w-full min-w-[80px] rounded-full pl-7 pr-2 py-0.5 text-center text-lg font-bold border focus:outline-none ${inputColor}`}
+        />
       </div>
     </div>
   )
@@ -334,23 +363,38 @@ export default function CharacterHeader() {
               />
             </div>
             
-            <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80 min-w-[120px] flex items-center justify-center">
+            <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80 min-w-[280px] flex items-center justify-center gap-3 flex-wrap">
               {/* Money */}
-              <div className="flex flex-col items-center gap-0.5">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-amber-500 dark:text-amber-400">Ouro</span>
-                <div className="relative flex items-center">
-                  <span className="absolute left-2 text-sm z-10">🪙</span>
-                  <input
-                    type="number"
-                    min={0}
-                    value={character.money || 0}
-                    onChange={(e) => store.setMoney(Math.max(0, Number(e.target.value)))}
-                    className="w-full min-w-[80px] rounded-full bg-white dark:bg-amber-950/30 pl-7 pr-2 py-0.5 text-center text-lg font-bold text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 focus:border-amber-500 focus:outline-none"
-                  />
-                </div>
-              </div>
+              <CoinField
+                label="Platina"
+                value={character.money.platina}
+                onChange={(v) => store.setMoney('platina', v)}
+                labelColor="text-cyan-500 dark:text-cyan-400"
+                inputColor="bg-white dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800/50 focus:border-cyan-500"
+              />
+              <CoinField
+                label="Ouro"
+                value={character.money.ouro}
+                onChange={(v) => store.setMoney('ouro', v)}
+                labelColor="text-amber-500 dark:text-amber-400"
+                inputColor="bg-white dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/50 focus:border-amber-500"
+              />
+              <CoinField
+                label="Prata"
+                value={character.money.prata}
+                onChange={(v) => store.setMoney('prata', v)}
+                labelColor="text-gray-500 dark:text-gray-400"
+                inputColor="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 focus:border-gray-500"
+              />
+              <CoinField
+                label="Bronze"
+                value={character.money.bronze}
+                onChange={(v) => store.setMoney('bronze', v)}
+                labelColor="text-orange-700 dark:text-orange-400"
+                inputColor="bg-white dark:bg-orange-950/30 text-orange-800 dark:text-orange-400 border-orange-200 dark:border-orange-800/50 focus:border-orange-500"
+              />
             </div>
-            
+
           </div>
         </div>
       </div>

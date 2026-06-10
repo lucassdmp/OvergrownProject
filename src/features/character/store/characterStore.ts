@@ -37,6 +37,19 @@ const DEFAULT_ATTRIBUTES: Attributes = {
   fortitude: 0,
 }
 
+const DEFAULT_MONEY = { platina: 0, ouro: 0, prata: 0, bronze: 0 }
+
+/** Accepts the old single-number `money` format and the new per-currency object. */
+function normalizeMoney(money: unknown): Character['money'] {
+  if (typeof money === 'number') {
+    return { ...DEFAULT_MONEY, ouro: money }
+  }
+  if (money && typeof money === 'object') {
+    return { ...DEFAULT_MONEY, ...(money as Partial<Character['money']>) }
+  }
+  return { ...DEFAULT_MONEY }
+}
+
 const DEFAULT_CHARACTER: Character = {
   id: crypto.randomUUID(),
   name: 'Novo Personagem',
@@ -53,7 +66,7 @@ const DEFAULT_CHARACTER: Character = {
   notes: '',
   avatarPosition: '50% 50%',
   avatarScale: 1,
-  money: 0,
+  money: { ...DEFAULT_MONEY },
   currentResources: {
     vida: calculateDerivedStats(DEFAULT_ATTRIBUTES).vida,
     iep: calculateDerivedStats(DEFAULT_ATTRIBUTES).iep,
@@ -82,7 +95,7 @@ interface CharacterState {
   setDivinity: (divinity: number) => void
   setAttribute: (attr: keyof Attributes, value: number) => void
 
-  setMoney: (amount: number) => void
+  setMoney: (currency: keyof Character['money'], amount: number) => void
   setCurrentVida: (value: number) => void
   setCurrentIep: (value: number) => void
   setCurrentPc: (value: number) => void
@@ -248,8 +261,10 @@ export const useCharacterStore = create<CharacterState>()(
             character: { ...s.character, currentResources: { ...s.character.currentResources, pc: value } },
           }), false, 'setCurrentPc'),
 
-        setMoney: (amount) =>
-          set((s) => ({ character: { ...s.character, money: amount } }), false, 'setMoney'),
+        setMoney: (currency, amount) =>
+          set((s) => ({
+            character: { ...s.character, money: { ...s.character.money, [currency]: Math.max(0, amount) } },
+          }), false, 'setMoney'),
 
         setNotes: (notes) =>
           set((s) => ({
@@ -474,6 +489,7 @@ export const useCharacterStore = create<CharacterState>()(
               avatarBase64: loadedCharacter.avatarBase64,
               avatarPosition: loadedCharacter.avatarPosition ?? DEFAULT_CHARACTER.avatarPosition,
               avatarScale: loadedCharacter.avatarScale ?? DEFAULT_CHARACTER.avatarScale,
+              money: normalizeMoney(loadedCharacter.money),
             },
           }), false, 'loadCharacter'),
 
@@ -504,6 +520,7 @@ export const useCharacterStore = create<CharacterState>()(
             avatarBase64: ps.character?.avatarBase64,
             avatarPosition: ps.character?.avatarPosition ?? '50% 50%',
             avatarScale: ps.character?.avatarScale ?? 1.0,
+            money: normalizeMoney(ps.character?.money),
           }
 
           let mergedCharacters = ps.characters || {}
