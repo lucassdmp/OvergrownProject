@@ -358,18 +358,6 @@
       }
     },
     {
-      "id": "melee-ataque-secundario",
-      "x": 250,
-      "y": 5250,
-      "data": {
-        "type": "combatAbility",
-        "skillId": "melee-ataque-secundario",
-        "skillName": "Ataque Secundário",
-        "skillCost": "2 PC",
-        "skillDescription": "Gaste PC para realizar um segundo ataque contra o mesmo alvo no mesmo turno, como uma ação adicional dentro da sua Ação Padrão."
-      }
-    },
-    {
       "id": "melee-comando-de-assalto",
       "x": 2000,
       "y": 5250,

@@ -118,14 +118,6 @@ export const EFFORT_SKILLS: CombatSkill[] = [
       'Realiza uma manobra de imobilização. Teste de Força contra o teste de Esquiva do alvo. Alvos agarrados não podem se mover, sofrem Desvantagem em ataques e precisam passar num teste de Força ou ser auxiliados por aliados para se libertar.',
   },
   {
-    id: 'ataque-secundario',
-    name: 'Ataque Secundário',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Gaste PC para realizar um segundo ataque contra o mesmo alvo no mesmo turno, como uma ação adicional dentro da sua Ação Padrão.',
-  },
-  {
     id: 'impulsao',
     name: 'Impulsão',
     cost: '1',
