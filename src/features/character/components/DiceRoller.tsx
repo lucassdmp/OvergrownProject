@@ -30,6 +30,18 @@ const DICE_SHAPES: Record<DiceType, { points?: string; circle?: boolean }> = {
   100: { points: '12 2 19 4 22 10 19 20 12 22 5 20 2 10 5 4' },
 }
 
+// Per-shape label sizing/positioning so the "Dn" text fits inside the polygon
+const DICE_TEXT: Record<DiceType, { fontSize: number; y: number }> = {
+  2: { fontSize: 8, y: 12.5 },
+  4: { fontSize: 6, y: 15.5 },
+  6: { fontSize: 8, y: 12.5 },
+  8: { fontSize: 8, y: 12.5 },
+  10: { fontSize: 6, y: 13.5 },
+  12: { fontSize: 8, y: 12.5 },
+  20: { fontSize: 8, y: 12.5 },
+  100: { fontSize: 6, y: 12.5 },
+}
+
 function rollDie(sides: DiceType) {
   return Math.floor(Math.random() * sides) + 1
 }
@@ -37,7 +49,7 @@ function rollDie(sides: DiceType) {
 function DiceIcon({ sides, className }: { sides: DiceType; className?: string }) {
   const shape = DICE_SHAPES[sides]
   const label = `D${sides}`
-  const fontSize = sides === 100 ? 6 : 8
+  const { fontSize, y } = DICE_TEXT[sides]
 
   return (
     <svg
@@ -53,7 +65,7 @@ function DiceIcon({ sides, className }: { sides: DiceType; className?: string })
       )}
       <text
         x="12"
-        y="12.5"
+        y={y}
         textAnchor="middle"
         dominantBaseline="middle"
         fontSize={fontSize}
