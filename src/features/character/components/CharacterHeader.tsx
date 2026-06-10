@@ -66,6 +66,44 @@ function CoinField({
   )
 }
 
+// ── Avatar image downscaling ────────────────────────────────────────────────
+const AVATAR_MAX_DIMENSION = 512
+const AVATAR_JPEG_QUALITY = 0.85
+const AVATAR_SIZE_THRESHOLD_BYTES = 300 * 1024
+
+/**
+ * Shrinks large avatar images so they don't bloat the exported/saved JSON.
+ * Small images are left untouched (dimensions and original encoding kept).
+ */
+function resizeAvatarImage(base64: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      const { width, height } = img
+      const approxBytes = (base64.length * 3) / 4
+      const needsResize = width > AVATAR_MAX_DIMENSION || height > AVATAR_MAX_DIMENSION
+      if (!needsResize && approxBytes <= AVATAR_SIZE_THRESHOLD_BYTES) {
+        resolve(base64)
+        return
+      }
+
+      const scale = Math.min(1, AVATAR_MAX_DIMENSION / Math.max(width, height))
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.round(width * scale)
+      canvas.height = Math.round(height * scale)
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        resolve(base64)
+        return
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+      resolve(canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY))
+    }
+    img.onerror = () => resolve(base64)
+    img.src = base64
+  })
+}
+
 function StatBadge({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex flex-col items-center gap-0.5">
@@ -80,6 +118,7 @@ export default function CharacterHeader() {
   const store = useCharacterStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const avatarInputRef = useRef<HTMLInputElement>(null)
+  const avatarBoxRef = useRef<HTMLDivElement>(null)
   const [importError, setImportError] = useState<string | null>(null)
   const [confirmReset, setConfirmReset] = useState(false)
   const [avatarEditorOpen, setAvatarEditorOpen] = useState(false)
@@ -87,6 +126,16 @@ export default function CharacterHeader() {
   const [pendingAvatarX, setPendingAvatarX] = useState(50)
   const [pendingAvatarY, setPendingAvatarY] = useState(50)
   const [pendingAvatarScale, setPendingAvatarScale] = useState(1)
+  // Aspect ratio (width / height) of the real avatar box, captured when the editor opens,
+  // so the preview matches how the photo will actually be framed on the sheet.
+  const [previewAspectRatio, setPreviewAspectRatio] = useState(1)
+
+  function captureAvatarBoxAspectRatio() {
+    const box = avatarBoxRef.current
+    if (box && box.offsetWidth > 0 && box.offsetHeight > 0) {
+      setPreviewAspectRatio(box.offsetWidth / box.offsetHeight)
+    }
+  }
 
   const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
   const parseAvatarPosition = (position?: string) => {
@@ -112,13 +161,15 @@ export default function CharacterHeader() {
     if (!file) return
 
     const reader = new FileReader()
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       const base64 = ev.target?.result as string
       if (!base64) return
-      setPendingAvatarBase64(base64)
+      const resized = await resizeAvatarImage(base64)
+      setPendingAvatarBase64(resized)
       setPendingAvatarX(50)
       setPendingAvatarY(50)
       setPendingAvatarScale(1)
+      captureAvatarBoxAspectRatio()
       setAvatarEditorOpen(true)
     }
     reader.readAsDataURL(file)
@@ -132,6 +183,7 @@ export default function CharacterHeader() {
     setPendingAvatarX(pos.x)
     setPendingAvatarY(pos.y)
     setPendingAvatarScale(clamp(character.avatarScale ?? 1, 0.5, 2.5))
+    captureAvatarBoxAspectRatio()
     setAvatarEditorOpen(true)
   }
 
@@ -225,6 +277,7 @@ export default function CharacterHeader() {
         {/* Avatar */}
         <div className="flex flex-col gap-2 shrink-0 self-center md:self-stretch md:w-56 md:min-w-56">
           <div
+            ref={avatarBoxRef}
             onClick={handleAvatarClick}
             className="group relative h-56 w-56 md:h-full md:w-full cursor-pointer overflow-hidden rounded-xl border-2 border-gray-300 bg-gray-100 transition hover:border-amber-500 dark:border-gray-700 dark:bg-gray-800 shadow-inner"
             title="Clique para alterar a foto (max 256x256)"
@@ -481,7 +534,10 @@ export default function CharacterHeader() {
       {avatarEditorOpen && pendingAvatarBase64 && (
         <Modal title="Ajustar Foto" onClose={() => setAvatarEditorOpen(false)} size="md">
           <div className="flex flex-col gap-4">
-            <div className="mx-auto h-64 w-64 overflow-hidden rounded-xl border border-gray-700 bg-gray-800">
+            <div
+              className="mx-auto w-full max-w-xs overflow-hidden rounded-xl border border-gray-700 bg-gray-800"
+              style={{ aspectRatio: previewAspectRatio }}
+            >
               <img
                 src={pendingAvatarBase64}
                 alt="Pré-visualização"
@@ -493,6 +549,9 @@ export default function CharacterHeader() {
                 }}
               />
             </div>
+            <p className="text-center text-[10px] text-gray-500">
+              A pré-visualização usa a mesma proporção do quadro da ficha.
+            </p>
 
             <div className="space-y-3">
               <div className="space-y-1">
