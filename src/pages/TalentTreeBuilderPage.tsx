@@ -7,7 +7,7 @@ import { useDarkMode } from '../hooks/useDarkMode'
 
 // ── Toolbar button ────────────────────────────────────────────────────────────
 
-const ADD_TYPES: TalentNodeType[] = ['player', 'attribute', 'magic', 'stat', 'combatAbility', 'extraDamage', 'healing']
+const ADD_TYPES: TalentNodeType[] = ['player', 'attribute', 'magic', 'stat', 'combatAbility', 'extraDamage', 'healing', 'weaponBonus', 'spellModifier', 'defenseBonus', 'skillBonus']
 
 const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
   player:        '👤',
@@ -17,6 +17,10 @@ const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
   combatAbility: '⚔',
   extraDamage:   '⊕',
   healing:       '✚',
+  weaponBonus:   '🗡',
+  spellModifier: '✧',
+  defenseBonus:  '🛡',
+  skillBonus:    '📚',
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

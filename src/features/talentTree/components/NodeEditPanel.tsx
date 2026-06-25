@@ -5,6 +5,8 @@ import {
   NODE_TYPE_COLORS,
   BASE_ATTACK_TARGETS,
   BASE_ATTACK_TARGET_LABELS,
+  WEAPON_BONUS_TYPE_LABELS,
+  SPELL_MODIFIER_EFFECT_LABELS,
   defaultNodeData,
   type TalentNodeType,
   type TalentNodeData,
@@ -16,12 +18,23 @@ import {
   type CombatAbilityNodeData,
   type ExtraDamageNodeData,
   type HealingNodeData,
+  type WeaponBonusNodeData,
+  type WeaponBonusType,
+  type SpellModifierNodeData,
+  type SpellModifierEffectType,
+  type DefenseBonusNodeData,
+  type SkillBonusNodeData,
 } from '../../../types/talentTree'
 import type { AttributeName, DerivedStats, ElementId, MagicTypeId, SpellLevelEntry } from '../../../types/game'
 import { SPELL_LEVEL_LABELS } from '../../../types/game'
 import { ELEMENTS } from '../../../data/elements'
 import { MAGIC_TYPES } from '../../../data/magicTypes'
 import { ALL_COMBAT_SKILLS } from '../../../data/combatSkills'
+import { ALL_SKILLS } from '../../../data/skills'
+import {
+  WEAPON_TAG_LABELS, WEAPON_TAGS_MELEE, WEAPON_TAGS_RANGED, WEAPON_TAGS_CATEGORY,
+  type WeaponTag,
+} from '../../../types/gameV2'
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -43,7 +56,10 @@ const STAT_OPTIONS: { value: keyof DerivedStats; label: string }[] = [
 
 const NODE_TYPES: TalentNodeType[] = [
   'player', 'attribute', 'magic', 'stat', 'combatAbility', 'extraDamage', 'healing',
+  'weaponBonus', 'spellModifier', 'defenseBonus', 'skillBonus',
 ]
+
+const NODE_TYPES_V2: TalentNodeType[] = ['weaponBonus', 'spellModifier', 'defenseBonus', 'skillBonus']
 
 // ── Primitive field components ────────────────────────────────────────────────
 
@@ -523,6 +539,235 @@ function ExtraDamageEditor({ data, onChange }: { data: ExtraDamageNodeData; onCh
   )
 }
 
+// ── V2 Editors ─────────────────────────────────────────────────────────────────
+
+const WEAPON_BONUS_OPTIONS: { value: WeaponBonusType; label: string }[] = [
+  { value: 'damage',         label: WEAPON_BONUS_TYPE_LABELS['damage'] },
+  { value: 'threatRange',    label: WEAPON_BONUS_TYPE_LABELS['threatRange'] },
+  { value: 'critMultiplier', label: WEAPON_BONUS_TYPE_LABELS['critMultiplier'] },
+  { value: 'hitBonus',       label: WEAPON_BONUS_TYPE_LABELS['hitBonus'] },
+]
+
+function WeaponBonusEditor({ data, onChange }: { data: WeaponBonusNodeData; onChange: (d: WeaponBonusNodeData) => void }) {
+  function toggleTag(tag: WeaponTag) {
+    const has = data.requiredTags.includes(tag)
+    onChange({ ...data, requiredTags: has ? data.requiredTags.filter((t) => t !== tag) : [...data.requiredTags, tag] })
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div>
+        <Label>Tipo de Bônus</Label>
+        <Select<WeaponBonusType>
+          value={data.bonusType}
+          onChange={(v) => onChange({ ...data, bonusType: v })}
+          options={WEAPON_BONUS_OPTIONS}
+        />
+      </div>
+      {data.bonusType === 'damage' && (
+        <div>
+          <Label>Dados de Dano (ex: 1d6)</Label>
+          <TextInput value={data.dice ?? ''} onChange={(v) => onChange({ ...data, dice: v || undefined })} placeholder="1d6" />
+        </div>
+      )}
+      <div>
+        <Label>{data.bonusType === 'damage' ? 'Dano Fixo Adicional' : 'Valor'}</Label>
+        <NumberInput value={data.value} onChange={(v) => onChange({ ...data, value: v })} min={0} />
+      </div>
+      <div>
+        <Label>Tags de Arma Requeridas (pelo menos uma)</Label>
+        <p className="text-[10px] text-gray-400 mb-1">Vazio = aplica a qualquer arma</p>
+        <div className="mb-1">
+          <p className="text-[9px] text-gray-500 uppercase tracking-widest">Corpo a Corpo</p>
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {WEAPON_TAGS_MELEE.map((tag) => {
+              const active = data.requiredTags.includes(tag)
+              return (
+                <button key={tag} onClick={() => toggleTag(tag)}
+                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-rose-600 border-rose-600 text-white' : 'border-rose-400 text-rose-400 hover:bg-rose-900/20'}`}>
+                  {WEAPON_TAG_LABELS[tag]}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+        <div className="mb-1">
+          <p className="text-[9px] text-gray-500 uppercase tracking-widest">Distância</p>
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {WEAPON_TAGS_RANGED.map((tag) => {
+              const active = data.requiredTags.includes(tag)
+              return (
+                <button key={tag} onClick={() => toggleTag(tag)}
+                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-sky-600 border-sky-600 text-white' : 'border-sky-400 text-sky-400 hover:bg-sky-900/20'}`}>
+                  {WEAPON_TAG_LABELS[tag]}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+        <div>
+          <p className="text-[9px] text-gray-500 uppercase tracking-widest">Categorias</p>
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {WEAPON_TAGS_CATEGORY.map((tag) => {
+              const active = data.requiredTags.includes(tag)
+              return (
+                <button key={tag} onClick={() => toggleTag(tag)}
+                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-amber-600 border-amber-600 text-white' : 'border-amber-400 text-amber-400 hover:bg-amber-900/20'}`}>
+                  {WEAPON_TAG_LABELS[tag]}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const SPELL_MOD_OPTIONS: { value: SpellModifierEffectType; label: string }[] = [
+  { value: 'costReduction',   label: SPELL_MODIFIER_EFFECT_LABELS['costReduction'] },
+  { value: 'extraProjectile', label: SPELL_MODIFIER_EFFECT_LABELS['extraProjectile'] },
+  { value: 'duration',        label: SPELL_MODIFIER_EFFECT_LABELS['duration'] },
+  { value: 'damageBonus',     label: SPELL_MODIFIER_EFFECT_LABELS['damageBonus'] },
+]
+
+function SpellModifierEditor({ data, onChange }: { data: SpellModifierNodeData; onChange: (d: SpellModifierNodeData) => void }) {
+  function toggleElement(id: ElementId) {
+    const has = data.conditionElements.includes(id)
+    onChange({ ...data, conditionElements: has ? data.conditionElements.filter((e) => e !== id) : [...data.conditionElements, id] })
+  }
+  function toggleType(id: MagicTypeId) {
+    const has = data.conditionTypes.includes(id)
+    onChange({ ...data, conditionTypes: has ? data.conditionTypes.filter((t) => t !== id) : [...data.conditionTypes, id] })
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div>
+        <Label>Efeito</Label>
+        <Select<SpellModifierEffectType>
+          value={data.effectType}
+          onChange={(v) => onChange({ ...data, effectType: v })}
+          options={SPELL_MOD_OPTIONS}
+        />
+      </div>
+      {data.effectType === 'damageBonus' && (
+        <div>
+          <Label>Dados de Dano (ex: 1d6)</Label>
+          <TextInput value={data.dice ?? ''} onChange={(v) => onChange({ ...data, dice: v || undefined })} placeholder="1d6" />
+        </div>
+      )}
+      <div>
+        <Label>Valor ({data.effectType === 'costReduction' ? 'IEP reduzido' : data.effectType === 'duration' ? 'rodadas extras' : 'bônus'})</Label>
+        <NumberInput value={data.value} onChange={(v) => onChange({ ...data, value: v })} min={0} />
+      </div>
+      <div>
+        <Label>Condição – Elementos (vazio = todos)</Label>
+        <div className="flex flex-wrap gap-1 mt-1">
+          {ELEMENTS.map((el) => {
+            const active = data.conditionElements.includes(el.id)
+            return (
+              <button key={el.id} onClick={() => toggleElement(el.id)}
+                className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
+                style={{ background: active ? el.color : 'transparent', borderColor: el.color, color: active ? el.textColor : el.color }}>
+                {el.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+      <div>
+        <Label>Condição – Tipos de Magia (vazio = todos)</Label>
+        <div className="flex flex-wrap gap-1 mt-1">
+          {MAGIC_TYPES.map((mt) => {
+            const active = data.conditionTypes.includes(mt.id)
+            return (
+              <button key={mt.id} onClick={() => toggleType(mt.id)}
+                className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
+                style={{ background: active ? mt.color : 'transparent', borderColor: mt.color, color: active ? mt.textColor : mt.color }}>
+                {mt.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+      <p className="text-[10px] text-gray-400 bg-gray-50 dark:bg-gray-800/60 rounded p-2">
+        Este nó afeta magias que tenham <em>pelo menos um</em> dos elementos e <em>pelo menos um</em> dos tipos selecionados.
+        Condições vazias aplicam a <em>todas</em> as magias.
+      </p>
+    </div>
+  )
+}
+
+const DEFENSE_TYPE_OPTIONS: { value: string; label: string }[] = [
+  { value: 'physical', label: 'Físico' },
+  { value: 'all', label: 'Todos os tipos' },
+  ...ELEMENTS.map((el) => ({ value: el.id, label: `Elemental – ${el.label}` })),
+]
+
+function DefenseBonusEditor({ data, onChange }: { data: DefenseBonusNodeData; onChange: (d: DefenseBonusNodeData) => void }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <div>
+        <Label>Tipo de Dano Reduzido</Label>
+        <select
+          value={data.damageType}
+          onChange={(e) => onChange({ ...data, damageType: e.target.value as DefenseBonusNodeData['damageType'] })}
+          className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+        >
+          {DEFENSE_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+      </div>
+      <div>
+        <Label>Redução de Dano (valor fixo)</Label>
+        <NumberInput value={data.value} onChange={(v) => onChange({ ...data, value: v })} min={1} />
+      </div>
+      <p className="text-[10px] text-gray-400 bg-gray-50 dark:bg-gray-800/60 rounded p-2">
+        Reduz o dano recebido deste tipo em {data.value} pontos por ataque.
+      </p>
+    </div>
+  )
+}
+
+function SkillBonusEditor({ data, onChange }: { data: SkillBonusNodeData; onChange: (d: SkillBonusNodeData) => void }) {
+  const [search, setSearch] = useState('')
+  const filtered = search.trim()
+    ? ALL_SKILLS.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
+    : ALL_SKILLS
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div>
+        <Label>Buscar Perícia</Label>
+        <TextInput value={search} onChange={setSearch} placeholder="Nome da perícia…" />
+      </div>
+      <div className="max-h-48 overflow-y-auto flex flex-col gap-0.5 rounded-lg border border-gray-200 dark:border-gray-700">
+        {filtered.map((sk) => {
+          const active = data.skillId === sk.id
+          return (
+            <button
+              key={sk.id}
+              onClick={() => onChange({ ...data, skillId: sk.id, skillName: sk.name })}
+              className={`w-full text-left px-3 py-1.5 text-xs transition ${active ? 'bg-orange-600 text-white' : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'}`}
+            >
+              {sk.name}
+            </button>
+          )
+        })}
+      </div>
+      {data.skillName && (
+        <div className="rounded-lg bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/40 px-3 py-2 text-xs text-orange-700 dark:text-orange-300">
+          Perícia selecionada: <strong>{data.skillName}</strong>
+        </div>
+      )}
+      <div>
+        <Label>Bônus (+X ao teste)</Label>
+        <NumberInput value={data.value} onChange={(v) => onChange({ ...data, value: v })} min={1} />
+      </div>
+    </div>
+  )
+}
+
 function HealingEditor({ data, onChange }: { data: HealingNodeData; onChange: (d: HealingNodeData) => void }) {
   return (
     <div className="flex flex-col gap-3">
@@ -615,7 +860,28 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
       <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 shrink-0">
         <Label>Tipo do Nó</Label>
         <div className="flex flex-wrap gap-1 mt-1">
-          {NODE_TYPES.map((t) => {
+          {NODE_TYPES.filter((t) => !NODE_TYPES_V2.includes(t)).map((t) => {
+            const active = draft.type === t
+            const c = NODE_TYPE_COLORS[t]
+            return (
+              <button
+                key={t}
+                onClick={() => changeType(t)}
+                className="rounded-full px-2.5 py-0.5 text-[10px] font-bold border transition"
+                style={{
+                  background: active ? c.stroke : 'transparent',
+                  borderColor: c.stroke,
+                  color: active ? '#fff' : c.stroke,
+                }}
+              >
+                {NODE_TYPE_LABELS[t]}
+              </button>
+            )
+          })}
+        </div>
+        <div className="flex flex-wrap gap-1 mt-1.5 pt-1.5 border-t border-gray-100 dark:border-gray-800">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-amber-500 self-center mr-1">V2</span>
+          {NODE_TYPES_V2.map((t) => {
             const active = draft.type === t
             const c = NODE_TYPE_COLORS[t]
             return (
@@ -667,6 +933,18 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
         )}
         {draft.type === 'healing' && (
           <HealingEditor data={draft} onChange={save} />
+        )}
+        {draft.type === 'weaponBonus' && (
+          <WeaponBonusEditor data={draft} onChange={save} />
+        )}
+        {draft.type === 'spellModifier' && (
+          <SpellModifierEditor data={draft} onChange={save} />
+        )}
+        {draft.type === 'defenseBonus' && (
+          <DefenseBonusEditor data={draft} onChange={save} />
+        )}
+        {draft.type === 'skillBonus' && (
+          <SkillBonusEditor data={draft} onChange={save} />
         )}
       </div>
     </div>

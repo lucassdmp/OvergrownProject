@@ -77,6 +77,14 @@ function NodeVisual({
       if (node.data.flat) parts.push(`+${node.data.flat}`)
       icon = '✚'; sublabel = parts.join(' ') || 'Cura'; break
     }
+    case 'weaponBonus':
+      icon = '🗡'; sublabel = (node.data.requiredTags[0] ?? 'Arma').slice(0, 9); break
+    case 'spellModifier':
+      icon = '✧'; sublabel = node.data.effectType.slice(0, 9); break
+    case 'defenseBonus':
+      icon = '🛡'; sublabel = `-${node.data.value} dano`; break
+    case 'skillBonus':
+      icon = '📚'; sublabel = `+${node.data.value} ${(node.data.skillName || node.data.skillId).slice(0, 6)}`; break
   }
 
   const shpProps = { fill, stroke: commonStroke, strokeWidth: commonWidth }
@@ -90,6 +98,10 @@ function NodeVisual({
       case 'combatAbility': return <polygon points={pentagPts(NODE_R)} {...shpProps} />
       case 'extraDamage':   return <circle r={NODE_R} strokeDasharray="5 3" {...shpProps} />
       case 'healing':       return <circle r={NODE_R} strokeDasharray="8 2" {...shpProps} />
+      case 'weaponBonus':   return <polygon points={hexPts(NODE_R)} {...shpProps} />
+      case 'spellModifier': return <polygon points={diamondPts(NODE_R)} {...shpProps} />
+      case 'defenseBonus':  return <polygon points={pentagPts(NODE_R)} {...shpProps} />
+      case 'skillBonus':    return <circle r={NODE_R} strokeDasharray="3 2" {...shpProps} />
     }
   })()
 
