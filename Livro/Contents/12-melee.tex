@@ -18,7 +18,7 @@ Cada ponto em \textbf{Might} ou \textbf{Grace} concede 1 PC, mais 2 de base. Um 
 
 \combatSkill{Hemorragia Interna}{4}{Ao acertar um ataque em um inimigo que já está com \link{status:brutal}{Sangramento Brutal} ou \link{status:ardiloso}{Sangramento Ardiloso} ativo, você aprofunda o ferimento. O alvo sofre imediatamente \textbf{o dano do tique de sangramento atual como dano extra}, adicional ao dano normal do ataque.}
 
-\combatSkill{Golpe Perfurante}{6}{Você direciona o golpe para vencer a proteção do inimigo. O ataque \textbf{ignora a Resistência da armadura} do alvo completamente, causando o dano base direto em seus pontos de vida. Não pode ser combinado com \textbf{Postura de Muralha}.}
+\combatSkill{Golpe Perfurante}{6}{Declare antes do teste de ataque. Se o ataque acertar e o alvo usar Bloqueio, o \textbf{VB da armadura é considerado 0} contra esse ataque; bônus de escudo, arma e habilidade ainda são aplicados. Não pode ser combinado com \textbf{Postura de Muralha}.}
 
 \combatSkill{Golpe Duplo}{5}{Você desfere dois golpes rápidos no mesmo turno, sacrificando precisão por volume. Realiza dois ataques contra o mesmo alvo, cada um com \textbf{$-$2 de acerto}. Ambos podem resultar em crítico normalmente.}
 
@@ -30,13 +30,15 @@ Cada ponto em \textbf{Might} ou \textbf{Grace} concede 1 PC, mais 2 de base. Um 
 
 \combatSkill{Pressão Constante}{8 por rodada}{Enquanto ativo, todo inimigo adjacente que tentar usar uma habilidade ou conjurar uma magia deve gastar \textbf{+2 PC adicionais} para fazê-lo. Você domina o espaço físico ao redor, tornando cada decisão do inimigo mais custosa. Cancele como ação livre.}
 
-\combatSkill{Marcar para a Morte}{14}{Você foca toda sua letalidade em um único alvo. Ganha \textbf{+3 no acerto}, \textbf{+2 na Margem de Ameaça} e \textbf{+1D6 de dano} contra ele. Em contrapartida, o dano recebido de todas as outras fontes aumenta em 25\% e você não pode \textbf{desviar ou resistir} ao que não vem do alvo marcado. \par\textit{\footnotesize \textbf{Aprimorado:} As penalidades são progressivamente removidas conforme a habilidade é refinada na Árvore de Talentos.}}
+\combatSkill{Marcar para a Morte}{14}{Você foca toda sua letalidade em um único alvo. Ganha \textbf{+3 no acerto}, \textbf{+2 na Margem de Ameaça} e \textbf{+1D6 de dano} contra ele. Em contrapartida, o dano recebido de todas as outras fontes aumenta em 25\% e você não pode usar \textbf{Esquiva ou Bloqueio} contra ataques que não venham do alvo marcado. Resistências e RD continuam funcionando. \par\textit{\footnotesize \textbf{Aprimorado:} As penalidades são progressivamente removidas conforme a habilidade é refinada na Árvore de Talentos.}}
 
 \combatSkill{Execução}{12}{Se o alvo estiver com \textbf{25\% de vida ou menos}, o ataque tem \textbf{Vantagem} e, ao acertar, causa o \textbf{dobro do dano}. Não pode ser usada contra alvos que já estejam na condição \link{status:morrendo}{Morrendo}.}
 
 \combatSkill{Última Resistência}{20}{Ao receber um dano que seria fatal, ao invés de entrar em \link{status:morrendo}{Morrendo}, você permanece com \textbf{1 de vida} e zera seus PC. Role \textbf{1D4}: durante esse número de turnos você está \textbf{imune à condição Morrendo}. Ao fim desse período, se ainda estiver sem cura, entra em Morrendo normalmente. Só pode ser ativada uma vez por combate.}
 
-\combatSkill{Escudo Humano}{7}{Use sua \textbf{Reação} para empurrar um aliado adjacente para fora da trajetória de um ataque direcionado a ele. Você absorve \textbf{metade do dano} no lugar do aliado. Deve ser declarado antes do resultado do ataque inimigo.}
+\combatSkill{Escudo Humano}{7}{\textbf{Requisito: FOR 15.} Quando um aliado adjacente for atingido por um ataque perceptível, mas antes da rolagem de dano, gaste sua \textbf{Reação} para se tornar o alvo no lugar dele. Você pode realizar um Bloqueio como parte dessa mesma Reação, sem gastar outra Reação. Depois do VB e da RD, você sofre todo o dano restante e recebe os efeitos associados ao acerto. O aliado não sofre dano nem efeitos desse ataque.}
+
+\combatSkill{Guarda Total}{0}{\textbf{Requisito: FOR 15 e armadura com VB ou escudo.} Use sua \textbf{Ação Padrão}. Até o início do seu próximo turno, você não pode atacar nem causar dano, recebe \textbf{+5 VB} e ganha \textbf{uma Reação adicional que só pode ser usada para Bloqueio}. A Reação adicional não se acumula com outra concedida por Guarda Total. Esta é uma escolha individual e não exige Postura de Muralha.}
 
 \combatSkill{Vício em Sangue}{6}{Se um alvo com \textbf{metade da vida ou menos} estiver em alcance médio, você se arremessa até ele \textbf{sem gastar sua Ação de Movimento}. O cheiro de sangue aguça o instinto predatório.}
 
@@ -72,7 +74,7 @@ Cada ponto em \textbf{Might} ou \textbf{Grace} concede 1 PC, mais 2 de base. Um 
 
 \combatSkill{Analisar Padrão}{7}{Gaste sua \textbf{Ação de Movimento} estudando os movimentos do inimigo. Todos os seus ataques contra ele neste turno têm \textbf{Vantagem}. Se não atacar neste turno, o bônus se transfere para o turno seguinte.}
 
-\combatSkill{Postura de Muralha}{4 por rodada}{Você não pode atacar neste turno, mas \textbf{dobra sua Resistência} até o início do seu próximo turno. Cada aliado adjacente ganha \textbf{+2 de Resistência} enquanto você mantiver a postura.}
+\combatSkill{Postura de Muralha}{4 por rodada}{\textbf{Requisito: FOR 15.} Use sua \textbf{Ação Padrão} e pague o custo ao ativar. Até o início do seu próximo turno, você não pode atacar nem causar dano, recebe \textbf{uma Reação adicional que só pode ser usada para Bloqueio} e dobra apenas o \textbf{VB da sua armadura}; bônus de escudo, arma e habilidade não são dobrados. Aliados adjacentes recebem \textbf{+2 VB} quando realizam seus próprios Bloqueios. No início de cada turno seguinte, você pode pagar novamente 4 PC e gastar sua Ação Padrão para renovar a postura por outra rodada; caso contrário, ela termina. A Reação adicional não se acumula com outra concedida por esta habilidade ou por Guarda Total.}
 
 \combatSkill{Rasteira}{7}{Tente derrubar o alvo aplicando \link{status:derrubado}{Derrubado}. Teste de \textbf{Grace} do alvo contra o seu \textbf{teste de Might}. Se falhar, o alvo cai. Alvos \link{status:derrubado}{Derrubados} sofrem \textbf{Vantagem} em ataques corpo a corpo recebidos até se levantarem.}
 

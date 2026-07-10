@@ -144,8 +144,9 @@ provenientes da da árvore de talentos e de itens equipados.
    Resistência em Combate
 
    Resistência é um atributo passivo: ela determina se o ataque ou magia acerta o jogador, mas não reduz o dano
-   recebido. Um jogador que usa escudo pode declarar a reação de Bloqueio para aumentar temporariamente sua
-   Resistência com base nos atributos do escudo.
+   recebido. Resistência, Valor de Bloqueio e Redução de Dano são estatísticas diferentes. Um Bloqueio não
+   aumenta a Resistência: ele reduz o dano de um ataque que já acertou, conforme as regras de Armaduras e
+   Proteções.
 
 Esquiva define a proficiência em desviar do jogador. Ela é baseada diretamente ao atributo de Grace. A cada 7 Pontos
 de Grace, o jogador ganha 1 ponto de Esquiva. Todos os jogadores tem Esquiva base em 5. Um jogador com 21 de
@@ -164,7 +165,6 @@ extras ou usar habilidades de combate. Um jogador com 10 de Grace e 10 de Might,
 
 Dados no Overgrown
 A Manifestação Numérica
-
                                                                                                                     3
 No universo de Overgrown, os dados transcendem a mera casualidade, eles representam a manifestação das capacidades
 inatas e divinas de um personagem. Cada rolagem é o encontro entre o potencial do aventureiro, os conhecimentos
@@ -274,7 +274,7 @@ A maestria reside na conversão de esforços. O sistema permite que o jogador sa
 dade para realizar múltiplas tarefas mais simples.
 
    • Ação Padrão: O núcleo do seu turno. Usada para atacar ou usar magias. Pode ser convertida em uma ação de
-     Movimento, Livre ou Reação.
+     Movimento, Livre ou em uma Reação adicional.
    • Ação de Movimento: Utilizada para reposicionamento. Pode ser convertida em uma ação Livre.
    • Ação Livre: Ações rápidas ou frases curtas. Não pode ser convertida.
 
@@ -282,6 +282,13 @@ dade para realizar múltiplas tarefas mais simples.
                                                                                                                    5
    • Reação: Uma resposta instintiva fora do seu turno (1 por rodada). Não pode ser convertida ou trocada. Esquivar
      de um ataque, bloquear, contra-atacar e interromper conjurações são exemplos de Reações.
+
+   Conversão em Reação
+
+   Uma Ação Padrão só pode ser convertida em Reação durante o próprio turno. A Reação adicional fica disponível
+   até o início do próximo turno do personagem e desaparece caso não seja usada. Ela se soma à Reação normal
+   da rodada, permitindo no máximo duas Reações nesse intervalo, salvo quando uma habilidade declarar outro
+   limite. A conversão não pode ser feita retroativamente depois que um gatilho já ocorreu.
 
 
 Nível de Ameaça e Precisão
@@ -313,7 +320,6 @@ Cobertura Total: O alvo está completamente atrás de um obstáculo sólido, sem
     distância comuns são impossíveis contra alvos em cobertura total. Apenas habilidades específicas (como Tiro
     Ricochete ou Tiro em Curva) ou magias de área permitem contornar este impedimento.
 
-
    Cobertura e Corpo a Corpo
 
    Cobertura não oferece proteção contra ataques corpo a corpo. Um inimigo que atravessar o obstáculo ou al-
@@ -332,14 +338,15 @@ Armas de Fogo: Por serem forjadas com gravuras de combustão rúnica focadas em 
     não podem ser usadas como canalizadores mágicos. Tentar fazê-lo dissipa a magia sem efeito e gasta o IEP
     normalmente.
 
-   Flechas Especiais e Magia
+                                                                                                                    6
+   Flechas Especiais e Magia
 
    Flechas de Aetherium e Rúnicas amplificam ainda mais magias canalizadas. O dano extra da flecha é adicionado
    ao dano da magia disparada, tornando a combinação de arqueria e arcanismo uma especialização poderosa.
 
 
-                                                                                                                    6
-Inventário e Carga
+
+Inventário e Carga
 O Fardo do Aventureiro
 No universo de Overgrown, cada objeto tem sua propria unidade de peso. A capacidade de carga básica de um indivíduo
 é de 10 unidades, representando o limite de volume e peso que pode ser manejado sem comprometer a mobilidade.
@@ -376,7 +383,6 @@ Diferente das armas de fogo, os arcos são extensões da alma do arqueiro e exce
 
    • Consumo: Flechas básicas não são contabilizadas por combate, mas sim por Aventura, tendo que ser repostas em
      períodos de descanso ou em mercadores.
-
    • Carga: Cada suprimento de flechas pesa 1 unidade, independentemente do tipo, mas o peso total pode variar
      conforme a qualidade e material da flecha.
    • Canalização: Arcos podem ser usados como canalizadores mágicos, permitindo disparar feitiços como se fossem
@@ -384,15 +390,17 @@ Diferente das armas de fogo, os arcos são extensões da alma do arqueiro e exce
      distância.
 
 
-                       Tipo de Projétil                     Peso de Carga       Dano Extra
-                       Flechas de Ferro ou Aço                     1                  —
-                       Flechas Rúnicas (Engravadas)                3           +1d6 Perfurante
-                       Flechas de Aetherium (Vastidrum)            5           +1d8 Perfurante
+
+
+                                                                                                                    7
+                      Tipo de Projétil                       Peso de Carga     Dano Extra
+                      Flechas de Ferro ou Aço                      1                 —
+                      Flechas Rúnicas (Engravadas)                 3          +1d6 Perfurante
+                      Flechas de Aetherium (Vastidrum)             5          +1d8 Perfurante
 
 
 Proteção e Utilitários
-                                                                                                                    7
-As armaduras são classificadas por sua densidade e material, afetando diretamente o fardo do usuário. Armaduras
+As armaduras são classificadas por sua densidade e material, afetando diretamente o fardo do usuário. Armaduras
 especiais podem ter pesos alterados conforme suas especificações técnicas.
 
 Pano (Peso 2): Vestes leves geralmente usada por magos.
@@ -402,6 +410,8 @@ Malha (Peso 7): O equilíbrio entre defesa e peso.
 Metal (Peso 10): Proteção pesada para a linha de frente.
 Placas (Peso 15): A fortaleza intransponível do guerreiro.
 
+Os pesos desta seção são os mesmos usados na tabela de Armaduras e Proteções. O peso da armadura conta normal-
+mente contra a Carga, mesmo quando o personagem não cumpre o requisito necessário para utilizá-la.
 Poções para uso rapido são guardadas em um cinto de poções do aventureiro, que tem capacidade para 5 frascos. Cada
 frasco pesa 0.4 unidade, totalizando 2 unidades. Existem cintos de poções maiores, no entanto devem ser adquiridos ou
 comprados. Poções no cinto de poção podem ser tomadas como ação livre, e deve ser reabastecido durante descanso
@@ -444,16 +454,20 @@ Armas Corpo a Corpo
        Clava            20      2
                                            MIG       críticos aplicam Concussão e
                                                           Sangramento Brutal.
-                                                          Guardian: Bloqueia,
+                                                      Guardian: Ocupa uma mão e
+                                                         adiciona +5 ao Valor de
                                       1D6 + MOD de
-      Escudo            20      3                         adicionando 1D10 de
+      Escudo            20      3                     Bloqueio. Apenas um escudo
                                            MIG
-                                                               resistência.
-                                                       Guerreiro: Bloqueia com a
-                                      3D6 + MOD de      espada (+1D6 resistência).
+                                                       pode contribuir para cada
+                                                                Bloqueio.
+                                                       Guerreiro: Adiciona +3 ao
+                                                     Valor de Bloqueio. Quando um
+                                      3D6 + MOD de   alvo bloquear um ataque desta
 Espada de Duas Mãos     20      4
-                                          MIG         Ignora metade da resistência
-                                                       de inimigos que bloqueiam.
+                                          MIG            arma, reduza o Valor de
+                                                      Bloqueio total dele à metade,
+                                                        arredondando para baixo.
                                       2D6 + MOD de      Warden: Use escudo sem
 Espada de Uma Mão       19      2
                                            MIG           penalidade de carga.
@@ -481,10 +495,12 @@ Machado de Uma Mão      19      3
                                                MIG              armadura leve ou sem
                                                             armadura, causa 2D6 adicional.
                                                              Crusader: Com escudo, causa
-                                           2D6 + MOD de     1D8 adicional. Acertos críticos
-     Maça de Uma Mão        19      3
-                                                MIG              ignoram 2 pontos de
-                                                                     Resistência.
+                                                               1D8 adicional. Em acertos
+                                           2D6 + MOD de
+     Maça de Uma Mão        19      3                       críticos, reduza em 2 o Valor de
+                                                MIG
+                                                                Bloqueio usado contra o
+                                                               ataque, até o mínimo de 0.
                                                               Legionary: Acertos críticos
                                           2D8 + 1D6 + MOD   aplicam Atordoado por 1 turno.
     Maça de Duas Mãos       20      6
@@ -495,13 +511,11 @@ Machado de Uma Mão      19      3
     Martelo de Uma Mão      19      3                       1D8 adicional. Acertos aplicam
                                                 MIG
                                                                  Sangramento Brutal.
-                                                            Avenger: Bloqueia com a arma
-                                                              (+1D6 resistência). Acertos
-                                           2D10 + MOD de
-   Martelo de Duas Mãos     20      6                       críticos aplicam Sangramento
-                                                MIG
-                                                                  Brutal e Concussão
-                                                                   simultaneamente.
+                                                            Avenger: Adiciona +3 ao Valor
+                                           2D10 + MOD de     de Bloqueio. Acertos críticos
+   Martelo de Duas Mãos     20      6
+                                                MIG         aplicam Sangramento Brutal e
+                                                             Concussão simultaneamente.
                                                             Duelist: Ao acertar, gaste 1 PC
                                                             para realizar um segundo golpe
                                            2D6 + MOD de
@@ -518,13 +532,15 @@ Machado de Uma Mão      19      3
                                                                   provoca ataques de
                                                                   oportunidade nesse
                                                                     deslocamento.
-                                                             Enforcer: Empunhe em par.
-                                                            Ao bloquear um ataque corpo
+                                                              Enforcer: Empunhe em par.
+                                                             Quando seu Bloqueio reduzir
+                                                             ao menos 1 ponto de dano de
                                            1D8 + MOD de
-          Tonfa             19      2                       a corpo, realize contra-ataque
+          Tonfa             19      2                       um ataque corpo a corpo, gaste
                                                 MIG
-                                                               imediato como ação livre
-                                                                     (custa 1 PC).
+                                                                 1 PC para realizar um
+                                                             contra-ataque imediato como
+                                                                      ação livre.
 
 Armas de Longo Alcance
 
@@ -566,10 +582,12 @@ Bola de Cristal     20      2     1D6 + MOD de WIS     acima) aos testes de ataq
                                                         mágico e o MOD de WIS
                                                       completo ao dano de magias.
                                                        Buccaneer: Acertos críticos
-                                                     ignoram a Resistência do alvo e
+                                                      ignoram o Valor de Bloqueio
+                                                      da armadura do alvo, mas não
                                    3D6 + MOD de
-  Bucaneira         20      7                         aplicam Sangramento Brutal.
+  Bucaneira         20      7                        o bônus de escudos ou armas, e
                                        MIG
+                                                      aplicam Sangramento Brutal.
                                                      Exige ação de movimento para
                                                                recarregar.
                                                      Arcanist: Ao conjurar magias,
@@ -584,82 +602,121 @@ Bola de Cristal     20      2     1D6 + MOD de WIS     acima) aos testes de ataq
 
 
                                                                                    11
-              Nome                   Ameaça       Peso         Dano Base              Propriedade Especial
-                                                                                    Trapper: Use Mira Focada
-                                                                                   como ação livre, sem gastar
-                                                              2D8 + MOD de
-       Espingarda de Caça                19         4                             PC. Até 5 unidades, causa 1D6
-                                                                  GRA
-                                                                                       extra. Exige ação de
-                                                                                   movimento para recarregar.
-                                                                                    Archmage: Conjure magias
-                                                                                  fora da Árvore de Habilidades
-                                                                                   (custo de IEP dobrado). Uma
-            Grimório                     19         2       1D8 + MOD de WIS
-                                                                                  vez por combate, reutilize uma
-                                                                                   magia já conjurada sem custo
-                                                                                               extra.
-                                                                                    Gunslinger: Empunhe duas
-                                                                                   pistolas e realize dois ataques
-                                                              2D6 + MOD de
-              Pistola                    18         2                                 por ação. Exige ação de
-                                                                  GRA
-                                                                                    movimento para recarregar
-                                                                                            cada pistola.
-                                                                                     Deadeye: Acertos críticos
-                                                                                   causam 1D10 extra e ignoram
-                                                             2D10 + MOD de         Resistência. Recarregar exige
-         Rifle de Precisão               19         8
-                                                                  GRA                 ação padrão completa.
-                                                                                   Desvantagem contra alvos a
-                                                                                       menos de 5 unidades.
-                                                                                  Sorcerer: Ataque básico causa
-                                                                                   Dano Mágico sem consumir
-             Varinha                     19         1       1D8 + MOD de WIS
-                                                                                    IEP. Ao acertar um ataque
-                                                                                   básico, recupera 1D4 de IEP.
+              Nome                  Ameaça        Peso         Dano Base             Propriedade Especial
+                                                                                   Trapper: Use Mira Focada
+                                                                                  como ação livre, sem gastar
+                                                             2D8 + MOD de
+       Espingarda de Caça              19           4                            PC. Até 5 unidades, causa 1D6
+                                                                 GRA
+                                                                                      extra. Exige ação de
+                                                                                  movimento para recarregar.
+                                                                                   Archmage: Conjure magias
+                                                                                 fora da Árvore de Habilidades
+                                                                                  (custo de IEP dobrado). Uma
+            Grimório                   19           2      1D8 + MOD de WIS
+                                                                                 vez por combate, reutilize uma
+                                                                                  magia já conjurada sem custo
+                                                                                              extra.
+                                                                                   Gunslinger: Empunhe duas
+                                                                                  pistolas e realize dois ataques
+                                                             2D6 + MOD de
+              Pistola                  18           2                                por ação. Exige ação de
+                                                                 GRA
+                                                                                   movimento para recarregar
+                                                                                           cada pistola.
+                                                                                   Deadeye: Acertos críticos
+                                                                                 causam 1D10 extra e ignoram o
+                                                                                 Valor de Bloqueio da armadura
+                                                             2D10 + MOD de        do alvo, mas não o bônus de
+         Rifle de Precisão             19           8
+                                                                  GRA            escudos ou armas. Recarregar
+                                                                                  exige ação padrão completa.
+                                                                                  Desvantagem contra alvos a
+                                                                                      menos de 5 unidades.
+                                                                                 Sorcerer: Ataque básico causa
+                                                                                  Dano Mágico sem consumir
+             Varinha                   19           1      1D8 + MOD de WIS
+                                                                                   IEP. Ao acertar um ataque
+                                                                                  básico, recupera 1D4 de IEP.
 
 Armaduras e Proteções
-Em Overgrown, vestir uma armadura não garante proteção passiva automática; ela fornece os meios para que o usuário
-se defenda. A eficácia de um traje é medida pelo seu valor de Armadura, utilizado no sistema de Bloqueio.
+Em Overgrown, armaduras não alteram a Resistência passiva. Elas fornecem um Valor de Bloqueio (VB), usado para
+reduzir o dano de ataques que já acertaram. Armaduras mais pesadas exigem treinamento físico permanente, enquanto
+a Armadura de Couro depende de mobilidade e controle corporal.
 
-   • Resistência (Bloqueio): Capacidade do traje de absorver ou defletir impactos quando o jogador declara um blo-
+   • Valor de Bloqueio (VB): quantidade fixa de dano que a armadura reduz quando o personagem declara um Blo-
      queio.
-
-
-             Nome                  Peso       Resistência                           Efeitos
-                                                               Condutor Rúnico: +1 Espaço de Melhoria Rúnica.
-        Vestes de Pano               1              0          Liberdade: Sem limite de Esquiva. Sem penalidade
-                                                                                   de ruído.
-                                                               Amortecida: Reduz o dano de Concussão em 1D4.
-           Gambeson                  1              3          Sem penalidade de Esquiva ou ruído. Ideal como
-                                                                              camada inferior.
-                                                                  Agilidade: +5 de Esquiva adicional. Reforço:
-      Armadura de Couro              2              5
-                                                                  Proteção básica sem prejuízo à mobilidade.
-                                                                  Malha Trançada: +2 RD Puro contra cortes.
-         Cota de Malha               4             8
-                                                                   Barulhento: −3 em testes de Furtividade.
-                                                               Peso Morto: −7 de Esquiva. Impermeável: Imune
-       Couraça de Metal              6             12
-                                                                                a Concussão.
-      Armadura de Placas             8             15            Tanque de Guerra: Restrição: −15 de Esquiva.
+   • Requisito: valor mínimo permanente de atributo necessário para usar a armadura corretamente. Bônus tempo-
+     rários não permitem cumprir requisitos.
+   • Requisito não cumprido: a armadura ainda ocupa sua Carga e aplica suas penalidades, mas não concede VB nem
+     efeitos positivos e não pode ser usada para Bloquear.
 
 
 
 
-                                                                                                                 12
-   O Uso do Bloqueio
+                                                                                                                12
+         Nome               Peso         VB         Requisito                           Efeitos
+                                                                      Condutor Rúnico: +1 Espaço de Melhoria
+     Vestes de Pano           2           0          Nenhum         Rúnica. Liberdade: Sem limite de Esquiva. Sem
+                                                                                 penalidade de ruído.
+                                                                     Amortecida: Reduz o dano de Concussão em
+       Gambeson               2           3          Nenhum
+                                                                      1D4. Sem penalidade de Esquiva ou ruído.
+                                                                      Agilidade: +5 de Esquiva adicional. Reforço:
+   Armadura de Couro          4           5          GRA 10
+                                                                      Proteção básica sem prejuízo à mobilidade.
+                                                                     Malha Trançada: +2 RD contra dano cortante.
+     Cota de Malha            7           8           MIG 12
+                                                                      Barulhento: −3 em testes de Furtividade.
+                                                                       Peso Morto: −7 de Esquiva. Impermeável:
+    Couraça de Metal          10         12          MIG 15
+                                                                                Imune a Concussão.
+   Armadura de Placas         15         15          MIG 20               Tanque de Guerra: −15 de Esquiva.
 
-   Ao ser alvo de um ataque, você pode declarar um Bloqueio. O valor de Resistência da sua armadura determina
-   quanto do impacto será mitigado. Escudos somam seus próprios valores de Resistência a este total.
+
+   O Uso do Bloqueio
+
+   Depois que um ataque perceptível acertar você, mas antes da rolagem de dano, gaste uma Reação para declarar
+   um Bloqueio. Some o VB da sua armadura aos bônus fixos de um escudo, arma ou habilidade. O resultado
+   reduz o dano daquele ataque, até o mínimo de 0.
+
+                             Dano final = max(0, dano após modificadores − VB − RD)
+   Um Bloqueio reduz apenas uma instância de dano. Uma habilidade com vários dados e um único teste de acerto
+   é uma instância; ataques com testes de acerto separados exigem Bloqueios separados. O Bloqueio e a Esquiva
+   não podem ser usados contra a mesma instância.
+
+
+   Sequência e Limites do Bloqueio
+
+   Resolva o Bloqueio nesta ordem: determine o acerto e o crítico; declare o Bloqueio; role o dano; aplique vul-
+   nerabilidades, resistências percentuais e outros multiplicadores; subtraia o VB; subtraia a RD aplicável; aplique
+   o restante ao HP. Se houver componentes de dano diferentes, o defensor distribui o VB entre os componentes
+   que possam ser bloqueados antes da aplicação das RD específicas.
+   Críticos acertam normalmente, mas podem ter seu dano reduzido. Reduzir o dano a 0 não transforma o acerto
+   em erro: efeitos que ocorram ao acertar ainda são aplicados, mas efeitos que exijam causar dano não são ativados.
+   VB excedente não é armazenado nem transferido para outro ataque.
+   Podem ser bloqueados ataques corpo a corpo, projéteis e efeitos de área perceptíveis que causem dano direto.
+   Dano contínuo, ambiental, mental ou Puro não pode ser bloqueado, salvo indicação expressa. Contra uma área,
+   cada personagem usa sua própria Reação e reduz apenas o dano que receberia; não existe teste de Bloqueio.
+
+
+   Armaduras e Escudos
+
+   Apenas uma armadura equipada fornece VB e efeitos. Um Gambeson pode ser vestido sob Cota de Malha,
+   Couraça de Metal ou Armadura de Placas: nesse caso, seu peso e o efeito Amortecida permanecem, mas seu
+   VB não é somado. Nenhuma outra combinação de armaduras acumula benefícios.
+   Um escudo ocupa uma mão e fornece +5 VB ao Bloqueio, inclusive quando o usuário veste Pano ou nenhuma
+   armadura. O bônus de apenas um escudo pode ser aplicado a cada Bloqueio. Empunhar ou guardar um escudo
+   segue as mesmas regras de uma arma de uma mão.
 
 
 
 Perícias e Maestrias
 O Refinamento do Talento
 No universo de Overgrown, os atributos representam o potencial bruto do aventureiro, mas são as Perícias que definem
-como esse poder é lapidado através da experiência. Elas representam o treinamento especializado, o estudo acadêmico
+
+                                                                                                                       13
+como esse poder é lapidado através da experiência. Elas representam o treinamento especializado, o estudo acadêmico
 e a memória muscular adquirida nas perigosas trilhas do Pináculo.
 A maestria em uma perícia permite que o personagem realize feitos que ultrapassam a mera sorte, transformando
 esforço em resultados precisos. Cada perícia possui um Atributo Base: ao realizar um teste, some o valor da perícia ao
@@ -702,10 +759,7 @@ e carisma.
 
 Enganação [SEN]: A capacidade de tecer mentiras convincentes, omitir fatos e manter disfarces sem levantar suspeitas.
 
-
-
-                                                                                                                   13
-Engenharia* [WIS]: O conhecimento técnico sobre a construção de estruturas, mecanismos complexos e fortificações.
+Engenharia* [WIS]: O conhecimento técnico sobre a construção de estruturas, mecanismos complexos e fortificações.
 
 Estratégia [SEN]: A capacidade de analisar o cenário em volta, identificar pontos cegos e planejar táticas de combate
 ou cerco.
@@ -717,7 +771,11 @@ Intimidação [MIG]: O uso da presença física ou ameaças diretas para dobrar 
 Investigação [SEN]: A busca minuciosa por evidências e o gracioso loot, permitindo deduzir eventos passados através
 de pequenos detalhes ou encontrar itens específicos.
 
-Luta [MIG]: A proficiência no combate corpo a corpo, englobando o uso de armas brancas e técnicas de combate
+
+
+
+                                                                                                                   14
+Luta [MIG]: A proficiência no combate corpo a corpo, englobando o uso de armas brancas e técnicas de combate
 desarmado.
 
 Manutenção* [WIS]: A habilidade de reparar, afiar lâminas e garantir que o inventário permaneça funcional.
@@ -755,15 +813,11 @@ Perícias e Progressão
 A maestria sobre as perícias em Overgrown não é estática. Ela exige que o aventureiro escolha entre a versatilidade de
 aprender novos conceitos ou a profundidade de especializar-se naquilo que já conhece.
 
+   Progressão de Perícia
 
-
-
-                                                                                                                  14
-    Progressão de Perícia
-
-    Diferente dos Atributos, as Perícias evoluem conforme o personagem interage com o Pináculo. Algumas habi-
-    lidades na Árvore de Talentos podem conceder bônus diretos nestes valores ou permitir que você utilize uma
-    perícia em situações não convencionais.
+   Diferente dos Atributos, as Perícias evoluem conforme o personagem interage com o Pináculo. Algumas habi-
+   lidades na Árvore de Talentos podem conceder bônus diretos nestes valores ou permitir que você utilize uma
+   perícia em situações não convencionais.
 
 
 
@@ -771,11 +825,14 @@ A Escolha de Aprendizado
 Todo personagem inicia sua jornada no Nível 0 com 5 Perícias Iniciais e 1 perícia de Origem (Maestria I). A cada 5
 Níveis de Divindade alcançados, o jogador deve escolher entre um dos dois caminhos:
 
-    1. Caminho da Versatilidade: Aprender duas novas perícias em Maestria I (+5).
+   1. Caminho da Versatilidade: Aprender duas novas perícias em Maestria I (+5).
    2. Caminho da Especialização: Melhorar uma perícia já existente para o próximo nível de Maestria.
 
 
-Níveis de Maestria e Limites
+
+
+                                                                                                                  15
+Níveis de Maestria e Limites
 A evolução de uma perícia amplia o bônus de teste, mas o conhecimento avançado é trancado pela Divindade. Você
 só pode realizar a melhoria se possuir o nível necessário:
 
@@ -814,9 +871,7 @@ dução*.
 Atento: Seus sentidos são aguçados; você ouve o que ninguém ouve e vê o que está oculto no horizonte. Perícia:
 Percepção.
 
-
-                                                                                                                    15
-Bestial: Sempre teve uma conexão inexplicável com as feras, sentindo-se mais confortável entre animais do que entre
+Bestial: Sempre teve uma conexão inexplicável com as feras, sentindo-se mais confortável entre animais do que entre
 pessoas. Perícia: Adestramento.
 
 Curativo: Sua compreensão sobre o corpo e fármacos permitiu que você trouxesse muitos de volta da beira da morte.
@@ -831,7 +886,10 @@ Enganação.
 Engenhoso: Sempre teve facilidade em entender como as coisas funcionam, de polias complexas a fortificações. Pe-
 rícia: Engenharia*.
 
-Erudito: Sua curiosidade o levou a acumular vasto conhecimento sobre a história, línguas e costumes do mundo.
+
+
+                                                                                                                    16
+Erudito: Sua curiosidade o levou a acumular vasto conhecimento sobre a história, línguas e costumes do mundo.
 Perícia: Cultura.
 
 Estóico: Sua mente é uma fortaleza; você permanece calmo e sob controle mesmo diante do horror psicológico.
@@ -870,11 +928,7 @@ Navegação*.
 Perspicaz: Nada escapa ao seu olhar; você lê as pessoas através de microexpressões e hesitações. Perícia: Discerni-
 mento.
 
-
-
-
-                                                                                                                      16
-Resiliente: Sua resistência física ultrapassa o comum; você suporta privações e dores que derrubariam outros. Perícia:
+Resiliente: Sua resistência física ultrapassa o comum; você suporta privações e dores que derrubariam outros. Perícia:
 Constituição.
 
 Rúnico: Suas mãos possuem o toque sagrado necessário para gravar runas e moldar materiais condutores. Perícia:
@@ -889,7 +943,11 @@ rícia: Sedução.
 Tático: Sua mente trabalha em prol da vantagem; você enxerga o campo de batalha como um tabuleiro. Perícia:
 Estratégia.
 
-Vigoroso: Seu corpo foi forjado pelo esforço físico constante, tornando-o capaz de superar qualquer barreira natural.
+
+
+
+                                                                                                                      17
+Vigoroso: Seu corpo foi forjado pelo esforço físico constante, tornando-o capaz de superar qualquer barreira natural.
 Perícia: Atletismo.
 
 Zeloso: Você possui um cuidado nato com suas ferramentas, sabendo exatamente como manter o metal afiado e o
@@ -928,9 +986,7 @@ Um sono profundo, acompanhado de alimentação e hidratação adequadas. Este de
 mente seguro e o consumo de rações ou refeições preparadas. A recuperação é massiva:
 
    • Vitalidade: Recupera 1D20 + FOR Pontos de Vida.
-
-                                                                                                                     17
-    • Energia Impossível: Recupera 1D20 + WIS Pontos de Energia.
+   • Energia Impossível: Recupera 1D20 + WIS Pontos de Energia.
 
 A Arte do Banquete
 Embora as rações de viagem mantenham um aventureiro de pé, apenas uma refeição preparada com maestria pode
@@ -940,7 +996,10 @@ Abaixo estão os níveis de complexidade para o preparo ou compra de refeições
 com a rolagem natural do descanso):
 
 
-Qualidade   Dificuldade   Breve   Pleno
+
+
+                                                                                                                     18
+Qualidade   Dificuldade   Breve   Pleno
 
 Básica          10        +1D4     +1D6
 
@@ -986,10 +1045,7 @@ Estados e Condições
 
 Status Negativos
 
-
-
-                                                                                                                   18
-Abalado: O espírito do alvo está fraquejado. Todos os testes realizados pelo personagem sofrem Desvantagem. O
+Abalado: O espírito do alvo está fraquejado. Todos os testes realizados pelo personagem sofrem Desvantagem. O
 alvo deve realizar um teste de Sense para quebrar o efeito.
 
 Atordoado: O alvo fica incapacitado de agir e reagir. Após sofrer este efeito, o alvo torna-se imune a novos atordoa-
@@ -1001,7 +1057,9 @@ Sense para quebrar o efeito.
 
 Cegueira: A escuridão toma os olhos. O alvo recebe Desvantagem em todos os testes de Ataque, Magia e Percepção.
 
-Concussão: O impacto desorientou os sentidos. O alvo deve escolher entre manter sua Ação de Movimento ou sua
+
+                                                                                                                   19
+Concussão: O impacto desorientou os sentidos. O alvo deve escolher entre manter sua Ação de Movimento ou sua
 Reação. Exige um teste de Fortitude contra o valor do ataque sofrido.
 
 Congelado / Petrificado: O corpo está rígido como gelo ou rocha. O alvo deve gastar sua Ação de Movimento para
@@ -1044,10 +1102,7 @@ Inconsciente: O alvo está indefeso e totalmente incapaz de agir ou reagir.
 
 Perplexo: O choque mental impede ações ofensivas. O alvo não pode agir, mas consegue se defender normalmente.
 
-
-
-                                                                                                                     19
-Vulnerável: O alvo perde sua Redução de Dano (Resistência) por uma rodada.
+Vulnerável: O alvo perde sua Redução de Dano (Resistência) por uma rodada.
 
 Provocado: A fúria cega o julgamento. O alvo deve atacar quem o provocou até a morte. Exige um teste de Sense +
 Temperança para resistir.
@@ -1055,7 +1110,11 @@ Temperança para resistir.
 Queimado: O alvo está em chamas. Deve gastar sua Ação de Movimento para apagar o fogo ou sofrerá dano contínuo
 até o efeito ser cessado.
 
-Sangramento Ardiloso: Dano contínuo por acúmulo. Para cada stack, o alvo sofre 1D4. A remoção de cargas
+
+
+
+                                                                                                                     20
+Sangramento Ardiloso: Dano contínuo por acúmulo. Para cada stack, o alvo sofre 1D4. A remoção de cargas
 depende da sua robustez física:
 
 
@@ -1112,9 +1171,7 @@ Invisível: Presença indetectável. Todos os ataques são considerados furtivos
 
 Passo Leve: Movimentação silenciosa e fluida. O alvo tem Vantagem em testes de Furtividade.
 
-
-                                                                                                                                   20
-Respiração Submersa: Capacidade mágica ou biológica de respirar debaixo d’água.
+Respiração Submersa: Capacidade mágica ou biológica de respirar debaixo d’água.
 
 Revigorado: Capacidade física aumentada. O alvo tem Vantagem em testes de Fortitude.
 
@@ -1122,7 +1179,9 @@ Acelerado: Ganha 1 ação padrão.
 
 
 
-Terrenos em Combate
+
+                                                                                                                                   21
+Terrenos em Combate
 Em Overgrown, o campo de batalha não é um palco neutro. O terreno é uma força ativa que pressiona, recompensa
 e pune. Dominar o ambiente ao redor é tão crucial quanto dominar a arma na mão — aventureiros que ignoram onde
 pisam morrem antes de aventureiros que não sabem como lutar.
@@ -1173,14 +1232,16 @@ ganham +1D6 de dano ou efeito enquanto o conjurador estiver dentro da área.
    perda em 1 (mínimo 0).
 
 
-
-                                                                                                                 21
-Sagrado: Terreno abençoado por forças divinas ou mágicas positivas. Todo personagem dentro regenera 1D4 de HP
+Sagrado: Terreno abençoado por forças divinas ou mágicas positivas. Todo personagem dentro regenera 1D4 de HP
 por rodada ao início de seu turno. Habilidades de cura têm sua eficácia aumentada em 50%. Status negativos com
 duração de turno têm sua duração reduzida em 1 rodada por turno passado no terreno sagrado. Magias e ataques de
 natureza sombria ou corrompida sofrem Desvantagem enquanto dentro da área.
 
-Nulo: O terreno emana energia pura, regenerando as reservas arcanas. Todo personagem dentro recupera 1D6 de
+
+
+
+                                                                                                                 22
+Nulo: O terreno emana energia pura, regenerando as reservas arcanas. Todo personagem dentro recupera 1D6 de
 IEP por rodada ao início de seu turno. Alvos Exauridos recuperam IEP normalmente enquanto estiverem no terreno
 nulo. Magias conjuradas dentro da área têm seu custo de IEP reduzido em 2 (mínimo 1). Ataques físicos comuns não
 recebem nenhum benefício ou penalidade desta área.
@@ -1225,9 +1286,7 @@ teste de Fortitude (DT 12, aumentando em +2 por rodada) ou receber Sufocado.
 
 
 
-
-                                                                                                                 22
-Combate Corpo a Corpo
+Combate Corpo a Corpo
 No campo de batalha de Overgrown, a supremacia do combate corpo a corpo pertence àqueles que dominam não
 apenas a lâmina, mas a própria fúria que ela carrega. As Habilidades de Combate são técnicas ativas e instintivas que
 podem ser acionadas durante o combate gastando Pontos de Combate (PC).
@@ -1240,60 +1299,59 @@ podem ser acionadas durante o combate gastando Pontos de Combate (PC).
 
 
 Habilidades
-Fúria                                                                                                                     10 PC
+
+                                                                                                                 23
+Fúria                                                                                                                         10 PC
 
 Você entra em um estado de Luta ou Fuga instintivo. Seu personagem fica compelido a atacar quem considera inimigo, ganhando
 mais um ataque por turno e 5 de RD contra danos físicos durante 1D6+1 rodadas. Toda lógica cede ao instinto.
 
 
-Fúria Descontrolada                                                                                                       14 PC
+Fúria Descontrolada                                                                                                           14 PC
 
 Requer Fúria ativa. Ascende o estado de fúria ao limite absoluto: aumenta a duração em +3 rodadas, concede mais um ataque por
 turno e eleva a RD para 10 contra danos físicos e mágicos. A cada rodada em que permanece ativo, você perde 1D4 de vida pelo
 esforço extremo.
 
 
-Pontos Fatais                                                                                                              8 PC
+Pontos Fatais                                                                                                                 8 PC
 
 Gaste sua Reação para realizar um teste de Discernimento contra a Percepção do alvo. Ao passar, você identifica uma abertura em
 suas defesas, reduzindo sua RD apenas para os seus ataques. Passar com até 10 remove 1 de RD; passar com 11–15 remove 3 de RD;
 passar com 16 ou mais remove 5 de RD. Se a redução ultrapassar a RD total do alvo, você também ganha +2 na Margem de Ameaça
 contra esse alvo até o fim da cena.
 
-Hemorragia Interna                                                                                                         4 PC
+Hemorragia Interna                                                                                                            4 PC
 
 Ao acertar um ataque em um inimigo que já está com Sangramento Brutal ou Sangramento Ardiloso ativo, você aprofunda o
 ferimento. O alvo sofre imediatamente o dano do tique de sangramento atual como dano extra, adicional ao dano normal do
 ataque.
 
 
-Golpe Perfurante                                                                                                           6 PC
+Golpe Perfurante                                                                                                              6 PC
 
-Você direciona o golpe para vencer a proteção do inimigo. O ataque ignora a Resistência da armadura do alvo completamente,
-causando o dano base direto em seus pontos de vida. Não pode ser combinado com Postura de Muralha.
+Declare antes do teste de ataque. Se o ataque acertar e o alvo usar Bloqueio, o VB da armadura é considerado 0 contra esse ataque;
+bônus de escudo, arma e habilidade ainda são aplicados. Não pode ser combinado com Postura de Muralha.
 
 
-Golpe Duplo                                                                                                                5 PC
+Golpe Duplo                                                                                                                   5 PC
 
 Você desfere dois golpes rápidos no mesmo turno, sacrificando precisão por volume. Realiza dois ataques contra o mesmo alvo, cada
 um com −2 de acerto. Ambos podem resultar em crítico normalmente.
 
 
-Garrote                                                                                                                    7 PC
+Garrote                                                                                                                       7 PC
 
 O primeiro Ataque Furtivo bem-sucedido contra um alvo o deixa Silenciado por 3 turnos, incapaz de conjurar magias ou emitir sons
 que pudessem alertar aliados. Pode ser usada sem estar oculto desde que o alvo esteja Desprevenido.
 
-Emboscar                                                                                                                   9 PC
+Emboscar                                                                                                                      9 PC
 
 O primeiro Ataque Furtivo bem-sucedido contra um alvo inflige 1,5× o dano normal. A surpresa transforma o primeiro golpe em
 uma execução quase perfeita.
 
 
-
-
-                                                                                                                             23
-Provocação                                                                                                                    4 PC
+Provocação                                                                                                                    4 PC
 
 Você instiga um inimigo inteligente a te atacar prioritariamente. Até o início do seu próximo turno, se o alvo atacar qualquer outro
 personagem que não seja você, sofre Desvantagem nesse ataque. Exige teste de Intimidação contra a Temperança do alvo.
@@ -1308,81 +1366,87 @@ fazê-lo. Você domina o espaço físico ao redor, tornando cada decisão do ini
 Marcar para a Morte                                                                                                           14 PC
 
 Você foca toda sua letalidade em um único alvo. Ganha +3 no acerto, +2 na Margem de Ameaça e +1D6 de dano contra ele. Em
-contrapartida, o dano recebido de todas as outras fontes aumenta em 25% e você não pode desviar ou resistir ao que não vem do
-alvo marcado.
+contrapartida, o dano recebido de todas as outras fontes aumenta em 25% e você não pode usar Esquiva ou Bloqueio contra ataques
+que não venham do alvo marcado. Resistências percentuais e RD continuam funcionando.
 Aprimorado: As penalidades são progressivamente removidas conforme a habilidade é refinada na Árvore de Talentos.
 
 
-Execução                                                                                                                      12 PC
+
+
+                                                                                                                                24
+Execução                                                                                                                   12 PC
 
 Se o alvo estiver com 25% de vida ou menos, o ataque tem Vantagem e, ao acertar, causa o dobro do dano. Não pode ser usada contra
 alvos que já estejam na condição Morrendo.
 
 
-Última Resistência                                                                                                           20 PC
+Última Resistência                                                                                                        20 PC
 
 Ao receber um dano que seria fatal, ao invés de entrar em Morrendo, você permanece com 1 de vida e zera seus PC. Role 1D4:
 durante esse número de turnos você está imune à condição Morrendo. Ao fim desse período, se ainda estiver sem cura, entra em
 Morrendo normalmente. Só pode ser ativada uma vez por combate.
 
 
-Escudo Humano                                                                                                                  7 PC
+Escudo Humano                                                                                                               7 PC
 
-Use sua Reação para empurrar um aliado adjacente para fora da trajetória de um ataque direcionado a ele. Você absorve metade do
-dano no lugar do aliado. Deve ser declarado antes do resultado do ataque inimigo.
+Requisito: FOR 15. Quando um aliado adjacente for atingido por um ataque perceptível, mas antes da rolagem de dano, gaste sua
+Reação para se tornar o alvo no lugar dele. Você pode realizar um Bloqueio como parte dessa mesma Reação, sem gastar outra
+Reação. Depois do VB e da RD, você sofre todo o dano restante e recebe os efeitos associados ao acerto. O aliado não sofre dano
+nem efeitos desse ataque.
 
 
-Vício em Sangue                                                                                                               6 PC
+Guarda Total                                                                                                               0 PC
+
+Requisito: FOR 15 e armadura com VB ou escudo. Use sua Ação Padrão. Até o início do seu próximo turno, você não pode atacar
+nem causar dano, recebe +5 VB e ganha uma Reação adicional que só pode ser usada para Bloqueio. A Reação adicional não se
+acumula com outra concedida por Guarda Total. Esta é uma escolha individual e não exige Postura de Muralha.
+
+
+Vício em Sangue                                                                                                            6 PC
 
 Se um alvo com metade da vida ou menos estiver em alcance médio, você se arremessa até ele sem gastar sua Ação de Movimento.
 O cheiro de sangue aguça o instinto predatório.
 
-Sede de Sangue                                                                                                                10 PC
+Sede de Sangue                                                                                                            10 PC
 
 Ao executar um inimigo (reduzir sua vida a 0), você canaliza o ímpeto da matança em vitalidade. Cure uma quantidade de pontos
 de vida igual a metade do dano do seu último ataque contra o alvo abatido.
 
 
-Instinto Sanguinário                                                                                                          13 PC
+Instinto Sanguinário                                                                                                       13 PC
 
 Você abandona a capacidade de Reagir em troca de instinto puro. Para cada participante do combate (aliado ou inimigo) com menos
 da metade da vida, você causa +1D4 de dano em todos os seus ataques. O bônus máximo acumulável é +5D4, independentemente
 do número de combatentes.
 
-Elipse Carmesim                                                                                                           10 / 15 PC
+Elipse Carmesim                                                                                                        10 / 15 PC
 
 Você gira e corta tudo ao seu redor: causa o dano da arma em todos os inimigos em alcance curto que estejam com Sangramento
 Ardiloso ou Sangramento Brutal ativo.
 Aprimorado (15 PC): O ataque pode resultar em crítico em cada inimigo acertado, não apenas no alvo principal.
 
 
-Desarmar                                                                                                                       7 PC
+Desarmar                                                                                                                    7 PC
 
 Tente arrancar a arma do alvo em pleno combate. Faça uma disputa de testes: seu Might contra o Might do alvo. Se vencer, a arma
 cai no terreno adjacente e o alvo fica Desprevenido por 1 turno. Alvos sem arma empunhada são imunes a esta habilidade.
 
 
-
-
-                                                                                                                                24
-Ataque Secundário                                                                                                            5 PC
-
-Gaste PC para realizar um segundo ataque contra o mesmo alvo no mesmo turno, como uma ação adicional dentro da sua Ação
-Padrão.
-
-Desarranjar                                                                                                                  6 PC
+Desarranjar                                                                                                                6 PC
 
 Realiza uma manobra de afastamento que nega ataques de oportunidade ao se reposicionar, quebrando o engajamento sem expor a
 guarda.
 
 
-Pisada de Impacto                                                                                                            11 PC
+Pisada de Impacto                                                                                                          11 PC
 
 Requer Fúria ativa. Você golpeia o chão com força brutal, causando uma onda de choque em cone de 3 unidades à sua frente. Todos
 os alvos na área sofrem 1D6 + MOD de Might de dano e devem realizar um teste de Fortitude (DT 14) ou receber Derrubado.
 
 
-Controle de Zona                                                                                                            10 PC
+
+                                                                                                                             25
+Controle de Zona                                                                                                            10 PC
 
 Até o início do seu próximo turno, declare uma área de 2 unidades ao redor de você como Zona Controlada. Qualquer inimigo que
 tentar entrar, sair ou se mover dentro dela sofre um ataque de oportunidade gratuito de sua parte. Você pode cancelar a habilidade
@@ -1430,27 +1494,31 @@ Use sua Reação para interromper uma habilidade ou magia em execução pelo ini
 sem efeito algum.
 
 
-
-
-                                                                                                                               25
-Comando de Assalto                                                                                                        7 PC
+Comando de Assalto                                                                                                           7 PC
 
 Gaste sua Ação de Movimento para emitir uma ordem tática a um aliado. Ele realiza um ataque fora do seu turno contra o inimigo
 de sua escolha, usando seus próprios atributos.
 
 
-Analisar Padrão                                                                                                           7 PC
+Analisar Padrão                                                                                                              7 PC
 
 Gaste sua Ação de Movimento estudando os movimentos do inimigo. Todos os seus ataques contra ele neste turno têm Vantagem.
 Se não atacar neste turno, o bônus se transfere para o turno seguinte.
 
 
-Postura de Muralha                                                                                            4 POR RODADA PC
+Postura de Muralha                                                                                              4 POR RODADA PC
 
-Você não pode atacar neste turno, mas dobra sua Resistência até o início do seu próximo turno. Cada aliado adjacente ganha +2 de
-Resistência enquanto você mantiver a postura.
+Requisito: FOR 15. Use sua Ação Padrão e pague o custo ao ativar. Até o início do seu próximo turno, você não pode atacar nem
+causar dano, recebe uma Reação adicional que só pode ser usada para Bloqueio e dobra apenas o VB da sua armadura; bônus de
+escudo, arma e habilidade não são dobrados. Aliados adjacentes recebem +2 VB quando realizam seus próprios Bloqueios. No início
+de cada turno seguinte, você pode pagar novamente 4 PC e gastar sua Ação Padrão para renovar a postura por outra rodada; caso
+contrário, ela termina. A Reação adicional não se acumula com outra concedida por esta habilidade ou por Guarda Total.
 
-Rasteira                                                                                                                  7 PC
+
+
+
+                                                                                                                               26
+Rasteira                                                                                                                  7 PC
 
 Tente derrubar o alvo aplicando Derrubado. Teste de Grace do alvo contra o seu teste de Might. Se falhar, o alvo cai. Alvos
 Derrubados sofrem Vantagem em ataques corpo a corpo recebidos até se levantarem.
@@ -1494,28 +1562,28 @@ Use sua Reação para disparar um projétil no momento exato em que um alvo come
 Ao acertar, a conjuração é interrompida e a ação gasta é perdida sem efeito.
 
 
-
-
-                                                                                                                            26
-Atirar em Cobertura                                                                                                             6 PC
+Atirar em Cobertura                                                                                                       6 PC
 
 Você dispara sem se expor completamente. Recebe os bônus de cobertura parcial normalmente enquanto atira, mas sofre −1 de
 acerto pelo ângulo restrito. Não pode ser usada com cobertura total.
 
 
-Ponto Cego                                                                                                                      7 PC
+Ponto Cego                                                                                                                7 PC
 
 Ao atacar um alvo que está engajado em combate corpo a corpo com um aliado, você encontra uma brecha perfeita. O ataque ignora
 a Esquiva do alvo (apenas a Resistência é aplicada) e elimina o risco de acertar seu aliado.
 
 
-Tiro de Reação                                                                                                                  9 PC
+Tiro de Reação                                                                                                            9 PC
 
 Quando um inimigo entrar no seu alcance de tiro curto, use sua Reação para disparar imediatamente antes que ele aja. Se acertar,
 o inimigo interrompe o movimento e permanece onde está pelo restante do turno.
 
 
-Tiro Perfurante                                                                                                                 9 PC
+
+
+                                                                                                                            27
+Tiro Perfurante                                                                                                                 9 PC
 
 O projétil atravessa o primeiro alvo e pode atingir um segundo diretamente atrás dele. Role acerto separado para o segundo alvo
 com −3 de acerto. O segundo alvo sofre metade do dano do ataque original. Não pode resultar em crítico no segundo alvo.
@@ -1568,27 +1636,26 @@ ricochete deve ser plausível e aprovado pelo Mestre. Ricochetes não podem resu
 Aprimorado: O tiro ricocheteado pode resultar em crítico normalmente e o projétil pode ricochetear até duas vezes.
 
 
-
-                                                                                                                                  27
-Tiro em Curva                                                                                                                       10 PC
+Tiro em Curva                                                                                                                  10 PC
 
 Você dobra a trajetória do projétil ao redor de um obstáculo com força física calculada ou magia leve. Atinge alvos em cobertura
 total com −2 de acerto. Deve haver espaço físico lateral que permita o arco — o Mestre avalia a viabilidade.
 
 
-Tiro Destroçante                                                                                                                     9 PC
+Tiro Destroçante                                                                                                                9 PC
 
-Gaste PC para converter todo o dano do ataque em dano que ignora a Resistência da armadura do alvo, atingindo os pontos de vida
-diretamente. Não pode ser combinado com críticos neste turno.
+Declare antes do teste de ataque. Se o ataque acertar e o alvo usar Bloqueio, o VB da armadura é considerado 0 contra esse ataque;
+bônus de escudo, arma e habilidade ainda são aplicados. O ataque não pode resultar em crítico.
 
 
-Desengajar                                                                                                                           6 PC
+Desengajar                                                                                                                      6 PC
 
 Você chuta o inimigo mais próximo para se propulsionar para trás, ganhando distância sem provocar ataques de oportunidade. Ideal
 para manter o alcance seguro contra quem tenta fechar a distância.
 
 
-Lobo Solitário                                                                                                                      16 PC
+                                                                                                                                  28
+Lobo Solitário                                                                                                                                              16 PC
 
 Você fecha sua mente para o grupo. Curas e Buffs aliados são reduzidos à metade em você, mas todos os seus ataques e habilidades
 ganham +1D6 de dano adicional.
@@ -1596,19 +1663,19 @@ Aprimorado: O bônus de dano aumenta para +2D6 e você passa a ser imune a debuf
 acumula com Rajada de Flechas.
 
 
-Rajada de Flechas                                                                                                                   13 PC
+Rajada de Flechas                                                                                                                                           13 PC
 
 Você dispara um leque de projéteis em um cone de 3 unidades de largura à sua frente. Todos os alvos dentro da área sofrem o dano
 base da arma, sem modificadores de atributo. Cada alvo deve ser atingido individualmente — role acerto separado para cada um.
 
 
-Disparo Paralisante                                                                                                                 10 PC
+Disparo Paralisante                                                                                                                                         10 PC
 
 Você mira em um ponto específico do corpo do alvo — perna, braço ou ombro. Em vez de dano normal, aplique Lento (perna) ou
 force o alvo a soltar o item que segura em uma das mãos (braço/ombro), sem teste de resistência. O alvo ainda sofre metade do dano
 base da arma.
 
-Cobertura de Fogo                                                                                                      7 POR RODADA PC
+Cobertura de Fogo                                                                                                                              7 POR RODADA PC
 
 Enquanto um aliado estiver em movimento, você pode gastar PC por rodada para manter fogo de supressão na direção de um
 inimigo. O inimigo suprimido sofre Desvantagem em testes de ataque e não pode usar sua Reação enquanto a cobertura estiver
@@ -1622,81 +1689,80 @@ Energia Impossivel (IEP) para manifestar conhecimentos ancestrais em realidade t
 em poder puro. Magias de Fogo
 
 
-
-
-                                                                                                                                       28
- CHAMUSCAR                                                                                                                          FOGO      PROJ SINGLE    | DIV 0+
+ CHAMUSCAR                                                                                                                          FOGO      PROJ SINGLE   | DIV 0+
 
 
 O usuário canaliza uma centelha de IEP, moldando-a em um projétil instável de chamas que serpenteia em direção ao alvo.
 
-Nív      Custo     Ataque                                                                                                 Efeito Adicional
-  0      4 IEP     1D8 + WIS                                                                                              Incêndio Crítico
-  1      8 IEP     1D10 + WIS                                                                                             Incêndio Crítico
-  2     12 IEP     2D10 + WIS                                                                                             Incêndio Crítico
-  3     16 IEP     2D12 + WIS                                                                                             Incêndio Crítico
- 4      20 IEP     3D12 + WIS                                                                                             Incêndio Crítico
-  5     28 IEP     4D12 + WIS                                                                                             Incêndio Crítico
-  6     36 IEP     5D12 + WIS                                                                                             Incêndio Crítico
-  7     44 IEP     5D12 + 2D6 + WIS                                                                                       Incêndio Crítico
-  8     52 IEP     5D12 + 4D6 + WIS                                                                                       Incêndio Crítico
-  9     60 IEP     5D12 + 6D6 + WIS                                                                                       Incêndio Crítico
-Div     68 IEP     5D12 + 8D6 + (1D20*WIS)                                                                                Incêndio Absoluto
+Nív     Custo     Ataque                                                                                                  Efeito Adicional
+ 0      4 IEP     1D8 + WIS                                                                                               Incêndio Crítico
+  1      8 IEP    1D10 + WIS                                                                                              Incêndio Crítico
+  2     12 IEP    2D10 + WIS                                                                                              Incêndio Crítico
+  3     16 IEP    2D12 + WIS                                                                                              Incêndio Crítico
+ 4      20 IEP    3D12 + WIS                                                                                              Incêndio Crítico
+ 5      28 IEP    4D12 + WIS                                                                                              Incêndio Crítico
+ 6      36 IEP    5D12 + WIS                                                                                              Incêndio Crítico
+  7     44 IEP    5D12 + 2D6 + WIS                                                                                        Incêndio Crítico
+ 8      52 IEP    5D12 + 4D6 + WIS                                                                                        Incêndio Crítico
+ 9      60 IEP    5D12 + 6D6 + WIS                                                                                        Incêndio Crítico
+Div     68 IEP    5D12 + 8D6 + (1D20*WIS)                                                                                 Incêndio Absoluto
 Incêndio Crítico: Acertos críticos aplicam Queimado (1D4 de dano por nível da magia por rodada).
 Incêndio Absoluto: Todo acerto aplica Queimado (10D10 de dano por rodada, por 3 rodadas).
 
 
 
 
- BOLA DE FOGO                                                                                                                            FOGO     PROJ AOE   | DIV 0+
+                                                                                                                                                                29
+ BOLA DE FOGO                                                                                                                                       FOGO     PROJ AOE       | DIV 0+
 
 
 O usuário condensa IEP em uma esfera de combustão pura, que explode no impacto criando uma onda expansiva de calor devastador.
 
-Nív      Custo     Ataque                                                                                                 Efeito Adicional
-  0      8 IEP     1D8 + 1D4 + WIS                                                                                        Incêndio Crítico
-  1     16 IEP     1D10 + 1D4 + WIS                                                                                       Incêndio Crítico
-  2     24 IEP     2D10 + 2D4 + WIS                                                                                       Incêndio Crítico
-  3     32 IEP     2D12 + 2D4 + WIS                                                                                       Incêndio Crítico
- 4      40 IEP     3D12 + 4D4 + WIS                                                                                       Incêndio Crítico
-  5     56 IEP     4D12 + 4D4 + WIS                                                                                       Incêndio Crítico
-  6     72 IEP     5D12 + 6D4 + WIS                                                                                       Incêndio Crítico
-  7     88 IEP     5D12 + 6D4 + 2D6 + WIS                                                                                 Incêndio Crítico
-  8     104 IEP    5D12 + 8D4 + 4D6 + WIS                                                                                 Incêndio Crítico
-  9     120 IEP    5D12 + 8D4 + 6D6 + WIS                                                                                 Incêndio Crítico
-Div     136 IEP    5D12 + 10D4        +   8D6    +                                                                        Incêndio Absoluto
-                   (1D20*WIS)
-Alvos na área de efeito devem rolar teste de esquiva ou bloqueio (DT = 20 + Nível da Magia).
+Nív      Custo    Ataque                                                                                                             Efeito Adicional
+  0      8 IEP    1D8 + 1D4 + WIS                                                                                                    Incêndio Crítico
+  1     16 IEP    1D10 + 1D4 + WIS                                                                                                   Incêndio Crítico
+  2     24 IEP    2D10 + 2D4 + WIS                                                                                                   Incêndio Crítico
+  3     32 IEP    2D12 + 2D4 + WIS                                                                                                   Incêndio Crítico
+ 4      40 IEP    3D12 + 4D4 + WIS                                                                                                   Incêndio Crítico
+  5     56 IEP    4D12 + 4D4 + WIS                                                                                                   Incêndio Crítico
+  6     72 IEP    5D12 + 6D4 + WIS                                                                                                   Incêndio Crítico
+  7     88 IEP    5D12 + 6D4 + 2D6 + WIS                                                                                             Incêndio Crítico
+  8     104 IEP   5D12 + 8D4 + 4D6 + WIS                                                                                             Incêndio Crítico
+  9     120 IEP   5D12 + 8D4 + 6D6 + WIS                                                                                             Incêndio Crítico
+Div     136 IEP   5D12 + 10D4        +   8D6    +                                                                                    Incêndio Absoluto
+                  (1D20*WIS)
+Cada alvo deve realizar um teste de Esquiva (DT = 20 + Nível da Magia). Quem falhar ou não usar Esquiva pode gastar sua Reação para Bloquear, reduzindo apenas o próprio dano conforme
+seu VB; Bloqueio não exige teste.
 Incêndio Crítico: Acertos críticos aplicam Queimado (1D4 por nível por rodada).
 Incêndio Absoluto: Todo acerto aplica Queimado (10D10/rodada, por 3 rodadas).
 
 
 
 
- CAUTERIZAR                                                                                                                         FOGO      CURA SINGLE    | DIV 0+
+ CAUTERIZAR                                                                                                                                    FOGO       CURA SINGLE       | DIV 0+
 
 
 O usuário concentra IEP em chamas precisas e controladas, selando feridas com calor cauterizante e estancando sangramentos.
 
-Nív      Custo     Cura                                                                                                   Efeito Adicional
-  0      8 IEP     1D6 + WIS                                                                                              Cicatrização
-  1     16 IEP     2D6 + WIS                                                                                              Cicatrização
-  2     24 IEP     3D6 + WIS                                                                                              Cicatrização
-  3     32 IEP     4D6 + WIS                                                                                              Cicatrização
- 4      40 IEP     4D8 + WIS                                                                                              Cicatrização
-  5     56 IEP     5D8 + WIS                                                                                              Cicatrização
-  6     72 IEP     5D10 + WIS                                                                                             Cicatrização
-  7     88 IEP     6D10 + WIS                                                                                             Cicatrização
-  8     104 IEP    6D12 + WIS                                                                                             Cicatrização
-  9     120 IEP    7D12 + WIS                                                                                             Cicatrização
-Div     136 IEP    8D12 + (1D10*WIS)                                                                                      Cicatrização Perfeita
+Nív      Custo    Cura                                                                                                               Efeito Adicional
+  0      8 IEP    1D6 + WIS                                                                                                          Cicatrização
+  1     16 IEP    2D6 + WIS                                                                                                          Cicatrização
+  2     24 IEP    3D6 + WIS                                                                                                          Cicatrização
+  3     32 IEP    4D6 + WIS                                                                                                          Cicatrização
+ 4      40 IEP    4D8 + WIS                                                                                                          Cicatrização
+  5     56 IEP    5D8 + WIS                                                                                                          Cicatrização
+  6     72 IEP    5D10 + WIS                                                                                                         Cicatrização
+  7     88 IEP    6D10 + WIS                                                                                                         Cicatrização
+  8     104 IEP   6D12 + WIS                                                                                                         Cicatrização
+  9     120 IEP   7D12 + WIS                                                                                                         Cicatrização
+Div     136 IEP   8D12 + (1D10*WIS)                                                                                                  Cicatrização Perfeita
 Cicatrização: Remove 1 acúmulo de Sangramento Ardiloso ou Sangramento Brutal por nível da magia.
 Cicatrização Perfeita: Remove todos os acúmulos de ambos os tipos de sangramento.
 
 
 
 
-                                                                                                                                                                 29
+                                                                                                                                                                                30
  ARMADURA DE LAVA                                                                                                                   FOGO TERRA           BUFF SINGLE    | DIV 0+
 
 
@@ -1767,7 +1833,7 @@ Incêndio Absoluto: Todo acerto aplica Queimado (10D10/rodada, por 3 rodadas).
 
 
 
-                                                                                                                                                                            30
+                                                                                                                                                                            31
  CORTINA DE FUMAÇA                                                                                                                      FOGO AR          AOE DEBUFF     | DIV 0+
 
 O usuário manipula a combustão do IEP para gerar uma densa cortina de fumaça, obscurecendo a visão e confundindo os sentidos.
@@ -1836,7 +1902,7 @@ Incêndio Verdadeiro Absoluto: Todo acerto aplica o Queimado permanente, sem nec
 
 
 
-                                                                                                                                                                             31
+                                                                                                                                                                             32
  LANÇA DE PROMETEUS                                                                                                           FOGO LUZ          PROJ SINGLE   | DIV 30+
 
 O usuário forja uma lança de fogo divino a partir de IEP puro, que busca o alvo com precisão implacável e poder incandescente. Críticos com essa magia contabilizam o
@@ -1908,7 +1974,7 @@ Penetração Total: Ignora toda Resistência a dano de Água e Gelo.
 
 
 
-                                                                                                                                                                   32
+                                                                                                                                                                   33
  ONDA CURATIVA                                                                                                                              AGUA      CURA SINGLE       | DIV 0+
 
 
@@ -1977,7 +2043,7 @@ Maré Curativa é a cura de alto volume de Água. Divino remove todos os efeitos
 
 
 
-                                                                                                                                                                             33
+                                                                                                                                                                             34
  PAREDE DE GELO                                                                                                                                      AGUA   AOE   | DIV 0+
 
 
@@ -2043,7 +2109,7 @@ Cura todos os aliados na área a cada rodada. Inimigos com o status Encharcado n
 
 
 
-                                                                                                                                                                       34
+                                                                                                                                                                       35
  PRISÃO DE ÁGUA                                                                                                                               AGUA       SINGLE DEBUFF     | DIV 0+
 
 
@@ -2118,7 +2184,7 @@ Magias de Ar
 
 
 
-                                                                                                                                                                               35
+                                                                                                                                                                               36
  CHICOTE DE VENTO                                                                                                                   AR     PROJ SINGLE    | DIV 0+
 
 
@@ -2186,7 +2252,7 @@ Críticos aplicam Sangramento Ardiloso.
 
 
 
-                                                                                                                                                               36
+                                                                                                                                                               37
  PASSOS DE PLUMA                                                                                                                         AR      BUFF SINGLE   | DIV 0+
 
 
@@ -2254,7 +2320,7 @@ Críticos aplicam Sangramento Ardiloso.
 
 
 
-                                                                                                                                                                    37
+                                                                                                                                                                    38
  MÁSCARA ASFIXIANTE                                                                                                             AR       SINGLE DEBUFF   | DIV 20+
 
 
@@ -2319,7 +2385,7 @@ Aplica o efeito Concussão em acertos críticos.
 
 
 
-                                                                                                                                                              38
+                                                                                                                                                              39
  DESLIZAMENTO DE GRANITO                                                                                                                          TERRA       PROJ AOE        | DIV 0+
 
 
@@ -2387,7 +2453,7 @@ Controle de Forma: Molda as rochas em formas complexas.
 
 
 
-                                                                                                                                                                                  39
+                                                                                                                                                                                  40
  ESPINHAÇO DE BASALTO                                                                                                                            TERRA      PROJ AOE       | DIV 0+
 
 O usuário levanta espinhos de basalto do chão que perfuram seus alvos e os deixam sangrando.
@@ -2453,7 +2519,7 @@ Aplica Concussão e Derrubado.
 
 
 
-                                                                                                                                                                               40
+                                                                                                                                                                               41
  CAIXÃO DE GNAISSE                                                                                                               TERRA          SINGLE DEBUFF     | DIV 20+
 
 
@@ -2519,7 +2585,7 @@ Cegueira Absoluta: Cada acerto aplica Desvantagem em dois ataques seguintes.
 
 
 
-                                                                                                                                                                       41
+                                                                                                                                                                       42
  ONDA CURATIVA                                                                                                                       LUZ    CURA SINGLE    | DIV 0+
 
 
@@ -2588,7 +2654,7 @@ uma cena inteira.
 
 
 
-                                                                                                                                                               42
+                                                                                                                                                               43
  ESPALHAR A LUZ                                                                                                                       LUZ      BUFF AOE      | DIV 0+
 
 
@@ -2657,7 +2723,7 @@ Em toda evolução ímpar da magia, a Margem de Ameaça aumenta em 1.
 
 
 
-                                                                                                                                                                 43
+                                                                                                                                                                 44
  SANTUÁRIO DE LUZ                                                                                                                       LUZ      BUFF AOE   | DIV 20+
 
 
@@ -2723,7 +2789,7 @@ uma cena inteira ou até ser cancelado. Custo cresce com o nível para refletir 
 
 
 
-                                                                                                                                                                 44
+                                                                                                                                                                 45
  DÁDIVA DE EOS                                                                                                                       LUZ       BUFF AOE   | DIV 40+
 
 
@@ -2799,7 +2865,7 @@ uma cena inteira.
 
 
 
-                                                                                                                                                               45
+                                                                                                                                                               46
  NÉVOA DO ABATIMENTO                                                                                                                          SOMBRA        AOE DEBUFF      | DIV 0+
 
 
@@ -2867,7 +2933,7 @@ Vulnerabilidade Crítica: O alvo recebe +3D10 de dano e sua Margem de Ameaça co
 
 
 
-                                                                                                                                                                                46
+                                                                                                                                                                                47
  ARAUTO DA PRAGA                                                                                                          SOMBRA        BUFF SINGLE      | DIV 0+
 
 
@@ -2934,7 +3000,7 @@ Custo alto por turno reflete o impacto de bloquear todos os elementos não-Sombr
 
 
 
-                                                                                                                                                              47
+                                                                                                                                                              48
  MANIFESTAÇÃO CAÓTICA                                                                                                                            SOMBRA        PROJ SINGLE   | DIV 20+
 
 Canaliza energia para desestabilizar o IEP de um alvo, causando um efeito negativo aleatório.
@@ -2999,7 +3065,7 @@ Em crítico, o dano em alvos adjacentes é igual ao rolamento completo da magia.
 
 
 
-                                                                                                                                                                                  48
+                                                                                                                                                                                  49
  SOBRECARREGAR                                                                                                                    ELETRICIDADE          BUFF SINGLE   | DIV 0+
 
 
@@ -3068,7 +3134,7 @@ até o final da cena.
 
 
 
-                                                                                                                                                                          49
+                                                                                                                                                                          50
  MUNIÇÃO ELETRIZANTE                                                                                                                    ELETRICIDADE           BUFF SINGLE   | DIV 0+
 
 O usuário transforma suas flechas ou munições em IEP instável elétrica.
@@ -3133,7 +3199,7 @@ Este bônus funciona apenas na tentativa de tirar alguém da condição Morrendo
 
 
 
-                                                                                                                                                                                  50
+                                                                                                                                                                                  51
  TEMPESTADE DE RAIOS                                                                                          ELETRICIDADE          PROJ AOE    | DIV 20+
 
 
@@ -3200,7 +3266,7 @@ Magias Mentais
 
 
 
-                                                                                                                                                     51
+                                                                                                                                                     52
  QUEBRAR MENTE                                                                                                                  MENTAL        MELEE SINGLE   | DIV 0+
 
 Ataca a mente do alvo com energia, reduzindo sua Sabedoria por 1D4 rodadas.
@@ -3269,7 +3335,7 @@ Atordoado: O alvo não pode realizar ações ou reações por 1 rodada.
 
 
 
-                                                                                                                                                                 52
+                                                                                                                                                                 53
  INIBIÇÃO SINÁPTICA                                                                                                                             MENTAL         SINGLE DEBUFF   | DIV 10+
 
 Bloqueia temporariamente os impulsos nervosos do alvo, forçando-o a escolher entre se mover ou reagir.
@@ -3335,7 +3401,7 @@ Consciência Coletiva: Todos os aliados ganham +5 em Iniciativa e Percepção pe
 
 
 
-                                                                                                                                                                                    53
+                                                                                                                                                                                    54
  TECELÃO DE ILUSÕES                                                                                                                           MENTAL        SINGLE CONTROL    | DIV 0+
 
 
@@ -3401,7 +3467,7 @@ Div     200 IEP    DT40                                                         
 
 
 
-                                                                                                                                                                                    54
+                                                                                                                                                                                    55
  INSANIDADE DE LISSA                                                                                                                           MENTAL         SINGLE DEBUFF   | DIV 30+
 
 
@@ -3464,7 +3530,7 @@ Nível Divino: WIS multiplicado por 1D10 na cura.
 
 
 
-                                                                                                                                                                                   55
+                                                                                                                                                                                   56
  DESACELERAR                                                                                                              TEMPO          DEBUFF SINGLE    | DIV 20+
 
 
@@ -3539,7 +3605,7 @@ Div     108 IEP   8D6+6 Ações antes de rebobi-                                
 
 
 
-                                                                                                                                                                 56
+                                                                                                                                                                 57
  QUEBRA TEMPORAL                                                                                                                TEMPO         DEBUFF AOE    | DIV 30+
 
 Cria uma zona onde todos os alvos dentro ficam Debilitados, incapazes de agir normalmente.
@@ -3615,7 +3681,7 @@ Div     240 IEP   Usos Infinitos                                                
 
 
 
-                                                                                                                                                                 57
+                                                                                                                                                                 58
  PASSO RÁPIDO                                                                                                             ESPACIAL       REACTION SELF   | DIV 20+
 
 
@@ -3661,7 +3727,8 @@ Singularidade: Alvos que falharem no teste ficam Atordoados pela pressão gravit
  LÂMINA DIMENSIONAL                                                                                                       ESPACIAL       SINGLE MELEE    | DIV 20+
 
 
-Corta o próprio tecido do Espacial que o alvo ocupa, ignorando qualquer armadura ou resistência física.
+Corta o próprio tecido do Espacial que o alvo ocupa. O dano não pode ser reduzido pelo VB de armaduras, escudos ou armas; outras defesas funcionam apenas quando
+declaradas pela magia.
 
 Nív      Custo     Dano Perfurante                                                                                    Efeito Adicional
   3     80 IEP     WIS + 3D4                                                                                          Fissura Espacial
@@ -3678,7 +3745,7 @@ Apagar Existência: Se o dano reduzir o HP do alvo a 0, ele é desintegrado, imp
 
 
 
-                                                                                                                                                              58
+                                                                                                                                                              59
  HORIZONTE DE EVENTOS                                                                                                           ESPACIAL         AREA BUFF   | DIV 20+
 
 
@@ -3742,7 +3809,7 @@ Fosso Dimensional: Ao retornar, o alvo sofre Atordoado por 1 rodada e recebe 1D2
 
 
 
-                                                                                                                                                                  59
+                                                                                                                                                                  60
  FENDA DE OBSERVAÇÃO                                                                                                                     ESPACIAL        UTILITY RANGED   | DIV 20+
 
 Abre uma fenda microscópica no Espacial em um ponto visível ao conjurador, permitindo observar o local sem estar presente.
@@ -3781,5 +3848,5 @@ Desintegração Espacial: Alvos que permanecerem na área por mais de 2 rodadas 
 
 
 
-                                                                                                                                                                               60
+                                                                                                                                                                               61
 
