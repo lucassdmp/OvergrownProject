@@ -7,6 +7,7 @@ import {
   type TalentNodeType,
   type TalentTreeNode,
 } from '../../../types/talentTree'
+import { nodeRadius, TalentNodeVisual } from './TalentNodeVisual'
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -14,34 +15,10 @@ export type CanvasMode = 'select' | 'connect' | `add-${TalentNodeType}`
 
 interface Viewport { x: number; y: number; zoom: number }
 
-const NODE_R = 34 // radius in SVG units
+// ── Builder node wrapper (adds selection/connect highlighting) ────────────────
 
-// ── Shape helpers ─────────────────────────────────────────────────────────────
-
-function hexPts(r: number) {
-  return Array.from({ length: 6 }, (_, i) => {
-    const a = (i * 60 - 30) * (Math.PI / 180)
-    return `${(r * Math.cos(a)).toFixed(2)},${(r * Math.sin(a)).toFixed(2)}`
-  }).join(' ')
-}
-function diamondPts(r: number) {
-  const s = r * 1.15
-  return `0,${-s} ${s},0 0,${s} ${-s},0`
-}
-function pentagPts(r: number) {
-  return Array.from({ length: 5 }, (_, i) => {
-    const a = (i * 72 - 90) * (Math.PI / 180)
-    return `${(r * Math.cos(a)).toFixed(2)},${(r * Math.sin(a)).toFixed(2)}`
-  }).join(' ')
-}
-
-// ── Node visual ───────────────────────────────────────────────────────────────
-
-function NodeVisual({
-  node,
-  selected,
-  multiSelected,
-  connectPending,
+function BuilderNode({
+  node, selected, multiSelected, connectPending,
 }: {
   node: TalentTreeNode
   selected: boolean
@@ -50,72 +27,8 @@ function NodeVisual({
 }) {
   const { fill, stroke, text } = NODE_TYPE_COLORS[node.data.type]
   const commonStroke = selected ? '#2563eb' : multiSelected ? '#7c3aed' : connectPending ? '#16a34a' : stroke
-  const commonWidth = selected || multiSelected || connectPending ? 3.5 : 2
-
-  let icon = ''
-  let sublabel = ''
-  switch (node.data.type) {
-    case 'player':
-      icon = '👤'; sublabel = (node.data.name || 'Jogador').slice(0, 10); break
-    case 'attribute': {
-      const al: Record<string, string> = { might: 'MGT', grace: 'GRC', wisdom: 'WIS', sense: 'SNS', fortitude: 'FOR' }
-      icon = 'A'; sublabel = node.data.attribute ? `+${node.data.value} ${al[node.data.attribute]}` : `+${node.data.value} ?`; break
-    }
-    case 'magic':
-      icon = '✦'; sublabel = (node.data.name || 'Magia').slice(0, 10); break
-    case 'stat': {
-      const sl: Record<string, string> = { vida: 'VID', iep: 'IEP', pc: 'PC ', resistencia: 'RES', esquiva: 'ESQ' }
-      icon = '★'; sublabel = `+${node.data.value} ${sl[node.data.stat] ?? '?'}`; break
-    }
-    case 'combatAbility':
-      icon = '⚔'; sublabel = (node.data.skillName || 'Combate').slice(0, 9); break
-    case 'extraDamage':
-      icon = '⊕'; sublabel = node.data.dice ?? `+${node.data.flat ?? 0}`; break
-    case 'healing': {
-      const parts: string[] = []
-      if (node.data.dice) parts.push(node.data.dice)
-      if (node.data.flat) parts.push(`+${node.data.flat}`)
-      icon = '✚'; sublabel = parts.join(' ') || 'Cura'; break
-    }
-    case 'weaponBonus':
-      icon = '🗡'; sublabel = (node.data.requiredTags[0] ?? 'Arma').slice(0, 9); break
-    case 'spellModifier':
-      icon = '✧'; sublabel = node.data.effectType.slice(0, 9); break
-    case 'defenseBonus':
-      icon = '🛡'; sublabel = `-${node.data.value} dano`; break
-    case 'skillBonus':
-      icon = '📚'; sublabel = `+${node.data.value} ${(node.data.skillName || node.data.skillId).slice(0, 6)}`; break
-  }
-
-  const shpProps = { fill, stroke: commonStroke, strokeWidth: commonWidth }
-
-  const shape = (() => {
-    switch (node.data.type) {
-      case 'player':        return <rect x={-NODE_R} y={-NODE_R} width={NODE_R * 2} height={NODE_R * 2} rx={8} {...shpProps} />
-      case 'attribute':     return <circle r={NODE_R} {...shpProps} />
-      case 'magic':         return <polygon points={hexPts(NODE_R)} {...shpProps} />
-      case 'stat':          return <polygon points={diamondPts(NODE_R)} {...shpProps} />
-      case 'combatAbility': return <polygon points={pentagPts(NODE_R)} {...shpProps} />
-      case 'extraDamage':   return <circle r={NODE_R} strokeDasharray="5 3" {...shpProps} />
-      case 'healing':       return <circle r={NODE_R} strokeDasharray="8 2" {...shpProps} />
-      case 'weaponBonus':   return <polygon points={hexPts(NODE_R)} {...shpProps} />
-      case 'spellModifier': return <polygon points={diamondPts(NODE_R)} {...shpProps} />
-      case 'defenseBonus':  return <polygon points={pentagPts(NODE_R)} {...shpProps} />
-      case 'skillBonus':    return <circle r={NODE_R} strokeDasharray="3 2" {...shpProps} />
-    }
-  })()
-
-  return (
-    <g>
-      {shape}
-      <text y={-6} textAnchor="middle" dominantBaseline="middle"
-        fontSize={14} fontWeight="bold" fill={text}
-        style={{ pointerEvents: 'none', userSelect: 'none' }}>{icon}</text>
-      <text y={10} textAnchor="middle" dominantBaseline="middle"
-        fontSize={8} fill={text}
-        style={{ pointerEvents: 'none', userSelect: 'none', fontFamily: 'monospace' }}>{sublabel}</text>
-    </g>
-  )
+  const commonWidth  = selected || multiSelected || connectPending ? 3.5 : 2
+  return <TalentNodeVisual node={node} fill={fill} stroke={commonStroke} strokeWidth={commonWidth} textColor={text} />
 }
 
 // ── Canvas ────────────────────────────────────────────────────────────────────
@@ -143,16 +56,20 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
   // Multi-selection
   const [multiIds, setMultiIds] = useState<Set<string>>(new Set())
 
+  // Area selection box (world coords)
+  const [selBox, setSelBox] = useState<{ wx1: number; wy1: number; wx2: number; wy2: number } | null>(null)
+
   // Internal clipboard (copy/paste)
   const clipboard = useRef<TalentTreeNode[]>([])
 
   // Drag state stored as ref to avoid stale-closure issues in mousemove
   const drag = useRef<{
-    type: 'pan' | 'node' | 'multi'
+    type: 'pan' | 'node' | 'multi' | 'select-box'
     nodeId?: string
     startPositions?: { id: string; x: number; y: number }[]
     startSX: number; startSY: number
     startX: number; startY: number
+    startWX: number; startWY: number
     hasMoved: boolean
   } | null>(null)
 
@@ -166,16 +83,18 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
     }
   }, [viewport])
 
-  const snap = useCallback((v: number) =>
-    snapEnabled && gridEnabled ? Math.round(v / gridSize) * gridSize : v
-  , [snapEnabled, gridEnabled, gridSize])
+  const snap = useCallback((v: number) => {
+    if (!snapEnabled || !gridEnabled) return v
+    const interval = gridSize / 2
+    return Math.round(v / interval) * interval
+  }, [snapEnabled, gridEnabled, gridSize])
 
   function hitNode(sx: number, sy: number): TalentTreeNode | null {
-    const r = svgRef.current!.getBoundingClientRect()
+    const rect = svgRef.current!.getBoundingClientRect()
     for (const node of [...tree.nodes].reverse()) {
-      const nx = r.left + viewport.x + node.x * viewport.zoom
-      const ny = r.top + viewport.y + node.y * viewport.zoom
-      if (Math.hypot(sx - nx, sy - ny) <= NODE_R * viewport.zoom + 6) return node
+      const nx = rect.left + viewport.x + node.x * viewport.zoom
+      const ny = rect.top + viewport.y + node.y * viewport.zoom
+      if (Math.hypot(sx - nx, sy - ny) <= nodeRadius(node.data) * viewport.zoom + 6) return node
     }
     return null
   }
@@ -211,6 +130,21 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
     }
 
     // ── select mode ───────────────────────────────────────────────────────────
+
+    // Shift+click empty = start area selection
+    if (e.shiftKey && !hit) {
+      const wp = svgPoint(e.clientX, e.clientY)
+      setSelBox(null)
+      drag.current = {
+        type: 'select-box',
+        startSX: e.clientX, startSY: e.clientY,
+        startX: 0, startY: 0,
+        startWX: wp.x, startWY: wp.y,
+        hasMoved: false,
+      }
+      return
+    }
+
     if (e.ctrlKey || e.metaKey) {
       // Ctrl+click: toggle node in multi-selection
       if (hit) {
@@ -232,6 +166,7 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
           startPositions,
           startSX: e.clientX, startSY: e.clientY,
           startX: 0, startY: 0,
+          startWX: 0, startWY: 0,
           hasMoved: false,
         }
       } else {
@@ -242,15 +177,32 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
       return
     }
 
-    // Normal click: clear multi-selection
+    // Normal click on node
     if (hit) {
-      setMultiIds(new Set())
-      setSelectedNodeId(hit.id)
-      drag.current = {
-        type: 'node', nodeId: hit.id,
-        startSX: e.clientX, startSY: e.clientY,
-        startX: hit.x, startY: hit.y,
-        hasMoved: false,
+      // If the clicked node is part of an existing multi-selection, drag all of them
+      if (multiIds.has(hit.id) && multiIds.size > 1) {
+        const startPositions = tree.nodes
+          .filter((n) => multiIds.has(n.id))
+          .map((n) => ({ id: n.id, x: n.x, y: n.y }))
+        setSelectedNodeId(hit.id)
+        drag.current = {
+          type: 'multi',
+          startPositions,
+          startSX: e.clientX, startSY: e.clientY,
+          startX: 0, startY: 0,
+          startWX: 0, startWY: 0,
+          hasMoved: false,
+        }
+      } else {
+        setMultiIds(new Set())
+        setSelectedNodeId(hit.id)
+        drag.current = {
+          type: 'node', nodeId: hit.id,
+          startSX: e.clientX, startSY: e.clientY,
+          startX: hit.x, startY: hit.y,
+          startWX: 0, startWY: 0,
+          hasMoved: false,
+        }
       }
     } else {
       setMultiIds(new Set())
@@ -259,6 +211,7 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
         type: 'pan',
         startSX: e.clientX, startSY: e.clientY,
         startX: viewport.x, startY: viewport.y,
+        startWX: 0, startWY: 0,
         hasMoved: false,
       }
     }
@@ -269,7 +222,7 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
     const dx = e.clientX - drag.current.startSX
     const dy = e.clientY - drag.current.startSY
     if (Math.hypot(dx, dy) > 3) drag.current.hasMoved = true
-    const { type, startX, startY, nodeId, hasMoved, startPositions } = drag.current
+    const { type, startX, startY, nodeId, hasMoved, startPositions, startWX, startWY } = drag.current
 
     if (type === 'pan') {
       setViewport((v) => ({ ...v, x: startX + dx, y: startY + dy }))
@@ -281,10 +234,30 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
       const dyWorld = dy / viewport.zoom
       moveNodes(startPositions.map((p) => ({ id: p.id, x: snap(p.x + dxWorld), y: snap(p.y + dyWorld) })))
       setTooltip(null)
+    } else if (type === 'select-box') {
+      const wp = svgPoint(e.clientX, e.clientY)
+      setSelBox({ wx1: startWX, wy1: startWY, wx2: wp.x, wy2: wp.y })
     }
   }
 
-  function onMouseUp() { drag.current = null }
+  function onMouseUp() {
+    if (drag.current?.type === 'select-box' && selBox) {
+      const minX = Math.min(selBox.wx1, selBox.wx2)
+      const maxX = Math.max(selBox.wx1, selBox.wx2)
+      const minY = Math.min(selBox.wy1, selBox.wy2)
+      const maxY = Math.max(selBox.wy1, selBox.wy2)
+      const inside = tree.nodes.filter((n) => n.x >= minX && n.x <= maxX && n.y >= minY && n.y <= maxY)
+      if (inside.length > 0) {
+        setMultiIds(new Set(inside.map((n) => n.id)))
+        setSelectedNodeId(inside[inside.length - 1].id)
+      } else {
+        setMultiIds(new Set())
+        setSelectedNodeId(null)
+      }
+      setSelBox(null)
+    }
+    drag.current = null
+  }
 
   function onWheel(e: React.WheelEvent<SVGSVGElement>) {
     e.preventDefault()
@@ -382,7 +355,7 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
 
   // ── cursor ─────────────────────────────────────────────────────────────────
 
-  const cursor = mode.startsWith('add-') ? 'crosshair' : mode === 'connect' ? 'pointer' : 'default'
+  const cursor = mode.startsWith('add-') ? 'crosshair' : mode === 'connect' ? 'pointer' : selBox ? 'crosshair' : 'default'
 
   // ── render ─────────────────────────────────────────────────────────────────
 
@@ -458,7 +431,7 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
               onMouseLeave={() => setTooltip(null)}
               onMouseMove={(e) => { if (!drag.current?.hasMoved) setTooltip((t) => t ? { ...t, sx: e.clientX, sy: e.clientY } : null) }}
             >
-              <NodeVisual
+              <BuilderNode
                 node={node}
                 selected={selectedNodeId === node.id}
                 multiSelected={multiIds.has(node.id)}
@@ -466,6 +439,21 @@ export default function TalentTreeCanvas({ mode, setMode, selectedNodeId, setSel
               />
             </g>
           ))}
+
+          {/* Area selection box */}
+          {selBox && (
+            <rect
+              x={Math.min(selBox.wx1, selBox.wx2)}
+              y={Math.min(selBox.wy1, selBox.wy2)}
+              width={Math.abs(selBox.wx2 - selBox.wx1)}
+              height={Math.abs(selBox.wy2 - selBox.wy1)}
+              fill="rgba(99,102,241,0.08)"
+              stroke="#6366f1"
+              strokeWidth={1 / viewport.zoom}
+              strokeDasharray={`${4 / viewport.zoom} ${3 / viewport.zoom}`}
+              style={{ pointerEvents: 'none' }}
+            />
+          )}
         </g>
       </svg>
 

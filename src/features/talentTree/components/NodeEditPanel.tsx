@@ -138,7 +138,7 @@ function PlayerEditor({ data, onChange }: { data: PlayerNodeData; onChange: (d: 
         <TextArea value={data.description} onChange={(v) => onChange({ ...data, description: v })} />
       </div>
       <p className="text-[10px] text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 rounded-lg px-2.5 py-1.5 border border-blue-200 dark:border-blue-900/40">
-        Este é o nó raiz da árvore — representa o personagem do jogador.
+        Este é um ponto de partida da árvore. Você pode criar vários nós de Jogador para permitir múltiplos inícios.
       </p>
     </div>
   )

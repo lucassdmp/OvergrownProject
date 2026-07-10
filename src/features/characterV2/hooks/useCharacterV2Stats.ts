@@ -1,9 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// OverGrown V2 – Stats hook
-// Derives all character stats from acquired talent tree nodes.
-// ─────────────────────────────────────────────────────────────────────────────
-
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useCharacterV2Store } from '../store/characterV2Store'
 import { useTalentTreeStore } from '../../talentTree/store/talentTreeStore'
 import { calculateAttributeModifiers, calculateDerivedStats, defaultGameConfig } from '../../../config/gameConfig'
@@ -15,26 +10,18 @@ import type {
   SpellModifierNodeData,
   DefenseBonusNodeData,
   TalentNodeData,
+  TalentTreeNode,
 } from '../../../types/talentTree'
 
 export interface CharacterV2Stats {
-  /** Summed attribute values from all acquired attribute nodes */
   attributes: Attributes
-  /** Attribute modifiers (e.g. MOD MIG) derived from attributes */
   attributeModifiers: Record<AttributeName, number>
-  /** Derived stats (max vida, IEP, PC, resistência, esquiva) from attributes + tree stat bonuses + item bonuses */
   derivedStats: DerivedStats
-  /** Unlocked spells (magic nodes that are acquired) */
   unlockedSpells: MagicNodeData[]
-  /** Unlocked combat abilities */
   unlockedAttacks: CombatAbilityNodeData[]
-  /** Weapon bonus nodes (passive, applied in combat UI) */
   weaponBonuses: WeaponBonusNodeData[]
-  /** Spell modifier nodes (passive, applied to spell display) */
   spellModifiers: SpellModifierNodeData[]
-  /** Defense bonus nodes (passive, damage reduction) */
   defenseBonuses: DefenseBonusNodeData[]
-  /** Aggregated skill bonuses from skill bonus nodes */
   skillBonuses: Record<string, number>
 }
 
@@ -42,17 +29,37 @@ const EMPTY_ATTRIBUTES: Attributes = {
   might: 0, grace: 0, wisdom: 0, sense: 0, fortitude: 0,
 }
 
+const EMPTY_STATS: CharacterV2Stats = {
+  attributes: { ...EMPTY_ATTRIBUTES },
+  attributeModifiers: { might: 0, grace: 0, wisdom: 0, sense: 0, fortitude: 0 },
+  derivedStats: { vida: 10, iep: 10, pc: 2, resistencia: 5, esquiva: 5 },
+  unlockedSpells: [],
+  unlockedAttacks: [],
+  weaponBonuses: [],
+  spellModifiers: [],
+  defenseBonuses: [],
+  skillBonuses: {},
+}
+
 export function useCharacterV2Stats(): CharacterV2Stats {
-  const character = useCharacterV2Store((s) => s.character)
-  const tree = useTalentTreeStore((s) => s.tree)
+  const character    = useCharacterV2Store((s) => s.character)
+  // Subscribe to nodes and edges individually so React sees reference changes
+  const treeNodes = useTalentTreeStore((s) => s.tree.nodes)
+
+  // Force a re-render when the talent tree store finishes hydrating
+  const [, forceUpdate] = useState(0)
+  useEffect(() => {
+    if (useTalentTreeStore.persist.hasHydrated()) return
+    const unsub = useTalentTreeStore.persist.onFinishHydration(() => forceUpdate((n) => n + 1))
+    return unsub
+  }, [])
 
   return useMemo(() => {
-    const acquiredSet = new Set(character.acquiredNodeIds)
-    const acquiredNodes = tree.nodes
-      .filter((n) => acquiredSet.has(n.id))
-      .map((n) => n.data as TalentNodeData)
+    if (!treeNodes.length) return EMPTY_STATS
 
-    // ── Accumulate attributes from attribute + magic nodes ────────────────────
+    const acquiredSet  = new Set(character.acquiredNodeIds)
+    const nodeConfigs  = character.nodeConfigs ?? {}
+
     const attributes: Attributes = { ...EMPTY_ATTRIBUTES }
     const unlockedSpells: MagicNodeData[] = []
     const unlockedAttacks: CombatAbilityNodeData[] = []
@@ -60,108 +67,64 @@ export function useCharacterV2Stats(): CharacterV2Stats {
     const spellModifiers: SpellModifierNodeData[] = []
     const defenseBonuses: DefenseBonusNodeData[] = []
     const skillBonuses: Record<string, number> = {}
-
     let statBonuses: Partial<DerivedStats> = {}
 
-    for (const data of acquiredNodes) {
+    for (const node of treeNodes.filter((n: TalentTreeNode) => acquiredSet.has(n.id))) {
+      const data = node.data as TalentNodeData
       switch (data.type) {
         case 'attribute': {
-          if (data.attribute) {
-            attributes[data.attribute] = (attributes[data.attribute] ?? 0) + data.value
-          }
+          const chosenAttr = nodeConfigs[node.id]?.attribute ?? data.attribute
+          if (chosenAttr) attributes[chosenAttr] = (attributes[chosenAttr] ?? 0) + data.value
           break
         }
         case 'magic': {
           unlockedSpells.push(data)
-          // Magic nodes can also grant attribute/stat bonuses
-          for (const b of data.attributeBonuses) {
+          for (const b of data.attributeBonuses)
             attributes[b.attribute] = (attributes[b.attribute] ?? 0) + b.value
-          }
-          for (const b of data.statBonuses) {
-            statBonuses = { ...statBonuses, [b.stat]: (statBonuses[b.stat as keyof DerivedStats] ?? 0) + b.value }
-          }
+          for (const b of data.statBonuses)
+            statBonuses = { ...statBonuses, [b.stat]: ((statBonuses[b.stat as keyof DerivedStats] ?? 0) as number) + b.value }
           break
         }
-        case 'combatAbility': {
-          unlockedAttacks.push(data)
+        case 'combatAbility':
+          unlockedAttacks.push(data); break
+        case 'stat':
+          statBonuses = { ...statBonuses, [data.stat]: ((statBonuses[data.stat as keyof DerivedStats] ?? 0) as number) + data.value }
           break
-        }
-        case 'stat': {
-          statBonuses = { ...statBonuses, [data.stat]: (statBonuses[data.stat as keyof DerivedStats] ?? 0) + data.value }
+        case 'weaponBonus':  weaponBonuses.push(data);  break
+        case 'spellModifier': spellModifiers.push(data); break
+        case 'defenseBonus': defenseBonuses.push(data); break
+        case 'skillBonus':
+          if (data.skillId) skillBonuses[data.skillId] = (skillBonuses[data.skillId] ?? 0) + data.value
           break
-        }
-        case 'weaponBonus': {
-          weaponBonuses.push(data)
-          break
-        }
-        case 'spellModifier': {
-          spellModifiers.push(data)
-          break
-        }
-        case 'defenseBonus': {
-          defenseBonuses.push(data)
-          break
-        }
-        case 'skillBonus': {
-          if (data.skillId) {
-            skillBonuses[data.skillId] = (skillBonuses[data.skillId] ?? 0) + data.value
-          }
-          break
-        }
-        default:
-          break
+        default: break
       }
     }
 
-    // ── Factor in item attribute bonuses on top of tree attributes ────────────
+    // Item attribute bonuses (equipped weapons/armors only)
     const boostedAttributes: Attributes = { ...attributes }
     const activeItems = (character.inventory ?? []).filter((it) =>
-      it.type === 'weapon' || it.type === 'armor'
-        ? it.equipped === true && !it.broken
-        : it.quantity > 0,
+      it.type === 'weapon' || it.type === 'armor' ? it.equipped === true && !it.broken : it.quantity > 0
     )
-    for (const item of activeItems) {
-      for (const ef of item.effects) {
-        if (ef.type === 'attributeBonus' && ef.attribute && ef.value != null) {
+    for (const item of activeItems)
+      for (const ef of item.effects)
+        if (ef.type === 'attributeBonus' && ef.attribute && ef.value != null)
           boostedAttributes[ef.attribute] = (boostedAttributes[ef.attribute] ?? 0) + ef.value
-        }
-      }
-    }
 
-    // ── Calculate derived stats ───────────────────────────────────────────────
-    const baseDerived = calculateDerivedStats(boostedAttributes, defaultGameConfig)
-
-    // Apply stat bonuses from tree nodes
-    const derivedStats: DerivedStats = { ...baseDerived }
-    for (const [key, val] of Object.entries(statBonuses)) {
-      if (val != null) derivedStats[key as keyof DerivedStats] += val
-    }
-
-    // Apply statBonus effects from active items
-    for (const item of activeItems) {
-      for (const ef of item.effects) {
-        if (ef.type === 'statBonus' && ef.stat && ef.value != null) {
+    // Derived stats
+    const derivedStats: DerivedStats = { ...calculateDerivedStats(boostedAttributes, defaultGameConfig) }
+    for (const [key, val] of Object.entries(statBonuses))
+      if (val != null) derivedStats[key as keyof DerivedStats] += val as number
+    for (const item of activeItems)
+      for (const ef of item.effects)
+        if (ef.type === 'statBonus' && ef.stat && ef.value != null)
           derivedStats[ef.stat] = (derivedStats[ef.stat] ?? 0) + ef.value
-        }
-      }
-    }
 
-    // Apply Reflexos perícia bonus
     const reflexosMastery = (character.skills?.['reflexos'] ?? 0) as number
-    if (reflexosMastery > 0) {
-      derivedStats.esquiva += reflexosMastery * 5
-    }
-
-    // Apply skillBonus nodes
-    for (const [skillId, bonus] of Object.entries(skillBonuses)) {
-      skillBonuses[skillId] = bonus
-    }
-
-    const attributeModifiers = calculateAttributeModifiers(boostedAttributes, defaultGameConfig)
+    if (reflexosMastery > 0) derivedStats.esquiva += reflexosMastery * 5
 
     return {
       attributes,
-      attributeModifiers,
+      attributeModifiers: calculateAttributeModifiers(boostedAttributes, defaultGameConfig),
       derivedStats,
       unlockedSpells,
       unlockedAttacks,
@@ -170,5 +133,12 @@ export function useCharacterV2Stats(): CharacterV2Stats {
       defenseBonuses,
       skillBonuses,
     }
-  }, [character.acquiredNodeIds, character.inventory, character.skills, tree.nodes])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    character.acquiredNodeIds,
+    character.nodeConfigs,
+    character.inventory,
+    character.skills,
+    treeNodes,
+  ])
 }

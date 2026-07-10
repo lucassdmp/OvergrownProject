@@ -6,7 +6,7 @@
 
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
-import type { MasteryLevel } from '../../../types/game'
+import type { MasteryLevel, AttributeName } from '../../../types/game'
 import type { CharacterV2, InventoryItemV2 } from '../../../types/gameV2'
 
 // ── Default character ─────────────────────────────────────────────────────────
@@ -24,6 +24,7 @@ const DEFAULT_CHARACTER_V2: CharacterV2 = {
   avatarScale: 1,
   connectedTreeId: undefined,
   acquiredNodeIds: [],
+  nodeConfigs: {},
   skills: {},
   inventory: [],
   notes: '',
@@ -53,6 +54,7 @@ interface CharacterV2State {
   acquireNode: (nodeId: string) => void
   removeNode: (nodeId: string) => void
   setAcquiredNodes: (nodeIds: string[]) => void
+  setNodeConfig: (nodeId: string, config: { attribute?: AttributeName }) => void
 
   setMoney: (currency: keyof CharacterV2['money'], amount: number) => void
   setCurrentVida: (value: number) => void
@@ -180,6 +182,14 @@ export const useCharacterV2Store = create<CharacterV2State>()(
           setAcquiredNodes: (nodeIds) =>
             set((s) => ({ character: { ...s.character, acquiredNodeIds: nodeIds } }), false, 'setAcquiredNodes'),
 
+          setNodeConfig: (nodeId, config) =>
+            set((s) => ({
+              character: {
+                ...s.character,
+                nodeConfigs: { ...(s.character.nodeConfigs ?? {}), [nodeId]: config },
+              },
+            }), false, 'setNodeConfig'),
+
           setMoney: (currency, amount) =>
             set((s) => ({
               character: { ...s.character, money: { ...s.character.money, [currency]: Math.max(0, amount) } },
@@ -288,6 +298,7 @@ export const useCharacterV2Store = create<CharacterV2State>()(
                 ...DEFAULT_CHARACTER_V2,
                 ...loaded,
                 acquiredNodeIds: loaded.acquiredNodeIds ?? [],
+                nodeConfigs: loaded.nodeConfigs ?? {},
                 skills: loaded.skills ?? {},
                 inventory: loaded.inventory ?? [],
                 money: loaded.money ?? { ...DEFAULT_MONEY },
@@ -311,6 +322,7 @@ export const useCharacterV2Store = create<CharacterV2State>()(
             ...DEFAULT_CHARACTER_V2,
             ...(ps.character ?? {}),
             acquiredNodeIds: ps.character?.acquiredNodeIds ?? [],
+            nodeConfigs: ps.character?.nodeConfigs ?? {},
             skills: ps.character?.skills ?? {},
             inventory: ps.character?.inventory ?? [],
             notes: ps.character?.notes ?? '',

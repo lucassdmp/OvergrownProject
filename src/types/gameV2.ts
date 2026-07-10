@@ -2,7 +2,7 @@
 // OverGrown V2 – Extended Game Type Definitions
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { InventoryItem, MasteryLevel } from './game'
+import type { InventoryItem, MasteryLevel, AttributeName } from './game'
 
 // ── Weapon Tags ───────────────────────────────────────────────────────────────
 // Specific weapon names from 6-armas_e_armaduras.tex plus category tags.
@@ -179,6 +179,8 @@ export interface CharacterV2 {
   connectedTreeId?: string
   /** IDs of talent tree nodes this character has acquired */
   acquiredNodeIds: string[]
+  /** Per-node player configuration (e.g. chosen attribute for flexible attribute nodes) */
+  nodeConfigs: Record<string, { attribute?: AttributeName }>
   /** Perícia mastery levels – controlled by the player */
   skills: Record<string, MasteryLevel>
   /** Inventory with V2 weapon/armor tag support */
