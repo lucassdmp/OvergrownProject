@@ -116,7 +116,7 @@ export default function AddAttackModal({ onClose, existing }: Props) {
   }
 
   const inputClass =
-    'w-full rounded bg-gray-800 border border-gray-700 px-2 py-1.5 text-sm text-white focus:border-amber-600 focus:outline-none'
+    'w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-amber-600 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white'
 
   return (
     <Modal title={existing ? 'Editar Ataque / Habilidade' : 'Adicionar Ataque / Habilidade'} onClose={onClose} size="md">
@@ -132,8 +132,8 @@ export default function AddAttackModal({ onClose, existing }: Props) {
               onClick={() => setActiveTab(tab.id)}
               className={`rounded-full px-3 py-1 text-xs font-semibold transition border ${
                 activeTab === tab.id
-                  ? 'border-amber-500 bg-amber-900/30 text-amber-300'
-                  : 'border-gray-700 text-gray-400 hover:border-gray-500'
+                  ? 'border-amber-500 bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+                  : 'border-gray-300 text-gray-600 hover:border-gray-500 dark:border-gray-700 dark:text-gray-400'
               }`}
             >
               {tab.label}
@@ -158,8 +158,8 @@ export default function AddAttackModal({ onClose, existing }: Props) {
                   onClick={() => setLibraryCategory(cat)}
                   className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold transition border ${
                     libraryCategory === cat
-                      ? 'border-amber-500 bg-amber-900/30 text-amber-300'
-                      : 'border-gray-700 text-gray-400 hover:border-gray-500'
+                      ? 'border-amber-500 bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+                      : 'border-gray-300 text-gray-600 hover:border-gray-500 dark:border-gray-700 dark:text-gray-400'
                   }`}
                 >
                   {cat === 'all' ? 'Todos' : COMBAT_CATEGORY_LABELS[cat]}
@@ -168,11 +168,11 @@ export default function AddAttackModal({ onClose, existing }: Props) {
             </div>
           </div>
 
-          <div className="max-h-[45vh] overflow-y-auto rounded-lg border border-gray-800">
+          <div className="max-h-[45vh] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-800">
             {filteredLibrary.length === 0 ? (
               <p className="px-4 py-6 text-center text-xs text-gray-500">Nenhuma habilidade encontrada.</p>
             ) : (
-              <div className="divide-y divide-gray-800">
+              <div className="divide-y divide-gray-200 dark:divide-gray-800">
                 {filteredLibrary.map((skill) => {
                   const selected = selectedAttackIds.includes(skill.id)
                   const alreadyAdded = existingNames.has(skill.name.toLowerCase())
@@ -181,27 +181,32 @@ export default function AddAttackModal({ onClose, existing }: Props) {
                       <button
                         onClick={() => toggleSelected(skill.id)}
                         className={`mt-1 h-4 w-4 rounded border ${
-                          selected ? 'bg-amber-500 border-amber-400' : 'border-gray-600'
+                          selected ? 'border-amber-500 bg-amber-500' : 'border-gray-400 dark:border-gray-600'
                         }`}
                         title={selected ? 'Selecionado' : 'Selecionar'}
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-gray-100">{skill.name}</span>
-                          <span className="rounded-full border border-gray-700 px-2 py-0.5 text-[10px] font-semibold text-gray-400">
+                          <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">{skill.name}</span>
+                          <span className="rounded-full border border-gray-300 px-2 py-0.5 text-[10px] font-semibold text-gray-600 dark:border-gray-700 dark:text-gray-400">
                             {COMBAT_CATEGORY_LABELS[skill.category]}
                           </span>
                           {alreadyAdded && (
-                            <span className="rounded-full border border-amber-700/40 px-2 py-0.5 text-[10px] font-semibold text-amber-400">
+                            <span className="rounded-full border border-amber-700/40 px-2 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
                               Já adicionada
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-gray-400">{skill.description}</p>
+                        <p className="text-xs text-gray-700 dark:text-gray-400">{skill.description}</p>
+                        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-gray-600 dark:text-gray-500">
+                          {skill.requirement && <span><strong>Requisito:</strong> {skill.requirement}</span>}
+                          {skill.action && <span><strong>Ação:</strong> {skill.action}</span>}
+                          <span className="font-bold text-amber-700 dark:text-amber-500">{skill.cost} PC</span>
+                        </div>
                       </div>
                       <button
                         onClick={() => handleAddSingleFromLibrary(skill.id)}
-                        className="rounded-full border border-amber-500/50 px-2.5 py-0.5 text-xs font-semibold text-amber-400 hover:border-amber-400"
+                        className="rounded-full border border-amber-600/60 px-2.5 py-0.5 text-xs font-semibold text-amber-700 hover:border-amber-600 dark:border-amber-500/50 dark:text-amber-400"
                       >
                         Adicionar
                       </button>
@@ -215,7 +220,7 @@ export default function AddAttackModal({ onClose, existing }: Props) {
           <div className="flex justify-end gap-3">
             <button
               onClick={onClose}
-              className="rounded-lg border border-gray-700 px-4 py-1.5 text-sm font-semibold text-gray-400 transition hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-gray-500 hover:text-gray-950 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white"
             >
               Cancelar
             </button>
@@ -235,7 +240,7 @@ export default function AddAttackModal({ onClose, existing }: Props) {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="rounded border border-gray-700 px-3 py-1 text-xs font-semibold text-gray-300 hover:border-gray-500"
+              className="rounded border border-gray-300 px-3 py-1 text-xs font-semibold text-gray-700 hover:border-gray-500 dark:border-gray-700 dark:text-gray-300"
             >
               Selecionar arquivo
             </button>
@@ -248,11 +253,11 @@ export default function AddAttackModal({ onClose, existing }: Props) {
               onChange={handleFileChange}
             />
             <div className="flex items-center gap-2">
-              <label className="text-xs text-gray-400">Categoria:</label>
+              <label className="text-xs text-gray-600 dark:text-gray-400">Categoria:</label>
               <select
                 value={importCategory}
                 onChange={(e) => setImportCategory(e.target.value as CombatCategory)}
-                className="rounded bg-gray-800 border border-gray-700 px-2 py-1 text-xs text-gray-200"
+                className="rounded border border-gray-300 bg-white px-2 py-1 text-xs text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
               >
                 {(['melee', 'ranged', 'effort'] as const).map((cat) => (
                   <option key={cat} value={cat}>
@@ -279,7 +284,7 @@ export default function AddAttackModal({ onClose, existing }: Props) {
           <div className="flex justify-end gap-3">
             <button
               onClick={onClose}
-              className="rounded-lg border border-gray-700 px-4 py-1.5 text-sm font-semibold text-gray-400 transition hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-gray-500 hover:text-gray-950 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white"
             >
               Cancelar
             </button>
@@ -298,17 +303,17 @@ export default function AddAttackModal({ onClose, existing }: Props) {
         <>
           <div className="flex flex-col gap-3">
             <div>
-              <label className="mb-1 block text-xs text-gray-400">Nome *</label>
+              <label className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Nome *</label>
               <input value={name} onChange={(e) => setName(e.target.value)} placeholder="ex: Fúria" className={inputClass} />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1 block text-xs text-gray-400">Custo de PC</label>
+                <label className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Custo de PC</label>
                 <input value={cost} onChange={(e) => setCost(e.target.value)} placeholder="ex: 2" className={inputClass} />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-gray-400">Dano (opcional)</label>
+                <label className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Dano (opcional)</label>
                 <input
                   value={damage}
                   onChange={(e) => setDamage(e.target.value)}
@@ -319,7 +324,7 @@ export default function AddAttackModal({ onClose, existing }: Props) {
             </div>
 
             <div>
-              <label className="mb-1 block text-xs text-gray-400">Categoria</label>
+              <label className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Categoria</label>
               <div className="flex gap-2">
                 {(['melee', 'ranged', 'effort'] as CombatCategory[]).map((cat) => {
                   const labels = { melee: 'Corpo a Corpo', ranged: 'Distância', effort: 'Esforço' }
@@ -329,8 +334,8 @@ export default function AddAttackModal({ onClose, existing }: Props) {
                       onClick={() => setCategory(cat)}
                       className={`flex-1 rounded py-1.5 text-xs font-semibold transition border ${
                         category === cat
-                          ? 'border-amber-600 bg-amber-900/30 text-amber-300'
-                          : 'border-gray-700 bg-gray-800 text-gray-400 hover:border-gray-500'
+                          ? 'border-amber-600 bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+                          : 'border-gray-300 bg-gray-50 text-gray-600 hover:border-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400'
                       }`}
                     >
                       {labels[cat]}
@@ -341,7 +346,7 @@ export default function AddAttackModal({ onClose, existing }: Props) {
             </div>
 
             <div>
-              <label className="mb-1 block text-xs text-gray-400">Descrição</label>
+              <label className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Descrição</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -355,7 +360,7 @@ export default function AddAttackModal({ onClose, existing }: Props) {
           <div className="mt-5 flex justify-end gap-3">
             <button
               onClick={onClose}
-              className="rounded-lg border border-gray-700 px-4 py-1.5 text-sm font-semibold text-gray-400 transition hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-gray-500 hover:text-gray-950 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white"
             >
               Cancelar
             </button>

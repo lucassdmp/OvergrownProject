@@ -5,6 +5,18 @@ import { ATTRIBUTE_LABELS } from '../../../../types/game'
 import type { DerivedStats } from '../../../../types/game'
 import { useCharacterStore } from '../../store/characterStore'
 import { ALL_SKILLS } from '../../../../data/skills'
+import { EQUIPMENT_PRESETS } from '../../../../data/equipment'
+
+type ItemPreset = {
+  label: string
+  type: ItemType
+  effects: ItemEffect[]
+  description: string
+  weight?: number
+  threat?: string
+  weaponDetails?: WeaponDetails
+  armorDetails?: ArmorDetails
+}
 
 const STAT_LABELS: Record<keyof DerivedStats, string> = {
   vida: 'Vida',
@@ -22,7 +34,7 @@ const ITEM_TYPE_LABELS: Record<ItemType, string> = {
   misc: '◆ Misc',
 }
 
-const PRESETS: { label: string; type: ItemType; effects: ItemEffect[]; description: string }[] = [
+const QUICK_PRESETS: ItemPreset[] = [
   {
     label: 'Poção de Vida Pequena',
     type: 'potion-vida',
@@ -47,6 +59,11 @@ const PRESETS: { label: string; type: ItemType; effects: ItemEffect[]; descripti
     description: 'Restaura uma grande quantidade de IEP.',
     effects: [{ type: 'restoreIep', value: 35 }],
   },
+]
+
+const PRESETS: ItemPreset[] = [
+  ...QUICK_PRESETS,
+  ...EQUIPMENT_PRESETS.map((preset) => ({ ...preset, label: preset.name })),
 ]
 
 interface Props {
@@ -75,12 +92,27 @@ export default function AddItemModal({ onClose, existing }: Props) {
   // Armor Details State
   const [armorHealth, setArmorHealth] = useState<number>(existing?.armorDetails?.currentHealth ?? 0)
   const [armorMaxHealth, setArmorMaxHealth] = useState<number>(existing?.armorDetails?.maxHealth ?? 0)
+  const [armorMetadata, setArmorMetadata] = useState<Partial<ArmorDetails>>(existing?.armorDetails ?? {})
 
   function applyPreset(preset: (typeof PRESETS)[0]) {
     setName(preset.label)
     setDescription(preset.description)
     setType(preset.type)
     setEffects(preset.effects)
+    setWeight(preset.weight ?? 0)
+    if (preset.weaponDetails) {
+      setWeaponDamage(preset.weaponDetails.damage)
+      setWeaponScaling(preset.weaponDetails.scaling)
+      setCritMult(preset.weaponDetails.critical?.multiplier ?? 2)
+      setCritRangeMin(preset.weaponDetails.critical?.rangeMin ?? 20)
+    }
+    if (preset.armorDetails) {
+      setArmorHealth(preset.armorDetails.currentHealth)
+      setArmorMaxHealth(preset.armorDetails.maxHealth)
+      setArmorMetadata(preset.armorDetails)
+    } else {
+      setArmorMetadata({})
+    }
   }
 
   function addEffect() {
@@ -107,7 +139,9 @@ export default function AddItemModal({ onClose, existing }: Props) {
       },
     } : undefined
 
-    const armorDetails: ArmorDetails | undefined = type === 'armor' ? {
+    const hasDefenseDetails = type === 'armor' || armorMetadata.blockBonus != null || armorMetadata.slot === 'shield'
+    const armorDetails: ArmorDetails | undefined = hasDefenseDetails ? {
+      ...armorMetadata,
       currentHealth: armorHealth,
       maxHealth: armorMaxHealth,
     } : undefined
@@ -145,7 +179,8 @@ export default function AddItemModal({ onClose, existing }: Props) {
       {!existing && (
         <div className="mb-4">
           <p className="mb-2 text-xs text-gray-500">Presets rápidos</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="max-h-36 overflow-y-auto rounded-lg border border-gray-800 p-2">
+            <div className="flex flex-wrap gap-2">
             {PRESETS.map((p) => (
               <button
                 key={p.label}
@@ -155,6 +190,7 @@ export default function AddItemModal({ onClose, existing }: Props) {
                 {p.label}
               </button>
             ))}
+            </div>
           </div>
         </div>
       )}
@@ -340,28 +376,49 @@ export default function AddItemModal({ onClose, existing }: Props) {
           </div>
         )}
 
-        {/* Armor Health Editor */}
+        {/* Armor and blocking rules */}
         {type === 'armor' && (
           <div className="space-y-3 rounded-lg border border-blue-900/40 bg-blue-950/20 p-3">
-             <h3 className="text-xs font-bold uppercase tracking-wider text-blue-500">Integridade da Armadura</h3>
-             <div className="grid grid-cols-2 gap-3">
+             <h3 className="text-xs font-bold uppercase tracking-wider text-blue-500">Proteção e Bloqueio</h3>
+             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="mb-1 block text-xs text-gray-400">Vida Atual</label>
+                  <label className="mb-1 block text-xs text-gray-400">Valor de Bloqueio</label>
                   <input
                     type="number"
                     min="0"
-                    value={armorHealth}
-                    onChange={(e) => setArmorHealth(Math.max(0, parseInt(e.target.value)))}
+                    value={armorMetadata.blockValue ?? 0}
+                    onChange={(e) => setArmorMetadata((current) => ({ ...current, blockValue: Math.max(0, Number(e.target.value)) }))}
                     className={inputClass}
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-gray-400">Vida Máxima</label>
+                  <label className="mb-1 block text-xs text-gray-400">Atributo exigido</label>
+                  <select
+                    value={armorMetadata.requirement?.attribute ?? ''}
+                    onChange={(e) => setArmorMetadata((current) => ({
+                      ...current,
+                      requirement: e.target.value
+                        ? { attribute: e.target.value as AttributeName, value: current.requirement?.value ?? 0 }
+                        : undefined,
+                    }))}
+                    className={inputClass}
+                  >
+                    <option value="">Nenhum</option>
+                    {(Object.keys(ATTRIBUTE_LABELS) as AttributeName[]).map((attribute) => (
+                      <option key={attribute} value={attribute}>{ATTRIBUTE_LABELS[attribute]}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-gray-400">Valor exigido</label>
                   <input
                     type="number"
-                    min="1"
-                    value={armorMaxHealth}
-                    onChange={(e) => setArmorMaxHealth(Math.max(1, parseInt(e.target.value)))}
+                    min="0"
+                    disabled={!armorMetadata.requirement}
+                    value={armorMetadata.requirement?.value ?? 0}
+                    onChange={(e) => setArmorMetadata((current) => current.requirement
+                      ? { ...current, requirement: { ...current.requirement, value: Math.max(0, Number(e.target.value)) } }
+                      : current)}
                     className={inputClass}
                   />
                 </div>

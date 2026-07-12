@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import type { AttributeName, Character } from '../../../types/game'
 import { useCharacterStore, remainingAttributePoints, totalAttributePoints } from '../store/characterStore'
 import IntegerInput from '../../../components/ui/IntegerInput'
@@ -120,14 +119,6 @@ export default function AttributePentagon() {
   const setAttribute = useCharacterStore((s) => s.setAttribute)
   const setDivinity = useCharacterStore((s) => s.setDivinity)
 
-  // Local string state so the user can clear the field freely before typing
-  const [divinityRaw, setDivinityRaw] = useState(String(character.divinity))
-  // Keep in sync if the store value changes externally (e.g. reset)
-  useEffect(() => { setDivinityRaw(String(character.divinity)) }, [character.divinity])
-
-  const divinityNum = Number(divinityRaw)
-  const divinityInvalid = divinityRaw === '' || isNaN(divinityNum) || divinityNum < 1
-
   const remaining = remainingAttributePoints(character.attributes, character.divinity)
   const total = totalAttributePoints(character.divinity)
   const itemBonuses = getItemAttrBonuses(character)
@@ -136,12 +127,17 @@ export default function AttributePentagon() {
     <div className="flex flex-col items-center gap-4">
       {/* Point counter */}
       <div className="flex items-center gap-3 text-sm">
-        <span className="text-gray-500 dark:text-gray-400">Pontos de Atributo:</span>
+        <span className="text-gray-500 dark:text-gray-400">Pontos de Talento em atributos:</span>
         <span className={remaining < 0 ? 'font-bold text-red-500 dark:text-red-400' : 'font-bold text-amber-600 dark:text-amber-400'}>
           {remaining} restantes
         </span>
         <span className="text-gray-400 dark:text-gray-600">/ {total} total</span>
       </div>
+      {remaining < 0 && (
+        <p className="rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-center text-xs font-semibold text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400">
+          Ficha antiga acima do orçamento atual em {Math.abs(remaining)} ponto(s). Os atributos foram preservados.
+        </p>
+      )}
 
       {/* Pentagon container */}
       <div className="relative w-full max-w-[440px]" style={{ aspectRatio: '500/480' }}>
@@ -205,38 +201,13 @@ export default function AttributePentagon() {
           <span className="text-[9px] font-bold uppercase tracking-wider text-amber-600/90 dark:text-amber-600/80">
             Divindade
           </span>
-          <div className="relative flex flex-col items-center">
-            <input
-              type="number"
-              min={1}
-              value={divinityRaw}
-              onChange={(e) => {
-                const val = e.target.value
-                setDivinityRaw(val)
-                const n = Number(val)
-                // Update store immediately if valid, so arrows work in real-time
-                if (!isNaN(n) && n >= 1) {
-                  setDivinity(Math.floor(n))
-                }
-              }}
-              onBlur={() => {
-                const n = Number(divinityRaw)
-                const clamped = isNaN(n) || n < 1 ? 1 : Math.floor(n)
-                setDivinity(clamped)
-                setDivinityRaw(String(clamped))
-              }}
-              className={`w-10 rounded bg-transparent text-center text-lg font-bold focus:outline-none ${
-                divinityInvalid
-                  ? 'text-red-500 dark:text-red-400'
-                  : 'text-amber-700 dark:text-amber-300'
-              }`}
-            />
-            {divinityInvalid && (
-              <span className="absolute top-full mt-0.5 whitespace-nowrap text-[9px] font-semibold text-red-500">
-                mín. 1
-              </span>
-            )}
-          </div>
+          <IntegerInput
+            min={0}
+            max={100}
+            value={character.divinity}
+            onChange={setDivinity}
+            className="w-10 rounded bg-transparent text-center text-lg font-bold text-amber-700 focus:outline-none dark:text-amber-300"
+          />
         </div>
       </div>
     </div>

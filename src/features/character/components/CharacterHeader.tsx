@@ -5,6 +5,8 @@ import { ALL_ORIGINS } from '../../../data/origins'
 import { ALL_SKILLS } from '../../../data/skills'
 import Modal from '../../../components/ui/Modal'
 import IntegerInput from '../../../components/ui/IntegerInput'
+import RestModal from './modals/RestModal'
+import { calculateEquipmentDefense } from '../../../lib/equipmentRules'
 
 function ResourcePip({
   label,
@@ -12,12 +14,14 @@ function ResourcePip({
   max,
   color,
   onCurrentChange,
+  temporary = 0,
 }: {
   label: string
   current: number
   max: number
   color: string
   onCurrentChange: (v: number) => void
+  temporary?: number
 }) {
   return (
     <div className="flex flex-col items-center gap-0.5 min-w-0">
@@ -33,6 +37,7 @@ function ResourcePip({
         <span className="text-gray-500">/</span>
         <span className="text-base font-semibold text-gray-600 dark:text-gray-300">{max}</span>
       </div>
+      {temporary > 0 && <span className="text-[10px] font-bold text-emerald-500">+{temporary} temporário</span>}
     </div>
   )
 }
@@ -121,6 +126,7 @@ export default function CharacterHeader() {
   const avatarBoxRef = useRef<HTMLDivElement>(null)
   const [importError, setImportError] = useState<string | null>(null)
   const [confirmReset, setConfirmReset] = useState(false)
+  const [restOpen, setRestOpen] = useState(false)
   const [avatarEditorOpen, setAvatarEditorOpen] = useState(false)
   const [pendingAvatarBase64, setPendingAvatarBase64] = useState<string | null>(null)
   const [pendingAvatarX, setPendingAvatarX] = useState(50)
@@ -129,6 +135,7 @@ export default function CharacterHeader() {
   // Aspect ratio (width / height) of the real avatar box, captured when the editor opens,
   // so the preview matches how the photo will actually be framed on the sheet.
   const [previewAspectRatio, setPreviewAspectRatio] = useState(1)
+  const equipmentDefense = calculateEquipmentDefense(character.inventory, character.attributes)
 
   function captureAvatarBoxAspectRatio() {
     const box = avatarBoxRef.current
@@ -253,7 +260,7 @@ export default function CharacterHeader() {
         >
           {Object.values(store.characters || {}).map((c) => (
             <option key={c.id} value={c.id}>
-              {c.name || 'Sem Nome'} {c.race ? `(${c.race})` : ''} - Nível {c.divinity}
+              {c.name || 'Sem Nome'}{c.race ? `, ${c.race}` : ''}. Nível {c.divinity}
             </option>
           ))}
           <option value="NEW">+ Criar Novo Personagem</option>
@@ -385,6 +392,8 @@ export default function CharacterHeader() {
               <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
               {/* Esquiva */}
               <StatBadge label="Esquiva" value={derivedStats.esquiva} />
+              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
+              <StatBadge label="VB" value={equipmentDefense.blockValue} />
             </div>
 
             <div className="flex items-center gap-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80">
@@ -395,6 +404,7 @@ export default function CharacterHeader() {
                 max={derivedStats.vida}
                 color="text-rose-400"
                 onCurrentChange={store.setCurrentVida}
+                temporary={character.temporaryResources.vida}
               />
               <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
               {/* IEP */}
@@ -404,6 +414,7 @@ export default function CharacterHeader() {
                 max={derivedStats.iep}
                 color="text-sky-400"
                 onCurrentChange={store.setCurrentIep}
+                temporary={character.temporaryResources.iep}
               />
               <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
               {/* PC */}
@@ -458,11 +469,11 @@ export default function CharacterHeader() {
       <div className="flex items-center gap-2 flex-wrap justify-end">
         {/* Restore */}
         <button
-          onClick={store.restoreAllResources}
-          title="Descanso longo – restaurar todos os recursos"
+          onClick={() => setRestOpen(true)}
+          title="Realizar Pausa Breve ou Descanso Pleno"
           className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 transition hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400"
         >
-          ⟳ Descanso
+          ⟳ Descansar
         </button>
 
         {/* Divider */}
@@ -530,6 +541,8 @@ export default function CharacterHeader() {
       {importError && (
         <p className="mt-2 text-xs text-red-400">{importError}</p>
       )}
+
+      {restOpen && <RestModal onClose={() => setRestOpen(false)} />}
 
       {avatarEditorOpen && pendingAvatarBase64 && (
         <Modal title="Ajustar Foto" onClose={() => setAvatarEditorOpen(false)} size="md">

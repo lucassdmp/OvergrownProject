@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { AttributeName } from '../types/game'
+import { calculateEquipmentDefense, meetsArmorRequirement } from '../lib/equipmentRules'
 // ── Formula primitive ─────────────────────────────────────────────────────────
 
 /**
@@ -53,7 +54,7 @@ export const defaultGameConfig: GameConfig = {
     pc: {
       base: 2,
       attributes: ['might', 'grace'],
-      rate: 2,
+      rate: 1,
     },
     vida: {
       base: 10,
@@ -72,11 +73,11 @@ export const defaultGameConfig: GameConfig = {
     },
   },
   attributeModifiers: {
-    might: { base: 0, rate: 1 / 4 },
-    grace: { base: 0, rate: 1 / 4 },
-    wisdom: { base: 0, rate: 1 / 4 },
-    sense: { base: 0, rate: 1 / 4 },
-    fortitude: { base: 0, rate: 1 / 4 },
+    might: { base: 0, rate: 1 / 5 },
+    grace: { base: 0, rate: 1 / 5 },
+    wisdom: { base: 0, rate: 1 / 5 },
+    sense: { base: 0, rate: 1 / 5 },
+    fortitude: { base: 0, rate: 1 / 5 },
   },
 }
 
@@ -90,12 +91,19 @@ export function calculateAttributeModifiers(
 ): Record<AttributeName, number> {
   const modifierConfig = config.attributeModifiers ?? defaultGameConfig.attributeModifiers
 
+  const calc = (attribute: AttributeName) => {
+    const value = attributes[attribute]
+    if (value <= 0) return 0
+    const formula = modifierConfig[attribute]
+    return Math.ceil(formula.base + value * formula.rate)
+  }
+
   return {
-    might: Math.floor(modifierConfig.might.base + attributes.might * modifierConfig.might.rate),
-    grace: Math.floor(modifierConfig.grace.base + attributes.grace * modifierConfig.grace.rate),
-    wisdom: Math.floor(modifierConfig.wisdom.base + attributes.wisdom * modifierConfig.wisdom.rate),
-    sense: Math.floor(modifierConfig.sense.base + attributes.sense * modifierConfig.sense.rate),
-    fortitude: Math.floor(modifierConfig.fortitude.base + attributes.fortitude * modifierConfig.fortitude.rate),
+    might: calc('might'),
+    grace: calc('grace'),
+    wisdom: calc('wisdom'),
+    sense: calc('sense'),
+    fortitude: calc('fortitude'),
   }
 }
 
@@ -132,15 +140,20 @@ export function calculateEffectiveDerivedStats(
   // Only include passive bonuses from items that are "active":
   // - weapons/armor must be equipped AND not broken
   // - everything else must have quantity > 0
+  const equipmentDefense = calculateEquipmentDefense(character.inventory ?? [], character.attributes)
   const activeItems = (character.inventory ?? []).filter((it) =>
     it.type === 'weapon' || it.type === 'armor'
-      ? it.equipped === true && !it.broken
+      ? it.equipped === true && !it.broken && (!it.armorDetails || equipmentDefense.activeItemIds.has(it.id) || equipmentDefense.invalidItemIds.has(it.id))
       : it.quantity > 0
   )
+
+  const grantsPositiveEffects = (item: Character['inventory'][number]) =>
+    !equipmentDefense.invalidItemIds.has(item.id) && meetsArmorRequirement(item, character.attributes)
 
   // 1. Sum attributeBonus effects into a copy of the attributes
   const boostedAttrs: Attributes = { ...character.attributes }
   for (const item of activeItems) {
+    if (!grantsPositiveEffects(item)) continue
     for (const ef of item.effects) {
       if (ef.type === 'attributeBonus' && ef.attribute && ef.value != null) {
         boostedAttrs[ef.attribute] = (boostedAttrs[ef.attribute] ?? 0) + ef.value
@@ -154,7 +167,8 @@ export function calculateEffectiveDerivedStats(
   // 3. Add statBonus effects directly
   for (const item of activeItems) {
     for (const ef of item.effects) {
-      if (ef.type === 'statBonus' && ef.stat && ef.value != null) {
+      const isApplicablePenalty = equipmentDefense.invalidItemIds.has(item.id) && (ef.value ?? 0) < 0
+      if (ef.type === 'statBonus' && ef.stat && ef.value != null && (grantsPositiveEffects(item) || isApplicablePenalty)) {
         stats[ef.stat] = (stats[ef.stat] ?? 0) + ef.value
       }
     }

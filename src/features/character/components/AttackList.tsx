@@ -77,8 +77,10 @@ function AttackCard({ attack, onEdit }: { attack: CharacterAttack; onEdit: (atta
       </div>
 
       {expanded && attack.description && (
-        <div className="px-3 py-2 text-xs text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700/40">
-          {attack.description}
+        <div className="space-y-1 px-3 py-2 text-xs text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700/40">
+          {attack.requirement && <p><strong>Requisito:</strong> {attack.requirement}</p>}
+          {attack.action && <p><strong>Ação:</strong> {attack.action}</p>}
+          <p><strong>Efeito:</strong> {attack.description}</p>
         </div>
       )}
     </div>
