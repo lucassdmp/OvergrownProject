@@ -240,6 +240,21 @@
     \vspace{4pt}%
 }
 
+% --- Habilidade de Combate com função e requisitos explícitos ---
+% #1 = Nome, #2 = Custo, #3 = Requisito, #4 = Ação, #5 = Propósito, #6 = Efeito
+\newcommand{\combatSkillFull}[6]{%
+    \needspace{7\baselineskip}%
+    \vspace{6pt}%
+    \noindent%
+    {\ringmfamily\color{overgrownRed}\large #1}\hfill%
+    {\setlength{\fboxsep}{2pt}\small\scshape\fbox{#2\ PC}}\par%
+    \vspace{2pt}%
+    \noindent{\small\textbf{Requisito:} #3. \textbf{Ação:} #4.}\par%
+    %  \noindent{\small\textbf{Propósito:} \textit{#5}}\par %
+    \noindent{\small\textbf{Efeito:} #6}\par%
+    \vspace{4pt}%
+}
+
 % --- Sistema de Armaduras (Ajustado para Armour/Bloqueio) ---
 \makeatletter
 \define@key{armor}{nome}{\def\armor@nome{#1}}

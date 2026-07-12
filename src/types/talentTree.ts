@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { AttributeName, DerivedStats, ElementId, MagicTypeId, SpellLevel, SpellLevelEntry } from './game'
+import type { WeaponTag } from './gameV2'
 
 // ── Node type discriminator ───────────────────────────────────────────────────
 
@@ -14,6 +15,11 @@ export type TalentNodeType =
   | 'combatAbility'
   | 'extraDamage'
   | 'healing'
+  // ── V2 node types
+  | 'weaponBonus'
+  | 'spellModifier'
+  | 'defenseBonus'
+  | 'skillBonus'
 
 // ── Attack targets for damage-bonus nodes ─────────────────────────────────────
 
@@ -115,6 +121,74 @@ export interface HealingNodeData {
   element: ElementId | null
 }
 
+// ── V2 Node data shapes ───────────────────────────────────────────────────────
+
+export type WeaponBonusType = 'damage' | 'threatRange' | 'critMultiplier' | 'hitBonus'
+
+export const WEAPON_BONUS_TYPE_LABELS: Record<WeaponBonusType, string> = {
+  damage:         'Dano Extra',
+  threatRange:    'Margem de Ameaça (-)',
+  critMultiplier: 'Multiplicador de Crítico (+)',
+  hitBonus:       'Bônus de Acerto (+)',
+}
+
+/** Passive bonus applied when an equipped weapon has the required tags */
+export interface WeaponBonusNodeData {
+  type: 'weaponBonus'
+  /** Weapon must have AT LEAST ONE of these tags to benefit */
+  requiredTags: WeaponTag[]
+  bonusType: WeaponBonusType
+  /** Dice expression for bonus damage (e.g. "1d6") */
+  dice?: string
+  /** Flat numeric bonus (damage, threat range reduction, crit multiplier, or hit) */
+  value: number
+}
+
+export type SpellModifierEffectType =
+  | 'costReduction'
+  | 'extraProjectile'
+  | 'duration'
+  | 'damageBonus'
+
+export const SPELL_MODIFIER_EFFECT_LABELS: Record<SpellModifierEffectType, string> = {
+  costReduction:   'Redução de Custo (IEP)',
+  extraProjectile: 'Projétil Extra (+)',
+  duration:        'Duração Extra (rodadas)',
+  damageBonus:     'Dano Extra',
+}
+
+/** Passive modifier applied when a cast spell matches the condition tags */
+export interface SpellModifierNodeData {
+  type: 'spellModifier'
+  /** Spell must match AT LEAST ONE element (empty = applies to all elements) */
+  conditionElements: ElementId[]
+  /** Spell must match AT LEAST ONE type (empty = applies to all types) */
+  conditionTypes: MagicTypeId[]
+  effectType: SpellModifierEffectType
+  value: number
+  /** Optional dice expression for damageBonus effect */
+  dice?: string
+}
+
+export type DefenseDamageType = 'physical' | 'all' | ElementId
+
+/** Passive damage reduction when character receives damage of the specified type */
+export interface DefenseBonusNodeData {
+  type: 'defenseBonus'
+  /** What kind of incoming damage this reduces */
+  damageType: DefenseDamageType
+  /** Amount of damage reduction (positive number) */
+  value: number
+}
+
+/** Passive bonus to a specific perícia check */
+export interface SkillBonusNodeData {
+  type: 'skillBonus'
+  skillId: string
+  skillName: string
+  value: number
+}
+
 export type TalentNodeData =
   | PlayerNodeData
   | AttributeNodeData
@@ -123,6 +197,10 @@ export type TalentNodeData =
   | CombatAbilityNodeData
   | ExtraDamageNodeData
   | HealingNodeData
+  | WeaponBonusNodeData
+  | SpellModifierNodeData
+  | DefenseBonusNodeData
+  | SkillBonusNodeData
 
 // ── Node shape colors (CSS hex) ───────────────────────────────────────────────
 
@@ -134,6 +212,11 @@ export const NODE_TYPE_COLORS: Record<TalentNodeType, { fill: string; stroke: st
   combatAbility: { fill: '#ffe4e6', stroke: '#e11d48', text: '#881337' },
   extraDamage:   { fill: '#ffedd5', stroke: '#ea580c', text: '#7c2d12' },
   healing:       { fill: '#dcfce7', stroke: '#16a34a', text: '#14532d' },
+  // V2 node types
+  weaponBonus:   { fill: '#fdf2f8', stroke: '#9d174d', text: '#701a75' },
+  spellModifier: { fill: '#f5f3ff', stroke: '#6d28d9', text: '#3b0764' },
+  defenseBonus:  { fill: '#f0fdf4', stroke: '#166534', text: '#14532d' },
+  skillBonus:    { fill: '#fff7ed', stroke: '#c2410c', text: '#7c2d12' },
 }
 
 export const NODE_TYPE_LABELS: Record<TalentNodeType, string> = {
@@ -144,6 +227,11 @@ export const NODE_TYPE_LABELS: Record<TalentNodeType, string> = {
   combatAbility: 'Habilidade de Combate',
   extraDamage:   'Dano Extra',
   healing:       'Cura',
+  // V2 node types
+  weaponBonus:   'Bônus de Arma',
+  spellModifier: 'Modificador de Magia',
+  defenseBonus:  'Bônus de Defesa',
+  skillBonus:    'Bônus de Perícia',
 }
 
 // ── Tree primitives ───────────────────────────────────────────────────────────
@@ -206,6 +294,14 @@ export function defaultNodeData(type: TalentNodeType): TalentNodeData {
       return { type: 'extraDamage', dice: '1d6', flat: undefined, attackTargets: [] }
     case 'healing':
       return { type: 'healing', dice: undefined, flat: undefined, element: null }
+    case 'weaponBonus':
+      return { type: 'weaponBonus', requiredTags: [], bonusType: 'damage', value: 5 }
+    case 'spellModifier':
+      return { type: 'spellModifier', conditionElements: [], conditionTypes: [], effectType: 'costReduction', value: 10 }
+    case 'defenseBonus':
+      return { type: 'defenseBonus', damageType: 'physical', value: 5 }
+    case 'skillBonus':
+      return { type: 'skillBonus', skillId: '', skillName: '', value: 5 }
   }
 }
 
@@ -258,5 +354,21 @@ export function nodeTooltip(data: TalentNodeData): string {
       const scope = data.element ? `Cura (${data.element})` : 'Cura Geral'
       return `${scope}: ${parts.join(' ') || '—'}`
     }
+    case 'weaponBonus': {
+      const tags = data.requiredTags.length > 0 ? data.requiredTags.join(', ') : 'qualquer arma'
+      const diceStr = data.dice ? `${data.dice}+` : ''
+      return `⚔ ${WEAPON_BONUS_TYPE_LABELS[data.bonusType]}: ${diceStr}${data.value}\nArmas: ${tags}`
+    }
+    case 'spellModifier': {
+      const elems = data.conditionElements.length > 0 ? data.conditionElements.join(', ') : 'todos elementos'
+      const types = data.conditionTypes.length > 0 ? data.conditionTypes.join(', ') : 'todos tipos'
+      const effectLabel = SPELL_MODIFIER_EFFECT_LABELS[data.effectType]
+      const diceStr = data.dice ? `${data.dice}+` : ''
+      return `✦ ${effectLabel}: ${diceStr}${data.value}\nElementos: ${elems}\nTipos: ${types}`
+    }
+    case 'defenseBonus':
+      return `🛡 Redução de Dano: ${data.value}\nTipo: ${data.damageType}`
+    case 'skillBonus':
+      return `📚 +${data.value} ${data.skillName || data.skillId}`
   }
 }

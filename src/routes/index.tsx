@@ -4,6 +4,8 @@ import HomePage from '@/pages/HomePage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import PdfPage from '@/pages/PdfPage'
 import TalentTreeBuilderPage from '@/pages/TalentTreeBuilderPage'
+import V2Page from '@/pages/V2Page'
+import TalentTreePlayerPage from '@/pages/TalentTreePlayerPage'
 
 export const router = createBrowserRouter([
   {
@@ -18,12 +20,21 @@ export const router = createBrowserRouter([
         path: 'livro',
         element: <PdfPage />,
       },
+      {
+        path: 'v2',
+        element: <V2Page />,
+      },
     ],
   },
   {
     // Hidden page – not linked from the nav. Access via /talent-tree-builder directly.
     path: '/talent-tree-builder',
     element: <TalentTreeBuilderPage />,
+  },
+  {
+    // Player-facing talent tree view – reached from the V2 sheet pentagon
+    path: '/arvore',
+    element: <TalentTreePlayerPage />,
   },
   {
     path: '*',

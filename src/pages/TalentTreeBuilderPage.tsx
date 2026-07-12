@@ -7,7 +7,7 @@ import { useDarkMode } from '../hooks/useDarkMode'
 
 // ── Toolbar button ────────────────────────────────────────────────────────────
 
-const ADD_TYPES: TalentNodeType[] = ['player', 'attribute', 'magic', 'stat', 'combatAbility', 'extraDamage', 'healing']
+const ADD_TYPES: TalentNodeType[] = ['player', 'attribute', 'magic', 'stat', 'combatAbility', 'extraDamage', 'healing', 'weaponBonus', 'spellModifier', 'defenseBonus', 'skillBonus']
 
 const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
   player:        '👤',
@@ -17,6 +17,10 @@ const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
   combatAbility: '⚔',
   extraDamage:   '⊕',
   healing:       '✚',
+  weaponBonus:   '🗡',
+  spellModifier: '✧',
+  defenseBonus:  '🛡',
+  skillBonus:    '📚',
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -25,6 +29,7 @@ export default function TalentTreeBuilderPage() {
   const { tree, setTreeName, setTreeDescription, importTree, resetTree } = useTalentTreeStore()
   const [isDark, toggleDark] = useDarkMode()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const playerNodeCount = tree.nodes.filter((node) => node.data.type === 'player').length
 
   const [mode, setMode] = useState<CanvasMode>('select')
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
@@ -156,13 +161,17 @@ export default function TalentTreeBuilderPage() {
             {tree.nodes.length} nós · {tree.edges.length} conexões
           </span>
 
+          <span className="shrink-0 rounded-full bg-sky-100 dark:bg-sky-900/30 px-2 py-0.5 text-[10px] font-semibold text-sky-700 dark:text-sky-400">
+            {playerNodeCount} início{playerNodeCount === 1 ? '' : 's'}
+          </span>
+
           {/* Spacer */}
           <div className="flex-1" />
 
           {/* Action buttons */}
           <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
 
-            {/* Grid controls */}
+            {/* Grid size slider — visible when grid is on */}
             {gridEnabled && (
               <div className="flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1 text-[11px] text-gray-500 dark:text-gray-400">
                 <span className="font-mono w-5 text-right">{gridSize}</span>
@@ -174,38 +183,38 @@ export default function TalentTreeBuilderPage() {
                 />
               </div>
             )}
-            {gridEnabled && (
-              <button
-                title={snapEnabled ? 'Desativar snap' : 'Ativar snap'}
-                onClick={() => setSnapEnabled((v) => !v)}
-                className={`flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition select-none ${
-                  snapEnabled
-                    ? 'bg-blue-500 border-blue-500 text-white'
-                    : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-blue-400'
-                }`}
-              >
-                <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                  <circle cx="1.5" cy="1.5" r="1.3" fill="currentColor"/><circle cx="6" cy="1.5" r="1.3" fill="currentColor"/><circle cx="10.5" cy="1.5" r="1.3" fill="currentColor"/>
-                  <circle cx="1.5" cy="6" r="1.3" fill="currentColor"/><circle cx="6" cy="6" r="1.8" fill="currentColor"/><circle cx="10.5" cy="6" r="1.3" fill="currentColor"/>
-                  <circle cx="1.5" cy="10.5" r="1.3" fill="currentColor"/><circle cx="6" cy="10.5" r="1.3" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.3" fill="currentColor"/>
-                </svg>
+
+            {/* Grid toggle switch */}
+            <label className="flex items-center gap-1.5 cursor-pointer select-none group" title={gridEnabled ? 'Ocultar grid' : 'Mostrar grid'}>
+              <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition">
+                Grid
+              </span>
+              <div className={`relative w-8 h-[18px] rounded-full transition-colors duration-200 ${gridEnabled ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-700'}`}>
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={gridEnabled}
+                  onChange={(e) => { setGridEnabled(e.target.checked); if (!e.target.checked) setSnapEnabled(false) }}
+                />
+                <span className={`absolute top-[2px] left-[2px] w-[14px] h-[14px] rounded-full bg-white shadow transition-transform duration-200 ${gridEnabled ? 'translate-x-[14px]' : ''}`} />
+              </div>
+            </label>
+
+            {/* Snap toggle switch */}
+            <label className="flex items-center gap-1.5 cursor-pointer select-none group" title="Encaixar nós nos cruzamentos do grid">
+              <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition">
                 Snap
-              </button>
-            )}
-            <button
-              title={gridEnabled ? 'Ocultar grid' : 'Mostrar grid'}
-              onClick={() => { setGridEnabled((v) => !v); if (gridEnabled) setSnapEnabled(false) }}
-              className={`flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition select-none ${
-                gridEnabled
-                  ? 'bg-blue-500 border-blue-500 text-white'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-blue-400'
-              }`}
-            >
-              <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
-                <path d="M0 4.5h13M0 8.5h13M4.5 0v13M8.5 0v13" stroke="currentColor" strokeWidth="1.3"/>
-              </svg>
-              Grid
-            </button>
+              </span>
+              <div className={`relative w-8 h-[18px] rounded-full transition-colors duration-200 ${snapEnabled ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-700'}`}>
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={snapEnabled}
+                  onChange={(e) => { setSnapEnabled(e.target.checked); if (e.target.checked) setGridEnabled(true) }}
+                />
+                <span className={`absolute top-[2px] left-[2px] w-[14px] h-[14px] rounded-full bg-white shadow transition-transform duration-200 ${snapEnabled ? 'translate-x-[14px]' : ''}`} />
+              </div>
+            </label>
 
             <div className="h-4 w-px bg-gray-200 dark:bg-gray-700" />
 
@@ -294,7 +303,7 @@ export default function TalentTreeBuilderPage() {
 
           {/* Hint */}
           <span className="text-[10px] text-gray-300 dark:text-gray-700">
-            Scroll = zoom · Arrastar fundo = mover · Del = remover · Ctrl+Click = multi-selecionar · Ctrl+C/V = copiar/colar · Ctrl+Bot.Dir = conectar rápido
+            Scroll = zoom · Arrastar fundo = mover · Del = remover · Shift+Arrastar = selecionar área · Ctrl+Click = multi-selecionar · Ctrl+C/V = copiar/colar · Ctrl+Bot.Dir = conectar rápido
           </span>
         </div>
 

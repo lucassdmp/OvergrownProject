@@ -69,8 +69,19 @@ Personagens atentos percebem o que outros ignoram, sons, mentiras, presenças in
 
 \titlesection{E Afinal, o que é Divindade em Overgrown?}
 
-Divindade representa o nível de progressão do personagem dentro do sistema de Overgrown. 
-A cada nível de Divindade alcançado, o jogador recebe 3 pontos para serem distribuídos na árvore de talentos. 
+Divindade representa o nível de progressão do personagem dentro do sistema de Overgrown. O valor de DIV é sempre igual ao nível do personagem: um personagem de nível 0 possui DIV 0, um personagem de nível 1 possui DIV 1 e assim sucessivamente, até o limite de DIV 100.
+
+Na criação, em \textbf{DIV 0}, o personagem recebe \textbf{5 Pontos de Talento}. A cada novo nível de DIV, recebe mais \textbf{5 Pontos de Talento}. Esse é o único orçamento concedido pela progressão de nível. Portanto:
+
+\[\text{Pontos de Talento totais}=5\times(\text{DIV}+1)\]
+
+Quando a árvore de talentos estiver implementada, esses mesmos pontos poderão ser gastos em qualquer árvore disponível. As árvores conterão tanto \textbf{Nós de Atributo}, que aumentam MIG, GRA, FOR, WIS ou SEN, quanto \textbf{Nós de Habilidade}, que concedem habilidades. Não existe uma reserva separada para atributos e outra para habilidades.
+
+\begin{rpgboxtips}{Modelo Atual sem Árvore}
+Enquanto a árvore ainda não estiver implementada, os 5 Pontos de Talento recebidos por DIV são aplicados diretamente em atributos. As habilidades continuam sendo escolhidas individualmente conforme as regras atuais. Quando a árvore for implementada, esse procedimento será substituído pela compra de Nós de Atributo e Nós de Habilidade, sem conceder pontos adicionais retroativos.
+\end{rpgboxtips}
+
+Os pontos podem ser guardados, mas um ponto aplicado não pode ser transferido sem um efeito de redistribuição. DIV não recebe esses pontos: ele aumenta junto do nível. Bônus temporários e equipamentos não consomem Pontos de Talento e não cumprem pré-requisitos de valor bruto permanente.
 Ao atingir 100 pontos de Divindade, o personagem alcança o limite máximo de conhecimento que uma mente humana 
 é capaz de suportar do Pináculo, tornando-se o mais próximo possível de uma entidade divina.
 
@@ -82,13 +93,17 @@ No universo de Overgrown, é possível adquirir divindade de várias formas,
 seja entrando em contato com vestígios restantes de Energia Primordial, estudando conhecimentos divinos ou 
 por meio de Combate. Todas as criaturas e seres tem vestígios de divindades, 
 essa energia não se dissipa, e matar algo que contem divindade resulta na distribuição i
-gualitária dela para quem participar do abate. Considere a tabela para representações numéricas de cada nível de divindade:
+gualitária dela para quem participar do abate. A tabela abaixo representa o progresso necessário para avançar cada nível de DIV; seus valores não são Pontos de Talento disponíveis para compra.
+
+\begin{rpgboxtips}{Exemplos de Progressão}
+Em DIV 0, o personagem possui 5 Pontos de Talento totais. Em DIV 1, possui 10; em DIV 10, 55; em DIV 20, 105; e em DIV 100, 505. Esses valores são o orçamento total recebido pela progressão, antes de bônus externos.
+\end{rpgboxtips}
 
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{@{} cc @{}}
 \toprule
-\rowcolor{gray!15} \textbf{Intervalo de Divindade} & \textbf{Pontos por Nível} \\ 
+\rowcolor{gray!15} \textbf{Intervalo de Divindade} & \textbf{Progresso por Nível} \\ 
 \midrule
 01 -- 10 & 10 pts \\
 11 -- 20 & 20 pts \\
@@ -108,6 +123,20 @@ gualitária dela para quem participar do abate. Considere a tabela para represen
 
 
 \titlesection{Estatísticas dos jogadores}
+
+\subsection*{Modificador de Atributo}
+
+O valor bruto de um atributo determina sua reserva de dados. O \textbf{Modificador de Atributo (MOD)} representa a parcela numérica usada em dano, recuperação e efeitos que pedem explicitamente um modificador. O MOD não é somado a um teste, salvo quando a própria regra mandar fazê-lo.
+
+Para um atributo maior que 0:
+
+\[\text{MOD de Atributo}=\left\lceil\frac{\text{Atributo}}{5}\right\rceil\]
+
+Um atributo 0 possui MOD 0. Assim, atributos de 1--5 possuem MOD 1; 6--10, MOD 2; 11--15, MOD 3; 16--20, MOD 4; e assim sucessivamente. Quando uma regra pedir o maior MOD entre dois atributos, compare os valores brutos e use apenas o MOD do maior; em empate, o resultado é o mesmo e nenhum dado adicional é concedido.
+
+\begin{rpgboxtips}{Valor Bruto e MOD}
+Pré-requisitos escritos como \textbf{MIG 15}, \textbf{GRA 10} ou semelhantes usam o valor bruto permanente do atributo. Bônus temporários não cumprem pré-requisitos. Uma expressão como \textbf{MOD de MIG} usa a fórmula acima.
+\end{rpgboxtips}
 
 Além dos atributos, jogadores tem algum recursos que são usado durante sua aventura: HP, IEP, Resistência e Esquiva.
 
@@ -129,7 +158,7 @@ Um jogador com 24 pontos de Fortitude terá 8 de resistência (5 base + 3 vindo 
 excluindo bônus e reduções provenientes da da árvore de talentos e de itens equipados.
 
 \begin{rpgboxtips}{Resistência em Combate}
-Resistência é um atributo passivo: ela determina se o ataque ou magia acerta o jogador, mas não reduz o dano recebido. Um jogador que usa escudo pode declarar a reação de \textbf{Bloqueio} para aumentar temporariamente sua Resistência com base nos atributos do escudo.
+Resistência é um atributo passivo: ela determina se o ataque ou magia acerta o jogador, mas não reduz o dano recebido. Resistência, Valor de Bloqueio e Redução de Dano são estatísticas diferentes. Um \textbf{Bloqueio} não aumenta a Resistência: ele reduz o dano de um ataque que já acertou, conforme as regras de Armaduras e Proteções.
 \end{rpgboxtips}
 
 Esquiva define a proficiência em desviar do jogador. Ela é baseada diretamente ao atributo de \link{att:grace}{Grace}. 
