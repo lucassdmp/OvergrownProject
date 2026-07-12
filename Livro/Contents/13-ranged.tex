@@ -1,58 +1,63 @@
 \midsectiontitle{Combate à Distância}
 
-Em \textit{Overgrown}, atacar à distância não é o caminho do covarde, é a arte de quem compreende que sobreviver é tão valioso quanto matar. Arqueiros, besteiros e artilheiros dominam o espaço entre eles e o perigo. As \textbf{Habilidades de Distância} são técnicas ativas que consomem \textbf{Pontos de Combate (PC)} para transformar cada projétil em uma decisão tática precisa.
+Atiradores do Pináculo sobrevivem controlando linhas de visão, distância, recarga e cobertura. As habilidades abaixo não são variações do mesmo disparo: cada uma responde a um problema tático específico. Aplicam-se também as regras gerais de aquisição, custos e ataques adicionais apresentadas em Combate Corpo a Corpo.
 
-\begin{rpgboxtips}{Alcance e Cobertura}
-Ataques à distância sofrem penalidades de cobertura parcial e total. Certas habilidades desta lista existem especificamente para ignorar essas penalidades --- aprenda quando utilizá-las ou o inimigo que se abriga atrás de uma rocha será seu maior problema.
+\begin{rpgboxtips}{Arma e Munição}
+Uma habilidade de distância exige uma arma carregada e alcance válido, salvo indicação contrária. \textbf{Arco} inclui arcos leve, recurvo e composto; \textbf{arma de precisão} inclui besta pesada, rifle de precisão e outras armas com propriedade equivalente. Conhecer a posição de um alvo não permite atravessar cobertura total ou obstáculos sólidos.
 \end{rpgboxtips}
 
 \titlesection{Habilidades}
 
 % {startranged}
-\combatSkill{Mira Focada}{6}{Gaste sua \textbf{Ação de Movimento} para \textit{travar} o alvo em sua linha de mira. Seu próximo ataque contra ele \textbf{ignora cobertura parcial} e ganha \textbf{+2 de acerto}. A preparação deliberada transforma incerteza em certeza.}
 
-\combatSkill{Calibrar}{0}{Uma vez por combate, sem custo de PC, você pode observar um tiro que errou e ajustar a mira instantaneamente. O \textbf{próximo ataque} contra o mesmo alvo neste turno ou no seguinte ganha \textbf{+3 de acerto} automaticamente.}
+\combatSkillFull{Mira Focada}{4}{GRA 10 e SEN 10}{Movimento}{Preparar um disparo confiável contra cobertura comum}{Escolha um alvo visível. Seu próximo ataque à distância contra ele, até o fim do próximo turno, recebe \textbf{+2 no acerto} e ignora Cobertura Parcial. O benefício termina após um ataque, acerte ou erre.}
 
-\combatSkill{Flecha de Arrasto}{7}{Ao acertar qualquer inimigo, a flecha possui farpas que dilaceram o ferimento ao entrar. Aplica \link{status:ardiloso}{Sangramento Ardiloso} automaticamente. Se o alvo já possuir \link{status:ardiloso}{Sangramento Ardiloso} ativo, causa imediatamente \textbf{o dano de 2 tiques} de sangramento como dano extra, além do dano normal.}
+\combatSkillFull{Calibrar}{0}{Mira Focada}{Livre, após errar}{Transformar um primeiro erro em informação balística}{Uma vez por combate, depois de errar um ataque beneficiado por Mira Focada, receba \textbf{+3 no próximo ataque} contra o mesmo alvo até o fim do próximo turno. Não acumula com nova Mira Focada.}
 
-\combatSkill{Tiro de Supressão}{10}{Use sua \textbf{Reação} para disparar um projétil no momento exato em que um alvo começa a conjurar uma magia ou ativar uma habilidade. Ao acertar, a conjuração é \textbf{interrompida} e a ação gasta é perdida sem efeito.}
+\combatSkillFull{Flecha de Arrasto}{6}{GRA 10 e arco}{Livre, antes de atacar}{Iniciar ou explorar sangramento a longa distância}{Uma vez por turno, declare antes do ataque. Ao acertar, aplique Sangramento Ardiloso. Se o alvo já o possuía, provoque imediatamente \textbf{um tique} em vez de aplicar novo acúmulo.}
 
-\combatSkill{Atirar em Cobertura}{6}{Você dispara sem se expor completamente. Recebe os bônus de \textbf{cobertura parcial} normalmente enquanto atira, mas sofre \textbf{$-$1 de acerto} pelo ângulo restrito. Não pode ser usada com cobertura total.}
+\combatSkillFull{Tiro de Supressão}{8}{GRA 15}{Reação}{Interromper conjurações e técnicas sem oferecer controle permanente}{Quando um inimigo visível iniciar magia ou habilidade dentro do alcance, realize um ataque básico. Se acertar, a ação e os recursos são gastos sem efeito. O disparo não pode ser crítico nem gerar ataques adicionais.}
 
-\combatSkill{Ponto Cego}{7}{Ao atacar um alvo que está \textbf{engajado em combate corpo a corpo com um aliado}, você encontra uma brecha perfeita. O ataque \textbf{ignora a Esquiva} do alvo (apenas a Resistência é aplicada) e \textbf{elimina o risco de acertar seu aliado}.}
+\combatSkillFull{Atirar em Cobertura}{2}{GRA 5 e Cobertura Parcial}{Padrão}{Expor-se por um instante e voltar à proteção antes da resposta inimiga}{Realize um ataque à distância com \textbf{$-$2 de acerto}. Depois, mova 1 unidade para um espaço de Cobertura Total criado pelo mesmo obstáculo, sem provocar ataques de oportunidade. Se não houver esse espaço adjacente ou linha de visão durante o disparo, a habilidade não pode ser usada.}
 
-\combatSkill{Tiro de Reação}{9}{Quando um inimigo entrar no seu \textbf{alcance de tiro curto}, use sua \textbf{Reação} para disparar imediatamente antes que ele aja. Se acertar, o inimigo \textbf{interrompe o movimento} e permanece onde está pelo restante do turno.}
+\combatSkillFull{Ponto Cego}{5}{GRA 10 e SEN 10}{Livre, antes de atacar}{Atingir um inimigo distraído pelo combate com um aliado}{Escolha um alvo engajado corpo a corpo com um aliado. O ataque ignora Esquiva, mas ainda enfrenta Resistência e Bloqueio, e não pode atingir o aliado por falha. Uma vez por turno.}
 
-\combatSkill{Tiro Perfurante}{9}{O projétil atravessa o primeiro alvo e pode atingir um segundo diretamente atrás dele. Role acerto separado para o segundo alvo com \textbf{$-$3 de acerto}. O segundo alvo sofre \textbf{metade do dano} do ataque original. Não pode resultar em crítico no segundo alvo.}
+\combatSkillFull{Disparo Duplo}{4}{GRA 10 e duas armas de distância de uma mão carregadas}{Padrão}{Trocar precisão por dois disparos sem transformar toda arma em multiataque}{Realize um ataque com cada arma contra o mesmo alvo. Ambos sofrem \textbf{$-$2 de acerto}, podem resultar em crítico e são instâncias separadas. Resolva a recarga de cada arma separadamente. Não pode combinar-se com outro ataque adicional.}
 
-\combatSkill{Faro de Caçador}{7}{Você marca rastros e padrões de movimento do alvo. Por \textbf{3 rodadas}, você sabe a posição exata do alvo mesmo que ele fique invisível, em névoa ou fora da linha de visão, e pode atacá-lo com \textbf{$-$3 de acerto}. O alvo não é informado de que foi marcado.}
+\combatSkillFull{Tiro de Reação}{7}{GRA 15}{Reação}{Impedir que um inimigo atravesse uma linha de tiro}{Quando um inimigo visível entrar ou se mover dentro do alcance curto da arma, realize um ataque básico. Se acertar, o movimento termina no espaço atual. O alvo ainda pode usar outra ação de movimento, se possuir uma.}
 
-\combatSkill{Sniper: Olho por Olho}{12}{Após receber dano de um \textbf{ataque à distância}, seu próximo ataque contra quem te atirou ganha \textbf{+4 na Margem de Ameaça} e \textbf{Vantagem}. A vingança aguça a mira.}
+\combatSkillFull{Tiro Perfurante}{8}{GRA 15 e projétil perfurante}{Padrão}{Aproveitar inimigos alinhados sem se tornar uma área genérica}{Ataque o primeiro alvo. Se acertar, escolha um segundo diretamente atrás dele e faça outro teste com \textbf{$-$3 de acerto}. O segundo recebe metade do dano rolado para o primeiro, antes das defesas do primeiro; depois aplica as próprias defesas. O segundo acerto não pode ser crítico.}
 
-\combatSkill{Sniper: Olhos de Águia}{X (máx. 8)}{Para cada PC gasto, você aumenta o \textbf{alcance efetivo} do seu ataque em \textbf{+2 unidades}, ignorando penalidades por distância acima do alcance base da arma. Custo máximo de \textbf{8 PC} por ataque.}
+\combatSkillFull{Faro de Caçador}{5}{SEN 15}{Movimento}{Rastrear um alvo que usa névoa, invisibilidade ou fuga}{Marque um alvo visível por 3 rodadas. Você conhece sua posição enquanto permanecer a até 30 unidades e ignora ocultação causada por invisibilidade ou névoa, mas ainda precisa de linha de efeito para atacar. Apenas um alvo pode estar marcado.}
 
-\combatSkill{Tiro de Aviso}{5}{Você atira propositalmente perto da cabeça do alvo. Realize um teste de \textbf{Intimidação usando Grace} contra a Temperança do alvo. Em caso de sucesso, o alvo recebe \link{status:abalado}{Abalado} por 1 turno, com \textbf{Desvantagem} apenas em testes de ataque.}
+\combatSkillFull{Sniper: Olho por Olho}{6}{GRA 15, SEN 15 e arma de precisão}{Livre, após sofrer ataque à distância}{Responder ao atirador que revelou a própria posição}{Uma vez por rodada, marque quem causou o dano. Seu próximo ataque contra ele até o fim do próximo turno recebe \textbf{+2 no acerto e +1 na Margem de Ameaça}. O benefício termina após um ataque.}
 
-\combatSkill{Recarregar Sob Pressão}{8}{Ignore a \textbf{penalidade de tempo de recarga} de armas pesadas como bestas pesadas ou armas de fogo lentas, podendo atirar \textbf{no mesmo turno} em que recarregou. A \textbf{primeira} utilização por combate custa 8 PC. Cada uso subsequente no mesmo combate tem o custo \textbf{aumentado em +4 PC} (12 PC no segundo uso, 16 no terceiro, e assim por diante).}
+\combatSkillFull{Sniper: Olhos de Águia}{X (máx. 6)}{SEN 15 e Mira Focada}{Livre, antes de atacar}{Alcançar alvos distantes sem atravessar obstáculos}{Para cada PC gasto, aumente o alcance efetivo do próximo ataque em \textbf{3 unidades}. O bônus termina após o ataque e não remove Cobertura nem linha de efeito.}
 
-\combatSkill{Mira de Precisão}{X (máx. 8)}{Para cada PC gasto, você acumula \textbf{+1 de acerto} para um único tiro neste turno. Toda a concentração é convertida em precisão absoluta. Ao gastar \textbf{5 ou mais PC} dessa forma, o ataque também \textbf{ignora cobertura total}. Custo máximo de \textbf{8 PC} por ataque.}
+\combatSkillFull{Tiro de Aviso}{4}{GRA 10, SEN 10 e Intimidação treinada}{Padrão}{Reduzir a ofensiva de um inimigo sem feri-lo}{Não cause dano. Dispute Intimidação usando SEN contra Temperança de um alvo inteligente a até 10 unidades. Se vencer, aplique Abalado por 1 rodada. Depois do teste, o alvo fica imune ao seu Tiro de Aviso por 2 rodadas.}
 
-\combatSkill{Olhar de Rapina}{5 por rodada}{Enquanto estiver \textbf{parado}, gaste PC por rodada para focar o mesmo alvo. A cada rodada consecutiva, sua \textbf{Margem de Ameaça} aumenta em \textbf{+2} cumulativamente. Se você se mover ou trocar de alvo, o bônus acumulado zera imediatamente.}
+\combatSkillFull{Recarregar Sob Pressão}{6 crescente}{GRA 15 e arma com recarga}{Livre}{Manter uma arma lenta funcionando durante uma emergência}{Recarregue imediatamente uma arma que normalmente exigiria Movimento. A primeira utilização no combate custa 6 PC; cada uso posterior custa +3 PC, sem limite máximo de custo. Armas cuja recarga exige Ação Padrão não podem usar esta técnica. Uma vez por turno.}
 
-\combatSkill{Tiro Ricochete}{12}{O projétil \textbf{ricocha uma vez} em uma superfície sólida antes de atingir o alvo, contornando cobertura parcial ou total. O ângulo do ricochete deve ser plausível e aprovado pelo Mestre. Ricochetes não podem resultar em crítico. \par\textit{\footnotesize \textbf{Aprimorado:} O tiro ricocheteado \textbf{pode resultar em crítico} normalmente e o projétil pode ricochetear até \textbf{duas vezes}.}}
+\combatSkillFull{Recarga de Emergência}{12 crescente}{GRA 20 e Recarregar Sob Pressão}{Movimento}{Evoluir a recarga rápida para rifles e mecanismos extremamente pesados}{Recarregue uma arma cuja recarga normalmente exigiria Ação Padrão. A primeira utilização no combate custa 12 PC; cada uso posterior custa +4 PC. Não reduz a recarga abaixo de Movimento, não funciona mais de uma vez por turno e não se combina com outra redução de recarga.}
 
-\combatSkill{Tiro em Curva}{10}{Você dobra a trajetória do projétil ao redor de um obstáculo com força física calculada ou magia leve. Atinge alvos em \textbf{cobertura total} com \textbf{$-$2 de acerto}. Deve haver espaço físico lateral que permita o arco --- o Mestre avalia a viabilidade.}
+\combatSkillFull{Mira de Precisão}{X (máx. 5)}{GRA 15 e Mira Focada}{Livre, antes de atacar}{Converter PC em precisão contra uma defesa alta}{Gaste até 5 PC e receba \textbf{+1 no acerto por PC} no próximo ataque deste turno. Gastar 5 PC também ignora Cobertura Parcial, nunca Cobertura Total. Não acumula com outro uso de Mira de Precisão.}
 
-\combatSkill{Tiro Destroçante}{9}{Declare antes do teste de ataque. Se o ataque acertar e o alvo usar Bloqueio, o \textbf{VB da armadura é considerado 0} contra esse ataque; bônus de escudo, arma e habilidade ainda são aplicados. O ataque não pode resultar em crítico.}
+\combatSkillFull{Olhar de Rapina}{4 por rodada}{SEN 20, Mira Focada e arma de precisão}{Padrão para iniciar; Livre para manter}{Recompensar o sniper que permanece imóvel observando o mesmo alvo}{Escolha um alvo visível e não se mova. Após uma rodada completa observando, receba +1 na Margem de Ameaça contra ele; após duas, o bônus chega ao máximo de +2. Pague no início de cada turno. Mover-se, sofrer dano, perder visão ou atacar outro alvo encerra o efeito.}
 
-\combatSkill{Desengajar}{6}{Você chuta o inimigo mais próximo para se \textbf{propulsionar para trás}, ganhando distância sem provocar \textbf{ataques de oportunidade}. Ideal para manter o alcance seguro contra quem tenta fechar a distância.}
+\combatSkillFull{Tiro Ricochete}{8}{GRA 15 e arma de fogo ou besta}{Padrão}{Contornar uma cobertura rígida usando uma superfície real}{Escolha uma superfície sólida e um alvo cuja posição você conheça. Faça um ataque com \textbf{$-$2 de acerto} que pode contornar Cobertura Total por um único ricochete geometricamente possível. Não pode resultar em crítico.}
 
-\combatSkill{Lobo Solitário}{16}{Você fecha sua mente para o grupo. Curas e Buffs aliados são \textbf{reduzidos à metade} em você, mas todos os seus \textbf{ataques e habilidades} ganham \textbf{+1D6 de dano} adicional. \par\textit{\footnotesize \textbf{Aprimorado:} O bônus de dano aumenta para \textbf{+2D6} e você passa a ser \textbf{imune a debuffs involuntários} de aliados. O bônus de Lobo Solitário \textbf{não se acumula} com Rajada de Flechas.}}
+\combatSkillFull{Tiro em Curva}{7}{GRA 15 e arco}{Padrão}{Contornar cobertura sem depender de superfície para ricochete}{Curve a trajetória por um caminho lateral livre e ataque um alvo conhecido atrás de cobertura com \textbf{$-$2 de acerto}. Não atravessa objetos sólidos, exige espaço para o arco da flecha e não pode resultar em crítico.}
 
-\combatSkill{Rajada de Flechas}{13}{Você dispara um leque de projéteis em um cone de \textbf{3 unidades de largura} à sua frente. Todos os alvos dentro da área sofrem \textbf{o dano base da arma}, sem modificadores de atributo. Cada alvo deve ser atingido individualmente --- role acerto separado para cada um.}
+\combatSkillFull{Tiro Destroçante}{8}{GRA 15 e arma de precisão}{Livre, antes de atacar}{Vencer armaduras pesadas preservando o valor de escudos}{Se acertar e o alvo Bloquear, o VB da armadura é considerado 0; bônus de escudo, arma e habilidade permanecem. O ataque não pode resultar em crítico nem combinar-se com outro efeito que ignore VB.}
 
-\combatSkill{Disparo Paralisante}{10}{Você mira em um ponto específico do corpo do alvo --- perna, braço ou ombro. Em vez de dano normal, aplique \link{status:lento}{Lento} (perna) ou force o alvo a soltar o item que segura em uma das mãos (braço/ombro), sem teste de resistência. O alvo ainda sofre \textbf{metade do dano base} da arma.}
+\combatSkillFull{Desengajar}{3}{GRA 5}{Movimento}{Criar distância curta sem substituir uma retirada completa}{Mova até 4 unidades para longe do inimigo mais próximo. Esse deslocamento não provoca ataques de oportunidade. Diferente de Recuar Estratégico, não dobra seu Movimento nem permite atravessar toda a linha inimiga.}
 
-\combatSkill{Cobertura de Fogo}{7 por rodada}{Enquanto um aliado estiver em movimento, você pode gastar PC por rodada para manter \textbf{fogo de supressão} na direção de um inimigo. O inimigo suprimido sofre \textbf{Desvantagem} em testes de ataque e não pode usar sua Reação enquanto a cobertura estiver ativa.}
+\combatSkillFull{Lobo Solitário}{12}{GRA 15 e SEN 10}{Padrão}{Fortalecer o atirador isolado mediante perda real de suporte}{Até o fim da cena, você não pode receber cura ou Buff de aliados. Uma vez por turno, um ataque seu causa \textbf{+1D6 de dano}. Cancele como Ação Livre; depois de cancelado, não pode ser reativado na mesma cena.}
+
+\combatSkillFull{Rajada de Flechas}{10}{GRA 15 e arco}{Padrão}{Oferecer dano em área inferior ao disparo especializado}{Ataque separadamente todos os alvos em cone de 3 unidades. Cada acerto causa apenas os dados base do arco, sem MOD ou dano adicional, e não pode resultar em crítico. Cada alvo só pode ser atingido uma vez.}
+
+\combatSkillFull{Disparo Paralisante}{9}{GRA 15 e SEN 10}{Padrão}{Trocar dano por mobilidade ou desarme temporário}{Realize um ataque que causa metade dos dados base da arma, sem MOD. Ao acertar, escolha: o alvo disputa FOR contra o resultado do ataque para evitar Lento por 1 rodada; ou disputa MIG para não soltar um item de uma mão. Depois, fica imune a esta técnica por 1 rodada.}
+
+\combatSkillFull{Cobertura de Fogo}{5 por rodada}{GRA 15}{Padrão para iniciar; Livre para manter}{Proteger o deslocamento de aliados por supressão, não por dano}{Escolha um inimigo visível dentro do alcance. Enquanto pagar no início do turno e não atacar outro alvo, ele sofre Desvantagem em ataques contra aliados em movimento e não pode usar ataques de oportunidade. O efeito termina se ele obtiver Cobertura Total ou sair do alcance.}
 
 % {endranged}
