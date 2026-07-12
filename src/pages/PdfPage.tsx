@@ -1,4 +1,4 @@
-const PDF_URL = '/overgrown-project.pdf'
+import PDF_URL from '../../Livro/Overgrown Project.pdf?url'
 
 export default function PdfPage() {
   return (

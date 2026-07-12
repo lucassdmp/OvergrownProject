@@ -128,7 +128,7 @@ function SkillRow({
             ? 'bg-amber-600 dark:bg-amber-500 text-white'
             : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
         }`}>
-          {trained ? `+${displayBonus}` : '—'}
+          {trained ? `+${displayBonus}` : 'Não treinada'}
         </span>
       </div>
     </div>
@@ -194,7 +194,7 @@ export default function SkillList() {
           />
         </div>
         {budgetOver && (
-          <p className="text-[10px] text-red-500 dark:text-red-400">Excedendo o limite — remova perícias ou aumente a Divindade.</p>
+          <p className="text-[10px] text-red-500 dark:text-red-400">Excedendo o limite. Remova perícias ou aumente a Divindade.</p>
         )}
         <p className="text-[10px] text-gray-400 dark:text-gray-600">
           A cada 5 Divindades: +2 novas perícias (I) ou +1 nível em uma existente.

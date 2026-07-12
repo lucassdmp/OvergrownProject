@@ -301,6 +301,9 @@ export function combatSkillToAttack(skill: CombatSkill, categoryOverride?: Comba
     cost: skill.cost,
     description: skill.description,
     category: categoryOverride ?? skill.category,
+    requirement: skill.requirement,
+    action: skill.action,
+    purpose: skill.purpose,
   }
 }
 
@@ -320,13 +323,18 @@ function parseCombatSkillCards(raw: string, category: CombatCategory): CombatSki
   let cursor = 0
 
   while (cursor < sectionRaw.length) {
-    const start = sectionRaw.indexOf('\\combatSkill', cursor)
-    if (start === -1) break
-
-    let index = start + '\\combatSkill'.length
+    const fullStart = sectionRaw.indexOf('\\combatSkillFull', cursor)
+    const legacyStart = sectionRaw.indexOf('\\combatSkill{', cursor)
+    const candidates = [fullStart, legacyStart].filter((value) => value >= 0)
+    if (candidates.length === 0) break
+    const start = Math.min(...candidates)
+    const isFull = start === fullStart
+    const macro = isFull ? '\\combatSkillFull' : '\\combatSkill'
+    let index = start + macro.length
     const args: string[] = []
+    const expectedArgs = isFull ? 6 : 3
 
-    while (args.length < 3 && index < sectionRaw.length) {
+    while (args.length < expectedArgs && index < sectionRaw.length) {
       while (/\s/.test(sectionRaw[index] ?? '')) index += 1
       const block = extractBraceBlock(sectionRaw, index)
       if (!block) throw new Error('Bloco de habilidade inválido no formato \\combatSkill.')
@@ -334,19 +342,27 @@ function parseCombatSkillCards(raw: string, category: CombatCategory): CombatSki
       index = block.endIndex
     }
 
-    if (args.length < 3) {
-      throw new Error('Quantidade de argumentos insuficiente em \\combatSkill.')
+    if (args.length < expectedArgs) {
+      throw new Error(`Quantidade de argumentos insuficiente em ${macro}.`)
     }
 
-    const [nameRaw, costRaw, descriptionRaw] = args
+    const [nameRaw, costRaw] = args
     const name = normalizeText(nameRaw)
+    const requirementRaw = isFull ? args[2] : undefined
+    const actionRaw = isFull ? args[3] : undefined
+    const purposeRaw = isFull ? args[4] : undefined
+    const effectRaw = isFull ? args[5] : args[2]
 
     skills.push({
       id: slugifyId(name),
       name,
       cost: normalizeText(costRaw),
-      description: stripLatex(normalizeText(descriptionRaw)),
+      description: stripLatex(normalizeText(effectRaw)),
       category,
+      requirement: requirementRaw ? stripLatex(normalizeText(requirementRaw)) : undefined,
+      action: actionRaw ? stripLatex(normalizeText(actionRaw)) : undefined,
+      purpose: purposeRaw ? stripLatex(normalizeText(purposeRaw)) : undefined,
+      effect: stripLatex(normalizeText(effectRaw)),
     })
 
     cursor = index

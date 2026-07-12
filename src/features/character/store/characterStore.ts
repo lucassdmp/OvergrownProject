@@ -9,11 +9,12 @@ import type {
   MasteryLevel,
 } from '../../../types/game'
 import { calculateDerivedStats, calculateEffectiveDerivedStats, defaultGameConfig, type GameConfig } from '../../../config/gameConfig'
+import { conflictingEquipmentIds } from '../../../lib/equipmentRules'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 export const BASE_ATTRIBUTE_POINTS = 5
-export const POINTS_PER_DIVINITY = 3
+export const POINTS_PER_DIVINITY = 5
 
 export function totalAttributePoints(divinity: number) {
   return BASE_ATTRIBUTE_POINTS + divinity * POINTS_PER_DIVINITY
@@ -55,8 +56,8 @@ const DEFAULT_CHARACTER: Character = {
   name: 'Novo Personagem',
   playerName: '',
   race: '',
-  level: 1,
-  divinity: 1,
+  level: 0,
+  divinity: 0,
   attributes: DEFAULT_ATTRIBUTES,
   acquiredTalents: [],
   customSpells: [],
@@ -72,6 +73,8 @@ const DEFAULT_CHARACTER: Character = {
     iep: calculateDerivedStats(DEFAULT_ATTRIBUTES).iep,
     pc: calculateDerivedStats(DEFAULT_ATTRIBUTES).pc,
   },
+  temporaryResources: { vida: 0, iep: 0 },
+  shortRestsUsed: 0,
 }
 
 // ── Store shape ───────────────────────────────────────────────────────────────
@@ -101,6 +104,8 @@ interface CharacterState {
   setCurrentPc: (value: number) => void
   setNotes: (notes: string) => void
   restoreAllResources: () => void
+  applyShortRest: (recovery: { vida: number; iep: number; pc: number }) => void
+  applyFullRest: (temporary: { vida: number; iep: number }) => void
 
   acquireTalent: (talentId: string) => void
   removeTalent: (talentId: string) => void
@@ -160,7 +165,7 @@ export const useCharacterStore = create<CharacterState>()(
               } as Partial<CharacterState>
             }
             return nextState as Partial<CharacterState>
-          }, replace as false, action as any) // fix for overload types
+          }, replace as false, action as string)
         }
 
         return {
@@ -224,10 +229,16 @@ export const useCharacterStore = create<CharacterState>()(
           set((s) => ({ character: { ...s.character, race } }), false, 'setRace'),
 
         setLevel: (level) =>
-          set((s) => ({ character: { ...s.character, level } }), false, 'setLevel'),
+          set((s) => {
+            const normalized = Math.max(0, Math.min(100, Math.floor(level)))
+            return { character: { ...s.character, level: normalized, divinity: normalized } }
+          }, false, 'setLevel'),
 
         setDivinity: (divinity) =>
-          set((s) => ({ character: { ...s.character, divinity: Math.max(0, divinity) } }), false, 'setDivinity'),
+          set((s) => {
+            const normalized = Math.max(0, Math.min(100, Math.floor(divinity)))
+            return { character: { ...s.character, divinity: normalized, level: normalized } }
+          }, false, 'setDivinity'),
 
         setAttribute: (attr, value) =>
           set((s) => {
@@ -281,6 +292,39 @@ export const useCharacterStore = create<CharacterState>()(
               },
             }
           }, false, 'restoreAllResources'),
+
+        applyShortRest: (recovery) =>
+          set((s) => {
+            if (s.character.shortRestsUsed >= 2) return {}
+            const derived = calculateEffectiveDerivedStats(s.character, s.gameConfig)
+            return {
+              character: {
+                ...s.character,
+                shortRestsUsed: s.character.shortRestsUsed + 1,
+                currentResources: {
+                  vida: Math.min(derived.vida, s.character.currentResources.vida + Math.max(0, recovery.vida)),
+                  iep: Math.min(derived.iep, s.character.currentResources.iep + Math.max(0, recovery.iep)),
+                  pc: Math.min(derived.pc, s.character.currentResources.pc + Math.max(0, recovery.pc)),
+                },
+              },
+            }
+          }, false, 'applyShortRest'),
+
+        applyFullRest: (temporary) =>
+          set((s) => {
+            const derived = calculateEffectiveDerivedStats(s.character, s.gameConfig)
+            return {
+              character: {
+                ...s.character,
+                shortRestsUsed: 0,
+                currentResources: { vida: derived.vida, iep: derived.iep, pc: derived.pc },
+                temporaryResources: {
+                  vida: Math.max(0, temporary.vida),
+                  iep: Math.max(0, temporary.iep),
+                },
+              },
+            }
+          }, false, 'applyFullRest'),
 
         acquireTalent: (talentId) =>
           set((s) => ({
@@ -374,14 +418,22 @@ export const useCharacterStore = create<CharacterState>()(
           }), false, 'updateItemQuantity'),
 
         toggleEquipped: (id) =>
-          set((s) => ({
-            character: {
-              ...s.character,
-              inventory: (s.character.inventory ?? []).map((it) =>
-                it.id === id ? { ...it, equipped: !it.equipped } : it,
-              ),
-            },
-          }), false, 'toggleEquipped'),
+          set((s) => {
+            const target = (s.character.inventory ?? []).find((item) => item.id === id)
+            if (!target) return {}
+            const equipping = !target.equipped
+            const conflicts = equipping ? new Set(conflictingEquipmentIds(s.character.inventory ?? [], target)) : new Set<string>()
+            return {
+              character: {
+                ...s.character,
+                inventory: (s.character.inventory ?? []).map((item) => {
+                  if (item.id === id) return { ...item, equipped: equipping }
+                  if (conflicts.has(item.id)) return { ...item, equipped: false }
+                  return item
+                }),
+              },
+            }
+          }, false, 'toggleEquipped'),
 
         toggleBroken: (id) =>
           set((s) => ({
@@ -398,7 +450,8 @@ export const useCharacterStore = create<CharacterState>()(
           const item = (character.inventory ?? []).find((it) => it.id === id)
           if (!item || item.quantity <= 0) return
           const derived = calculateEffectiveDerivedStats(character, gameConfig)
-          let { vida, iep, pc } = character.currentResources
+          let { vida, iep } = character.currentResources
+          const { pc } = character.currentResources
           for (const effect of item.effects) {
             if (effect.type === 'heal' && effect.value != null)
               vida = Math.min(vida + effect.value, derived.vida)
@@ -486,6 +539,8 @@ export const useCharacterStore = create<CharacterState>()(
               skills: loadedCharacter.skills ?? {},
               attributes: { ...DEFAULT_CHARACTER.attributes, ...(loadedCharacter.attributes ?? {}) },
               currentResources: { ...DEFAULT_CHARACTER.currentResources, ...(loadedCharacter.currentResources ?? {}) },
+              temporaryResources: { ...DEFAULT_CHARACTER.temporaryResources, ...(loadedCharacter.temporaryResources ?? {}) },
+              shortRestsUsed: Math.max(0, Math.min(2, loadedCharacter.shortRestsUsed ?? 0)),
               avatarBase64: loadedCharacter.avatarBase64,
               avatarPosition: loadedCharacter.avatarPosition ?? DEFAULT_CHARACTER.avatarPosition,
               avatarScale: loadedCharacter.avatarScale ?? DEFAULT_CHARACTER.avatarScale,
@@ -501,6 +556,7 @@ export const useCharacterStore = create<CharacterState>()(
     },
     {
       name: 'overgrown-character',
+        version: 2,
         // Ensure old persisted characters missing new array fields don't break
         merge: (persisted, current) => {
           const ps = persisted as Partial<typeof current>
@@ -517,17 +573,45 @@ export const useCharacterStore = create<CharacterState>()(
             origin: ps.character?.origin,
             notes: ps.character?.notes ?? '',
             currentResources: ps.character?.currentResources ?? current.character.currentResources,
+            temporaryResources: {
+              ...DEFAULT_CHARACTER.temporaryResources,
+              ...(ps.character?.temporaryResources ?? {}),
+            },
+            shortRestsUsed: Math.max(0, Math.min(2, ps.character?.shortRestsUsed ?? 0)),
+            level: Math.max(0, Math.min(100, ps.character?.divinity ?? ps.character?.level ?? 0)),
+            divinity: Math.max(0, Math.min(100, ps.character?.divinity ?? ps.character?.level ?? 0)),
             avatarBase64: ps.character?.avatarBase64,
             avatarPosition: ps.character?.avatarPosition ?? '50% 50%',
             avatarScale: ps.character?.avatarScale ?? 1.0,
             money: normalizeMoney(ps.character?.money),
           }
 
-          let mergedCharacters = ps.characters || {}
-          // If no characters map exists from older state, init it with the mapped character
-          if (Object.keys(mergedCharacters).length === 0) {
-            mergedCharacters = { [mergedCharacter.id]: mergedCharacter }
+          const normalizePersistedCharacter = (saved: Partial<Character>): Character => {
+            const divinity = Math.max(0, Math.min(100, saved.divinity ?? saved.level ?? 0))
+            return {
+              ...DEFAULT_CHARACTER,
+              ...saved,
+              level: divinity,
+              divinity,
+              customSpells: saved.customSpells ?? [],
+              characterAttacks: saved.characterAttacks ?? [],
+              inventory: saved.inventory ?? [],
+              acquiredTalents: saved.acquiredTalents ?? [],
+              skills: saved.skills ?? {},
+              attributes: { ...DEFAULT_CHARACTER.attributes, ...(saved.attributes ?? {}) },
+              currentResources: { ...DEFAULT_CHARACTER.currentResources, ...(saved.currentResources ?? {}) },
+              temporaryResources: { ...DEFAULT_CHARACTER.temporaryResources, ...(saved.temporaryResources ?? {}) },
+              shortRestsUsed: Math.max(0, Math.min(2, saved.shortRestsUsed ?? 0)),
+              avatarPosition: saved.avatarPosition ?? DEFAULT_CHARACTER.avatarPosition,
+              avatarScale: saved.avatarScale ?? DEFAULT_CHARACTER.avatarScale,
+              money: normalizeMoney(saved.money),
+            }
           }
+
+          const mergedCharacters = Object.fromEntries(
+            Object.entries(ps.characters ?? {}).map(([id, saved]) => [id, normalizePersistedCharacter(saved)]),
+          )
+          mergedCharacters[mergedCharacter.id] = normalizePersistedCharacter(mergedCharacter)
           
           return {
             ...current,

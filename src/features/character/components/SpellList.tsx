@@ -137,7 +137,7 @@ function SpellCard({ spell }: { spell: CustomSpell }) {
                       <td className="px-2 py-1 font-bold text-amber-400">{LEVEL_LABEL[entry.level]}</td>
                       <td className="px-2 py-1 text-sky-300">{entry.cost}</td>
                       <td className="px-2 py-1 text-gray-700 dark:text-gray-300">{entry.scaling}</td>
-                      <td className="px-2 py-1 text-amber-300/80 font-semibold">{entry.special ?? '—'}</td>
+                      <td className="px-2 py-1 text-amber-300/80 font-semibold">{entry.special ?? 'Nenhum'}</td>
                     </tr>
                   ))}
                 </tbody>

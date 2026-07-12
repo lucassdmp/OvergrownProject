@@ -4,6 +4,7 @@ import { ALL_SKILLS } from '../../../data/skills'
 import { ATTRIBUTE_LABELS, type InventoryItem, type ItemType } from '../../../types/game'
 import AddItemModal from './modals/AddItemModal'
 import UseItemModal from './modals/UseItemModal'
+import { calculateEquipmentDefense } from '../../../lib/equipmentRules'
 
 const TYPE_STYLE: Record<ItemType, { icon: string; color: string }> = {
   weapon:       { icon: '⚔',  color: 'text-red-400' },
@@ -13,7 +14,7 @@ const TYPE_STYLE: Record<ItemType, { icon: string; color: string }> = {
   misc:         { icon: '◆',  color: 'text-gray-400' },
 }
 
-function ItemCard({ item }: { item: InventoryItem }) {
+function ItemCard({ item, invalidRequirement }: { item: InventoryItem; invalidRequirement: boolean }) {
   const removeItem = useCharacterStore((s) => s.removeItem)
   const updateItemQuantity = useCharacterStore((s) => s.updateItemQuantity)
   const toggleEquipped = useCharacterStore((s) => s.toggleEquipped)
@@ -48,6 +49,9 @@ function ItemCard({ item }: { item: InventoryItem }) {
               <span className="ml-1.5 text-[10px] font-bold text-gray-500 dark:text-gray-400 border border-gray-400/50 rounded px-1">
                 QUEBRADO
               </span>
+            )}
+            {invalidRequirement && (
+              <span className="ml-1.5 rounded border border-red-500/50 px-1 text-[10px] font-bold text-red-500">REQUISITO NÃO CUMPRIDO</span>
             )}
           </span>
 
@@ -184,33 +188,19 @@ function ItemCard({ item }: { item: InventoryItem }) {
               </div>
             )}
 
-            {/* Armor Details */}
-            {item.type === 'armor' && item.armorDetails && (
+            {/* Armor / blocking details */}
+            {item.armorDetails && (
               <div className="rounded bg-gray-50/50 p-2 dark:bg-gray-800/50">
-                <div className="mb-1 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                  <span>Integridade</span>
-                  <span
-                    className={
-                      item.armorDetails.currentHealth === 0 ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'
-                    }
-                  >
-                    {item.armorDetails.currentHealth} / {item.armorDetails.maxHealth}
-                  </span>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {(item.armorDetails.blockValue ?? 0) > 0 && <span className="rounded border border-sky-700/40 px-2 py-0.5 text-sky-500">VB {item.armorDetails.blockValue}</span>}
+                  {(item.armorDetails.blockBonus ?? 0) > 0 && <span className="rounded border border-sky-700/40 px-2 py-0.5 text-sky-500">+{item.armorDetails.blockBonus} VB</span>}
+                  {item.armorDetails.requirement && (
+                    <span className={invalidRequirement ? 'text-red-500' : 'text-emerald-500'}>
+                      {ATTRIBUTE_LABELS[item.armorDetails.requirement.attribute]} {item.armorDetails.requirement.value}
+                    </span>
+                  )}
                 </div>
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-                  <div
-                    className={`h-full transition-all ${
-                      item.armorDetails.currentHealth === 0
-                        ? 'bg-transparent'
-                        : item.armorDetails.currentHealth < item.armorDetails.maxHealth * 0.3
-                          ? 'bg-red-500'
-                          : 'bg-blue-500'
-                    }`}
-                    style={{
-                      width: `${Math.min(100, (item.armorDetails.currentHealth / item.armorDetails.maxHealth) * 100)}%`,
-                    }}
-                  />
-                </div>
+                {invalidRequirement && <p className="mt-1 text-xs text-red-500">Ocupa Carga e mantém penalidades, mas não concede VB nem efeitos positivos.</p>}
               </div>
             )}
 
@@ -246,7 +236,7 @@ function ItemCard({ item }: { item: InventoryItem }) {
               </div>
             )}
             {isBroken && (
-              <p className="text-xs italic text-gray-500">⚠ Item quebrado — bônus passivos desativados.</p>
+              <p className="text-xs italic text-gray-500">⚠ Item quebrado. Bônus passivos desativados.</p>
             )}
           </div>
         )}
@@ -259,6 +249,7 @@ export default function Inventory() {
   const character = useCharacterStore((s) => s.character)
   const inventory = character.inventory
   const [showModal, setShowModal] = useState(false)
+  const equipmentDefense = calculateEquipmentDefense(inventory, character.attributes)
 
   // Effective Might = base + attributeBonus('might') from active non-broken items.
   // Calculated once here so it is never double-counted.
@@ -285,6 +276,9 @@ export default function Inventory() {
           ◈ Inventário
         </h2>
         <div className="flex items-center gap-3">
+          <div className="rounded-full border border-sky-400/50 px-2.5 py-0.5 text-xs font-bold text-sky-600 dark:text-sky-400" title="Valor de Bloqueio total dos equipamentos válidos">
+            VB {equipmentDefense.blockValue}
+          </div>
           {hasWeight && (
             <div className={`flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
               isOverencumbered
@@ -311,7 +305,7 @@ export default function Inventory() {
       ) : (
         <div className="grid gap-2 sm:grid-cols-2">
           {inventory.map((item) => (
-            <ItemCard key={item.id} item={item} />
+            <ItemCard key={item.id} item={item} invalidRequirement={equipmentDefense.invalidItemIds.has(item.id)} />
           ))}
         </div>
       )}

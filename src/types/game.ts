@@ -167,6 +167,10 @@ export interface CombatSkill {
   cost: string
   description: string
   category: CombatCategory
+  requirement?: string
+  action?: string
+  purpose?: string
+  effect?: string
 }
 
 // ── Talent Tree ───────────────────────────────────────────────────────────────
@@ -223,6 +227,9 @@ export interface CharacterAttack {
   description: string
   damage?: string
   category: CombatCategory
+  requirement?: string
+  action?: string
+  purpose?: string
 }
 
 // ── Perícias (Skills) ────────────────────────────────────────────────────────
@@ -284,6 +291,11 @@ export interface WeaponDetails {
 export interface ArmorDetails {
   currentHealth: number
   maxHealth: number
+  blockValue?: number
+  requirement?: { attribute: AttributeName; value: number }
+  slot?: 'primary' | 'underlayer' | 'shield'
+  blockBonus?: number
+  ruleText?: string
 }
 
 export interface InventoryItem {
@@ -336,6 +348,11 @@ export interface Character {
     iep: number
     pc: number
   }
+  temporaryResources: {
+    vida: number
+    iep: number
+  }
+  shortRestsUsed: number
   money: {
     platina: number
     ouro: number
