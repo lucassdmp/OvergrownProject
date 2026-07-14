@@ -4,6 +4,18 @@ Em \textit{Overgrown}, cada arma é uma escolha de identidade.
 Não existem regras para ditar quantas armas o aventureiro pode carregar ou quando utilizá-las, estar preparado
 é parte do valor de sobreviver no Pináculo.
 
+\begin{rpgboxtips}{Requisitos de Armas}
+Cada arma possui um ou mais requisitos de atributos permanentes. Esses requisitos não dependem de DIV e podem ser cumpridos em qualquer nível. Bônus temporários, magias e estados não contam para esse fim.
+
+Um personagem que não cumpra todos os requisitos ainda pode empunhar e atacar com a arma. Enquanto estiver empunhando ou utilizando essa arma, sofre \textbf{$-$10 em todos os testes que realizar}, mesmo quando o teste não estiver diretamente relacionado à arma. A penalidade termina assim que a arma deixa de ser empunhada ou utilizada. Rolagens de dano não são testes e não recebem essa penalidade.
+\end{rpgboxtips}
+
+\begin{rpgboxtips}{Configurações de Empunhadura Dupla}
+Certos pares de armas formam uma \textbf{Configuração de Empunhadura Dupla}, apresentada em perfil próprio. Para usar esse perfil, o personagem deve empunhar uma cópia válida da arma em cada mão e cumprir o requisito da configuração.
+
+Ao realizar um ataque, declare se está usando o perfil individual de uma das armas ou o perfil da configuração. O perfil de Empunhadura Dupla substitui o dano, a Ameaça e as Propriedades Especiais das armas individuais durante toda a ação. Benefícios dos dois perfis individuais não se acumulam com o perfil duplo. Ataques separados concedidos por uma configuração contam para o limite geral de ataques adicionais e não geram novos ataques extras. Uma configuração não pode usar Golpe Duplo, Disparo Duplo, Ataque Secundário ou outra fonte de ataque adicional na mesma ação.
+\end{rpgboxtips}
+
 % ==============================================================================
 \titlesection{Armas Corpo a Corpo}
 % ==============================================================================
@@ -11,31 +23,32 @@ Não existem regras para ditar quantas armas o aventureiro pode carregar ou quan
 \renewcommand{\tabularxcolumn}[1]{m{#1}}
 \setlength{\extrarowheight}{3pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.28\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.09\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.07\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.17\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.18\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.08\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.06\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.13\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.12\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
     \hline
     \multicolumn{1}{|c|}{\textbf{\ringm{Nome}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Ameaça}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Peso}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Dano Base}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Requisito}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Propriedade Especial}}} \\
     \hline
-    Adaga & 18 & 1 & 1D6 + MOD de GRA & \textbf{Assassin:} Ao usar Golpe Duplo com duas adagas, reduza a penalidade de cada ataque para $-$1. Acertos aplicam \link{status:ardiloso}{Sangramento Ardiloso}, no máximo uma vez por alvo em cada uso. \\
+    Adaga & 18 & 1 & 1D6 + MOD de GRA & GRA 3 & \textbf{Assassin:} Contra um alvo Desprevenido, o primeiro acerto da cena aplica \link{status:ardiloso}{Sangramento Ardiloso}. \\
     \hline
-    Alabarda & 19 & 5 & 2D8 + MOD de MIG & \textbf{Halberdier:} Alterne entre dano cortante e perfurante. Inimigos que avançarem a 2 unidades sofrem ataque de oportunidade. Acertos críticos aplicam \link{status:brutal}{Sangramento Brutal}. \\
+    Alabarda & 19 & 5 & 2D8 + MOD de MIG & MIG 10 e SEN 5 & \textbf{Halberdier:} Alterne entre dano cortante e perfurante. Inimigos que avançarem a 2 unidades sofrem ataque de oportunidade. Acertos críticos aplicam \link{status:brutal}{Sangramento Brutal}. \\
     \hline
-    Bo & 20 & 3 & 2D6 + MOD de MIG & \textbf{Monk:} Acertos críticos aplicam \link{status:concussionado}{Concussão}. Acertos comuns concedem +1 Esquiva até seu próximo turno (acumulável até +3). \\
+    Bo & 20 & 3 & 2D6 + MOD de MIG & MIG 3 e GRA 3 & \textbf{Monk:} Acertos críticos aplicam \link{status:concussionado}{Concussão}. Acertos comuns concedem +1 Esquiva até seu próximo turno (acumulável até +3). \\
     \hline
-    Clava & 20 & 2 & 1D8 + MOD de MIG & \textbf{Bruta:} Qualquer personagem usa sem treinamento. Acertos críticos aplicam \link{status:concussionado}{Concussão} e \link{status:brutal}{Sangramento Brutal}. \\
+    Clava & 20 & 2 & 1D8 + MOD de MIG & MIG 2 & \textbf{Bruta:} Arma simples de impacto. Acertos críticos aplicam \link{status:concussionado}{Concussão} e \link{status:brutal}{Sangramento Brutal}. \\
     \hline
-    Escudo & 20 & 3 & 1D6 + MOD de MIG & \textbf{Guardian:} Ocupa uma mão e adiciona \textbf{+5 ao Valor de Bloqueio}. Apenas um escudo pode contribuir para cada Bloqueio. \\
+    Escudo & 20 & 3 & 1D6 + MOD de MIG & FOR 3 & \textbf{Guardian:} Ocupa uma mão e adiciona \textbf{+5 ao Valor de Bloqueio}. Apenas um escudo pode contribuir para cada Bloqueio. \\
     \hline
-    Espada de Duas Mãos & 20 & 4 & 3D6 + MOD de MIG & \textbf{Guerreiro:} Adiciona \textbf{+3 ao Valor de Bloqueio}. Quando um alvo bloquear um ataque desta arma, reduza o Valor de Bloqueio total dele à metade, arredondando para baixo. \\
+    Espada de Duas Mãos & 20 & 4 & 3D6 + MOD de MIG & MIG 10 e FOR 5 & \textbf{Guerreiro:} Adiciona \textbf{+3 ao Valor de Bloqueio}. Quando um alvo bloquear um ataque desta arma, reduza o Valor de Bloqueio total dele à metade, arredondando para baixo. \\
     \hline
-    Espada de Uma Mão & 19 & 2 & 2D6 + MOD de MIG & \textbf{Warden:} Use escudo sem penalidade de carga. \\
+    Espada de Uma Mão & 19 & 2 & 2D6 + MOD de MIG & MIG 5 & \textbf{Warden:} Use escudo sem penalidade de carga. \\
     \hline
-    Lança & 19 & 3 & 2D8 + MOD de MIG & \textbf{Lancer:} Inimigos que avançarem a 1 unidade sofrem ataque de oportunidade. Pode ser arremessada (4 unidades), causando metade do dano. \\
+    Lança & 19 & 3 & 2D8 + MOD de MIG & MIG 7 e SEN 3 & \textbf{Lancer:} Inimigos que avançarem a 1 unidade sofrem ataque de oportunidade. Pode ser arremessada (4 unidades), causando metade do dano. \\
     \hline
-    Machado de Uma Mão & 19 & 3 & 2D6 + MOD de MIG & \textbf{BloodLetter:} Ao usar Golpe Duplo com dois machados, acertos aplicam \link{status:brutal}{Sangramento Brutal}, no máximo uma vez por alvo em cada uso. \\
+    Machado de Uma Mão & 19 & 3 & 2D6 + MOD de MIG & MIG 5 & \textbf{BloodLetter:} Acertos críticos aplicam \link{status:brutal}{Sangramento Brutal}. \\
     \hline
 \end{tabularx}
 
@@ -43,29 +56,30 @@ Não existem regras para ditar quantas armas o aventureiro pode carregar ou quan
 \renewcommand{\tabularxcolumn}[1]{m{#1}}
 \setlength{\extrarowheight}{3pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.28\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.09\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.07\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.17\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.18\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.08\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.06\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.13\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.12\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
     \hline
     \multicolumn{1}{|c|}{\textbf{\ringm{Nome}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Ameaça}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Peso}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Dano Base}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Requisito}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Propriedade Especial}}} \\
     \hline
-    Machado de Duas Mãos & 20 & 7 & 3D8 + MOD de MIG & \textbf{Berserker:} Todo acerto aplica \link{status:brutal}{Sangramento Brutal}. Com armadura leve ou sem armadura, causa 2D6 adicional. \\
+    Machado de Duas Mãos & 20 & 7 & 3D8 + MOD de MIG & MIG 12 e FOR 5 & \textbf{Berserker:} Todo acerto aplica \link{status:brutal}{Sangramento Brutal}. Com armadura leve ou sem armadura, causa 2D6 adicional. \\
     \hline
-    Maça de Uma Mão & 19 & 3 & 2D6 + MOD de MIG & \textbf{Crusader:} Com escudo, causa 1D8 adicional. Em acertos críticos, reduza em 2 o Valor de Bloqueio usado contra o ataque, até o mínimo de 0. \\
+    Maça de Uma Mão & 19 & 3 & 2D6 + MOD de MIG & MIG 5 & \textbf{Crusader:} Com escudo, causa 1D8 adicional. Em acertos críticos, reduza em 2 o Valor de Bloqueio usado contra o ataque, até o mínimo de 0. \\
     \hline
-    Maça de Duas Mãos & 20 & 6 & 2D8 + 1D6 + MOD de MIG & \textbf{Legionary:} Acertos críticos aplicam \link{status:atordoado}{Atordoado} por 1 turno. Ataques reduzem Resistência do alvo em 1 (máx. $-$5). \\
+    Maça de Duas Mãos & 20 & 6 & 2D8 + 1D6 + MOD de MIG & MIG 10 e FOR 5 & \textbf{Legionary:} Acertos críticos aplicam \link{status:atordoado}{Atordoado} por 1 turno. Ataques reduzem Resistência do alvo em 1 (máx. $-$5). \\
     \hline
-    Martelo de Uma Mão & 19 & 3 & 2D6 + MOD de MIG & \textbf{Templar:} Com escudo, causa 1D8 adicional. Acertos aplicam \link{status:brutal}{Sangramento Brutal}. \\
+    Martelo de Uma Mão & 19 & 3 & 2D6 + MOD de MIG & MIG 6 e FOR 3 & \textbf{Templar:} Com escudo, causa 1D8 adicional. Acertos aplicam \link{status:brutal}{Sangramento Brutal}. \\
     \hline
-    Martelo de Duas Mãos & 20 & 6 & 2D10 + MOD de MIG & \textbf{Avenger:} Adiciona \textbf{+3 ao Valor de Bloqueio}. Acertos críticos aplicam \link{status:brutal}{Sangramento Brutal} e \link{status:concussionado}{Concussão} simultaneamente. \\
+    Martelo de Duas Mãos & 20 & 6 & 2D10 + MOD de MIG & MIG 12 e FOR 5 & \textbf{Avenger:} Adiciona \textbf{+3 ao Valor de Bloqueio}. Acertos críticos aplicam \link{status:brutal}{Sangramento Brutal} e \link{status:concussionado}{Concussão} simultaneamente. \\
     \hline
-    Rapieira & 18 & 2 & 2D6 + MOD de GRA & \textbf{Duelist:} Reduza em 2 PC o custo de Ataque Secundário com esta arma, até o mínimo de 3 PC. Se o alvo errar um ataque contra você, ganhe \textbf{Vantagem} no próximo ataque contra ele. \\
+    Rapieira & 18 & 2 & 2D6 + MOD de GRA & GRA 8 e SEN 3 & \textbf{Duelist:} Reduza em 2 PC o custo de Ataque Secundário com esta arma, até o mínimo de 3 PC. Se o alvo errar um ataque contra você, ganhe \textbf{Vantagem} no próximo ataque contra ele. \\
     \hline
-    Soqueiras & 19 & 1 & 1D6 + MOD de GRA & \textbf{Pugilist:} Para cada 2 MOD de Grace, realiza um ataque adicional por ação padrão. Ao avançar em direção a um inimigo para atacar, você \textbf{não provoca ataques de oportunidade} nesse deslocamento. \\
+    Soqueiras & 19 & 1 & 1D6 + MOD de GRA & GRA 8 e MIG 3 & \textbf{Pugilist:} Para cada 5 MOD de GRA, realize um ataque adicional ao usar uma Ação Padrão para atacar com as Soqueiras. Cada ataque adicional causa apenas 1D6, sem MOD ou dano adicional, não pode resultar em crítico, não ativa efeitos ao acertar e não gera outros ataques. Esta é uma exceção expressa ao limite geral de um ataque adicional. Ao avançar em direção a um inimigo para atacar, você \textbf{não provoca ataques de oportunidade} nesse deslocamento. \\
     \hline
-    Tonfa & 19 & 2 & 1D8 + MOD de MIG & \textbf{Enforcer:} Empunhe em par. Quando seu Bloqueio reduzir ao menos 1 ponto de dano de um ataque corpo a corpo, gaste 1 PC para realizar um contra-ataque imediato como ação livre. \\
+    Tonfa & 19 & 2 & 1D8 + MOD de MIG & GRA 5 e FOR 5 & \textbf{Enforcer:} Quando seu Bloqueio reduzir ao menos 1 ponto de dano de um ataque corpo a corpo, receba +1 VB até o início do próximo turno. \\
     \hline
 \end{tabularx}
 
@@ -77,29 +91,30 @@ Não existem regras para ditar quantas armas o aventureiro pode carregar ou quan
 \renewcommand{\tabularxcolumn}[1]{m{#1}}
 \setlength{\extrarowheight}{3pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.28\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.09\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.07\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.17\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.18\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.08\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.06\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.13\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.12\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
     \hline
     \multicolumn{1}{|c|}{\textbf{\ringm{Nome}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Ameaça}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Peso}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Dano Base}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Requisito}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Propriedade Especial}}} \\
     \hline
-    Arco Composto & 19 & 5 & 2D8 + MOD de GRA & \textbf{Hunter:} Ataques acima de 20 unidades têm Vantagem e +1D6. Pode canalizar magias como flechas. \\
+    Arco Composto & 19 & 5 & 2D8 + MOD de GRA & GRA 8, MIG 5 e SEN 3 & \textbf{Hunter:} Ataques acima de 20 unidades têm Vantagem e +1D6. Pode canalizar magias como flechas. \\
     \hline
-    Arco Leve & 20 & 1 & 1D8 + MOD de GRA & \textbf{Scout:} Oculto ou primeiro a atacar, causa 1D8 extra. Pode ser empunhado e guardado como ação livre. \\
+    Arco Leve & 20 & 1 & 1D8 + MOD de GRA & GRA 3 & \textbf{Scout:} Oculto ou primeiro a atacar, causa 1D8 extra. Pode ser empunhado e guardado como ação livre. \\
     \hline
-    Arco Recurvo & 19 & 3 & 2D6 + MOD de GRA & \textbf{Ranger:} Em terreno elevado, causa 1D6 extra. Pode canalizar magias como flechas. \\
+    Arco Recurvo & 19 & 3 & 2D6 + MOD de GRA & GRA 6 e SEN 3 & \textbf{Ranger:} Em terreno elevado, causa 1D6 extra. Pode canalizar magias como flechas. \\
     \hline
-    Besta Leve & 19 & 3 & 2D6 + MOD de GRA & \textbf{Pathfinder:} Pode ser usada em par com Disparo Duplo e não exige ação de recarga. \\
+    Besta Leve & 19 & 3 & 2D6 + MOD de GRA & GRA 3 e SEN 2 & \textbf{Pathfinder:} Seu mecanismo rúnico permite disparar sem gastar ação para recarregar. \\
     \hline
-    Besta Pesada & 20 & 5 & 3D6 + MOD de GRA & \textbf{Marksman:} Marque um alvo no início do combate; ataques contra ele causam 1D8 extra. Exige ação de movimento para recarregar. \\
+    Besta Pesada & 20 & 5 & 3D6 + MOD de GRA & GRA 6 e SEN 5 & \textbf{Marksman:} Marque um alvo no início do combate; ataques contra ele causam 1D8 extra. Exige ação de movimento para recarregar. \\
     \hline
-    Bola de Cristal & 20 & 2 & 1D6 + MOD de WIS & \textbf{Channeler:} Adiciona metade do MOD de WIS (arredondado acima) aos testes de ataque mágico e o MOD de WIS completo ao dano de magias. \\
+    Bola de Cristal & 20 & 2 & 1D6 + MOD de WIS & WIS 8 e SEN 3 & \textbf{Channeler:} Adiciona metade do MOD de WIS (arredondado acima) aos testes de ataque mágico e o MOD de WIS completo ao dano de magias. \\
     \hline
-    Bucaneira & 20 & 7 & 3D6 + MOD de MIG & \textbf{Buccaneer:} Acertos críticos ignoram o Valor de Bloqueio da armadura do alvo, mas não o bônus de escudos ou armas, e aplicam \link{status:brutal}{Sangramento Brutal}. Exige ação de movimento para recarregar. \\
+    Bucaneira & 20 & 7 & 3D6 + MOD de MIG & MIG 10 e FOR 7 & \textbf{Buccaneer:} Acertos críticos ignoram o Valor de Bloqueio da armadura do alvo, mas não o bônus de escudos ou armas, e aplicam \link{status:brutal}{Sangramento Brutal}. Exige ação de movimento para recarregar. \\
     \hline
-    Cajado & 20 & 3 & 2D6 + MOD de WIS & \textbf{Arcanist:} Ao conjurar magias, gaste 10 IEP para aumentar o dano em 1D10. Pode ser usado em corpo a corpo sem penalidade. \\
+    Cajado & 20 & 3 & 2D6 + MOD de WIS & WIS 3 & \textbf{Arcanist:} Ao conjurar magias, gaste 10 IEP para aumentar o dano em 1D10. Pode ser usado em corpo a corpo sem penalidade. \\
     \hline
 \end{tabularx}
 
@@ -107,23 +122,54 @@ Não existem regras para ditar quantas armas o aventureiro pode carregar ou quan
 \renewcommand{\tabularxcolumn}[1]{m{#1}}
 \setlength{\extrarowheight}{3pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.28\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.09\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.07\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.17\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.18\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.08\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.06\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.13\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.12\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
     \hline
     \multicolumn{1}{|c|}{\textbf{\ringm{Nome}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Ameaça}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Peso}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Dano Base}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Requisito}}} &
     \multicolumn{1}{c|}{\textbf{\ringm{Propriedade Especial}}} \\
     \hline
-    Espingarda de Caça & 19 & 4 & 2D8 + MOD de GRA & \textbf{Trapper:} Use Mira Focada como ação livre, sem gastar PC. Até 5 unidades, causa 1D6 extra. Exige ação de movimento para recarregar. \\
+    Espingarda de Caça & 19 & 4 & 2D8 + MOD de GRA & GRA 7, MIG 5 e SEN 3 & \textbf{Trapper:} Use Mira Focada como ação livre, sem gastar PC. Até 5 unidades, causa 1D6 extra. Exige ação de movimento para recarregar. \\
     \hline
-    Grimório & 19 & 2 & 1D8 + MOD de WIS & \textbf{Archmage:} Conjure magias fora da Árvore de Habilidades (custo de IEP dobrado). Uma vez por combate, reutilize uma magia já conjurada sem custo extra. \\
+    Grimório & 19 & 2 & 1D8 + MOD de WIS & WIS 10 e SEN 5 & \textbf{Archmage:} Durante um Descanso Pleno, armazene no Grimório uma magia cuja fórmula esteja disponível ao personagem. Apenas uma magia pode ficar armazenada por vez; armazenar outra substitui a anterior. A magia armazenada pode ser conjurada mesmo fora das escolhas atuais do personagem, mas cada conjuração paga seu custo de IEP normalmente. Se estiver fora das escolhas atuais, seu custo de IEP é dobrado. O Grimório nunca elimina o custo da magia. \\
     \hline
-    Pistola & 18 & 2 & 2D6 + MOD de GRA & \textbf{Gunslinger:} Ao usar Disparo Duplo com duas pistolas, reduza a penalidade de cada ataque para $-$1. Recarregar as pistolas exigem uma ação de Movimento. \\
+    Pistola & 18 & 2 & 2D6 + MOD de GRA & GRA 5 e SEN 3 & \textbf{Gunslinger:} Recarregar a pistola exige uma ação de Movimento. \\
     \hline
-    Rifle de Precisão & 19 & 8 & 2D10 + MOD de GRA & \textbf{Deadeye:} Acertos críticos causam 1D10 extra e ignoram o Valor de Bloqueio da armadura do alvo, mas não o bônus de escudos ou armas. Recarregar exige ação padrão completa. Desvantagem contra alvos a menos de 5 unidades. \\
+    Rifle de Precisão & 19 & 8 & 2D10 + MOD de GRA & GRA 10 e SEN 10 & \textbf{Deadeye:} Acertos críticos causam 1D10 extra e ignoram o Valor de Bloqueio da armadura do alvo, mas não o bônus de escudos ou armas. Recarregar exige ação padrão completa. Desvantagem contra alvos a menos de 5 unidades. \\
     \hline
-    Varinha & 19 & 1 & 1D8 + MOD de WIS & \textbf{Sorcerer:} Ataque básico causa Dano Mágico sem consumir IEP. Ao acertar um ataque básico, recupera 1D4 de IEP. \\
+    Varinha & 19 & 1 & 1D8 + MOD de WIS & WIS 3 e SEN 2 & \textbf{Sorcerer:} Ataque básico causa Dano Mágico sem consumir IEP. Quando esse ataque causa ao menos 1 ponto de dano a um alvo vivo, aliado ou inimigo, recupere 1D4 IEP. Um mesmo alvo só pode alimentar esta recuperação uma vez por rodada, e a recuperação não pode elevar o IEP acima do máximo. Construtos, objetos, cadáveres e alvos sem vida não ativam o efeito. \\
+    \hline
+\end{tabularx}
+
+% ==============================================================================
+\titlesection{Configurações de Empunhadura Dupla}
+% ==============================================================================
+
+Os perfis abaixo são tratados como armas próprias durante a ação em que forem usados. O peso indicado é o peso total do par. Salvo indicação contrária, somente o primeiro ataque da configuração soma MOD ao dano.
+
+\vspace{4pt}
+\begin{tabularx}{\textwidth}{|>{\columncolor{white}\centering\arraybackslash}m{0.19\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.08\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.06\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.14\textwidth}|>{\columncolor{white}\centering\arraybackslash}m{0.13\textwidth}|>{\columncolor{white}\centering\arraybackslash}X|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{\ringm{Configuração}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Ameaça}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Peso}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Dano Base}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Requisito}}} &
+    \multicolumn{1}{c|}{\textbf{\ringm{Propriedade Especial}}} \\
+    \hline
+    Adagas Gêmeas & 19 & 2 & Dois ataques de 1D6 & GRA 8 & \textbf{Twin Assassin:} Os dois ataques sofrem apenas $-$1 de acerto. Se ambos acertarem o mesmo alvo, aplique uma carga de \link{status:ardiloso}{Sangramento Ardiloso}. Aplique no máximo uma carga por ação. \\
+    \hline
+    Espadas Gêmeas & 19 & 4 & Dois ataques de 1D8 & MIG 7 e GRA 5 & \textbf{Twin Warden:} Os dois ataques sofrem $-$2 de acerto. Se ambos acertarem o mesmo alvo, cause +1D6 de dano após resolver o segundo ataque. \\
+    \hline
+    Machados Gêmeos & 20 & 6 & Dois ataques de 1D8 & MIG 8 e GRA 5 & \textbf{Twin BloodLetter:} Os dois ataques sofrem $-$2 de acerto. Se ambos causarem dano ao mesmo alvo, o segundo aplica \link{status:brutal}{Sangramento Brutal}. \\
+    \hline
+    Tonfas Gêmeas & 19 & 4 & 2D6 + MOD de MIG & GRA 7 e FOR 5 & \textbf{Twin Enforcer:} Adicione +3 VB. Uma vez por rodada, quando um Bloqueio reduzir dano de ataque corpo a corpo, gaste 2 PC para contra-atacar imediatamente. Esse ataque não exige nova Reação e não gera ataques adicionais. \\
+    \hline
+    Bestas Leves Gêmeas & 20 & 6 & Dois ataques de 1D8 & GRA 7 e SEN 5 & \textbf{Twin Pathfinder:} Os ataques sofrem $-$2 de acerto e podem escolher alvos diferentes. Os mecanismos rúnicos independentes não exigem ação de recarga. \\
+    \hline
+    Pistolas Gêmeas & 19 & 4 & Dois ataques de 1D8 & GRA 8 e SEN 5 & \textbf{Twin Gunslinger:} Os ataques sofrem $-$1 de acerto e devem escolher o mesmo alvo. Uma única Ação de Movimento recarrega ambas as pistolas. \\
     \hline
 \end{tabularx}
 
