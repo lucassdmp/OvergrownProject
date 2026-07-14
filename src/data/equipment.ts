@@ -33,6 +33,8 @@ function parseDamage(value: string): { damage: WeaponDamageRoll[]; scaling: Weap
 
 function parseWeapons(): EquipmentPreset[] {
   const section = armorBookRaw.split('\\titlesection{Armaduras e Proteções}')[0]
+  const rangedStart = section.indexOf('\\titlesection{Armas de Longo Alcance}')
+  const dualStart = section.indexOf('\\titlesection{Configurações de Empunhadura Dupla}')
   const rows: EquipmentPreset[] = []
   const rowPattern = /^\s*([^%\\][^&\n]+?)\s*&\s*(\d+)\s*&\s*(\d+)\s*&\s*([^&\n]+?)\s*&\s*([^&\n]+?)\s*&\s*(.*?)\s*\\\\/gm
   for (const match of section.matchAll(rowPattern)) {
@@ -44,6 +46,12 @@ function parseWeapons(): EquipmentPreset[] {
     const requirement = stripLatex(match[5])
     const property = stripLatex(match[6])
     const parsedDamage = parseDamage(damageText)
+    const rowPosition = match.index ?? 0
+    const isRangedSection = rangedStart >= 0 && rowPosition >= rangedStart && (dualStart < 0 || rowPosition < dualStart)
+    const isRangedDual = /Bestas|Pistolas/i.test(name)
+    const combatSkill = parsedDamage.scaling.some((scaling) => scaling.attribute === 'wisdom')
+      ? 'arcanismo'
+      : isRangedSection || isRangedDual ? 'pontaria' : 'luta'
     const blockBonus = name === 'Escudo' ? 5 : ['Espada de Duas Mãos', 'Martelo de Duas Mãos'].includes(name) ? 3 : 0
     rows.push({
       name,
@@ -54,6 +62,7 @@ function parseWeapons(): EquipmentPreset[] {
       threat: String(threat),
       weaponDetails: {
         ...parsedDamage,
+        combatSkill,
         critical: { rangeMin: threat, multiplier: 2 },
       },
       armorDetails: blockBonus > 0 || name === 'Escudo'

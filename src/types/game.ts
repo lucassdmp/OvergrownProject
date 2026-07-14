@@ -282,6 +282,8 @@ export interface WeaponAttributeScaling {
 export interface WeaponDetails {
   damage: WeaponDamageRoll[]
   scaling: WeaponAttributeScaling[]
+  /** Combat skill used by this weapon's basic attack. */
+  combatSkill?: 'luta' | 'pontaria' | 'arcanismo'
   critical?: {
     multiplier: number
     rangeMin: number

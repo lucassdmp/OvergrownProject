@@ -38,6 +38,22 @@ Uma Ação Padrão só pode ser convertida em Reação durante o próprio turno.
 
 \titlesection{Nível de Ameaça e Precisão}
 
+\subsection*{Teste de Ataque}
+
+Para resolver um ataque, role a reserva de d20 determinada pelo atributo indicado pela arma, magia ou habilidade e conserve o maior resultado. Em seguida, some a Perícia de Combate apropriada e quaisquer bônus ou penalidades que declarem afetar o teste de ataque:
+
+\begin{itemize}
+    \item \textbf{Luta:} ataques corpo a corpo, incluindo armas brancas e ataques desarmados.
+    \item \textbf{Pontaria:} ataques com armas de longo alcance, mesmo quando a arma utilizar MIG em vez de GRA para formar sua reserva.
+    \item \textbf{Arcanismo:} ataques de magias e ataques básicos de armas mágicas que utilizem WIS.
+\end{itemize}
+
+\[\text{Resultado de Ataque}=\text{maior d20 da reserva}+\text{Perícia de Combate}+\text{bônus e penalidades de acerto}\]
+
+O ataque acerta quando seu resultado iguala ou supera a defesa aplicável do alvo. Um 20 natural continua sendo um acerto crítico garantido e um 1 natural continua sendo uma falha crítica, independentemente do total após os bônus.
+
+O \textbf{MOD de Atributo não participa do teste de ataque}. Expressões como \textbf{MOD de MIG}, \textbf{MOD de GRA} ou \textbf{MOD de WIS} presentes na ficha da arma ou da magia são somadas somente ao dano, depois de confirmar o acerto. Por exemplo, uma arma com dano \textbf{2D6 + MOD de MIG} testa o acerto usando a reserva indicada + Luta; ao acertar, causa 2D6 + MOD de MIG.
+
 \originlink{stats:crit}
 No mundo de \textit{Overgrown}, o \textbf{Nível de Ameaça} descreve o potencial do aventureiro de encontrar brechas na defesa inimiga e atingir pontos vitais com precisão absoluta.
 
@@ -67,7 +83,7 @@ Cobertura não oferece proteção contra ataques corpo a corpo. Um inimigo que a
 Certas armas possuem afinidade com energias arcanas e podem ser usadas como catalisadores para magias, transformando projéteis comuns em veículos de destruição mágica.
 
 \begin{description}
-    \item[\ringm{Arcos}:] Arcos são excelentes condutores de energia primordial. Ao canalizar uma magia através de um arco, o conjurador dispara a magia como se fosse uma flecha. O ataque utiliza o \link{stats:crit}{Nível de Ameaça} do arco e seus bônus de distância. A magia herda o tipo de dano definido pelo conjurador, mas o teste de acerto usa \textbf{Grace} em vez de Arcanismo.
+    \item[\ringm{Arcos}:] Arcos são excelentes condutores de energia primordial. Ao canalizar uma magia através de um arco, o conjurador dispara a magia como se fosse uma flecha. O ataque utiliza o \link{stats:crit}{Nível de Ameaça} do arco e seus bônus de distância. A magia herda o tipo de dano definido pelo conjurador. Por continuar sendo uma magia, o teste soma \textbf{Arcanismo}, mas utiliza \textbf{Grace} para determinar a reserva de d20 no lugar de Wisdom.
     \item[\ringm{Armas de Fogo}:] Por serem forjadas com gravuras de combustão rúnica focadas em dano físico bruto, armas de fogo \textbf{não podem ser usadas como canalizadores mágicos}. Tentar fazê-lo dissipa a magia sem efeito e gasta o IEP normalmente.
 \end{description}
 

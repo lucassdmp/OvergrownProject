@@ -6,6 +6,7 @@ import PdfPage from '@/pages/PdfPage'
 import TalentTreeBuilderPage from '@/pages/TalentTreeBuilderPage'
 import V2Page from '@/pages/V2Page'
 import TalentTreePlayerPage from '@/pages/TalentTreePlayerPage'
+import CombatTestPage from '@/pages/CombatTestPage'
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: 'v2',
         element: <V2Page />,
+      },
+      {
+        path: 'combat-test',
+        element: <CombatTestPage />,
       },
     ],
   },
