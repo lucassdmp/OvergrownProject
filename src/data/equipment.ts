@@ -34,19 +34,20 @@ function parseDamage(value: string): { damage: WeaponDamageRoll[]; scaling: Weap
 function parseWeapons(): EquipmentPreset[] {
   const section = armorBookRaw.split('\\titlesection{Armaduras e Proteções}')[0]
   const rows: EquipmentPreset[] = []
-  const rowPattern = /^\s*([^%\\][^&\n]+?)\s*&\s*(\d+)\s*&\s*(\d+)\s*&\s*([^&\n]+?)\s*&\s*(.*?)\s*\\\\/gm
+  const rowPattern = /^\s*([^%\\][^&\n]+?)\s*&\s*(\d+)\s*&\s*(\d+)\s*&\s*([^&\n]+?)\s*&\s*([^&\n]+?)\s*&\s*(.*?)\s*\\\\/gm
   for (const match of section.matchAll(rowPattern)) {
     const name = stripLatex(match[1])
     if (!name || name.includes('Nome')) continue
     const threat = Number(match[2])
     const weight = Number(match[3])
     const damageText = stripLatex(match[4])
-    const property = stripLatex(match[5])
+    const requirement = stripLatex(match[5])
+    const property = stripLatex(match[6])
     const parsedDamage = parseDamage(damageText)
     const blockBonus = name === 'Escudo' ? 5 : ['Espada de Duas Mãos', 'Martelo de Duas Mãos'].includes(name) ? 3 : 0
     rows.push({
       name,
-      description: `${damageText}. ${property}`,
+      description: `${damageText}. Requisito: ${requirement}. ${property}`,
       type: 'weapon',
       effects: [],
       weight,
