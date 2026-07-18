@@ -1,8 +1,8 @@
 {
   "id": "arvore-principal-og",
   "name": "Árvore do Pináculo",
-  "description": "Árvore de talento oficial do OverGrown. Seis caminhos de classe — Guerreiro, Rogue, Tank, Arqueiro, Curandeiro e Mago — ligados pelo Coração do Pináculo.",
-  "version": 1,
+  "description": "Árvore de talento oficial do OverGrown. Uma única árvore: o Coração central e seis seções — Guerreiro, Rogue, Tank, Arqueiro, Curandeiro e Mago — organizadas apenas para controle de nós.",
+  "version": 2,
   "nodes": [
     {
       "id": "arqueiro-branchL",
@@ -126,6 +126,37 @@
         "type": "attribute",
         "attribute": "sense",
         "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-senseA",
+      "x": 950,
+      "y": -180,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-senseB",
+      "x": 880,
+      "y": -330,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-senseC",
+      "x": 800,
+      "y": -230,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "investigacao",
+        "skillName": "Investigação",
+        "value": 5
       }
     },
     {
@@ -263,12 +294,223 @@
       }
     },
     {
-      "id": "coracao-do-pinaculo",
+      "id": "centro-a-arqueiro",
+      "x": 250,
+      "y": 0,
+      "data": {
+        "type": "stat",
+        "stat": "esquiva",
+        "value": 2
+      }
+    },
+    {
+      "id": "centro-a-curandeiro",
+      "x": -125,
+      "y": 217,
+      "data": {
+        "type": "stat",
+        "stat": "vida",
+        "value": 5
+      }
+    },
+    {
+      "id": "centro-a-guerreiro",
+      "x": -125,
+      "y": -217,
+      "data": {
+        "type": "stat",
+        "stat": "resistencia",
+        "value": 2
+      }
+    },
+    {
+      "id": "centro-a-mago",
+      "x": 125,
+      "y": 217,
+      "data": {
+        "type": "stat",
+        "stat": "iep",
+        "value": 5
+      }
+    },
+    {
+      "id": "centro-a-rogue",
+      "x": 125,
+      "y": -217,
+      "data": {
+        "type": "stat",
+        "stat": "pc",
+        "value": 1
+      }
+    },
+    {
+      "id": "centro-a-tank",
+      "x": -250,
+      "y": 0,
+      "data": {
+        "type": "conditional",
+        "name": "Postura Firme",
+        "description": "Fundamentos de defesa: +2 de Valor de Bloqueio.",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "blockBonus",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "centro-b-arqueiro",
+      "x": 470,
+      "y": 0,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "tiro-de-aviso",
+        "skillName": "Tiro de Aviso",
+        "skillDescription": "Você atira propositalmente perto da cabeça do alvo. Realize um teste de Intimidação usando Graça contra a Temperança do alvo. Em caso de sucesso, o alvo hesita ou recua.",
+        "skillCost": "1",
+        "attributeBonuses": [
+          {
+            "attribute": "sense",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "centro-b-curandeiro",
+      "x": -235,
+      "y": 407,
+      "data": {
+        "type": "healing",
+        "flat": 1,
+        "element": null
+      }
+    },
+    {
+      "id": "centro-b-guerreiro",
+      "x": -235,
+      "y": -407,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "impulsao",
+        "skillName": "Impulsão",
+        "skillDescription": "Gaste PC para ganhar +5 metros na sua Ação de Movimento neste turno, canalizando um burst de energia física para cobrir mais terreno.",
+        "skillCost": "1",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "centro-b-mago",
+      "x": 235,
+      "y": 407,
+      "data": {
+        "type": "extraDamage",
+        "flat": 1,
+        "attackTargets": [
+          "magias"
+        ]
+      }
+    },
+    {
+      "id": "centro-b-rogue",
+      "x": 235,
+      "y": -407,
+      "data": {
+        "type": "extraDamage",
+        "flat": 1,
+        "attackTargets": [
+          "corpo-a-corpo"
+        ]
+      }
+    },
+    {
+      "id": "centro-b-tank",
+      "x": -470,
+      "y": 0,
+      "data": {
+        "type": "defenseBonus",
+        "damageType": "physical",
+        "value": 1
+      }
+    },
+    {
+      "id": "centro-c-arqueiro",
+      "x": 640,
+      "y": 0,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "centro-c-curandeiro",
+      "x": -320,
+      "y": 554,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "centro-c-guerreiro",
+      "x": -320,
+      "y": -554,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "centro-c-mago",
+      "x": 320,
+      "y": 554,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "centro-c-rogue",
+      "x": 320,
+      "y": -554,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "centro-c-tank",
+      "x": -640,
+      "y": 0,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "centro-start",
       "x": 0,
       "y": 0,
       "data": {
-        "type": "link",
-        "name": "Coração"
+        "type": "player",
+        "name": "Coração",
+        "description": "O Coração do Pináculo — início central da árvore. A progressão parte daqui: vantagens mínimas, depois habilidades fracas, até alcançar as seções de classe."
       }
     },
     {
@@ -406,6 +648,37 @@
         "type": "attribute",
         "attribute": "wisdom",
         "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-senseA",
+      "x": -319,
+      "y": 913,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-senseB",
+      "x": -154,
+      "y": 927,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-senseC",
+      "x": -201,
+      "y": 808,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "discernimento",
+        "skillName": "Discernimento",
+        "value": 5
       }
     },
     {
@@ -588,12 +861,42 @@
       }
     },
     {
+      "id": "guerreiro-b1",
+      "x": -325,
+      "y": -1083,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-b2",
+      "x": -171,
+      "y": -1056,
+      "data": {
+        "type": "stat",
+        "stat": "vida",
+        "value": 10
+      }
+    },
+    {
+      "id": "guerreiro-b3",
+      "x": -59,
+      "y": -1063,
+      "data": {
+        "type": "defenseBonus",
+        "damageType": "physical",
+        "value": 1
+      }
+    },
+    {
       "id": "guerreiro-branchL",
       "x": -831,
       "y": -1079,
       "data": {
         "type": "attribute",
-        "attribute": "might",
+        "attribute": "fortitude",
         "value": 1
       }
     },
@@ -603,14 +906,90 @@
       "y": -1259,
       "data": {
         "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-f1",
+      "x": -1037,
+      "y": -1076,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-f2",
+      "x": -1225,
+      "y": -1082,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "furia",
+        "skillName": "Fúria",
+        "skillDescription": "Você entra em um estado de Luta ou Fuga instintivo. Seu personagem fica compelido a atacar quem considera inimigo, ganhando mais um ataque por turno e RD contra danos físicos durante 1D6+1 rodadas. Toda lógica cede ao instinto.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "guerreiro-f3",
+      "x": -1335,
+      "y": -1192,
+      "data": {
+        "type": "attribute",
         "attribute": "fortitude",
         "value": 1
       }
     },
     {
-      "id": "guerreiro-capstone",
-      "x": -1025,
-      "y": -1775,
+      "id": "guerreiro-f4",
+      "x": -1154,
+      "y": -1239,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "vicio-em-sangue",
+        "skillName": "Vício em Sangue",
+        "skillDescription": "Se um alvo com metade da vida ou menos estiver em alcance médio, você se arremessa até ele sem gastar sua Ação de Movimento. O cheiro de sangue aguça o instinto predatório.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "guerreiro-f5",
+      "x": -1316,
+      "y": -1319,
+      "data": {
+        "type": "stat",
+        "stat": "vida",
+        "value": 5
+      }
+    },
+    {
+      "id": "guerreiro-f6",
+      "x": -1479,
+      "y": -1282,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-f7",
+      "x": -1460,
+      "y": -1409,
       "data": {
         "type": "combatAbility",
         "skillId": "furia-descontrolada",
@@ -631,54 +1010,23 @@
       "cost": 2
     },
     {
-      "id": "guerreiro-cond",
-      "x": -920,
-      "y": -1593,
+      "id": "guerreiro-f8",
+      "x": -1371,
+      "y": -1575,
       "data": {
-        "type": "conditional",
-        "name": "Colosso de Duas Mãos",
-        "description": "Empunhar uma arma de duas mãos transforma cada golpe em devastação.",
-        "conditions": {
-          "weaponTagsAnyOf": [
-            "duas-maos"
-          ],
-          "armorTagsAnyOf": []
-        },
-        "effects": [
+        "type": "combatAbility",
+        "skillId": "instinto-sanguinario",
+        "skillName": "Instinto Sanguinário",
+        "skillDescription": "Você abandona a capacidade de Reagir em troca de instinto puro. Ganha bônus de dano progressivo baseado no estado físico de todos os envolvidos no combate — quanto mais feridos todos estiverem, mais letal você se torna.",
+        "skillCost": "4",
+        "attributeBonuses": [
           {
-            "kind": "extraDamage",
-            "flat": 2,
-            "attackTargets": [
-              "corpo-a-corpo"
-            ]
-          },
-          {
-            "kind": "attributeBonus",
             "attribute": "might",
-            "value": 1
+            "value": 2
           }
         ]
-      }
-    },
-    {
-      "id": "guerreiro-midL",
-      "x": -835,
-      "y": -846,
-      "data": {
-        "type": "attribute",
-        "attribute": "fortitude",
-        "value": 1
-      }
-    },
-    {
-      "id": "guerreiro-midR",
-      "x": -315,
-      "y": -1146,
-      "data": {
-        "type": "attribute",
-        "attribute": "might",
-        "value": 1
-      }
+      },
+      "cost": 2
     },
     {
       "id": "guerreiro-path1",
@@ -711,75 +1059,19 @@
       }
     },
     {
-      "id": "guerreiro-start",
-      "x": -750,
-      "y": -1299,
+      "id": "guerreiro-s1",
+      "x": -413,
+      "y": -1436,
       "data": {
-        "type": "player",
-        "name": "Guerreiro",
-        "description": "Combate corpo a corpo, fúria e poder físico bruto."
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
       }
     },
     {
-      "id": "guerreiro-statL",
-      "x": -1223,
-      "y": -1199,
-      "data": {
-        "type": "stat",
-        "stat": "vida",
-        "value": 5
-      }
-    },
-    {
-      "id": "guerreiro-statR",
-      "x": -427,
-      "y": -1659,
-      "data": {
-        "type": "stat",
-        "stat": "resistencia",
-        "value": 3
-      }
-    },
-    {
-      "id": "guerreiro-t1L",
-      "x": -1034,
-      "y": -1112,
-      "data": {
-        "type": "combatAbility",
-        "skillId": "furia",
-        "skillName": "Fúria",
-        "skillDescription": "Você entra em um estado de Luta ou Fuga instintivo. Seu personagem fica compelido a atacar quem considera inimigo, ganhando mais um ataque por turno e RD contra danos físicos durante 1D6+1 rodadas. Toda lógica cede ao instinto.",
-        "skillCost": "2",
-        "attributeBonuses": [
-          {
-            "attribute": "might",
-            "value": 1
-          }
-        ]
-      }
-    },
-    {
-      "id": "guerreiro-t1R",
-      "x": -446,
-      "y": -1452,
-      "data": {
-        "type": "combatAbility",
-        "skillId": "vicio-em-sangue",
-        "skillName": "Vício em Sangue",
-        "skillDescription": "Se um alvo com metade da vida ou menos estiver em alcance médio, você se arremessa até ele sem gastar sua Ação de Movimento. O cheiro de sangue aguça o instinto predatório.",
-        "skillCost": "2",
-        "attributeBonuses": [
-          {
-            "attribute": "might",
-            "value": 1
-          }
-        ]
-      }
-    },
-    {
-      "id": "guerreiro-t2L",
-      "x": -1031,
-      "y": -825,
+      "id": "guerreiro-s2",
+      "x": -325,
+      "y": -1602,
       "data": {
         "type": "combatAbility",
         "skillId": "sede-de-sangue",
@@ -799,9 +1091,51 @@
       }
     },
     {
-      "id": "guerreiro-t2R",
-      "x": -199,
-      "y": -1305,
+      "id": "guerreiro-s3",
+      "x": -365,
+      "y": -1752,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-s4",
+      "x": -496,
+      "y": -1619,
+      "data": {
+        "type": "extraDamage",
+        "dice": "1d4",
+        "attackTargets": [
+          "melee"
+        ]
+      }
+    },
+    {
+      "id": "guerreiro-s5",
+      "x": -484,
+      "y": -1799,
+      "data": {
+        "type": "stat",
+        "stat": "resistencia",
+        "value": 3
+      }
+    },
+    {
+      "id": "guerreiro-s6",
+      "x": -371,
+      "y": -1922,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-s7",
+      "x": -490,
+      "y": -1969,
       "data": {
         "type": "combatAbility",
         "skillId": "elipse-carmesim",
@@ -814,12 +1148,13 @@
             "value": 2
           }
         ]
-      }
+      },
+      "cost": 2
     },
     {
-      "id": "guerreiro-utilL",
-      "x": -996,
-      "y": -1365,
+      "id": "guerreiro-s8",
+      "x": -679,
+      "y": -1975,
       "data": {
         "type": "weaponBonus",
         "requiredTags": [
@@ -831,70 +1166,208 @@
       }
     },
     {
-      "id": "guerreiro-utilR",
-      "x": -684,
-      "y": -1545,
+      "id": "guerreiro-se1",
+      "x": -775,
+      "y": -823,
       "data": {
-        "type": "extraDamage",
-        "dice": "1d4",
-        "attackTargets": [
-          "melee"
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-se2",
+      "x": -829,
+      "y": -676,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-se3",
+      "x": -710,
+      "y": -629,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "percepcao",
+        "skillName": "Percepção",
+        "value": 5
+      }
+    },
+    {
+      "id": "guerreiro-se4",
+      "x": -891,
+      "y": -583,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "discernimento",
+        "skillName": "Discernimento",
+        "value": 5
+      }
+    },
+    {
+      "id": "guerreiro-start",
+      "x": -750,
+      "y": -1299,
+      "data": {
+        "type": "player",
+        "name": "Guerreiro",
+        "description": "Combate corpo a corpo, fúria e poder físico bruto."
+      }
+    },
+    {
+      "id": "guerreiro-w1",
+      "x": -903,
+      "y": -1384,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-w2",
+      "x": -747,
+      "y": -1474,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-w3",
+      "x": -900,
+      "y": -1559,
+      "data": {
+        "type": "conditional",
+        "name": "Colosso de Duas Mãos",
+        "description": "Empunhar uma arma de duas mãos transforma cada golpe em devastação.",
+        "conditions": {
+          "weaponTagsAnyOf": [
+            "duas-maos"
+          ],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "extraDamage",
+            "flat": 2,
+            "attackTargets": [
+              "corpo-a-corpo"
+            ]
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "might",
+            "value": 1
+          }
         ]
       }
     },
     {
-      "id": "ligacao-arqueiro-mago",
-      "x": 1126,
-      "y": 650,
+      "id": "guerreiro-w4",
+      "x": -1096,
+      "y": -1619,
       "data": {
-        "type": "link",
-        "name": "Arqueiro↔Mago"
+        "type": "weaponBonus",
+        "requiredTags": [
+          "corpo-a-corpo"
+        ],
+        "bonusType": "damage",
+        "dice": "1d6",
+        "value": 0
       }
     },
     {
-      "id": "ligacao-curandeiro-tank",
-      "x": -1126,
-      "y": 650,
+      "id": "guerreiro-w5",
+      "x": -854,
+      "y": -1759,
       "data": {
-        "type": "link",
-        "name": "Curandeiro↔Tank"
+        "type": "weaponBonus",
+        "requiredTags": [
+          "duas-maos"
+        ],
+        "bonusType": "critMultiplier",
+        "value": 1
       }
     },
     {
-      "id": "ligacao-guerreiro-rogue",
-      "x": 0,
-      "y": -1300,
+      "id": "guerreiro-w6",
+      "x": -1119,
+      "y": -1779,
       "data": {
-        "type": "link",
-        "name": "Guerreiro↔Rogue"
+        "type": "combatAbility",
+        "skillId": "desarmar",
+        "skillName": "Desarmar",
+        "skillDescription": "Tente arrancar a arma do alvo. Teste de Força contra o teste de Força do alvo. Se bem-sucedido, a arma cai no terreno adjacente.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
       }
     },
     {
-      "id": "ligacao-mago-curandeiro",
-      "x": 0,
-      "y": 1300,
+      "id": "guerreiro-w7",
+      "x": -981,
+      "y": -1859,
       "data": {
-        "type": "link",
-        "name": "Mago↔Curandeiro"
+        "type": "combatAbility",
+        "skillId": "rasteira",
+        "skillName": "Rasteira",
+        "skillDescription": "Tente derrubar o alvo aplicando a condição Derrubado. Teste de Esquiva do alvo contra o seu teste de Combate.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "fortitude",
+            "value": 1
+          }
+        ]
       }
     },
     {
-      "id": "ligacao-rogue-arqueiro",
-      "x": 1126,
-      "y": -650,
+      "id": "guerreiro-w8",
+      "x": -1125,
+      "y": -1949,
       "data": {
-        "type": "link",
-        "name": "Rogue↔Arqueiro"
-      }
-    },
-    {
-      "id": "ligacao-tank-guerreiro",
-      "x": -1126,
-      "y": -650,
-      "data": {
-        "type": "link",
-        "name": "Tank↔Guerreiro"
-      }
+        "type": "conditional",
+        "name": "Titã do Campo de Batalha",
+        "description": "Nó Supremo: seu corpo é uma arma de cerco viva.",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "attributeBonus",
+            "attribute": "might",
+            "value": 2
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "fortitude",
+            "value": 2
+          },
+          {
+            "kind": "statBonus",
+            "stat": "vida",
+            "value": 10
+          },
+          {
+            "kind": "extraDamage",
+            "flat": 3,
+            "attackTargets": [
+              "corpo-a-corpo"
+            ]
+          }
+        ]
+      },
+      "cost": 3
     },
     {
       "id": "mago-branchL",
@@ -1028,6 +1501,37 @@
         "type": "attribute",
         "attribute": "wisdom",
         "value": 1
+      }
+    },
+    {
+      "id": "mago-senseA",
+      "x": 631,
+      "y": 733,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-senseB",
+      "x": 726,
+      "y": 597,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-senseC",
+      "x": 599,
+      "y": 578,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "percepcao",
+        "skillName": "Percepção",
+        "value": 5
       }
     },
     {
@@ -1305,9 +1809,9 @@
       }
     },
     {
-      "id": "rogue-branchL",
-      "x": 519,
-      "y": -1259,
+      "id": "rogue-a1",
+      "x": 413,
+      "y": -1436,
       "data": {
         "type": "attribute",
         "attribute": "grace",
@@ -1315,9 +1819,27 @@
       }
     },
     {
-      "id": "rogue-branchR",
-      "x": 831,
-      "y": -1079,
+      "id": "rogue-a2",
+      "x": 325,
+      "y": -1602,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "emboscar",
+        "skillName": "Emboscar",
+        "skillDescription": "O primeiro Ataque Furtivo bem-sucedido contra um alvo inflige 1,5× o dano normal. A surpresa transforma o primeiro golpe em uma execução quase perfeita.",
+        "skillCost": "3",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-a3",
+      "x": 365,
+      "y": -1752,
       "data": {
         "type": "attribute",
         "attribute": "sense",
@@ -1325,9 +1847,48 @@
       }
     },
     {
-      "id": "rogue-capstone",
-      "x": 1025,
-      "y": -1775,
+      "id": "rogue-a4",
+      "x": 496,
+      "y": -1619,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "garrote",
+        "skillName": "Garrote",
+        "skillDescription": "O primeiro Ataque Furtivo bem-sucedido contra um alvo o deixa Silenciado por 2 turnos, incapaz de conjurar magias ou emitir sons que pudessem alertar aliados.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-a5",
+      "x": 484,
+      "y": -1799,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "furtividade",
+        "skillName": "Furtividade",
+        "value": 5
+      }
+    },
+    {
+      "id": "rogue-a6",
+      "x": 371,
+      "y": -1922,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-a7",
+      "x": 490,
+      "y": -1969,
       "data": {
         "type": "combatAbility",
         "skillId": "marcar-para-a-morte",
@@ -1348,9 +1909,80 @@
       "cost": 2
     },
     {
-      "id": "rogue-cond",
-      "x": 920,
-      "y": -1593,
+      "id": "rogue-a8",
+      "x": 679,
+      "y": -1975,
+      "data": {
+        "type": "conditional",
+        "name": "Lâmina Oculta",
+        "description": "Com uma adaga em mãos, cada sombra é uma oportunidade de execução.",
+        "conditions": {
+          "weaponTagsAnyOf": [
+            "adaga"
+          ],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "extraDamage",
+            "dice": "1d6",
+            "attackTargets": [
+              "corpo-a-corpo"
+            ]
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      },
+      "cost": 2
+    },
+    {
+      "id": "rogue-branchL",
+      "x": 519,
+      "y": -1259,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-branchR",
+      "x": 831,
+      "y": -1079,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-d1",
+      "x": 747,
+      "y": -1474,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-d2",
+      "x": 903,
+      "y": -1384,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-d3",
+      "x": 900,
+      "y": -1559,
       "data": {
         "type": "conditional",
         "name": "Dança das Lâminas",
@@ -1378,23 +2010,135 @@
       }
     },
     {
-      "id": "rogue-midL",
-      "x": 315,
-      "y": -1146,
+      "id": "rogue-d4",
+      "x": 854,
+      "y": -1759,
       "data": {
-        "type": "attribute",
-        "attribute": "sense",
+        "type": "weaponBonus",
+        "requiredTags": [
+          "uma-mao"
+        ],
+        "bonusType": "critMultiplier",
         "value": 1
       }
     },
     {
-      "id": "rogue-midR",
-      "x": 835,
-      "y": -846,
+      "id": "rogue-d5",
+      "x": 1096,
+      "y": -1619,
+      "data": {
+        "type": "weaponBonus",
+        "requiredTags": [
+          "corpo-a-corpo"
+        ],
+        "bonusType": "hitBonus",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-d6",
+      "x": 981,
+      "y": -1859,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "desarranjar",
+        "skillName": "Desarranjar",
+        "skillDescription": "Realiza uma manobra de afastamento que nega ataques de oportunidade ao se reposicionar, quebrando o engajamento sem expor a guarda.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-d7",
+      "x": 1119,
+      "y": -1779,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "recuar-estrategico",
+        "skillName": "Recuar Estratégico",
+        "skillDescription": "Ao desengajar, use esta técnica para se afastar o dobro da distância normal, criando uma zona de segurança entre você e o oponente.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-d8",
+      "x": 1125,
+      "y": -1949,
+      "data": {
+        "type": "conditional",
+        "name": "Espectro Carmesim",
+        "description": "Nó Supremo: você é o corte que ninguém viu chegar.",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "attributeBonus",
+            "attribute": "grace",
+            "value": 2
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "sense",
+            "value": 1
+          },
+          {
+            "kind": "statBonus",
+            "stat": "esquiva",
+            "value": 5
+          },
+          {
+            "kind": "extraDamage",
+            "dice": "1d4",
+            "attackTargets": [
+              "corpo-a-corpo"
+            ]
+          }
+        ]
+      },
+      "cost": 3
+    },
+    {
+      "id": "rogue-m1",
+      "x": 775,
+      "y": -823,
       "data": {
         "type": "attribute",
         "attribute": "grace",
         "value": 1
+      }
+    },
+    {
+      "id": "rogue-m2",
+      "x": 829,
+      "y": -676,
+      "data": {
+        "type": "stat",
+        "stat": "esquiva",
+        "value": 3
+      }
+    },
+    {
+      "id": "rogue-m3",
+      "x": 891,
+      "y": -583,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "reflexos",
+        "skillName": "Reflexos",
+        "value": 5
       }
     },
     {
@@ -1428,57 +2172,61 @@
       }
     },
     {
-      "id": "rogue-start",
-      "x": 750,
-      "y": -1299,
+      "id": "rogue-se1",
+      "x": 325,
+      "y": -1083,
       "data": {
-        "type": "player",
-        "name": "Rogue",
-        "description": "Letalidade precisa, furtividade e golpes fatais."
-      }
-    },
-    {
-      "id": "rogue-statL",
-      "x": 427,
-      "y": -1659,
-      "data": {
-        "type": "stat",
-        "stat": "esquiva",
-        "value": 3
-      }
-    },
-    {
-      "id": "rogue-statR",
-      "x": 1223,
-      "y": -1199,
-      "data": {
-        "type": "stat",
-        "stat": "pc",
+        "type": "attribute",
+        "attribute": "sense",
         "value": 1
       }
     },
     {
-      "id": "rogue-t1L",
-      "x": 446,
-      "y": -1452,
+      "id": "rogue-se2",
+      "x": 171,
+      "y": -1056,
       "data": {
-        "type": "combatAbility",
-        "skillId": "pontos-fatais",
-        "skillName": "Pontos Fatais",
-        "skillDescription": "Gaste sua Reação para realizar um teste de Discernimento contra a DT do alvo. Ao passar, você identifica uma abertura em suas defesas, reduzindo sua RD apenas para os seus ataques. Se a redução ultrapassar a RD total, você também ganha +2 na Margem de Ameaça contra esse alvo.",
-        "skillCost": "3",
-        "attributeBonuses": [
-          {
-            "attribute": "grace",
-            "value": 1
-          }
-        ]
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
       }
     },
     {
-      "id": "rogue-t1R",
-      "x": 1034,
-      "y": -1112,
+      "id": "rogue-se3",
+      "x": 190,
+      "y": -929,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "investigacao",
+        "skillName": "Investigação",
+        "value": 5
+      }
+    },
+    {
+      "id": "rogue-se4",
+      "x": 59,
+      "y": -1063,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "percepcao",
+        "skillName": "Percepção",
+        "value": 5
+      }
+    },
+    {
+      "id": "rogue-sg1",
+      "x": 1037,
+      "y": -1076,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-sg2",
+      "x": 1225,
+      "y": -1082,
       "data": {
         "type": "combatAbility",
         "skillId": "hemorragia-interna",
@@ -1494,36 +2242,56 @@
       }
     },
     {
-      "id": "rogue-t2L",
-      "x": 199,
-      "y": -1305,
+      "id": "rogue-sg3",
+      "x": 1335,
+      "y": -1192,
       "data": {
-        "type": "combatAbility",
-        "skillId": "garrote",
-        "skillName": "Garrote",
-        "skillDescription": "O primeiro Ataque Furtivo bem-sucedido contra um alvo o deixa Silenciado por 2 turnos, incapaz de conjurar magias ou emitir sons que pudessem alertar aliados.",
-        "skillCost": "2",
-        "attributeBonuses": [
-          {
-            "attribute": "grace",
-            "value": 1
-          },
-          {
-            "attribute": "sense",
-            "value": 1
-          }
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-sg4",
+      "x": 1154,
+      "y": -1239,
+      "data": {
+        "type": "extraDamage",
+        "flat": 1,
+        "attackTargets": [
+          "corpo-a-corpo"
         ]
       }
     },
     {
-      "id": "rogue-t2R",
-      "x": 1031,
-      "y": -825,
+      "id": "rogue-sg5",
+      "x": 1316,
+      "y": -1319,
+      "data": {
+        "type": "stat",
+        "stat": "pc",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-sg6",
+      "x": 1479,
+      "y": -1282,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-sg7",
+      "x": 1460,
+      "y": -1409,
       "data": {
         "type": "combatAbility",
-        "skillId": "emboscar",
-        "skillName": "Emboscar",
-        "skillDescription": "O primeiro Ataque Furtivo bem-sucedido contra um alvo inflige 1,5× o dano normal. A surpresa transforma o primeiro golpe em uma execução quase perfeita.",
+        "skillId": "pontos-fatais",
+        "skillName": "Pontos Fatais",
+        "skillDescription": "Gaste sua Reação para realizar um teste de Discernimento contra a DT do alvo. Ao passar, você identifica uma abertura em suas defesas, reduzindo sua RD apenas para os seus ataques. Se a redução ultrapassar a RD total, você também ganha +2 na Margem de Ameaça contra esse alvo.",
         "skillCost": "3",
         "attributeBonuses": [
           {
@@ -1531,12 +2299,13 @@
             "value": 2
           }
         ]
-      }
+      },
+      "cost": 2
     },
     {
-      "id": "rogue-utilL",
-      "x": 684,
-      "y": -1545,
+      "id": "rogue-sg8",
+      "x": 1371,
+      "y": -1575,
       "data": {
         "type": "weaponBonus",
         "requiredTags": [
@@ -1549,14 +2318,13 @@
       }
     },
     {
-      "id": "rogue-utilR",
-      "x": 996,
-      "y": -1365,
+      "id": "rogue-start",
+      "x": 750,
+      "y": -1299,
       "data": {
-        "type": "skillBonus",
-        "skillId": "furtividade",
-        "skillName": "Furtividade",
-        "value": 5
+        "type": "player",
+        "name": "Rogue",
+        "description": "Letalidade precisa, furtividade e golpes fatais."
       }
     },
     {
@@ -1682,6 +2450,37 @@
         "type": "attribute",
         "attribute": "fortitude",
         "value": 1
+      }
+    },
+    {
+      "id": "tank-senseA",
+      "x": -950,
+      "y": 180,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-senseB",
+      "x": -880,
+      "y": 330,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-senseC",
+      "x": -800,
+      "y": 230,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "percepcao",
+        "skillName": "Percepção",
+        "value": 5
       }
     },
     {
@@ -1883,9 +2682,24 @@
       "to": "arqueiro-path3"
     },
     {
-      "id": "arqueiro-path3--coracao-do-pinaculo",
-      "from": "arqueiro-path3",
-      "to": "coracao-do-pinaculo"
+      "id": "arqueiro-path2--arqueiro-senseA",
+      "from": "arqueiro-path2",
+      "to": "arqueiro-senseA"
+    },
+    {
+      "id": "arqueiro-path3--centro-c-arqueiro",
+      "from": "centro-c-arqueiro",
+      "to": "arqueiro-path3"
+    },
+    {
+      "id": "arqueiro-senseA--arqueiro-senseB",
+      "from": "arqueiro-senseA",
+      "to": "arqueiro-senseB"
+    },
+    {
+      "id": "arqueiro-senseB--arqueiro-senseC",
+      "from": "arqueiro-senseB",
+      "to": "arqueiro-senseC"
     },
     {
       "id": "arqueiro-start--arqueiro-utilL",
@@ -1908,39 +2722,149 @@
       "to": "arqueiro-statR"
     },
     {
-      "id": "arqueiro-t2L--ligacao-rogue-arqueiro",
-      "from": "arqueiro-t2L",
-      "to": "ligacao-rogue-arqueiro"
+      "id": "centro-a-arqueiro--centro-a-mago",
+      "from": "centro-a-arqueiro",
+      "to": "centro-a-mago"
     },
     {
-      "id": "arqueiro-t2R--ligacao-arqueiro-mago",
-      "from": "arqueiro-t2R",
-      "to": "ligacao-arqueiro-mago"
+      "id": "centro-a-arqueiro--centro-a-rogue",
+      "from": "centro-a-rogue",
+      "to": "centro-a-arqueiro"
     },
     {
-      "id": "coracao-do-pinaculo--curandeiro-path3",
-      "from": "curandeiro-path3",
-      "to": "coracao-do-pinaculo"
+      "id": "centro-a-arqueiro--centro-b-arqueiro",
+      "from": "centro-a-arqueiro",
+      "to": "centro-b-arqueiro"
     },
     {
-      "id": "coracao-do-pinaculo--guerreiro-path3",
-      "from": "guerreiro-path3",
-      "to": "coracao-do-pinaculo"
+      "id": "centro-a-arqueiro--centro-start",
+      "from": "centro-start",
+      "to": "centro-a-arqueiro"
     },
     {
-      "id": "coracao-do-pinaculo--mago-path3",
-      "from": "mago-path3",
-      "to": "coracao-do-pinaculo"
+      "id": "centro-a-curandeiro--centro-a-mago",
+      "from": "centro-a-mago",
+      "to": "centro-a-curandeiro"
     },
     {
-      "id": "coracao-do-pinaculo--rogue-path3",
-      "from": "rogue-path3",
-      "to": "coracao-do-pinaculo"
+      "id": "centro-a-curandeiro--centro-a-tank",
+      "from": "centro-a-curandeiro",
+      "to": "centro-a-tank"
     },
     {
-      "id": "coracao-do-pinaculo--tank-path3",
-      "from": "tank-path3",
-      "to": "coracao-do-pinaculo"
+      "id": "centro-a-curandeiro--centro-b-curandeiro",
+      "from": "centro-a-curandeiro",
+      "to": "centro-b-curandeiro"
+    },
+    {
+      "id": "centro-a-curandeiro--centro-start",
+      "from": "centro-start",
+      "to": "centro-a-curandeiro"
+    },
+    {
+      "id": "centro-a-guerreiro--centro-a-rogue",
+      "from": "centro-a-guerreiro",
+      "to": "centro-a-rogue"
+    },
+    {
+      "id": "centro-a-guerreiro--centro-a-tank",
+      "from": "centro-a-tank",
+      "to": "centro-a-guerreiro"
+    },
+    {
+      "id": "centro-a-guerreiro--centro-b-guerreiro",
+      "from": "centro-a-guerreiro",
+      "to": "centro-b-guerreiro"
+    },
+    {
+      "id": "centro-a-guerreiro--centro-start",
+      "from": "centro-start",
+      "to": "centro-a-guerreiro"
+    },
+    {
+      "id": "centro-a-mago--centro-b-mago",
+      "from": "centro-a-mago",
+      "to": "centro-b-mago"
+    },
+    {
+      "id": "centro-a-mago--centro-start",
+      "from": "centro-start",
+      "to": "centro-a-mago"
+    },
+    {
+      "id": "centro-a-rogue--centro-b-rogue",
+      "from": "centro-a-rogue",
+      "to": "centro-b-rogue"
+    },
+    {
+      "id": "centro-a-rogue--centro-start",
+      "from": "centro-start",
+      "to": "centro-a-rogue"
+    },
+    {
+      "id": "centro-a-tank--centro-b-tank",
+      "from": "centro-a-tank",
+      "to": "centro-b-tank"
+    },
+    {
+      "id": "centro-a-tank--centro-start",
+      "from": "centro-start",
+      "to": "centro-a-tank"
+    },
+    {
+      "id": "centro-b-arqueiro--centro-c-arqueiro",
+      "from": "centro-b-arqueiro",
+      "to": "centro-c-arqueiro"
+    },
+    {
+      "id": "centro-b-curandeiro--centro-c-curandeiro",
+      "from": "centro-b-curandeiro",
+      "to": "centro-c-curandeiro"
+    },
+    {
+      "id": "centro-b-guerreiro--centro-c-guerreiro",
+      "from": "centro-b-guerreiro",
+      "to": "centro-c-guerreiro"
+    },
+    {
+      "id": "centro-b-mago--centro-c-mago",
+      "from": "centro-b-mago",
+      "to": "centro-c-mago"
+    },
+    {
+      "id": "centro-b-rogue--centro-c-rogue",
+      "from": "centro-b-rogue",
+      "to": "centro-c-rogue"
+    },
+    {
+      "id": "centro-b-tank--centro-c-tank",
+      "from": "centro-b-tank",
+      "to": "centro-c-tank"
+    },
+    {
+      "id": "centro-c-curandeiro--curandeiro-path3",
+      "from": "centro-c-curandeiro",
+      "to": "curandeiro-path3"
+    },
+    {
+      "id": "centro-c-guerreiro--guerreiro-path3",
+      "from": "centro-c-guerreiro",
+      "to": "guerreiro-path3"
+    },
+    {
+      "id": "centro-c-mago--mago-path3",
+      "from": "centro-c-mago",
+      "to": "mago-path3"
+    },
+    {
+      "id": "centro-c-rogue--rogue-path3",
+      "from": "centro-c-rogue",
+      "to": "rogue-path3"
+    },
+    {
+      "id": "centro-c-tank--tank-path3",
+      "from": "centro-c-tank",
+      "to": "tank-path3"
     },
     {
       "id": "curandeiro-branchL--curandeiro-midL",
@@ -2013,6 +2937,21 @@
       "to": "curandeiro-path3"
     },
     {
+      "id": "curandeiro-path2--curandeiro-senseA",
+      "from": "curandeiro-path2",
+      "to": "curandeiro-senseA"
+    },
+    {
+      "id": "curandeiro-senseA--curandeiro-senseB",
+      "from": "curandeiro-senseA",
+      "to": "curandeiro-senseB"
+    },
+    {
+      "id": "curandeiro-senseB--curandeiro-senseC",
+      "from": "curandeiro-senseB",
+      "to": "curandeiro-senseC"
+    },
+    {
       "id": "curandeiro-start--curandeiro-utilL",
       "from": "curandeiro-start",
       "to": "curandeiro-utilL"
@@ -2033,19 +2972,24 @@
       "to": "curandeiro-statR"
     },
     {
-      "id": "curandeiro-t2L--ligacao-mago-curandeiro",
-      "from": "curandeiro-t2L",
-      "to": "ligacao-mago-curandeiro"
+      "id": "guerreiro-b1--guerreiro-b2",
+      "from": "guerreiro-b1",
+      "to": "guerreiro-b2"
     },
     {
-      "id": "curandeiro-t2R--ligacao-curandeiro-tank",
-      "from": "curandeiro-t2R",
-      "to": "ligacao-curandeiro-tank"
+      "id": "guerreiro-b1--guerreiro-path2",
+      "from": "guerreiro-path2",
+      "to": "guerreiro-b1"
     },
     {
-      "id": "guerreiro-branchL--guerreiro-midL",
+      "id": "guerreiro-b2--guerreiro-b3",
+      "from": "guerreiro-b2",
+      "to": "guerreiro-b3"
+    },
+    {
+      "id": "guerreiro-branchL--guerreiro-f1",
       "from": "guerreiro-branchL",
-      "to": "guerreiro-midL"
+      "to": "guerreiro-f1"
     },
     {
       "id": "guerreiro-branchL--guerreiro-path1",
@@ -2053,49 +2997,59 @@
       "to": "guerreiro-branchL"
     },
     {
-      "id": "guerreiro-branchL--guerreiro-t1L",
-      "from": "guerreiro-branchL",
-      "to": "guerreiro-t1L"
-    },
-    {
-      "id": "guerreiro-branchR--guerreiro-midR",
-      "from": "guerreiro-branchR",
-      "to": "guerreiro-midR"
-    },
-    {
       "id": "guerreiro-branchR--guerreiro-path1",
       "from": "guerreiro-path1",
       "to": "guerreiro-branchR"
     },
     {
-      "id": "guerreiro-branchR--guerreiro-t1R",
+      "id": "guerreiro-branchR--guerreiro-s1",
       "from": "guerreiro-branchR",
-      "to": "guerreiro-t1R"
+      "to": "guerreiro-s1"
     },
     {
-      "id": "guerreiro-capstone--guerreiro-cond",
-      "from": "guerreiro-cond",
-      "to": "guerreiro-capstone"
+      "id": "guerreiro-f1--guerreiro-f2",
+      "from": "guerreiro-f1",
+      "to": "guerreiro-f2"
     },
     {
-      "id": "guerreiro-cond--guerreiro-utilL",
-      "from": "guerreiro-utilL",
-      "to": "guerreiro-cond"
+      "id": "guerreiro-f2--guerreiro-f3",
+      "from": "guerreiro-f2",
+      "to": "guerreiro-f3"
     },
     {
-      "id": "guerreiro-cond--guerreiro-utilR",
-      "from": "guerreiro-utilR",
-      "to": "guerreiro-cond"
+      "id": "guerreiro-f2--guerreiro-f4",
+      "from": "guerreiro-f2",
+      "to": "guerreiro-f4"
     },
     {
-      "id": "guerreiro-midL--guerreiro-t2L",
-      "from": "guerreiro-midL",
-      "to": "guerreiro-t2L"
+      "id": "guerreiro-f3--guerreiro-f5",
+      "from": "guerreiro-f3",
+      "to": "guerreiro-f5"
     },
     {
-      "id": "guerreiro-midR--guerreiro-t2R",
-      "from": "guerreiro-midR",
-      "to": "guerreiro-t2R"
+      "id": "guerreiro-f4--guerreiro-f8",
+      "from": "guerreiro-f4",
+      "to": "guerreiro-f8"
+    },
+    {
+      "id": "guerreiro-f4--guerreiro-w4",
+      "from": "guerreiro-f4",
+      "to": "guerreiro-w4"
+    },
+    {
+      "id": "guerreiro-f5--guerreiro-f6",
+      "from": "guerreiro-f5",
+      "to": "guerreiro-f6"
+    },
+    {
+      "id": "guerreiro-f5--guerreiro-f8",
+      "from": "guerreiro-f5",
+      "to": "guerreiro-f8"
+    },
+    {
+      "id": "guerreiro-f6--guerreiro-f7",
+      "from": "guerreiro-f6",
+      "to": "guerreiro-f7"
     },
     {
       "id": "guerreiro-path1--guerreiro-path2",
@@ -2113,64 +3067,119 @@
       "to": "guerreiro-path3"
     },
     {
-      "id": "guerreiro-start--guerreiro-utilL",
+      "id": "guerreiro-path2--guerreiro-se1",
+      "from": "guerreiro-path2",
+      "to": "guerreiro-se1"
+    },
+    {
+      "id": "guerreiro-s1--guerreiro-s2",
+      "from": "guerreiro-s1",
+      "to": "guerreiro-s2"
+    },
+    {
+      "id": "guerreiro-s2--guerreiro-s3",
+      "from": "guerreiro-s2",
+      "to": "guerreiro-s3"
+    },
+    {
+      "id": "guerreiro-s2--guerreiro-s4",
+      "from": "guerreiro-s2",
+      "to": "guerreiro-s4"
+    },
+    {
+      "id": "guerreiro-s3--guerreiro-s5",
+      "from": "guerreiro-s3",
+      "to": "guerreiro-s5"
+    },
+    {
+      "id": "guerreiro-s4--guerreiro-s8",
+      "from": "guerreiro-s4",
+      "to": "guerreiro-s8"
+    },
+    {
+      "id": "guerreiro-s4--guerreiro-w5",
+      "from": "guerreiro-s4",
+      "to": "guerreiro-w5"
+    },
+    {
+      "id": "guerreiro-s5--guerreiro-s6",
+      "from": "guerreiro-s5",
+      "to": "guerreiro-s6"
+    },
+    {
+      "id": "guerreiro-s5--guerreiro-s8",
+      "from": "guerreiro-s5",
+      "to": "guerreiro-s8"
+    },
+    {
+      "id": "guerreiro-s6--guerreiro-s7",
+      "from": "guerreiro-s6",
+      "to": "guerreiro-s7"
+    },
+    {
+      "id": "guerreiro-se1--guerreiro-se2",
+      "from": "guerreiro-se1",
+      "to": "guerreiro-se2"
+    },
+    {
+      "id": "guerreiro-se2--guerreiro-se3",
+      "from": "guerreiro-se2",
+      "to": "guerreiro-se3"
+    },
+    {
+      "id": "guerreiro-se2--guerreiro-se4",
+      "from": "guerreiro-se2",
+      "to": "guerreiro-se4"
+    },
+    {
+      "id": "guerreiro-start--guerreiro-w1",
       "from": "guerreiro-start",
-      "to": "guerreiro-utilL"
+      "to": "guerreiro-w1"
     },
     {
-      "id": "guerreiro-start--guerreiro-utilR",
+      "id": "guerreiro-start--guerreiro-w2",
       "from": "guerreiro-start",
-      "to": "guerreiro-utilR"
+      "to": "guerreiro-w2"
     },
     {
-      "id": "guerreiro-statL--guerreiro-t1L",
-      "from": "guerreiro-t1L",
-      "to": "guerreiro-statL"
+      "id": "guerreiro-w1--guerreiro-w3",
+      "from": "guerreiro-w1",
+      "to": "guerreiro-w3"
     },
     {
-      "id": "guerreiro-statR--guerreiro-t1R",
-      "from": "guerreiro-t1R",
-      "to": "guerreiro-statR"
+      "id": "guerreiro-w2--guerreiro-w3",
+      "from": "guerreiro-w2",
+      "to": "guerreiro-w3"
     },
     {
-      "id": "guerreiro-t2L--ligacao-tank-guerreiro",
-      "from": "guerreiro-t2L",
-      "to": "ligacao-tank-guerreiro"
+      "id": "guerreiro-w3--guerreiro-w4",
+      "from": "guerreiro-w3",
+      "to": "guerreiro-w4"
     },
     {
-      "id": "guerreiro-t2R--ligacao-guerreiro-rogue",
-      "from": "guerreiro-t2R",
-      "to": "ligacao-guerreiro-rogue"
+      "id": "guerreiro-w3--guerreiro-w5",
+      "from": "guerreiro-w3",
+      "to": "guerreiro-w5"
     },
     {
-      "id": "ligacao-arqueiro-mago--mago-t2L",
-      "from": "mago-t2L",
-      "to": "ligacao-arqueiro-mago"
+      "id": "guerreiro-w4--guerreiro-w6",
+      "from": "guerreiro-w4",
+      "to": "guerreiro-w6"
     },
     {
-      "id": "ligacao-curandeiro-tank--tank-t2L",
-      "from": "tank-t2L",
-      "to": "ligacao-curandeiro-tank"
+      "id": "guerreiro-w5--guerreiro-w7",
+      "from": "guerreiro-w5",
+      "to": "guerreiro-w7"
     },
     {
-      "id": "ligacao-guerreiro-rogue--rogue-t2L",
-      "from": "rogue-t2L",
-      "to": "ligacao-guerreiro-rogue"
+      "id": "guerreiro-w6--guerreiro-w8",
+      "from": "guerreiro-w6",
+      "to": "guerreiro-w8"
     },
     {
-      "id": "ligacao-mago-curandeiro--mago-t2R",
-      "from": "mago-t2R",
-      "to": "ligacao-mago-curandeiro"
-    },
-    {
-      "id": "ligacao-rogue-arqueiro--rogue-t2R",
-      "from": "rogue-t2R",
-      "to": "ligacao-rogue-arqueiro"
-    },
-    {
-      "id": "ligacao-tank-guerreiro--tank-t2R",
-      "from": "tank-t2R",
-      "to": "ligacao-tank-guerreiro"
+      "id": "guerreiro-w7--guerreiro-w8",
+      "from": "guerreiro-w7",
+      "to": "guerreiro-w8"
     },
     {
       "id": "mago-branchL--mago-midL",
@@ -2243,6 +3252,21 @@
       "to": "mago-path3"
     },
     {
+      "id": "mago-path2--mago-senseA",
+      "from": "mago-path2",
+      "to": "mago-senseA"
+    },
+    {
+      "id": "mago-senseA--mago-senseB",
+      "from": "mago-senseA",
+      "to": "mago-senseB"
+    },
+    {
+      "id": "mago-senseB--mago-senseC",
+      "from": "mago-senseB",
+      "to": "mago-senseC"
+    },
+    {
       "id": "mago-start--mago-utilL",
       "from": "mago-start",
       "to": "mago-utilL"
@@ -2263,9 +3287,54 @@
       "to": "mago-statR"
     },
     {
-      "id": "rogue-branchL--rogue-midL",
+      "id": "rogue-a1--rogue-a2",
+      "from": "rogue-a1",
+      "to": "rogue-a2"
+    },
+    {
+      "id": "rogue-a1--rogue-branchL",
       "from": "rogue-branchL",
-      "to": "rogue-midL"
+      "to": "rogue-a1"
+    },
+    {
+      "id": "rogue-a2--rogue-a3",
+      "from": "rogue-a2",
+      "to": "rogue-a3"
+    },
+    {
+      "id": "rogue-a2--rogue-a4",
+      "from": "rogue-a2",
+      "to": "rogue-a4"
+    },
+    {
+      "id": "rogue-a3--rogue-a5",
+      "from": "rogue-a3",
+      "to": "rogue-a5"
+    },
+    {
+      "id": "rogue-a4--rogue-a8",
+      "from": "rogue-a4",
+      "to": "rogue-a8"
+    },
+    {
+      "id": "rogue-a4--rogue-d4",
+      "from": "rogue-a4",
+      "to": "rogue-d4"
+    },
+    {
+      "id": "rogue-a5--rogue-a6",
+      "from": "rogue-a5",
+      "to": "rogue-a6"
+    },
+    {
+      "id": "rogue-a5--rogue-a8",
+      "from": "rogue-a5",
+      "to": "rogue-a8"
+    },
+    {
+      "id": "rogue-a6--rogue-a7",
+      "from": "rogue-a6",
+      "to": "rogue-a7"
     },
     {
       "id": "rogue-branchL--rogue-path1",
@@ -2273,49 +3342,84 @@
       "to": "rogue-branchL"
     },
     {
-      "id": "rogue-branchL--rogue-t1L",
-      "from": "rogue-branchL",
-      "to": "rogue-t1L"
-    },
-    {
-      "id": "rogue-branchR--rogue-midR",
-      "from": "rogue-branchR",
-      "to": "rogue-midR"
-    },
-    {
       "id": "rogue-branchR--rogue-path1",
       "from": "rogue-path1",
       "to": "rogue-branchR"
     },
     {
-      "id": "rogue-branchR--rogue-t1R",
+      "id": "rogue-branchR--rogue-sg1",
       "from": "rogue-branchR",
-      "to": "rogue-t1R"
+      "to": "rogue-sg1"
     },
     {
-      "id": "rogue-capstone--rogue-cond",
-      "from": "rogue-cond",
-      "to": "rogue-capstone"
+      "id": "rogue-d1--rogue-d3",
+      "from": "rogue-d1",
+      "to": "rogue-d3"
     },
     {
-      "id": "rogue-cond--rogue-utilL",
-      "from": "rogue-utilL",
-      "to": "rogue-cond"
+      "id": "rogue-d1--rogue-start",
+      "from": "rogue-start",
+      "to": "rogue-d1"
     },
     {
-      "id": "rogue-cond--rogue-utilR",
-      "from": "rogue-utilR",
-      "to": "rogue-cond"
+      "id": "rogue-d2--rogue-d3",
+      "from": "rogue-d2",
+      "to": "rogue-d3"
     },
     {
-      "id": "rogue-midL--rogue-t2L",
-      "from": "rogue-midL",
-      "to": "rogue-t2L"
+      "id": "rogue-d2--rogue-start",
+      "from": "rogue-start",
+      "to": "rogue-d2"
     },
     {
-      "id": "rogue-midR--rogue-t2R",
-      "from": "rogue-midR",
-      "to": "rogue-t2R"
+      "id": "rogue-d3--rogue-d4",
+      "from": "rogue-d3",
+      "to": "rogue-d4"
+    },
+    {
+      "id": "rogue-d3--rogue-d5",
+      "from": "rogue-d3",
+      "to": "rogue-d5"
+    },
+    {
+      "id": "rogue-d4--rogue-d6",
+      "from": "rogue-d4",
+      "to": "rogue-d6"
+    },
+    {
+      "id": "rogue-d5--rogue-d7",
+      "from": "rogue-d5",
+      "to": "rogue-d7"
+    },
+    {
+      "id": "rogue-d5--rogue-sg4",
+      "from": "rogue-sg4",
+      "to": "rogue-d5"
+    },
+    {
+      "id": "rogue-d6--rogue-d8",
+      "from": "rogue-d6",
+      "to": "rogue-d8"
+    },
+    {
+      "id": "rogue-d7--rogue-d8",
+      "from": "rogue-d7",
+      "to": "rogue-d8"
+    },
+    {
+      "id": "rogue-m1--rogue-m2",
+      "from": "rogue-m1",
+      "to": "rogue-m2"
+    },
+    {
+      "id": "rogue-m1--rogue-path2",
+      "from": "rogue-path2",
+      "to": "rogue-m1"
+    },
+    {
+      "id": "rogue-m2--rogue-m3",
+      "from": "rogue-m2",
+      "to": "rogue-m3"
     },
     {
       "id": "rogue-path1--rogue-path2",
@@ -2333,24 +3437,64 @@
       "to": "rogue-path3"
     },
     {
-      "id": "rogue-start--rogue-utilL",
-      "from": "rogue-start",
-      "to": "rogue-utilL"
+      "id": "rogue-path2--rogue-se1",
+      "from": "rogue-path2",
+      "to": "rogue-se1"
     },
     {
-      "id": "rogue-start--rogue-utilR",
-      "from": "rogue-start",
-      "to": "rogue-utilR"
+      "id": "rogue-se1--rogue-se2",
+      "from": "rogue-se1",
+      "to": "rogue-se2"
     },
     {
-      "id": "rogue-statL--rogue-t1L",
-      "from": "rogue-t1L",
-      "to": "rogue-statL"
+      "id": "rogue-se2--rogue-se3",
+      "from": "rogue-se2",
+      "to": "rogue-se3"
     },
     {
-      "id": "rogue-statR--rogue-t1R",
-      "from": "rogue-t1R",
-      "to": "rogue-statR"
+      "id": "rogue-se2--rogue-se4",
+      "from": "rogue-se2",
+      "to": "rogue-se4"
+    },
+    {
+      "id": "rogue-sg1--rogue-sg2",
+      "from": "rogue-sg1",
+      "to": "rogue-sg2"
+    },
+    {
+      "id": "rogue-sg2--rogue-sg3",
+      "from": "rogue-sg2",
+      "to": "rogue-sg3"
+    },
+    {
+      "id": "rogue-sg2--rogue-sg4",
+      "from": "rogue-sg2",
+      "to": "rogue-sg4"
+    },
+    {
+      "id": "rogue-sg3--rogue-sg5",
+      "from": "rogue-sg3",
+      "to": "rogue-sg5"
+    },
+    {
+      "id": "rogue-sg4--rogue-sg8",
+      "from": "rogue-sg4",
+      "to": "rogue-sg8"
+    },
+    {
+      "id": "rogue-sg5--rogue-sg6",
+      "from": "rogue-sg5",
+      "to": "rogue-sg6"
+    },
+    {
+      "id": "rogue-sg5--rogue-sg8",
+      "from": "rogue-sg5",
+      "to": "rogue-sg8"
+    },
+    {
+      "id": "rogue-sg6--rogue-sg7",
+      "from": "rogue-sg6",
+      "to": "rogue-sg7"
     },
     {
       "id": "tank-branchL--tank-midL",
@@ -2421,6 +3565,21 @@
       "id": "tank-path2--tank-path3",
       "from": "tank-path2",
       "to": "tank-path3"
+    },
+    {
+      "id": "tank-path2--tank-senseA",
+      "from": "tank-path2",
+      "to": "tank-senseA"
+    },
+    {
+      "id": "tank-senseA--tank-senseB",
+      "from": "tank-senseA",
+      "to": "tank-senseB"
+    },
+    {
+      "id": "tank-senseB--tank-senseC",
+      "from": "tank-senseB",
+      "to": "tank-senseC"
     },
     {
       "id": "tank-start--tank-utilL",

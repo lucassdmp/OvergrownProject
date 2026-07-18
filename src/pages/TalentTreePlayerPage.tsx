@@ -278,13 +278,24 @@ export default function TalentTreePlayerPage() {
   } | null>(null)
 
   // ── Points budget ─────────────────────────────────────────────────────────
+  // Nós de jogador: sempre acessíveis, custo escalonado — o 1º é gratuito,
+  // o 2º custa 1, o 3º custa 2, e assim por diante (independe da ordem).
   const divinity = character.divinity ?? 0
   const totalPoints = divinity * 5
-  const spentPoints = tree.nodes
-    .filter((n) => acquiredSet.has(n.id))
-    .reduce((s, n) => s + nodeCost(n), 0)
+  const nextPlayerNodeCost = acquiredPlayerCount
+  const playerNodesSpent = (acquiredPlayerCount * (acquiredPlayerCount - 1)) / 2
+  const spentPoints =
+    tree.nodes
+      .filter((n) => acquiredSet.has(n.id) && n.data.type !== 'player')
+      .reduce((s, n) => s + nodeCost(n), 0) + playerNodesSpent
   const remainingPoints = totalPoints - spentPoints
-  const canAfford = (node: TalentTreeNode) => remainingPoints >= nodeCost(node)
+  const effectiveCost = (node: TalentTreeNode) =>
+    node.data.type === 'player'
+      ? acquiredSet.has(node.id)
+        ? 0
+        : nextPlayerNodeCost
+      : nodeCost(node)
+  const canAfford = (node: TalentTreeNode) => remainingPoints >= effectiveCost(node)
 
   // ── Viewport pan/zoom ─────────────────────────────────────────────────────
   const [vp, setVp] = useState({ x: 0, y: 0, zoom: 1 })
@@ -363,9 +374,6 @@ export default function TalentTreePlayerPage() {
     }
   }
 
-  function acquireAllPlayerNodes() {
-    for (const node of unacquiredPlayerNodes) acquireNode(node.id)
-  }
 
   function confirmAttrPicker() {
     if (!attrPicker || !attrPicker.current) return
@@ -672,12 +680,16 @@ export default function TalentTreePlayerPage() {
               <p className="mb-2 text-[9px] font-bold tracking-widest text-gray-600 uppercase">
                 Pontos de Partida
               </p>
-              <button
-                onClick={acquireAllPlayerNodes}
-                className="w-full rounded-lg border border-sky-800/50 bg-sky-950/30 px-3 py-1.5 text-xs font-bold text-sky-300 transition hover:border-sky-600 hover:bg-sky-900/40"
-              >
-                Ativar todos os inícios gratuitos
-              </button>
+              <p className="text-[10px] leading-relaxed text-gray-500">
+                Nós de jogador podem ser adquiridos a qualquer momento. O primeiro é
+                gratuito; cada início seguinte custa 1 ponto a mais que o anterior.
+              </p>
+              <p className="mt-1.5 text-xs text-gray-400">
+                Próximo início:{' '}
+                <span className={`font-bold ${nextPlayerNodeCost === 0 ? 'text-emerald-400' : 'text-sky-400'}`}>
+                  {nextPlayerNodeCost === 0 ? 'Gratuito' : `${nextPlayerNodeCost} ponto${nextPlayerNodeCost > 1 ? 's' : ''}`}
+                </span>
+              </p>
             </div>
           )}
 
@@ -687,7 +699,7 @@ export default function TalentTreePlayerPage() {
               (() => {
                 const acquired = acquiredSet.has(selectedNode.id)
                 const reachable = isReachable(selectedNode.id, acquiredSet, tree)
-                const cost = nodeCost(selectedNode)
+                const cost = effectiveCost(selectedNode)
                 const isFree = cost === 0
                 const canAcquire = !acquired && reachable && canAfford(selectedNode)
                 const { stroke } = NODE_TYPE_COLORS[selectedNode.data.type]
