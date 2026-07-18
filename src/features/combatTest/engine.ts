@@ -291,6 +291,7 @@ function parseRequirementText(description: string) {
 export function buildSavedCombatant(character: Character, policy: DefensePolicy = 'optimal'): SimCombatant {
   const derived = calculateEffectiveDerivedStats(character)
   const defense = calculateEquipmentDefense(character.inventory, character.attributes)
+  const fortitudeModifier = calculateAttributeModifiers(character.attributes).fortitude
   const weapons = character.inventory
     .filter((item) => item.type === 'weapon' && item.equipped && !item.broken)
     .map((item) => weaponToAction(item, character.attributes))
@@ -310,7 +311,7 @@ export function buildSavedCombatant(character: Character, policy: DefensePolicy 
     maxPc: derived.pc,
     resistance: derived.resistencia,
     dodge: derived.esquiva,
-    blockValue: defense.blockValue,
+    blockValue: defense.blockValue + fortitudeModifier,
     damageReduction: 0,
     defensePolicy: policy,
     combatSkillBonuses: maximumCombatSkillBonuses(character.divinity),
@@ -405,7 +406,8 @@ export function buildGenericCombatant(config: GenericProfileConfig, policy: Defe
   }
   if (armor && !armorIsValid) requirementWarnings.push(`${armor.name} está equipada, mas não concede VB nem efeitos positivos porque o requisito não foi atendido.`)
   if (armor?.description.includes('RD')) requirementWarnings.push('A RD específica da armadura não foi aplicada porque o simulador ainda não classifica o tipo de dano de cada ataque.')
-  const blockValue = armorIsValid ? (armor?.armorDetails?.blockValue ?? 0) : 0
+  const equipmentBlockValue = armorIsValid ? (armor?.armorDetails?.blockValue ?? 0) : 0
+  const blockValue = equipmentBlockValue + calculateAttributeModifiers(attributes).fortitude
   return {
     id: `generic-${slug(config.name)}-${config.focus}-${config.optionId}`,
     name: config.name,
@@ -676,6 +678,7 @@ export function runSimulation(profileA: SimCombatant, profileB: SimCombatant, re
     'Toda ficha usa automaticamente a maior Maestria de combate liberada pela DIV: +5 em DIV 0, +10 em DIV 20, +15 em DIV 30 e +20 em DIV 40.',
     'Crítico dobra somente os dados base; MOD e valores fixos não dobram.',
     'A defesa automática escolhe entre uma Esquiva ou um Bloqueio por rodada.',
+    'O Bloqueio reduz dano usando o VB dos equipamentos somado ao MOD de Fortitude.',
     'Controle, terreno, cura, múltiplos alvos, concentração e propriedades não estruturadas não entram no dano.',
     ...profileA.warnings.map((warning) => `${profileA.name}: ${warning}`),
     ...profileB.warnings.map((warning) => `${profileB.name}: ${warning}`),
@@ -752,7 +755,7 @@ export function compareResults(baseline: SimulationResult, current: SimulationRe
 export const COMBAT_TEST_WEAPONS = WEAPON_PRESETS.map((weapon) => ({ id: slug(weapon.name), label: weapon.name }))
 export const COMBAT_TEST_ARMORS = [
   { id: '', label: 'Sem armadura' },
-  ...ARMOR_PRESETS.map((armor) => ({ id: slug(armor.name), label: `${armor.name}, VB ${armor.armorDetails?.blockValue ?? 0}` })),
+  ...ARMOR_PRESETS.map((armor) => ({ id: slug(armor.name), label: `${armor.name}, VB base ${armor.armorDetails?.blockValue ?? 0}` })),
 ]
 export const COMBAT_TEST_SPELLS = getBookSpells()
   .filter((spell) => spellLooksOffensive(bookSpellToCustom(spell)) && spell.levels.some((level) => /\d+D\d+/i.test(level.scaling)))

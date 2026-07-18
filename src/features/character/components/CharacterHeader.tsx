@@ -7,9 +7,28 @@ import Modal from '../../../components/ui/Modal'
 import IntegerInput from '../../../components/ui/IntegerInput'
 import RestModal from './modals/RestModal'
 import { calculateEquipmentDefense } from '../../../lib/equipmentRules'
+import { calculateAttributeModifiers } from '../../../config/gameConfig'
+
+const HEADER_FIELD_DESCRIPTIONS = {
+  sheet: 'Alterna entre as fichas salvas ou cria um novo personagem.',
+  name: 'Nome usado para identificar o personagem.',
+  race: 'Raça ou povo ao qual o personagem pertence.',
+  origin: 'Passado do personagem, que define sua perícia de origem.',
+  vida: 'Pontos de Vida atuais e máximos. Ao chegar a zero, o personagem fica incapacitado.',
+  iep: 'Energia Impossível atual e máxima, consumida para conjurar magias e usar efeitos arcanos.',
+  pc: 'Pontos de Combate atuais e máximos, consumidos por técnicas e ações especiais.',
+  resistencia: 'Defesa passiva usada como valor-alvo de ataques e efeitos. É calculada principalmente pela Fortitude.',
+  esquiva: 'Defesa usada para evitar um ataque com uma reação. É calculada pela Graça e por bônus ativos.',
+  bloqueio: 'Valor de Bloqueio total dos equipamentos válidos. Reduz o dano de um ataque bloqueado.',
+  platina: 'Quantidade de moedas de platina carregadas pelo personagem.',
+  ouro: 'Quantidade de moedas de ouro carregadas pelo personagem.',
+  prata: 'Quantidade de moedas de prata carregadas pelo personagem.',
+  bronze: 'Quantidade de moedas de bronze carregadas pelo personagem.',
+} as const
 
 function ResourcePip({
   label,
+  description,
   current,
   max,
   color,
@@ -17,6 +36,7 @@ function ResourcePip({
   temporary = 0,
 }: {
   label: string
+  description: string
   current: number
   max: number
   color: string
@@ -24,7 +44,7 @@ function ResourcePip({
   temporary?: number
 }) {
   return (
-    <div className="flex flex-col items-center gap-0.5 min-w-0">
+    <div className="flex min-w-0 cursor-help flex-col items-center gap-0.5" title={description}>
       <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">{label}</span>
       <div className="flex items-center gap-1">
         <IntegerInput
@@ -44,27 +64,29 @@ function ResourcePip({
 
 function CoinField({
   label,
+  description,
   value,
   onChange,
   labelColor,
   inputColor,
 }: {
   label: string
+  description: string
   value: number
   onChange: (v: number) => void
   labelColor: string
   inputColor: string
 }) {
   return (
-    <div className="flex flex-col items-center gap-0.5">
+    <div className="flex cursor-help flex-col items-center gap-0.5" title={description}>
       <span className={`text-[10px] font-semibold uppercase tracking-widest ${labelColor}`}>{label}</span>
       <div className="relative flex items-center">
-        <span className="absolute left-2 text-sm z-10">🪙</span>
+        <span className="absolute left-1.5 z-10 text-xs">🪙</span>
         <IntegerInput
           min={0}
           value={value}
           onChange={onChange}
-          className={`w-full min-w-[80px] rounded-full pl-7 pr-2 py-0.5 text-center text-lg font-bold border focus:outline-none ${inputColor}`}
+          className={`w-[72px] rounded-full border py-0.5 pl-5 pr-1 text-center text-sm font-semibold focus:outline-none ${inputColor}`}
         />
       </div>
     </div>
@@ -109,11 +131,34 @@ function resizeAvatarImage(base64: string): Promise<string> {
   })
 }
 
-function StatBadge({ label, value }: { label: string; value: number }) {
+function StatBadge({
+  label,
+  value,
+  description,
+  detail,
+  prominent = false,
+}: {
+  label: string
+  value: number
+  description: string
+  detail?: string
+  prominent?: boolean
+}) {
   return (
-    <div className="flex flex-col items-center gap-0.5">
+    <div className="flex cursor-help flex-col items-center gap-0.5" title={description}>
       <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">{label}</span>
-      <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{value}</span>
+      <span
+        className={
+          prominent
+            ? 'text-xl font-bold leading-none text-gray-700 dark:text-gray-200'
+            : 'text-base font-semibold leading-none text-gray-600 dark:text-gray-300'
+        }
+      >
+        {value}
+      </span>
+      {detail && (
+        <span className="text-[9px] font-medium text-gray-400 dark:text-gray-500">{detail}</span>
+      )}
     </div>
   )
 }
@@ -136,6 +181,8 @@ export default function CharacterHeader() {
   // so the preview matches how the photo will actually be framed on the sheet.
   const [previewAspectRatio, setPreviewAspectRatio] = useState(1)
   const equipmentDefense = calculateEquipmentDefense(character.inventory, character.attributes)
+  const fortitudeModifier = calculateAttributeModifiers(character.attributes, store.gameConfig).fortitude
+  const totalBlockValue = equipmentDefense.blockValue + fortitudeModifier
 
   function captureAvatarBoxAspectRatio() {
     const box = avatarBoxRef.current
@@ -244,7 +291,10 @@ export default function CharacterHeader() {
 
   return (
     <div className="rounded-xl border border-amber-200 dark:border-amber-900/30 bg-white dark:bg-gray-900/80 px-4 py-3 shadow-sm dark:shadow-lg">
-      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-800">
+      <div
+        className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-800"
+        title={HEADER_FIELD_DESCRIPTIONS.sheet}
+      >
         <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Selecionar Ficha</label>
         <select
           value={character.id}
@@ -334,29 +384,40 @@ export default function CharacterHeader() {
           {/* Top Row: Name, Race, Origin */}
           <div className="flex flex-wrap items-end gap-4">
             {/* Name */}
-            <div className="flex flex-col gap-0.5 min-w-[200px] flex-1">
+            <div
+              className="flex min-w-[200px] flex-1 cursor-help flex-col gap-0.5"
+              title={HEADER_FIELD_DESCRIPTIONS.name}
+            >
               <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Nome</label>
               <input
                 value={character.name}
                 onChange={(e) => store.setCharacterName(e.target.value)}
                 placeholder="Nome do personagem"
+                title={HEADER_FIELD_DESCRIPTIONS.name}
                 className="rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-lg font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none"
               />
             </div>
 
             {/* Race */}
-            <div className="flex flex-col gap-0.5 min-w-[140px]">
+            <div
+              className="flex min-w-[140px] cursor-help flex-col gap-0.5"
+              title={HEADER_FIELD_DESCRIPTIONS.race}
+            >
               <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Raça</label>
               <input
                 value={character.race}
                 onChange={(e) => store.setRace(e.target.value)}
                 placeholder="Raça"
+                title={HEADER_FIELD_DESCRIPTIONS.race}
                 className="rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-base font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none"
               />
             </div>
 
             {/* Origin */}
-            <div className="flex flex-col gap-0.5 min-w-[180px]">
+            <div
+              className="flex min-w-[180px] cursor-help flex-col gap-0.5"
+              title={HEADER_FIELD_DESCRIPTIONS.origin}
+            >
               <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                 Origem
                 {character.origin && (() => {
@@ -372,6 +433,7 @@ export default function CharacterHeader() {
               <select
                 value={character.origin ?? ''}
                 onChange={(e) => store.setOrigin(e.target.value)}
+                title={HEADER_FIELD_DESCRIPTIONS.origin}
                 className="rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-base font-semibold text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none"
               >
                 <option value="">Sem origem</option>
@@ -385,80 +447,105 @@ export default function CharacterHeader() {
           <hr className="border-gray-200 dark:border-gray-800 w-full" />
 
           {/* Bottom Row: Stats and Resources */}
-          <div className="flex flex-wrap items-center gap-6">
-            <div className="flex items-center gap-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80">
-              {/* Resistência */}
-              <StatBadge label="Resistência" value={derivedStats.resistencia} />
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-              {/* Esquiva */}
-              <StatBadge label="Esquiva" value={derivedStats.esquiva} />
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-              <StatBadge label="VB" value={equipmentDefense.blockValue} />
+          <div className="grid grid-cols-1 items-stretch gap-x-6 gap-y-2 sm:grid-cols-[max-content_minmax(280px,1fr)]">
+            <div className="contents">
+              <div className="flex items-center justify-center gap-4 px-3 py-2 sm:col-start-1 sm:row-start-1">
+                {/* Esquiva */}
+                <StatBadge
+                  label="Esquiva"
+                  value={derivedStats.esquiva}
+                  description={HEADER_FIELD_DESCRIPTIONS.esquiva}
+                />
+                <div className="h-8 w-px bg-gray-200 dark:bg-gray-700" />
+                <StatBadge
+                  label="Valor de Bloqueio"
+                  value={totalBlockValue}
+                  description={`${HEADER_FIELD_DESCRIPTIONS.bloqueio} Total atual: ${equipmentDefense.blockValue} dos equipamentos + ${fortitudeModifier} do MOD de Fortitude.`}
+                />
+              </div>
+
+              <div className="flex items-center justify-center px-3 py-1.5 sm:col-start-1 sm:row-start-2">
+                <StatBadge
+                  label="Resistência"
+                  value={derivedStats.resistencia}
+                  description={HEADER_FIELD_DESCRIPTIONS.resistencia}
+                  detail="Defesa passiva"
+                  prominent
+                />
+              </div>
             </div>
 
-            <div className="flex items-center gap-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80">
-              {/* Vida */}
-              <ResourcePip
-                label="Vida"
-                current={character.currentResources.vida}
-                max={derivedStats.vida}
-                color="text-rose-400"
-                onCurrentChange={store.setCurrentVida}
-                temporary={character.temporaryResources.vida}
-              />
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-              {/* IEP */}
-              <ResourcePip
-                label="IEP"
-                current={character.currentResources.iep}
-                max={derivedStats.iep}
-                color="text-sky-400"
-                onCurrentChange={store.setCurrentIep}
-                temporary={character.temporaryResources.iep}
-              />
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-              {/* PC */}
-              <ResourcePip
-                label="Pontos de Combate"
-                current={character.currentResources.pc}
-                max={derivedStats.pc}
-                color="text-orange-400"
-                onCurrentChange={store.setCurrentPc}
-              />
-            </div>
-            
-            <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80 min-w-[280px] flex items-center justify-center gap-3 flex-wrap">
-              {/* Money */}
-              <CoinField
-                label="Platina"
-                value={character.money.platina}
-                onChange={(v) => store.setMoney('platina', v)}
-                labelColor="text-cyan-500 dark:text-cyan-400"
-                inputColor="bg-white dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800/50 focus:border-cyan-500"
-              />
-              <CoinField
-                label="Ouro"
-                value={character.money.ouro}
-                onChange={(v) => store.setMoney('ouro', v)}
-                labelColor="text-amber-500 dark:text-amber-400"
-                inputColor="bg-white dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/50 focus:border-amber-500"
-              />
-              <CoinField
-                label="Prata"
-                value={character.money.prata}
-                onChange={(v) => store.setMoney('prata', v)}
-                labelColor="text-gray-500 dark:text-gray-400"
-                inputColor="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 focus:border-gray-500"
-              />
-              <CoinField
-                label="Bronze"
-                value={character.money.bronze}
-                onChange={(v) => store.setMoney('bronze', v)}
-                labelColor="text-orange-700 dark:text-orange-400"
-                inputColor="bg-white dark:bg-orange-950/30 text-orange-800 dark:text-orange-400 border-orange-200 dark:border-orange-800/50 focus:border-orange-500"
-              />
-            </div>
+            <div className="contents">
+              <div className="flex items-center justify-center gap-4 px-4 py-2 sm:col-start-2 sm:row-start-1">
+                {/* Vida */}
+                <ResourcePip
+                  label="Vida"
+                  description={HEADER_FIELD_DESCRIPTIONS.vida}
+                  current={character.currentResources.vida}
+                  max={derivedStats.vida}
+                  color="text-rose-400"
+                  onCurrentChange={store.setCurrentVida}
+                  temporary={character.temporaryResources.vida}
+                />
+                <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
+                {/* IEP */}
+                <ResourcePip
+                  label="IEP"
+                  description={HEADER_FIELD_DESCRIPTIONS.iep}
+                  current={character.currentResources.iep}
+                  max={derivedStats.iep}
+                  color="text-sky-400"
+                  onCurrentChange={store.setCurrentIep}
+                  temporary={character.temporaryResources.iep}
+                />
+                <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
+                {/* PC */}
+                <ResourcePip
+                  label="Pontos de Combate"
+                  description={HEADER_FIELD_DESCRIPTIONS.pc}
+                  current={character.currentResources.pc}
+                  max={derivedStats.pc}
+                  color="text-orange-400"
+                  onCurrentChange={store.setCurrentPc}
+                />
+              </div>
 
+              <div className="flex flex-wrap items-center justify-center gap-2 px-3 py-2 sm:col-start-2 sm:row-start-2">
+                {/* Money */}
+                <CoinField
+                  label="Platina"
+                  description={HEADER_FIELD_DESCRIPTIONS.platina}
+                  value={character.money.platina}
+                  onChange={(v) => store.setMoney('platina', v)}
+                  labelColor="text-cyan-500 dark:text-cyan-400"
+                  inputColor="bg-white dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800/50 focus:border-cyan-500"
+                />
+                <CoinField
+                  label="Ouro"
+                  description={HEADER_FIELD_DESCRIPTIONS.ouro}
+                  value={character.money.ouro}
+                  onChange={(v) => store.setMoney('ouro', v)}
+                  labelColor="text-amber-500 dark:text-amber-400"
+                  inputColor="bg-white dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/50 focus:border-amber-500"
+                />
+                <CoinField
+                  label="Prata"
+                  description={HEADER_FIELD_DESCRIPTIONS.prata}
+                  value={character.money.prata}
+                  onChange={(v) => store.setMoney('prata', v)}
+                  labelColor="text-gray-500 dark:text-gray-400"
+                  inputColor="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 focus:border-gray-500"
+                />
+                <CoinField
+                  label="Bronze"
+                  description={HEADER_FIELD_DESCRIPTIONS.bronze}
+                  value={character.money.bronze}
+                  onChange={(v) => store.setMoney('bronze', v)}
+                  labelColor="text-orange-700 dark:text-orange-400"
+                  inputColor="bg-white dark:bg-orange-950/30 text-orange-800 dark:text-orange-400 border-orange-200 dark:border-orange-800/50 focus:border-orange-500"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
