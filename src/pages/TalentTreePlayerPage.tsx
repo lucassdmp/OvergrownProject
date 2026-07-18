@@ -1,32 +1,33 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTalentTreeStore } from '../features/talentTree/store/talentTreeStore'
-import { useCharacterV2Store } from '../features/characterV2/store/characterV2Store'
+import { useCharacterStore } from '../features/character/store/characterStore'
 import {
   NODE_TYPE_COLORS,
   NODE_TYPE_LABELS,
   nodeTooltip,
+  talentNodeCost,
   type TalentTree,
   type TalentTreeNode,
 } from '../types/talentTree'
+import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
 import { nodeRadius, TalentNodeVisual } from '../features/talentTree/components/TalentNodeVisual'
 import { ELEMENTS } from '../data/elements'
 import { MAGIC_TYPES } from '../data/magicTypes'
 import { ATTRIBUTE_LABELS, type AttributeName } from '../types/game'
 import { useSaveShortcut } from '../hooks/useSaveShortcut'
 import { downloadTextFile, fileNamePart } from '../utils/downloadFile'
-import { serializeCharacterV2File } from '../features/characterV2/utils/characterV2File'
+import { serializeCharacterFile } from '../features/character/utils/characterFile'
 
-// ── Point cost (player node is free) ─────────────────────────────────────────
-function nodeCost(node: TalentTreeNode): number {
-  return node.data.type === 'player' ? 0 : 1
-}
+// ── Point cost (player/link nodes are free; per-node override via node.cost) ──
+const nodeCost = talentNodeCost
 
 // ── Adjacency: node is reachable if it's connected to any acquired node ───────
 function isReachable(nodeId: string, acquiredSet: Set<string>, tree: TalentTree): boolean {
   const node = tree.nodes.find((n) => n.id === nodeId)
   if (!node) return false
   if (node.data.type === 'player') return true
+  // Nós de ligação e condicionais seguem a regra normal de adjacência
   const edges = tree.edges.filter((e) => e.from === nodeId || e.to === nodeId)
   return edges.some((e) => {
     const neighborId = e.from === nodeId ? e.to : e.from
@@ -229,16 +230,18 @@ function NodeContextMenu({
 
 export default function TalentTreePlayerPage() {
   const navigate = useNavigate()
+  // Carrega a árvore oficial (src/data/defaultTalentTree.json) automaticamente
+  useDefaultTreeAutoLoad()
   const tree = useTalentTreeStore((s) => s.tree)
-  const character = useCharacterV2Store((s) => s.character)
-  const acquireNode = useCharacterV2Store((s) => s.acquireNode)
-  const removeNode = useCharacterV2Store((s) => s.removeNode)
-  const setNodeConfig = useCharacterV2Store((s) => s.setNodeConfig)
+  const character = useCharacterStore((s) => s.character)
+  const acquireNode = useCharacterStore((s) => s.acquireNode)
+  const removeNode = useCharacterStore((s) => s.removeNode)
+  const setNodeConfig = useCharacterStore((s) => s.setNodeConfig)
 
   const handleExport = useCallback(() => {
     downloadTextFile(
-      serializeCharacterV2File(character, tree),
-      `${fileNamePart(character.name, 'personagem')}_v2.json`,
+      serializeCharacterFile(character, tree),
+      `${fileNamePart(character.name, 'personagem')}.json`,
     )
   }, [character, tree])
 
@@ -281,7 +284,7 @@ export default function TalentTreePlayerPage() {
     .filter((n) => acquiredSet.has(n.id))
     .reduce((s, n) => s + nodeCost(n), 0)
   const remainingPoints = totalPoints - spentPoints
-  const canAffordPoint = remainingPoints > 0
+  const canAfford = (node: TalentTreeNode) => remainingPoints >= nodeCost(node)
 
   // ── Viewport pan/zoom ─────────────────────────────────────────────────────
   const [vp, setVp] = useState({ x: 0, y: 0, zoom: 1 })
@@ -396,7 +399,7 @@ export default function TalentTreePlayerPage() {
           <p className="mb-4 text-gray-400">Nenhuma Árvore de Talento encontrada.</p>
           <p className="mb-6 text-sm text-gray-500">O GM precisa criar uma árvore no Builder.</p>
           <button
-            onClick={() => navigate('/v2')}
+            onClick={() => navigate('/')}
             className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white hover:bg-amber-500"
           >
             ← Voltar para a Ficha
@@ -424,8 +427,7 @@ export default function TalentTreePlayerPage() {
           const node = ctxMenu.node
           const acquired = acquiredSet.has(node.id)
           const reachable = isReachable(node.id, acquiredSet, tree)
-          const isFree = nodeCost(node) === 0
-          const canAcquire = !acquired && reachable && (isFree || canAffordPoint)
+          const canAcquire = !acquired && reachable && canAfford(node)
           return (
             <NodeContextMenu
               node={node}
@@ -444,7 +446,7 @@ export default function TalentTreePlayerPage() {
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-gray-800 bg-gray-900 px-4 py-2.5">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/v2')}
+            onClick={() => navigate('/')}
             className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-bold text-gray-300 transition hover:border-amber-500 hover:text-white"
           >
             ← Ficha
@@ -568,8 +570,7 @@ export default function TalentTreePlayerPage() {
                       removeNode(node.id)
                     } else {
                       const reachable = isReachable(node.id, acquiredSet, tree)
-                      const isFree = nodeCost(node) === 0
-                      if (reachable && (isFree || canAffordPoint)) {
+                      if (reachable && canAfford(node)) {
                         handleAcquireNode(node)
                       }
                     }
@@ -686,8 +687,9 @@ export default function TalentTreePlayerPage() {
               (() => {
                 const acquired = acquiredSet.has(selectedNode.id)
                 const reachable = isReachable(selectedNode.id, acquiredSet, tree)
-                const isFree = nodeCost(selectedNode) === 0
-                const canAcquire = !acquired && reachable && (isFree || canAffordPoint)
+                const cost = nodeCost(selectedNode)
+                const isFree = cost === 0
+                const canAcquire = !acquired && reachable && canAfford(selectedNode)
                 const { stroke } = NODE_TYPE_COLORS[selectedNode.data.type]
                 const lines = nodeTooltip(selectedNode.data).split('\n')
 
@@ -708,9 +710,9 @@ export default function TalentTreePlayerPage() {
                       <div className="flex shrink-0 flex-col items-end gap-1">
                         {!isFree && !acquired && (
                           <span
-                            className={`text-[10px] font-bold ${canAffordPoint ? 'text-amber-400' : 'text-red-400'}`}
+                            className={`text-[10px] font-bold ${canAfford(selectedNode) ? 'text-amber-400' : 'text-red-400'}`}
                           >
-                            {canAffordPoint ? '1 ponto' : 'Sem pontos'}
+                            {canAfford(selectedNode) ? `${cost} ponto${cost > 1 ? 's' : ''}` : 'Sem pontos'}
                           </span>
                         )}
                         {!reachable && !acquired && (

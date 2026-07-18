@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { AttributeName, DerivedStats, ElementId, MagicTypeId, SpellLevel, SpellLevelEntry } from './game'
-import type { WeaponTag } from './gameV2'
+import type { ArmorTag, WeaponTag } from './game'
 
 // ── Node type discriminator ───────────────────────────────────────────────────
 
@@ -15,11 +15,12 @@ export type TalentNodeType =
   | 'combatAbility'
   | 'extraDamage'
   | 'healing'
-  // ── V2 node types
   | 'weaponBonus'
   | 'spellModifier'
   | 'defenseBonus'
   | 'skillBonus'
+  | 'link'
+  | 'conditional'
 
 // ── Attack targets for damage-bonus nodes ─────────────────────────────────────
 
@@ -99,6 +100,12 @@ export interface CombatAbilityNodeData {
   skillName: string
   skillDescription: string
   skillCost: string
+  /**
+   * Extra attribute bonuses the ability also grants.
+   * Regra de design: toda habilidade dá atributos — quanto maior o investimento
+   * de pontos necessário para alcançá-la, maior o bônus (ex: ~5 pts → +1, ~15 pts → +3).
+   */
+  attributeBonuses?: Array<{ attribute: AttributeName; value: number }>
 }
 
 export interface ExtraDamageNodeData {
@@ -189,6 +196,63 @@ export interface SkillBonusNodeData {
   value: number
 }
 
+// ── Link node (Nó de Ligação – custo 0, ponte entre ramificações) ─────────────
+
+export interface LinkNodeData {
+  type: 'link'
+  name: string
+}
+
+// ── Conditional node (nó "com script": condições de equipamento → efeitos) ────
+
+/**
+ * All non-empty condition groups must hold simultaneously (AND between groups,
+ * OR within a group). Empty groups are ignored; a node with all groups empty
+ * is always active (útil para "Nós Supremos" com múltiplos efeitos).
+ */
+export interface NodeConditions {
+  /** At least one EQUIPPED (not broken) weapon must have one of these tags */
+  weaponTagsAnyOf: WeaponTag[]
+  /** At least one EQUIPPED (not broken) armor must have one of these tags */
+  armorTagsAnyOf: ArmorTag[]
+}
+
+export type ConditionalEffect =
+  | { kind: 'attributeBonus'; attribute: AttributeName; value: number }
+  | { kind: 'statBonus'; stat: keyof DerivedStats; value: number }
+  | { kind: 'extraDamage'; dice?: string; flat?: number; attackTargets: AttackTarget[] }
+  | { kind: 'defense'; damageType: DefenseDamageType; value: number }
+  | { kind: 'blockBonus'; value: number }
+  | { kind: 'healingBonus'; dice?: string; flat?: number; element: ElementId | null }
+  | {
+      kind: 'spellModifier'
+      conditionElements: ElementId[]
+      conditionTypes: MagicTypeId[]
+      effectType: SpellModifierEffectType
+      value: number
+      dice?: string
+    }
+  | { kind: 'custom'; description: string }
+
+export const CONDITIONAL_EFFECT_KIND_LABELS: Record<ConditionalEffect['kind'], string> = {
+  attributeBonus: 'Bônus de Atributo',
+  statBonus:      'Bônus de Stat',
+  extraDamage:    'Dano Extra',
+  defense:        'Redução de Dano',
+  blockBonus:     'Bônus de Block',
+  healingBonus:   'Bônus de Cura',
+  spellModifier:  'Modificador de Magia',
+  custom:         'Efeito Customizado',
+}
+
+export interface ConditionalNodeData {
+  type: 'conditional'
+  name: string
+  description: string
+  conditions: NodeConditions
+  effects: ConditionalEffect[]
+}
+
 export type TalentNodeData =
   | PlayerNodeData
   | AttributeNodeData
@@ -201,6 +265,8 @@ export type TalentNodeData =
   | SpellModifierNodeData
   | DefenseBonusNodeData
   | SkillBonusNodeData
+  | LinkNodeData
+  | ConditionalNodeData
 
 // ── Node shape colors (CSS hex) ───────────────────────────────────────────────
 
@@ -212,11 +278,12 @@ export const NODE_TYPE_COLORS: Record<TalentNodeType, { fill: string; stroke: st
   combatAbility: { fill: '#ffe4e6', stroke: '#e11d48', text: '#881337' },
   extraDamage:   { fill: '#ffedd5', stroke: '#ea580c', text: '#7c2d12' },
   healing:       { fill: '#dcfce7', stroke: '#16a34a', text: '#14532d' },
-  // V2 node types
   weaponBonus:   { fill: '#fdf2f8', stroke: '#9d174d', text: '#701a75' },
   spellModifier: { fill: '#f5f3ff', stroke: '#6d28d9', text: '#3b0764' },
   defenseBonus:  { fill: '#f0fdf4', stroke: '#166534', text: '#14532d' },
   skillBonus:    { fill: '#fff7ed', stroke: '#c2410c', text: '#7c2d12' },
+  link:          { fill: '#f8fafc', stroke: '#64748b', text: '#334155' },
+  conditional:   { fill: '#fefce8', stroke: '#a16207', text: '#713f12' },
 }
 
 export const NODE_TYPE_LABELS: Record<TalentNodeType, string> = {
@@ -227,11 +294,12 @@ export const NODE_TYPE_LABELS: Record<TalentNodeType, string> = {
   combatAbility: 'Habilidade de Combate',
   extraDamage:   'Dano Extra',
   healing:       'Cura',
-  // V2 node types
   weaponBonus:   'Bônus de Arma',
   spellModifier: 'Modificador de Magia',
   defenseBonus:  'Bônus de Defesa',
   skillBonus:    'Bônus de Perícia',
+  link:          'Ligação',
+  conditional:   'Condicional',
 }
 
 // ── Tree primitives ───────────────────────────────────────────────────────────
@@ -241,6 +309,17 @@ export interface TalentTreeNode {
   x: number
   y: number
   data: TalentNodeData
+  /**
+   * Custo em pontos de talento para adquirir o nó.
+   * Padrão: 1. Nós de jogador e de ligação custam 0.
+   */
+  cost?: number
+}
+
+/** Effective talent point cost of a node */
+export function talentNodeCost(node: TalentTreeNode): number {
+  if (node.cost != null) return node.cost
+  return node.data.type === 'player' || node.data.type === 'link' ? 0 : 1
 }
 
 export interface TalentTreeEdge {
@@ -255,6 +334,12 @@ export interface TalentTree {
   id: string
   name: string
   description: string
+  /**
+   * Versão da árvore oficial. Ao salvar a árvore oficial no builder este número
+   * é incrementado; as páginas carregam automaticamente o arquivo padrão quando
+   * a versão embarcada é maior que a versão local.
+   */
+  version?: number
   nodes: TalentTreeNode[]
   edges: TalentTreeEdge[]
 }
@@ -272,7 +357,8 @@ export function defaultNodeData(type: TalentNodeType): TalentNodeData {
     case 'player':
       return { type: 'player', name: 'Jogador', description: '' }
     case 'attribute':
-      return { type: 'attribute', attribute: null, value: 1 }
+      // Nós de atributo são FIXOS por padrão (não mais "jogador escolhe").
+      return { type: 'attribute', attribute: 'might', value: 1 }
     case 'magic':
       return {
         type: 'magic',
@@ -289,7 +375,7 @@ export function defaultNodeData(type: TalentNodeType): TalentNodeData {
     case 'stat':
       return { type: 'stat', stat: 'vida', value: 5 }
     case 'combatAbility':
-      return { type: 'combatAbility', skillId: '', skillName: '', skillDescription: '', skillCost: '' }
+      return { type: 'combatAbility', skillId: '', skillName: '', skillDescription: '', skillCost: '', attributeBonuses: [] }
     case 'extraDamage':
       return { type: 'extraDamage', dice: '1d6', flat: undefined, attackTargets: [] }
     case 'healing':
@@ -302,6 +388,60 @@ export function defaultNodeData(type: TalentNodeType): TalentNodeData {
       return { type: 'defenseBonus', damageType: 'physical', value: 5 }
     case 'skillBonus':
       return { type: 'skillBonus', skillId: '', skillName: '', value: 5 }
+    case 'link':
+      return { type: 'link', name: 'Ligação' }
+    case 'conditional':
+      return {
+        type: 'conditional',
+        name: 'Novo Condicional',
+        description: '',
+        conditions: { weaponTagsAnyOf: [], armorTagsAnyOf: [] },
+        effects: [],
+      }
+  }
+}
+
+export function defaultConditionalEffect(kind: ConditionalEffect['kind']): ConditionalEffect {
+  switch (kind) {
+    case 'attributeBonus': return { kind, attribute: 'might', value: 1 }
+    case 'statBonus':      return { kind, stat: 'vida', value: 5 }
+    case 'extraDamage':    return { kind, dice: '1d4', flat: undefined, attackTargets: [] }
+    case 'defense':        return { kind, damageType: 'physical', value: 2 }
+    case 'blockBonus':     return { kind, value: 2 }
+    case 'healingBonus':   return { kind, dice: undefined, flat: 2, element: null }
+    case 'spellModifier':  return { kind, conditionElements: [], conditionTypes: [], effectType: 'costReduction', value: 2 }
+    case 'custom':         return { kind, description: '' }
+  }
+}
+
+export function conditionalEffectSummary(effect: ConditionalEffect): string {
+  switch (effect.kind) {
+    case 'attributeBonus': return `+${effect.value} ${effect.attribute}`
+    case 'statBonus':      return `+${effect.value} ${effect.stat}`
+    case 'extraDamage': {
+      const parts: string[] = []
+      if (effect.dice) parts.push(effect.dice)
+      if (effect.flat) parts.push(`+${effect.flat}`)
+      const targets = effect.attackTargets.length > 0 ? effect.attackTargets.join(', ') : 'todos ataques'
+      return `Dano ${parts.join(' ') || '—'} (${targets})`
+    }
+    case 'defense':        return `-${effect.value} dano (${effect.damageType})`
+    case 'blockBonus':     return `+${effect.value} block`
+    case 'healingBonus': {
+      const parts: string[] = []
+      if (effect.dice) parts.push(effect.dice)
+      if (effect.flat) parts.push(`+${effect.flat}`)
+      return `Cura ${parts.join(' ') || '—'}${effect.element ? ` (${effect.element})` : ''}`
+    }
+    case 'spellModifier': {
+      const scope = [
+        effect.conditionTypes.length > 0 ? effect.conditionTypes.join('/') : null,
+        effect.conditionElements.length > 0 ? effect.conditionElements.join('/') : null,
+      ].filter(Boolean).join(' · ')
+      const diceStr = effect.dice ? `${effect.dice}+` : ''
+      return `${SPELL_MODIFIER_EFFECT_LABELS[effect.effectType]}: ${diceStr}${effect.value}${scope ? ` (${scope})` : ''}`
+    }
+    case 'custom':         return effect.description || 'Efeito customizado'
   }
 }
 
@@ -336,10 +476,13 @@ export function nodeTooltip(data: TalentNodeData): string {
       }
       return `+${data.value} ${labels[data.stat]}`
     }
-    case 'combatAbility':
-      return data.skillName
-        ? `⚔ ${data.skillName}\nCusto: ${data.skillCost}\n${data.skillDescription}`
-        : 'Habilidade de Combate (não configurada)'
+    case 'combatAbility': {
+      if (!data.skillName) return 'Habilidade de Combate (não configurada)'
+      const bonuses = (data.attributeBonuses ?? []).map((b) => `+${b.value} ${b.attribute}`)
+      return [`⚔ ${data.skillName}`, `Custo: ${data.skillCost}`, data.skillDescription, ...bonuses]
+        .filter(Boolean)
+        .join('\n')
+    }
     case 'extraDamage': {
       const parts: string[] = []
       if (data.dice) parts.push(data.dice)
@@ -370,5 +513,21 @@ export function nodeTooltip(data: TalentNodeData): string {
       return `🛡 Redução de Dano: ${data.value}\nTipo: ${data.damageType}`
     case 'skillBonus':
       return `📚 +${data.value} ${data.skillName || data.skillId}`
+    case 'link':
+      return `⛓ ${data.name || 'Ligação'}\nNó de ligação (custo 0) — ponte entre ramificações.`
+    case 'conditional': {
+      const conds: string[] = []
+      if (data.conditions.weaponTagsAnyOf.length > 0)
+        conds.push(`Arma: ${data.conditions.weaponTagsAnyOf.join(', ')}`)
+      if (data.conditions.armorTagsAnyOf.length > 0)
+        conds.push(`Armadura: ${data.conditions.armorTagsAnyOf.join(', ')}`)
+      const lines = [
+        `⚙ ${data.name || 'Condicional'}`,
+        data.description || null,
+        conds.length > 0 ? `Se equipado — ${conds.join(' · ')}` : 'Sempre ativo',
+        ...data.effects.map((e) => `→ ${conditionalEffectSummary(e)}`),
+      ].filter(Boolean)
+      return lines.join('\n')
+    }
   }
 }

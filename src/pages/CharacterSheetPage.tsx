@@ -1,14 +1,14 @@
-import CharacterHeaderV2 from '../features/characterV2/components/CharacterHeaderV2'
-import AttributePentagonV2 from '../features/characterV2/components/AttributePentagonV2'
-import AttributeModifiersPanelV2 from '../features/characterV2/components/AttributeModifiersPanelV2'
-import SpellListV2 from '../features/characterV2/components/SpellListV2'
-import AttackListV2 from '../features/characterV2/components/AttackListV2'
-import SkillListV2 from '../features/characterV2/components/SkillListV2'
-import InventoryV2 from '../features/characterV2/components/InventoryV2'
-import NotesPanelV2 from '../features/characterV2/components/NotesPanelV2'
+import CharacterHeader from '../features/character/components/CharacterHeader'
+import AttributePentagon from '../features/character/components/AttributePentagon'
+import AttributeModifiersPanel from '../features/character/components/AttributeModifiersPanel'
+import SpellList from '../features/character/components/SpellList'
+import AttackList from '../features/character/components/AttackList'
+import SkillList from '../features/character/components/SkillList'
+import Inventory from '../features/character/components/Inventory'
+import NotesPanel from '../features/character/components/NotesPanel'
 import DiceRoller from '../features/character/components/DiceRoller'
 
-export default function V2Page() {
+export default function CharacterSheetPage() {
   return (
     <div className="min-h-screen pb-16">
       <div className="mx-auto max-w-5xl px-4 py-6 flex flex-col gap-6">
@@ -16,7 +16,7 @@ export default function V2Page() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="rounded-full bg-amber-500 px-3 py-0.5 text-xs font-bold text-white uppercase tracking-widest">
-              Ficha V2
+              Ficha
             </span>
             <span className="text-xs text-gray-400 dark:text-gray-500">
               Atributos, magias e ataques provenientes da Árvore de Talento
@@ -31,23 +31,23 @@ export default function V2Page() {
         </div>
 
         {/* Header */}
-        <CharacterHeaderV2 />
+        <CharacterHeader />
 
         {/* Attribute Pentagon – read-only, click to go to /arvore */}
         <section className="rounded-xl border border-amber-200 dark:border-amber-900/20 bg-amber-50/40 dark:bg-gray-900/50 px-4 py-6">
-          <AttributePentagonV2 />
+          <AttributePentagon />
         </section>
 
         {/* Attribute Modifiers */}
-        <AttributeModifiersPanelV2 />
+        <AttributeModifiersPanel />
 
         {/* Spells & Attacks */}
         <div className="grid gap-6 md:grid-cols-2">
           <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 px-4 py-4">
-            <SpellListV2 />
+            <SpellList />
           </section>
           <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 px-4 py-4">
-            <AttackListV2 />
+            <AttackList />
           </section>
         </div>
 
@@ -58,17 +58,17 @@ export default function V2Page() {
 
         {/* Skills */}
         <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 px-4 py-4">
-          <SkillListV2 />
+          <SkillList />
         </section>
 
         {/* Inventory */}
         <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 px-4 py-4">
-          <InventoryV2 />
+          <Inventory />
         </section>
 
         {/* Notes */}
         <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 px-4 py-4">
-          <NotesPanelV2 />
+          <NotesPanel />
         </section>
       </div>
     </div>

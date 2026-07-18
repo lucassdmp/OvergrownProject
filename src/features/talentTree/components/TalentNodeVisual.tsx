@@ -27,7 +27,9 @@ export function pentagPts(r: number): string {
 }
 
 export function nodeRadius(data: TalentNodeData): number {
-  return data.type === 'attribute' ? NODE_R / 2 : NODE_R
+  if (data.type === 'attribute') return NODE_R / 2
+  if (data.type === 'link') return NODE_R * 0.45
+  return NODE_R
 }
 
 // ── Icon + sublabel ───────────────────────────────────────────────────────────
@@ -72,6 +74,10 @@ export function nodeIconAndSublabel(
       return { icon: '🛡', sublabel: `-${data.value} dano` }
     case 'skillBonus':
       return { icon: '📚', sublabel: `+${data.value} ${(data.skillName || data.skillId).slice(0, 6)}` }
+    case 'link':
+      return { icon: '⛓', sublabel: (data.name || 'Ligação').slice(0, 8) }
+    case 'conditional':
+      return { icon: '⚙', sublabel: (data.name || 'Cond.').slice(0, 10) }
   }
 }
 
@@ -105,10 +111,12 @@ export function TalentNodeVisual({ node, fill, stroke, strokeWidth, textColor, a
       case 'spellModifier': return <polygon points={diamondPts(r)} {...shpProps} />
       case 'defenseBonus':  return <polygon points={pentagPts(r)} {...shpProps} />
       case 'skillBonus':    return <circle r={r} strokeDasharray="3 2" {...shpProps} />
+      case 'link':          return <circle r={r} strokeDasharray="2 2" {...shpProps} />
+      case 'conditional':   return <polygon points={hexPts(r)} strokeDasharray="6 2" {...shpProps} />
     }
   })()
 
-  const isSmall = node.data.type === 'attribute'
+  const isSmall = node.data.type === 'attribute' || node.data.type === 'link'
   const iconY   = isSmall ? -3 : -6
   const subY    = isSmall ?  5 : 10
   const iconSz  = isSmall ? 10 : 14

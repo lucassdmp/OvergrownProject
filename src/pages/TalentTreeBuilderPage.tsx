@@ -8,12 +8,14 @@ import { NODE_TYPE_COLORS, NODE_TYPE_LABELS, type TalentNodeType } from '../type
 import { useDarkMode } from '../hooks/useDarkMode'
 import { useSaveShortcut } from '../hooks/useSaveShortcut'
 import { downloadTextFile, fileNamePart } from '../utils/downloadFile'
-import { useCharacterV2Store } from '../features/characterV2/store/characterV2Store'
+import { useCharacterStore } from '../features/character/store/characterStore'
 import {
-  isCharacterV2File,
+  isCharacterFile,
   isTalentTree,
-  serializeCharacterV2File,
-} from '../features/characterV2/utils/characterV2File'
+  serializeCharacterFile,
+} from '../features/character/utils/characterFile'
+import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
+import { serializeTree } from '../features/talentTree/store/talentTreeStore'
 
 // ── Toolbar button ────────────────────────────────────────────────────────────
 
@@ -29,6 +31,8 @@ const ADD_TYPES: TalentNodeType[] = [
   'spellModifier',
   'defenseBonus',
   'skillBonus',
+  'link',
+  'conditional',
 ]
 
 const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
@@ -43,14 +47,18 @@ const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
   spellModifier: '✧',
   defenseBonus: '🛡',
   skillBonus: '📚',
+  link: '⛓',
+  conditional: '⚙',
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function TalentTreeBuilderPage() {
   const { tree, setTreeName, setTreeDescription, importTree, resetTree } = useTalentTreeStore()
-  const character = useCharacterV2Store((s) => s.character)
-  const loadCharacter = useCharacterV2Store((s) => s.loadCharacter)
+  // Carrega a árvore oficial (src/data/defaultTalentTree.json) automaticamente
+  useDefaultTreeAutoLoad()
+  const character = useCharacterStore((s) => s.character)
+  const loadCharacter = useCharacterStore((s) => s.loadCharacter)
   const [isDark, toggleDark] = useDarkMode()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const playerNodeCount = tree.nodes.filter((node) => node.data.type === 'player').length
@@ -71,12 +79,23 @@ export default function TalentTreeBuilderPage() {
 
   const handleExport = useCallback(() => {
     downloadTextFile(
-      serializeCharacterV2File(character, tree),
-      `${fileNamePart(character.name, 'personagem')}_v2.json`,
+      serializeCharacterFile(character, tree),
+      `${fileNamePart(character.name, 'personagem')}.json`,
     )
   }, [character, tree])
 
   useSaveShortcut(handleExport)
+
+  // ── Salvar árvore oficial ──────────────────────────────────────────────────
+  // Baixa defaultTalentTree.json com a versão incrementada. Substitua o arquivo
+  // em src/data/ manualmente e faça deploy — as páginas carregam a nova versão
+  // automaticamente (na Vercel não é possível gravar o arquivo pelo servidor).
+  const handleSaveOfficial = useCallback(() => {
+    const nextVersion = (tree.version ?? 0) + 1
+    const official = { ...tree, version: nextVersion }
+    importTree(official) // mantém o store na mesma versão do arquivo salvo
+    downloadTextFile(serializeTree(official), 'defaultTalentTree.json')
+  }, [tree, importTree])
 
   // ── Import ─────────────────────────────────────────────────────────────────
 
@@ -92,7 +111,7 @@ export default function TalentTreeBuilderPage() {
     reader.onload = (ev) => {
       try {
         const parsed: unknown = JSON.parse(ev.target?.result as string)
-        if (isCharacterV2File(parsed)) {
+        if (isCharacterFile(parsed)) {
           loadCharacter(parsed.character)
           importTree(parsed.talentTree)
         } else if (isTalentTree(parsed)) {
@@ -268,6 +287,13 @@ export default function TalentTreeBuilderPage() {
 
             <div className="h-4 w-px bg-gray-200 dark:bg-gray-700" />
 
+            <button
+              onClick={handleSaveOfficial}
+              title="Baixa defaultTalentTree.json (versão incrementada). Substitua o arquivo em src/data/ e faça deploy para publicar."
+              className="rounded-lg border border-amber-400 bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 transition hover:bg-amber-100 dark:border-amber-600 dark:bg-amber-950/30 dark:text-amber-400 dark:hover:bg-amber-900/40"
+            >
+              💾 Salvar Oficial{tree.version != null && ` (v${tree.version})`}
+            </button>
             <button
               onClick={handleExport}
               className="rounded-lg border border-sky-300 bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-600 transition hover:bg-sky-100 dark:border-sky-700 dark:bg-sky-950/30 dark:text-sky-400 dark:hover:bg-sky-900/40"

@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
-import { useCharacterV2Store } from '../store/characterV2Store'
+import { useCharacterStore } from '../store/characterStore'
 import { useTalentTreeStore } from '../../talentTree/store/talentTreeStore'
 import { calculateAttributeModifiers, calculateDerivedStats, defaultGameConfig } from '../../../config/gameConfig'
 import type { Attributes, DerivedStats, AttributeName } from '../../../types/game'
@@ -9,11 +9,15 @@ import type {
   WeaponBonusNodeData,
   SpellModifierNodeData,
   DefenseBonusNodeData,
+  ConditionalNodeData,
+  ConditionalEffect,
+  NodeConditions,
   TalentNodeData,
   TalentTreeNode,
 } from '../../../types/talentTree'
+import type { InventoryItem } from '../../../types/game'
 
-export interface CharacterV2Stats {
+export interface CharacterStats {
   attributes: Attributes
   attributeModifiers: Record<AttributeName, number>
   derivedStats: DerivedStats
@@ -23,13 +27,37 @@ export interface CharacterV2Stats {
   spellModifiers: SpellModifierNodeData[]
   defenseBonuses: DefenseBonusNodeData[]
   skillBonuses: Record<string, number>
+  /** Conditional nodes acquired, with whether their equipment conditions hold */
+  conditionalNodes: Array<{ data: ConditionalNodeData; active: boolean }>
+  /** Effects from ACTIVE conditional nodes (already filtered) */
+  activeConditionalEffects: ConditionalEffect[]
+  /** Extra block granted by active conditional nodes */
+  conditionalBlockBonus: number
+}
+
+/** True when the node's equipment conditions are satisfied by equipped items */
+export function conditionsMet(conditions: NodeConditions, inventory: InventoryItem[]): boolean {
+  const equipped = inventory.filter((it) => it.equipped === true && !it.broken)
+  if (conditions.weaponTagsAnyOf.length > 0) {
+    const ok = equipped.some(
+      (it) => it.type === 'weapon' && (it.weaponTags ?? []).some((t) => conditions.weaponTagsAnyOf.includes(t)),
+    )
+    if (!ok) return false
+  }
+  if (conditions.armorTagsAnyOf.length > 0) {
+    const ok = equipped.some(
+      (it) => it.type === 'armor' && (it.armorTags ?? []).some((t) => conditions.armorTagsAnyOf.includes(t)),
+    )
+    if (!ok) return false
+  }
+  return true
 }
 
 const EMPTY_ATTRIBUTES: Attributes = {
   might: 0, grace: 0, wisdom: 0, sense: 0, fortitude: 0,
 }
 
-const EMPTY_STATS: CharacterV2Stats = {
+const EMPTY_STATS: CharacterStats = {
   attributes: { ...EMPTY_ATTRIBUTES },
   attributeModifiers: { might: 0, grace: 0, wisdom: 0, sense: 0, fortitude: 0 },
   derivedStats: { vida: 10, iep: 10, pc: 2, resistencia: 5, esquiva: 5 },
@@ -39,10 +67,13 @@ const EMPTY_STATS: CharacterV2Stats = {
   spellModifiers: [],
   defenseBonuses: [],
   skillBonuses: {},
+  conditionalNodes: [],
+  activeConditionalEffects: [],
+  conditionalBlockBonus: 0,
 }
 
-export function useCharacterV2Stats(): CharacterV2Stats {
-  const character    = useCharacterV2Store((s) => s.character)
+export function useCharacterStats(): CharacterStats {
+  const character    = useCharacterStore((s) => s.character)
   // Subscribe to nodes and edges individually so React sees reference changes
   const treeNodes = useTalentTreeStore((s) => s.tree.nodes)
 
@@ -67,7 +98,12 @@ export function useCharacterV2Stats(): CharacterV2Stats {
     const spellModifiers: SpellModifierNodeData[] = []
     const defenseBonuses: DefenseBonusNodeData[] = []
     const skillBonuses: Record<string, number> = {}
+    const conditionalNodes: Array<{ data: ConditionalNodeData; active: boolean }> = []
+    const activeConditionalEffects: ConditionalEffect[] = []
+    let conditionalBlockBonus = 0
     let statBonuses: Partial<DerivedStats> = {}
+
+    const inventory = character.inventory ?? []
 
     for (const node of treeNodes.filter((n: TalentTreeNode) => acquiredSet.has(n.id))) {
       const data = node.data as TalentNodeData
@@ -86,7 +122,10 @@ export function useCharacterV2Stats(): CharacterV2Stats {
           break
         }
         case 'combatAbility':
-          unlockedAttacks.push(data); break
+          unlockedAttacks.push(data)
+          for (const b of data.attributeBonuses ?? [])
+            attributes[b.attribute] = (attributes[b.attribute] ?? 0) + b.value
+          break
         case 'stat':
           statBonuses = { ...statBonuses, [data.stat]: ((statBonuses[data.stat as keyof DerivedStats] ?? 0) as number) + data.value }
           break
@@ -96,6 +135,47 @@ export function useCharacterV2Stats(): CharacterV2Stats {
         case 'skillBonus':
           if (data.skillId) skillBonuses[data.skillId] = (skillBonuses[data.skillId] ?? 0) + data.value
           break
+        case 'conditional': {
+          const active = conditionsMet(data.conditions, inventory)
+          conditionalNodes.push({ data, active })
+          if (!active) break
+          for (const effect of data.effects) {
+            activeConditionalEffects.push(effect)
+            switch (effect.kind) {
+              case 'attributeBonus':
+                attributes[effect.attribute] = (attributes[effect.attribute] ?? 0) + effect.value
+                break
+              case 'statBonus':
+                statBonuses = { ...statBonuses, [effect.stat]: ((statBonuses[effect.stat as keyof DerivedStats] ?? 0) as number) + effect.value }
+                break
+              case 'extraDamage':
+                // surfaced via activeConditionalEffects (consumed by attack lists)
+                break
+              case 'defense':
+                defenseBonuses.push({ type: 'defenseBonus', damageType: effect.damageType, value: effect.value })
+                break
+              case 'blockBonus':
+                conditionalBlockBonus += effect.value
+                break
+              case 'healingBonus':
+                // surfaced via activeConditionalEffects
+                break
+              case 'spellModifier':
+                spellModifiers.push({
+                  type: 'spellModifier',
+                  conditionElements: effect.conditionElements,
+                  conditionTypes: effect.conditionTypes,
+                  effectType: effect.effectType,
+                  value: effect.value,
+                  dice: effect.dice,
+                })
+                break
+              case 'custom':
+                break
+            }
+          }
+          break
+        }
         default: break
       }
     }
@@ -132,6 +212,9 @@ export function useCharacterV2Stats(): CharacterV2Stats {
       spellModifiers,
       defenseBonuses,
       skillBonuses,
+      conditionalNodes,
+      activeConditionalEffects,
+      conditionalBlockBonus,
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

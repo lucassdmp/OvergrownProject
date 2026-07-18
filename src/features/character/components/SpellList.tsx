@@ -1,259 +1,163 @@
 import { useState } from 'react'
-import { useCharacterStore } from '../store/characterStore'
-import { ELEMENTS_MAP } from '../../../data/elements'
-import { MAGIC_TYPES_MAP } from '../../../data/magicTypes'
-import type { CustomSpell, SpellLevel } from '../../../types/game'
-import { parseOverleafSpellCards } from '../../../lib/bookImport'
-import AddSpellModal from './modals/AddSpellModal'
-import ImportContentModal from './modals/ImportContentModal'
+import { ELEMENTS } from '../../../data/elements'
+import { MAGIC_TYPES } from '../../../data/magicTypes'
+import { SPELL_LEVEL_LABELS } from '../../../types/game'
+import type { MagicNodeData, SpellModifierNodeData } from '../../../types/talentTree'
+import { useCharacterStats } from '../hooks/useCharacterStats'
+import { SPELL_MODIFIER_EFFECT_LABELS } from '../../../types/talentTree'
 
-const LEVEL_LABEL: Record<SpellLevel, string> = {
-  0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', divino: 'Div',
+function SpellModifierTag({ mod }: { mod: SpellModifierNodeData }) {
+  const effectLabel = SPELL_MODIFIER_EFFECT_LABELS[mod.effectType]
+  const valStr = mod.effectType === 'costReduction' ? `-${mod.value}` : `+${mod.value}`
+  const diceStr = mod.dice ? `${mod.dice}+` : ''
+  return (
+    <span className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-bold bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-800/40">
+      {effectLabel}: {diceStr}{valStr}
+    </span>
+  )
 }
 
-function exportOne(item: object, filename: string) {
-  const blob = new Blob([JSON.stringify(item, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  a.click()
-  URL.revokeObjectURL(url)
-}
-
-function slugifyFilename(name: string, fallback: string) {
-  const sanitized = name
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9_-]+/g, '_')
-    .replace(/^_+|_+$/g, '')
-
-  return `${sanitized || fallback}.json`
-}
-
-function SpellCard({ spell }: { spell: CustomSpell }) {
-  const removeSpell = useCharacterStore((s) => s.removeSpell)
+function SpellCard({ spell, modifiers }: { spell: MagicNodeData; modifiers: SpellModifierNodeData[] }) {
   const [expanded, setExpanded] = useState(false)
-  const [editing, setEditing] = useState(false)
+
+  // Find modifiers that apply to this spell
+  const applicableModifiers = modifiers.filter((mod) => {
+    const elemMatch = mod.conditionElements.length === 0 || mod.conditionElements.some((e) => spell.elements.includes(e))
+    const typeMatch = mod.conditionTypes.length === 0 || mod.conditionTypes.some((t) => spell.magicTypes.includes(t))
+    return elemMatch && typeMatch
+  })
+
+  const nonEmptyLevels = spell.levels.filter((l) => l.cost || l.scaling || l.special)
 
   return (
-    <>
-      {editing && <AddSpellModal existing={spell} onClose={() => setEditing(false)} />}
-      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60 overflow-hidden">
-        {/* Card header */}
-        <div className="px-3 py-2 bg-gray-50 dark:bg-gray-800">
-          {/* Row 1: name + action buttons */}
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-bold text-gray-900 dark:text-white">{spell.name}</span>
-            <div className="flex items-center gap-1 shrink-0">
-              <button
-                onClick={() => setExpanded((v) => !v)}
-                className="text-xs text-gray-500 dark:text-gray-400 transition hover:text-gray-900 dark:hover:text-white"
-                title={expanded ? 'Recolher' : 'Expandir'}
-              >
-                {expanded ? '▲' : '▼'}
-              </button>
-              <button
-                onClick={() => exportOne(spell, slugifyFilename(spell.name, 'magia'))}
-                title="Exportar esta magia"
-                className="text-xs text-gray-400 dark:text-gray-500 transition hover:text-amber-400"
-              >
-                ↓
-              </button>
-              <button onClick={() => setEditing(true)} className="text-xs text-gray-500 transition hover:text-amber-400">
-                ✎
-              </button>
-              <button onClick={() => removeSpell(spell.id)} className="text-xs text-gray-500 transition hover:text-red-400">
-                ✕
-              </button>
-            </div>
+    <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden">
+      {/* Header */}
+      <button
+        onClick={() => setExpanded((e) => !e)}
+        className="w-full flex items-start gap-2 px-3 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
+      >
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="font-bold text-sm text-gray-900 dark:text-white">{spell.name}</span>
+            {spell.category && (
+              <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
+                [{spell.category}]
+              </span>
+            )}
           </div>
-          {/* Row 2: element + type tags */}
-          {(spell.elements.length > 0 || spell.types.length > 0) && (
-            <div className="mt-1 flex items-start justify-between gap-3">
-              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
-                {spell.elements.map((eid) => {
-                  const el = ELEMENTS_MAP[eid]
-                  if (!el) return null
-                  return (
+          {/* Element tags */}
+          <div className="flex flex-wrap gap-1 mt-1">
+            {spell.elements.map((elId) => {
+              const el = ELEMENTS.find((e) => e.id === elId)
+              if (!el) return null
+              return (
+                <span
+                  key={elId}
+                  className="rounded px-1.5 py-0.5 text-[10px] font-bold"
+                  style={{ background: el.color, color: el.textColor }}
+                >
+                  {el.label}
+                </span>
+              )
+            })}
+            {spell.magicTypes.map((typeId) => {
+              const mt = MAGIC_TYPES.find((t) => t.id === typeId)
+              if (!mt) return null
+              return (
+                <span
+                  key={typeId}
+                  className="rounded px-1.5 py-0.5 text-[10px] font-bold"
+                  style={{ background: mt.color, color: mt.textColor }}
+                >
+                  {mt.label}
+                </span>
+              )
+            })}
+          </div>
+        </div>
+        <span className="text-gray-400 text-xs mt-1 shrink-0">{expanded ? '▲' : '▼'}</span>
+      </button>
+
+      {/* Tree modifiers (always visible if any) */}
+      {applicableModifiers.length > 0 && (
+        <div className="px-3 pb-2 flex flex-wrap gap-1">
+          {applicableModifiers.map((mod, i) => <SpellModifierTag key={i} mod={mod} />)}
+        </div>
+      )}
+
+      {/* Expanded content */}
+      {expanded && (
+        <div className="border-t border-gray-100 dark:border-gray-800 px-3 py-2.5 flex flex-col gap-2">
+          {spell.description && (
+            <p className="text-xs text-gray-600 dark:text-gray-300">{spell.description}</p>
+          )}
+          {spell.notes && (
+            <p className="text-[11px] text-gray-400 italic">{spell.notes}</p>
+          )}
+          {/* Level table */}
+          {nonEmptyLevels.length > 0 && (
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Níveis</span>
+              <div className="grid gap-1">
+                {nonEmptyLevels.map((entry) => (
+                  <div
+                    key={String(entry.level)}
+                    className="grid grid-cols-[auto_1fr_1fr] gap-2 items-center bg-gray-50 dark:bg-gray-800/60 rounded px-2 py-1 text-xs"
+                  >
                     <span
-                      key={eid}
-                      className="rounded-full px-2 py-0.5 text-[10px] font-bold"
-                      style={{ background: el.color, color: el.textColor }}
+                      className="shrink-0 w-8 h-5 rounded flex items-center justify-center text-[10px] font-bold"
+                      style={{
+                        background: entry.level === 'divino' ? '#6d28d9' : '#374151',
+                        color: '#fff',
+                      }}
                     >
-                      {el.label}
+                      {SPELL_LEVEL_LABELS[entry.level]}
                     </span>
-                  )
-                })}
-              </div>
-              <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-1">
-                {spell.types.map((tid) => {
-                  const mt = MAGIC_TYPES_MAP[tid]
-                  if (!mt) return null
-                  return (
-                    <span
-                      key={tid}
-                      className="rounded-full px-2 py-0.5 text-[10px] font-bold"
-                      style={{ background: mt.color, color: mt.textColor }}
-                    >
-                      {mt.label}
-                    </span>
-                  )
-                })}
+                    <span className="text-gray-600 dark:text-gray-300 truncate">{entry.cost}</span>
+                    <span className="text-gray-500 dark:text-gray-400 truncate">{entry.scaling}</span>
+                    {entry.special && (
+                      <span className="col-span-3 text-violet-600 dark:text-violet-400 text-[10px]">
+                        ✦ {entry.special}
+                      </span>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           )}
         </div>
-
-        {/* Description / category */}
-        {spell.category && (
-          <div className="px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-500/70 bg-amber-50 dark:bg-gray-800/40 border-b border-amber-100 dark:border-gray-700/50">
-            {spell.category}
-          </div>
-        )}
-
-        {expanded && (
-          <>
-            {spell.description && (
-              <p className="px-3 py-2 text-xs text-gray-600 dark:text-gray-400 italic border-b border-gray-200 dark:border-gray-700/40">
-                {spell.description}
-              </p>
-            )}
-
-            {/* Level table */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="bg-gray-100 dark:bg-gray-800/80 text-gray-500">
-                    <th className="px-2 py-1 text-left w-8">Nv</th>
-                    <th className="px-2 py-1 text-left">Custo</th>
-                    <th className="px-2 py-1 text-left">Escala</th>
-                    <th className="px-2 py-1 text-left">Especial</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {spell.levels.filter((l) => l.cost || l.scaling || l.special).map((entry) => (
-                    <tr key={String(entry.level)} className="border-t border-gray-100 dark:border-gray-700/30 hover:bg-gray-50 dark:hover:bg-gray-700/20">
-                      <td className="px-2 py-1 font-bold text-amber-400">{LEVEL_LABEL[entry.level]}</td>
-                      <td className="px-2 py-1 text-sky-300">{entry.cost}</td>
-                      <td className="px-2 py-1 text-gray-700 dark:text-gray-300">{entry.scaling}</td>
-                      <td className="px-2 py-1 text-amber-300/80 font-semibold">{entry.special ?? 'Nenhum'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Special descriptions */}
-            {Object.keys(spell.specialDescriptions).length > 0 && (
-              <div className="px-3 py-2 border-t border-gray-200 dark:border-gray-700/40 space-y-1">
-                {Object.entries(spell.specialDescriptions).map(([k, v]) => (
-                  <p key={k} className="text-xs text-gray-600 dark:text-gray-400">
-                    <span className="font-semibold text-amber-300/80">{k}:</span> {v}
-                  </p>
-                ))}
-              </div>
-            )}
-
-            {spell.notes && (
-              <p className="px-3 pb-2 text-xs text-gray-500 italic">{spell.notes}</p>
-            )}
-          </>
-        )}
-      </div>
-    </>
+      )}
+    </div>
   )
 }
 
 export default function SpellList() {
-  const spells = useCharacterStore((s) => s.character.customSpells)
-  const importSpells = useCharacterStore((s) => s.importSpells)
-  const [showModal, setShowModal] = useState(false)
-  const [showImport, setShowImport] = useState(false)
-
-  function handleExport() {
-    const json = JSON.stringify(spells, null, 2)
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'magias.json'
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-
-  function handleImport(raw: string) {
-    try {
-      let list: CustomSpell[]
-
-      if (raw.includes('\\spellCard')) {
-        list = parseOverleafSpellCards(raw)
-      } else {
-        const data = JSON.parse(raw)
-        list = Array.isArray(data) ? data : [data]
-      }
-
-      if (list.length === 0) {
-        throw new Error('Nenhuma magia encontrada.')
-      }
-
-      importSpells(list)
-    } catch {
-      alert('Conteúdo inválido. Use JSON ou a sintaxe \\spellCard do Overleaf.')
-    }
-  }
+  const { unlockedSpells, spellModifiers } = useCharacterStats()
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-amber-400/80">
-          ✦ Lista de Mágias
+        <h2 className="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">
+          Magias
         </h2>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleExport}
-            disabled={spells.length === 0}
-            title="Exportar mágias"
-            className="rounded-full border border-amber-400/50 dark:border-amber-800/40 px-2.5 py-0.5 text-xs font-semibold text-amber-600/70 dark:text-amber-500/70 transition hover:text-amber-600 hover:border-amber-400 disabled:opacity-30"
-          >
-            ↓ Exportar
-          </button>
-          <button
-            onClick={() => setShowImport(true)}
-            title="Importar mágias de JSON ou Overleaf"
-            className="rounded-full border border-amber-400/50 dark:border-amber-800/40 px-2.5 py-0.5 text-xs font-semibold text-amber-600/70 dark:text-amber-500/70 transition hover:text-amber-600 hover:border-amber-400"
-          >
-            ↑ Importar
-          </button>
-          <button
-            onClick={() => setShowModal(true)}
-            className="rounded-full border border-amber-400/70 dark:border-amber-800/50 px-3 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-500 transition hover:bg-amber-100 dark:hover:bg-amber-900/30"
-          >
-            + Adicionar
-          </button>
-        </div>
+        <span className="text-[11px] text-gray-400 dark:text-gray-500">da Árvore de Talento</span>
       </div>
 
-      {spells.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-gray-300 dark:border-gray-700 px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-600">
-          Nenhuma magia adicionada.
-        </p>
+      {unlockedSpells.length === 0 ? (
+        <div className="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 p-6 text-center">
+          <p className="text-sm text-gray-400 dark:text-gray-600">
+            Nenhuma magia desbloqueada ainda.
+          </p>
+          <p className="text-xs text-gray-400 dark:text-gray-600 mt-1">
+            Adquira nós de Magia na Árvore de Talento.
+          </p>
+        </div>
       ) : (
         <div className="flex flex-col gap-2">
-          {spells.map((spell) => (
-            <SpellCard key={spell.id} spell={spell} />
+          {unlockedSpells.map((spell, i) => (
+            <SpellCard key={spell.name + i} spell={spell} modifiers={spellModifiers} />
           ))}
         </div>
-      )}
-
-      {showModal && <AddSpellModal onClose={() => setShowModal(false)} />}
-      {showImport && (
-        <ImportContentModal
-          title="Importar Magias"
-          onClose={() => setShowImport(false)}
-          onImport={handleImport}
-          acceptedFormats=".json,.tex,.txt"
-        />
       )}
     </div>
   )

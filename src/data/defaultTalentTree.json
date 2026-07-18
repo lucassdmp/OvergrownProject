@@ -1,0 +1,2446 @@
+{
+  "id": "arvore-principal-og",
+  "name": "Árvore do Pináculo",
+  "description": "Árvore de talento oficial do OverGrown. Seis caminhos de classe — Guerreiro, Rogue, Tank, Arqueiro, Curandeiro e Mago — ligados pelo Coração do Pináculo.",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "arqueiro-branchL",
+      "x": 1350,
+      "y": -180,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-branchR",
+      "x": 1350,
+      "y": 180,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-capstone",
+      "x": 2050,
+      "y": 0,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "lobo-solitario",
+        "skillName": "Lobo Solitário",
+        "skillDescription": "Você fecha sua mente para o grupo. Curas e Buffs aliados são reduzidos à metade em você, mas todos os seus ataques e habilidades ganham +1D6 de dano adicional. Aprimorado: O bônus de dano aumenta para +3D6 em todos os ataques e habilidades.",
+        "skillCost": "5",
+        "attributeBonuses": [
+          {
+            "attribute": "sense",
+            "value": 2
+          },
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      },
+      "cost": 2
+    },
+    {
+      "id": "arqueiro-cond",
+      "x": 1840,
+      "y": 0,
+      "data": {
+        "type": "conditional",
+        "name": "Olho do Falcão",
+        "description": "Com um arco ou besta em mãos, nada escapa da sua mira.",
+        "conditions": {
+          "weaponTagsAnyOf": [
+            "arco",
+            "besta"
+          ],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "extraDamage",
+            "dice": "1d4",
+            "attackTargets": [
+              "projeteis"
+            ]
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "sense",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "arqueiro-midL",
+      "x": 1150,
+      "y": -300,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-midR",
+      "x": 1150,
+      "y": 300,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-path1",
+      "x": 1250,
+      "y": 0,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-path2",
+      "x": 1000,
+      "y": 0,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-path3",
+      "x": 750,
+      "y": 0,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-start",
+      "x": 1500,
+      "y": 0,
+      "data": {
+        "type": "player",
+        "name": "Arqueiro",
+        "description": "Precisão à distância, mobilidade e controle de campo."
+      }
+    },
+    {
+      "id": "arqueiro-statL",
+      "x": 1650,
+      "y": -460,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "pontaria",
+        "skillName": "Pontaria",
+        "value": 5
+      }
+    },
+    {
+      "id": "arqueiro-statR",
+      "x": 1650,
+      "y": 460,
+      "data": {
+        "type": "stat",
+        "stat": "esquiva",
+        "value": 3
+      }
+    },
+    {
+      "id": "arqueiro-t1L",
+      "x": 1480,
+      "y": -340,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "mira-focada",
+        "skillName": "Mira Focada",
+        "skillDescription": "Gaste sua Ação de Movimento para travar o alvo em sua linha de mira. Seu próximo ataque contra ele ignora cobertura parcial. A preparação deliberada transforma incerteza em certeza.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "sense",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "arqueiro-t1R",
+      "x": 1480,
+      "y": 340,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "desengajar",
+        "skillName": "Desengajar",
+        "skillDescription": "Você chuta o inimigo mais próximo para se propulsionar para trás, ganhando distância sem provocar ataques de oportunidade. Ideal para manter o alcance seguro.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "arqueiro-t2L",
+      "x": 1230,
+      "y": -480,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "ponto-cego",
+        "skillName": "Ponto Cego",
+        "skillDescription": "Ao atacar um alvo que está engajado em combate corpo a corpo com um aliado, você gasta PC para encontrar uma brecha. O ataque ignora a Esquiva do alvo (apenas a armadura base é aplicada) e elimina o risco de acertar seu aliado.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "sense",
+            "value": 1
+          },
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "arqueiro-t2R",
+      "x": 1230,
+      "y": 480,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "tiro-ricochete",
+        "skillName": "Tiro Ricochete",
+        "skillDescription": "O projétil ricocha uma vez em uma superfície antes de atingir o alvo, contornando cobertura parcial ou total. Ricochetes não podem resultar em crítico. Aprimorado: O tiro ricocheteado pode resultar em crítico normalmente.",
+        "skillCost": "4",
+        "attributeBonuses": [
+          {
+            "attribute": "sense",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "arqueiro-utilL",
+      "x": 1680,
+      "y": -180,
+      "data": {
+        "type": "weaponBonus",
+        "requiredTags": [
+          "arco",
+          "besta"
+        ],
+        "bonusType": "hitBonus",
+        "value": 1
+      }
+    },
+    {
+      "id": "arqueiro-utilR",
+      "x": 1680,
+      "y": 180,
+      "data": {
+        "type": "extraDamage",
+        "dice": "1d4",
+        "attackTargets": [
+          "projeteis",
+          "arcos"
+        ]
+      }
+    },
+    {
+      "id": "coracao-do-pinaculo",
+      "x": 0,
+      "y": 0,
+      "data": {
+        "type": "link",
+        "name": "Coração"
+      }
+    },
+    {
+      "id": "curandeiro-branchL",
+      "x": -519,
+      "y": 1259,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-branchR",
+      "x": -831,
+      "y": 1079,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-capstone",
+      "x": -1025,
+      "y": 1775,
+      "data": {
+        "type": "conditional",
+        "name": "Bênção do Pináculo",
+        "description": "Nó Supremo: a cura que flui de você carrega a graça direta do Pináculo.",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "healingBonus",
+            "dice": "1d8",
+            "element": null
+          },
+          {
+            "kind": "statBonus",
+            "stat": "iep",
+            "value": 10
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "wisdom",
+            "value": 2
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "sense",
+            "value": 1
+          }
+        ]
+      },
+      "cost": 2
+    },
+    {
+      "id": "curandeiro-cond",
+      "x": -920,
+      "y": 1593,
+      "data": {
+        "type": "conditional",
+        "name": "Canalizador Sagrado",
+        "description": "Um foco arcano amplifica a energia curativa que flui por você.",
+        "conditions": {
+          "weaponTagsAnyOf": [
+            "cajado",
+            "varinha",
+            "bola-de-cristal"
+          ],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "healingBonus",
+            "flat": 2,
+            "element": null
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "wisdom",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "curandeiro-midL",
+      "x": -315,
+      "y": 1146,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-midR",
+      "x": -835,
+      "y": 846,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-path1",
+      "x": -625,
+      "y": 1083,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-path2",
+      "x": -500,
+      "y": 866,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-path3",
+      "x": -375,
+      "y": 650,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "curandeiro-start",
+      "x": -750,
+      "y": 1299,
+      "data": {
+        "type": "player",
+        "name": "Curandeiro",
+        "description": "Cura, suporte e a luz do Pináculo a favor dos aliados."
+      }
+    },
+    {
+      "id": "curandeiro-statL",
+      "x": -427,
+      "y": 1659,
+      "data": {
+        "type": "stat",
+        "stat": "vida",
+        "value": 5
+      }
+    },
+    {
+      "id": "curandeiro-statR",
+      "x": -1223,
+      "y": 1199,
+      "data": {
+        "type": "stat",
+        "stat": "iep",
+        "value": 10
+      }
+    },
+    {
+      "id": "curandeiro-t1L",
+      "x": -446,
+      "y": 1452,
+      "data": {
+        "type": "magic",
+        "name": "Onda Curativa",
+        "elements": [
+          "agua"
+        ],
+        "magicTypes": [
+          "cura",
+          "single"
+        ],
+        "description": "O usuário invoca uma onda de energia aquática curativa, que banha o alvo em uma luz revitalizante e limpa impurezas.",
+        "category": "Cura",
+        "notes": "Aumenta a cura por nível. Cada nível também melhora a remoção de efeitos negativos.",
+        "levels": [
+          {
+            "level": 0,
+            "cost": "6 IEP",
+            "scaling": "2D6 + WIS",
+            "special": null
+          },
+          {
+            "level": 1,
+            "cost": "12 IEP",
+            "scaling": "3D6 + WIS",
+            "special": null
+          },
+          {
+            "level": 2,
+            "cost": "18 IEP",
+            "scaling": "3D6 + WIS",
+            "special": null
+          },
+          {
+            "level": 3,
+            "cost": "24 IEP",
+            "scaling": "4D6 + WIS",
+            "special": null
+          },
+          {
+            "level": 4,
+            "cost": "36 IEP",
+            "scaling": "4D6 + WIS",
+            "special": null
+          },
+          {
+            "level": 5,
+            "cost": "48 IEP",
+            "scaling": "5D8 + WIS",
+            "special": null
+          },
+          {
+            "level": 6,
+            "cost": "60 IEP",
+            "scaling": "5D8 + WIS",
+            "special": null
+          },
+          {
+            "level": 7,
+            "cost": "72 IEP",
+            "scaling": "6D8 + WIS",
+            "special": null
+          },
+          {
+            "level": 8,
+            "cost": "84 IEP",
+            "scaling": "6D8 + WIS",
+            "special": null
+          },
+          {
+            "level": 9,
+            "cost": "96 IEP",
+            "scaling": "7D10 + WIS",
+            "special": null
+          },
+          {
+            "level": "divino",
+            "cost": "108 IEP",
+            "scaling": "8D10 + (1D10 × WIS)",
+            "special": null
+          }
+        ],
+        "attributeBonuses": [
+          {
+            "attribute": "wisdom",
+            "value": 1
+          }
+        ],
+        "statBonuses": []
+      }
+    },
+    {
+      "id": "curandeiro-t1R",
+      "x": -1034,
+      "y": 1112,
+      "data": {
+        "type": "healing",
+        "flat": 2,
+        "element": null
+      }
+    },
+    {
+      "id": "curandeiro-t2L",
+      "x": -199,
+      "y": 1305,
+      "data": {
+        "type": "spellModifier",
+        "conditionElements": [],
+        "conditionTypes": [
+          "cura"
+        ],
+        "effectType": "costReduction",
+        "value": 4
+      }
+    },
+    {
+      "id": "curandeiro-t2R",
+      "x": -1031,
+      "y": 825,
+      "data": {
+        "type": "healing",
+        "dice": "1d4",
+        "element": null
+      }
+    },
+    {
+      "id": "curandeiro-utilL",
+      "x": -684,
+      "y": 1545,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "medicina",
+        "skillName": "Medicina",
+        "value": 5
+      }
+    },
+    {
+      "id": "curandeiro-utilR",
+      "x": -996,
+      "y": 1365,
+      "data": {
+        "type": "stat",
+        "stat": "iep",
+        "value": 10
+      }
+    },
+    {
+      "id": "guerreiro-branchL",
+      "x": -831,
+      "y": -1079,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-branchR",
+      "x": -519,
+      "y": -1259,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-capstone",
+      "x": -1025,
+      "y": -1775,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "furia-descontrolada",
+        "skillName": "Fúria Descontrolada",
+        "skillDescription": "Requer Fúria ativa. Ascende o estado de fúria ao limite absoluto: aumenta a duração em +3 rodadas, concede mais um ataque por turno e estende a RD para danos mágicos. A violência desse estado cobra um custo em vida a cada rodada que permanece ativo.",
+        "skillCost": "3",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 2
+          },
+          {
+            "attribute": "fortitude",
+            "value": 1
+          }
+        ]
+      },
+      "cost": 2
+    },
+    {
+      "id": "guerreiro-cond",
+      "x": -920,
+      "y": -1593,
+      "data": {
+        "type": "conditional",
+        "name": "Colosso de Duas Mãos",
+        "description": "Empunhar uma arma de duas mãos transforma cada golpe em devastação.",
+        "conditions": {
+          "weaponTagsAnyOf": [
+            "duas-maos"
+          ],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "extraDamage",
+            "flat": 2,
+            "attackTargets": [
+              "corpo-a-corpo"
+            ]
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "guerreiro-midL",
+      "x": -835,
+      "y": -846,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-midR",
+      "x": -315,
+      "y": -1146,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-path1",
+      "x": -625,
+      "y": -1083,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-path2",
+      "x": -500,
+      "y": -866,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-path3",
+      "x": -375,
+      "y": -650,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "guerreiro-start",
+      "x": -750,
+      "y": -1299,
+      "data": {
+        "type": "player",
+        "name": "Guerreiro",
+        "description": "Combate corpo a corpo, fúria e poder físico bruto."
+      }
+    },
+    {
+      "id": "guerreiro-statL",
+      "x": -1223,
+      "y": -1199,
+      "data": {
+        "type": "stat",
+        "stat": "vida",
+        "value": 5
+      }
+    },
+    {
+      "id": "guerreiro-statR",
+      "x": -427,
+      "y": -1659,
+      "data": {
+        "type": "stat",
+        "stat": "resistencia",
+        "value": 3
+      }
+    },
+    {
+      "id": "guerreiro-t1L",
+      "x": -1034,
+      "y": -1112,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "furia",
+        "skillName": "Fúria",
+        "skillDescription": "Você entra em um estado de Luta ou Fuga instintivo. Seu personagem fica compelido a atacar quem considera inimigo, ganhando mais um ataque por turno e RD contra danos físicos durante 1D6+1 rodadas. Toda lógica cede ao instinto.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "guerreiro-t1R",
+      "x": -446,
+      "y": -1452,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "vicio-em-sangue",
+        "skillName": "Vício em Sangue",
+        "skillDescription": "Se um alvo com metade da vida ou menos estiver em alcance médio, você se arremessa até ele sem gastar sua Ação de Movimento. O cheiro de sangue aguça o instinto predatório.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "guerreiro-t2L",
+      "x": -1031,
+      "y": -825,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "sede-de-sangue",
+        "skillName": "Sede de Sangue",
+        "skillDescription": "Ao executar um inimigo, você canaliza o ímpeto da matança em vitalidade. Cure uma quantidade de pontos de vida igual ao dano do seu último ataque contra o alvo abatido.",
+        "skillCost": "3",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 1
+          },
+          {
+            "attribute": "fortitude",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "guerreiro-t2R",
+      "x": -199,
+      "y": -1305,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "elipse-carmesim",
+        "skillName": "Elipse Carmesim",
+        "skillDescription": "Você gira e corta tudo ao seu redor: causa o dano da arma em todos os inimigos em alcance curto que estejam Sangrando. Aprimorado (5 PC): O ataque pode resultar em crítico em cada inimigo acertado, não apenas no alvo principal.",
+        "skillCost": "3 / 5",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "guerreiro-utilL",
+      "x": -996,
+      "y": -1365,
+      "data": {
+        "type": "weaponBonus",
+        "requiredTags": [
+          "corpo-a-corpo"
+        ],
+        "bonusType": "damage",
+        "dice": "1d4",
+        "value": 0
+      }
+    },
+    {
+      "id": "guerreiro-utilR",
+      "x": -684,
+      "y": -1545,
+      "data": {
+        "type": "extraDamage",
+        "dice": "1d4",
+        "attackTargets": [
+          "melee"
+        ]
+      }
+    },
+    {
+      "id": "ligacao-arqueiro-mago",
+      "x": 1126,
+      "y": 650,
+      "data": {
+        "type": "link",
+        "name": "Arqueiro↔Mago"
+      }
+    },
+    {
+      "id": "ligacao-curandeiro-tank",
+      "x": -1126,
+      "y": 650,
+      "data": {
+        "type": "link",
+        "name": "Curandeiro↔Tank"
+      }
+    },
+    {
+      "id": "ligacao-guerreiro-rogue",
+      "x": 0,
+      "y": -1300,
+      "data": {
+        "type": "link",
+        "name": "Guerreiro↔Rogue"
+      }
+    },
+    {
+      "id": "ligacao-mago-curandeiro",
+      "x": 0,
+      "y": 1300,
+      "data": {
+        "type": "link",
+        "name": "Mago↔Curandeiro"
+      }
+    },
+    {
+      "id": "ligacao-rogue-arqueiro",
+      "x": 1126,
+      "y": -650,
+      "data": {
+        "type": "link",
+        "name": "Rogue↔Arqueiro"
+      }
+    },
+    {
+      "id": "ligacao-tank-guerreiro",
+      "x": -1126,
+      "y": -650,
+      "data": {
+        "type": "link",
+        "name": "Tank↔Guerreiro"
+      }
+    },
+    {
+      "id": "mago-branchL",
+      "x": 831,
+      "y": 1079,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-branchR",
+      "x": 519,
+      "y": 1259,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-capstone",
+      "x": 1025,
+      "y": 1775,
+      "data": {
+        "type": "conditional",
+        "name": "Domínio Arcano",
+        "description": "Nó Supremo: uma vez por descanso longo, conjure uma magia 1 nível acima do permitido.",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "custom",
+            "description": "Conjura magias 1 nível acima do permitido, uma vez por descanso longo."
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "wisdom",
+            "value": 2
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "sense",
+            "value": 1
+          }
+        ]
+      },
+      "cost": 2
+    },
+    {
+      "id": "mago-cond",
+      "x": 920,
+      "y": 1593,
+      "data": {
+        "type": "conditional",
+        "name": "Foco Arcano",
+        "description": "Um canalizador mágico reduz o esforço de dobrar a realidade.",
+        "conditions": {
+          "weaponTagsAnyOf": [
+            "grimorio",
+            "cajado",
+            "varinha",
+            "bola-de-cristal"
+          ],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "spellModifier",
+            "conditionElements": [],
+            "conditionTypes": [],
+            "effectType": "costReduction",
+            "value": 2
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "wisdom",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "mago-midL",
+      "x": 835,
+      "y": 846,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-midR",
+      "x": 315,
+      "y": 1146,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-path1",
+      "x": 625,
+      "y": 1083,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-path2",
+      "x": 500,
+      "y": 866,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-path3",
+      "x": 375,
+      "y": 650,
+      "data": {
+        "type": "attribute",
+        "attribute": "wisdom",
+        "value": 1
+      }
+    },
+    {
+      "id": "mago-start",
+      "x": 750,
+      "y": 1299,
+      "data": {
+        "type": "player",
+        "name": "Mago",
+        "description": "Poder arcano puro: dano mágico, IEP e domínio elemental."
+      }
+    },
+    {
+      "id": "mago-statL",
+      "x": 1223,
+      "y": 1199,
+      "data": {
+        "type": "stat",
+        "stat": "iep",
+        "value": 10
+      }
+    },
+    {
+      "id": "mago-statR",
+      "x": 427,
+      "y": 1659,
+      "data": {
+        "type": "stat",
+        "stat": "vida",
+        "value": 5
+      }
+    },
+    {
+      "id": "mago-t1L",
+      "x": 1034,
+      "y": 1112,
+      "data": {
+        "type": "magic",
+        "name": "Encharcar",
+        "elements": [
+          "agua"
+        ],
+        "magicTypes": [
+          "aoe",
+          "debuff"
+        ],
+        "description": "O usuário condensa a umidade do ar em uma esfera de água pura, que explode no contato, deixando os alvos completamente encharcados.",
+        "category": "Alcance",
+        "notes": "Aplica Encharcado. Aumenta o raio por nível.",
+        "levels": [
+          {
+            "level": 0,
+            "cost": "2 IEP",
+            "scaling": "1m Raio",
+            "special": null
+          },
+          {
+            "level": 1,
+            "cost": "4 IEP",
+            "scaling": "2m Raio",
+            "special": null
+          },
+          {
+            "level": 2,
+            "cost": "6 IEP",
+            "scaling": "3m Raio",
+            "special": "Invocação Livre"
+          },
+          {
+            "level": 3,
+            "cost": "8 IEP",
+            "scaling": "4m Raio",
+            "special": null
+          },
+          {
+            "level": 4,
+            "cost": "10 IEP",
+            "scaling": "5m Raio",
+            "special": "Purificação Mística"
+          },
+          {
+            "level": 5,
+            "cost": "12 IEP",
+            "scaling": "6m Raio",
+            "special": null
+          },
+          {
+            "level": 6,
+            "cost": "14 IEP",
+            "scaling": "7m Raio",
+            "special": null
+          },
+          {
+            "level": 7,
+            "cost": "16 IEP",
+            "scaling": "8m Raio",
+            "special": null
+          },
+          {
+            "level": 8,
+            "cost": "18 IEP",
+            "scaling": "9m Raio",
+            "special": null
+          },
+          {
+            "level": 9,
+            "cost": "20 IEP",
+            "scaling": "10m Raio",
+            "special": null
+          },
+          {
+            "level": "divino",
+            "cost": "22 IEP",
+            "scaling": "20m Raio",
+            "special": "Dilúvio"
+          }
+        ],
+        "attributeBonuses": [
+          {
+            "attribute": "wisdom",
+            "value": 1
+          }
+        ],
+        "statBonuses": []
+      }
+    },
+    {
+      "id": "mago-t1R",
+      "x": 446,
+      "y": 1452,
+      "data": {
+        "type": "extraDamage",
+        "dice": "1d4",
+        "attackTargets": [
+          "magias"
+        ]
+      }
+    },
+    {
+      "id": "mago-t2L",
+      "x": 1031,
+      "y": 825,
+      "data": {
+        "type": "magic",
+        "name": "Estalactite",
+        "elements": [
+          "agua",
+          "ar"
+        ],
+        "magicTypes": [
+          "projetil",
+          "single"
+        ],
+        "description": "O usuário forma um projétil de gelo aguçado a partir de IEP congelado, que voa em alta velocidade para perfurar o alvo.",
+        "category": "Ataque",
+        "notes": "Aumenta o dano por nível.",
+        "levels": [
+          {
+            "level": 0,
+            "cost": "6 IEP",
+            "scaling": "2D8 + WIS",
+            "special": null
+          },
+          {
+            "level": 1,
+            "cost": "10 IEP",
+            "scaling": "2D10 + WIS",
+            "special": null
+          },
+          {
+            "level": 2,
+            "cost": "14 IEP",
+            "scaling": "3D10 + WIS",
+            "special": null
+          },
+          {
+            "level": 3,
+            "cost": "18 IEP",
+            "scaling": "3D12 + WIS",
+            "special": "Penetração Mágica Básica"
+          },
+          {
+            "level": 4,
+            "cost": "22 IEP",
+            "scaling": "4D12 + WIS",
+            "special": null
+          },
+          {
+            "level": 5,
+            "cost": "30 IEP",
+            "scaling": "5D12 + WIS",
+            "special": "Penetração Mágica Avançada"
+          },
+          {
+            "level": 6,
+            "cost": "38 IEP",
+            "scaling": "6D12 + WIS",
+            "special": null
+          },
+          {
+            "level": 7,
+            "cost": "46 IEP",
+            "scaling": "6D12 + 3D6 + WIS",
+            "special": null
+          },
+          {
+            "level": 8,
+            "cost": "54 IEP",
+            "scaling": "6D12 + 5D6 + WIS",
+            "special": null
+          },
+          {
+            "level": 9,
+            "cost": "62 IEP",
+            "scaling": "6D12 + 7D6 + WIS",
+            "special": null
+          },
+          {
+            "level": "divino",
+            "cost": "70 IEP",
+            "scaling": "6D12 + 9D6 + (1D20 × WIS)",
+            "special": "Penetração Total"
+          }
+        ],
+        "attributeBonuses": [
+          {
+            "attribute": "wisdom",
+            "value": 1
+          },
+          {
+            "attribute": "sense",
+            "value": 1
+          }
+        ],
+        "statBonuses": []
+      }
+    },
+    {
+      "id": "mago-t2R",
+      "x": 199,
+      "y": 1305,
+      "data": {
+        "type": "spellModifier",
+        "conditionElements": [],
+        "conditionTypes": [
+          "projetil"
+        ],
+        "effectType": "damageBonus",
+        "dice": "1d6",
+        "value": 0
+      }
+    },
+    {
+      "id": "mago-utilL",
+      "x": 996,
+      "y": 1365,
+      "data": {
+        "type": "stat",
+        "stat": "iep",
+        "value": 10
+      }
+    },
+    {
+      "id": "mago-utilR",
+      "x": 684,
+      "y": 1545,
+      "data": {
+        "type": "spellModifier",
+        "conditionElements": [],
+        "conditionTypes": [
+          "aoe"
+        ],
+        "effectType": "costReduction",
+        "value": 4
+      }
+    },
+    {
+      "id": "rogue-branchL",
+      "x": 519,
+      "y": -1259,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-branchR",
+      "x": 831,
+      "y": -1079,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-capstone",
+      "x": 1025,
+      "y": -1775,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "marcar-para-a-morte",
+        "skillName": "Marcar para a Morte",
+        "skillDescription": "Você foca toda sua letalidade em um único alvo. Ganha bônus em acerto, Margem de Ameaça e dano contra ele. Em contrapartida, o dano recebido de todas as outras fontes aumenta e você não pode desviar ou resistir ao que não vem do alvo marcado. Aprimorado: As penalidades são progressivamente removidas conforme a habilidade é refinada na Árvore de Talentos.",
+        "skillCost": "4",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 2
+          },
+          {
+            "attribute": "sense",
+            "value": 1
+          }
+        ]
+      },
+      "cost": 2
+    },
+    {
+      "id": "rogue-cond",
+      "x": 920,
+      "y": -1593,
+      "data": {
+        "type": "conditional",
+        "name": "Dança das Lâminas",
+        "description": "Duas lâminas, um só fluxo de morte.",
+        "conditions": {
+          "weaponTagsAnyOf": [
+            "dual-wield"
+          ],
+          "armorTagsAnyOf": []
+        },
+        "effects": [
+          {
+            "kind": "extraDamage",
+            "dice": "1d4",
+            "attackTargets": [
+              "corpo-a-corpo"
+            ]
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-midL",
+      "x": 315,
+      "y": -1146,
+      "data": {
+        "type": "attribute",
+        "attribute": "sense",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-midR",
+      "x": 835,
+      "y": -846,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-path1",
+      "x": 625,
+      "y": -1083,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-path2",
+      "x": 500,
+      "y": -866,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-path3",
+      "x": 375,
+      "y": -650,
+      "data": {
+        "type": "attribute",
+        "attribute": "grace",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-start",
+      "x": 750,
+      "y": -1299,
+      "data": {
+        "type": "player",
+        "name": "Rogue",
+        "description": "Letalidade precisa, furtividade e golpes fatais."
+      }
+    },
+    {
+      "id": "rogue-statL",
+      "x": 427,
+      "y": -1659,
+      "data": {
+        "type": "stat",
+        "stat": "esquiva",
+        "value": 3
+      }
+    },
+    {
+      "id": "rogue-statR",
+      "x": 1223,
+      "y": -1199,
+      "data": {
+        "type": "stat",
+        "stat": "pc",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-t1L",
+      "x": 446,
+      "y": -1452,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "pontos-fatais",
+        "skillName": "Pontos Fatais",
+        "skillDescription": "Gaste sua Reação para realizar um teste de Discernimento contra a DT do alvo. Ao passar, você identifica uma abertura em suas defesas, reduzindo sua RD apenas para os seus ataques. Se a redução ultrapassar a RD total, você também ganha +2 na Margem de Ameaça contra esse alvo.",
+        "skillCost": "3",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-t1R",
+      "x": 1034,
+      "y": -1112,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "hemorragia-interna",
+        "skillName": "Hemorragia Interna",
+        "skillDescription": "Ao acertar um ataque em um inimigo que já está Sangrando, você aprofunda o ferimento girando a lâmina. O alvo sofre imediatamente 1 tique do sangramento como dano extra, adicional ao dano do ataque.",
+        "skillCost": "1",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-t2L",
+      "x": 199,
+      "y": -1305,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "garrote",
+        "skillName": "Garrote",
+        "skillDescription": "O primeiro Ataque Furtivo bem-sucedido contra um alvo o deixa Silenciado por 2 turnos, incapaz de conjurar magias ou emitir sons que pudessem alertar aliados.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 1
+          },
+          {
+            "attribute": "sense",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-t2R",
+      "x": 1031,
+      "y": -825,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "emboscar",
+        "skillName": "Emboscar",
+        "skillDescription": "O primeiro Ataque Furtivo bem-sucedido contra um alvo inflige 1,5× o dano normal. A surpresa transforma o primeiro golpe em uma execução quase perfeita.",
+        "skillCost": "3",
+        "attributeBonuses": [
+          {
+            "attribute": "grace",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "rogue-utilL",
+      "x": 684,
+      "y": -1545,
+      "data": {
+        "type": "weaponBonus",
+        "requiredTags": [
+          "adaga",
+          "rapieira",
+          "uma-mao"
+        ],
+        "bonusType": "threatRange",
+        "value": 1
+      }
+    },
+    {
+      "id": "rogue-utilR",
+      "x": 996,
+      "y": -1365,
+      "data": {
+        "type": "skillBonus",
+        "skillId": "furtividade",
+        "skillName": "Furtividade",
+        "value": 5
+      }
+    },
+    {
+      "id": "tank-branchL",
+      "x": -1350,
+      "y": 180,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-branchR",
+      "x": -1350,
+      "y": -180,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-capstone",
+      "x": -2050,
+      "y": 0,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "ultima-resistencia",
+        "skillName": "Última Resistência",
+        "skillDescription": "Ao receber um dano que seria fatal, ao invés de entrar em Morrendo, você permanece com 1 de vida, zerando seus PC. Role 1D4+X: durante esses turnos você está imune à condição Morrendo. Sobreviver tem um preço.",
+        "skillCost": "5 por turno",
+        "attributeBonuses": [
+          {
+            "attribute": "fortitude",
+            "value": 2
+          },
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      },
+      "cost": 2
+    },
+    {
+      "id": "tank-cond",
+      "x": -1840,
+      "y": 0,
+      "data": {
+        "type": "conditional",
+        "name": "Baluarte",
+        "description": "Com um escudo em mãos, você é a muralha entre o inimigo e seus aliados.",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "armorTagsAnyOf": [
+            "escudo-item"
+          ]
+        },
+        "effects": [
+          {
+            "kind": "blockBonus",
+            "value": 3
+          },
+          {
+            "kind": "defense",
+            "damageType": "physical",
+            "value": 1
+          },
+          {
+            "kind": "attributeBonus",
+            "attribute": "fortitude",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "tank-midL",
+      "x": -1150,
+      "y": 300,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-midR",
+      "x": -1150,
+      "y": -300,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-path1",
+      "x": -1250,
+      "y": 0,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-path2",
+      "x": -1000,
+      "y": 0,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-path3",
+      "x": -750,
+      "y": 0,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "tank-start",
+      "x": -1500,
+      "y": 0,
+      "data": {
+        "type": "player",
+        "name": "Tank",
+        "description": "Defesa impenetrável, controle e proteção do grupo."
+      }
+    },
+    {
+      "id": "tank-statL",
+      "x": -1650,
+      "y": 460,
+      "data": {
+        "type": "stat",
+        "stat": "resistencia",
+        "value": 5
+      }
+    },
+    {
+      "id": "tank-statR",
+      "x": -1650,
+      "y": -460,
+      "data": {
+        "type": "stat",
+        "stat": "vida",
+        "value": 5
+      }
+    },
+    {
+      "id": "tank-t1L",
+      "x": -1480,
+      "y": 340,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "postura-de-muralha",
+        "skillName": "Postura de Muralha",
+        "skillDescription": "Você não pode atacar, mas dobra sua Armadura até o início do seu próximo turno. Uma defesa impenetrável para quem sabe que o maior dano é o recebido.",
+        "skillCost": "1 por rodada",
+        "attributeBonuses": [
+          {
+            "attribute": "fortitude",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "tank-t1R",
+      "x": -1480,
+      "y": -340,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "inabalavel",
+        "skillName": "Inabalável",
+        "skillDescription": "Use como Reação para consumir PC e prevenir as condições Atordoado ou Caído antes que entrem em efeito.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "fortitude",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "tank-t2L",
+      "x": -1230,
+      "y": 480,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "contra-ataque",
+        "skillName": "Contra-Ataque",
+        "skillDescription": "Se um inimigo errar um ataque contra você, use sua Reação para responder imediatamente com um ataque contra ele.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "fortitude",
+            "value": 1
+          },
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "tank-t2R",
+      "x": -1230,
+      "y": -480,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "agarrar",
+        "skillName": "Agarrar",
+        "skillDescription": "Realiza uma manobra de imobilização. Teste de Força contra o teste de Esquiva do alvo. Alvos agarrados não podem se mover, sofrem Desvantagem em ataques e precisam passar num teste de Força ou ser auxiliados por aliados para se libertar.",
+        "skillCost": "2",
+        "attributeBonuses": [
+          {
+            "attribute": "fortitude",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "tank-utilL",
+      "x": -1680,
+      "y": 180,
+      "data": {
+        "type": "defenseBonus",
+        "damageType": "physical",
+        "value": 2
+      }
+    },
+    {
+      "id": "tank-utilR",
+      "x": -1680,
+      "y": -180,
+      "data": {
+        "type": "stat",
+        "stat": "vida",
+        "value": 10
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "arqueiro-branchL--arqueiro-midL",
+      "from": "arqueiro-branchL",
+      "to": "arqueiro-midL"
+    },
+    {
+      "id": "arqueiro-branchL--arqueiro-path1",
+      "from": "arqueiro-path1",
+      "to": "arqueiro-branchL"
+    },
+    {
+      "id": "arqueiro-branchL--arqueiro-t1L",
+      "from": "arqueiro-branchL",
+      "to": "arqueiro-t1L"
+    },
+    {
+      "id": "arqueiro-branchR--arqueiro-midR",
+      "from": "arqueiro-branchR",
+      "to": "arqueiro-midR"
+    },
+    {
+      "id": "arqueiro-branchR--arqueiro-path1",
+      "from": "arqueiro-path1",
+      "to": "arqueiro-branchR"
+    },
+    {
+      "id": "arqueiro-branchR--arqueiro-t1R",
+      "from": "arqueiro-branchR",
+      "to": "arqueiro-t1R"
+    },
+    {
+      "id": "arqueiro-capstone--arqueiro-cond",
+      "from": "arqueiro-cond",
+      "to": "arqueiro-capstone"
+    },
+    {
+      "id": "arqueiro-cond--arqueiro-utilL",
+      "from": "arqueiro-utilL",
+      "to": "arqueiro-cond"
+    },
+    {
+      "id": "arqueiro-cond--arqueiro-utilR",
+      "from": "arqueiro-utilR",
+      "to": "arqueiro-cond"
+    },
+    {
+      "id": "arqueiro-midL--arqueiro-t2L",
+      "from": "arqueiro-midL",
+      "to": "arqueiro-t2L"
+    },
+    {
+      "id": "arqueiro-midR--arqueiro-t2R",
+      "from": "arqueiro-midR",
+      "to": "arqueiro-t2R"
+    },
+    {
+      "id": "arqueiro-path1--arqueiro-path2",
+      "from": "arqueiro-path1",
+      "to": "arqueiro-path2"
+    },
+    {
+      "id": "arqueiro-path1--arqueiro-start",
+      "from": "arqueiro-start",
+      "to": "arqueiro-path1"
+    },
+    {
+      "id": "arqueiro-path2--arqueiro-path3",
+      "from": "arqueiro-path2",
+      "to": "arqueiro-path3"
+    },
+    {
+      "id": "arqueiro-path3--coracao-do-pinaculo",
+      "from": "arqueiro-path3",
+      "to": "coracao-do-pinaculo"
+    },
+    {
+      "id": "arqueiro-start--arqueiro-utilL",
+      "from": "arqueiro-start",
+      "to": "arqueiro-utilL"
+    },
+    {
+      "id": "arqueiro-start--arqueiro-utilR",
+      "from": "arqueiro-start",
+      "to": "arqueiro-utilR"
+    },
+    {
+      "id": "arqueiro-statL--arqueiro-t1L",
+      "from": "arqueiro-t1L",
+      "to": "arqueiro-statL"
+    },
+    {
+      "id": "arqueiro-statR--arqueiro-t1R",
+      "from": "arqueiro-t1R",
+      "to": "arqueiro-statR"
+    },
+    {
+      "id": "arqueiro-t2L--ligacao-rogue-arqueiro",
+      "from": "arqueiro-t2L",
+      "to": "ligacao-rogue-arqueiro"
+    },
+    {
+      "id": "arqueiro-t2R--ligacao-arqueiro-mago",
+      "from": "arqueiro-t2R",
+      "to": "ligacao-arqueiro-mago"
+    },
+    {
+      "id": "coracao-do-pinaculo--curandeiro-path3",
+      "from": "curandeiro-path3",
+      "to": "coracao-do-pinaculo"
+    },
+    {
+      "id": "coracao-do-pinaculo--guerreiro-path3",
+      "from": "guerreiro-path3",
+      "to": "coracao-do-pinaculo"
+    },
+    {
+      "id": "coracao-do-pinaculo--mago-path3",
+      "from": "mago-path3",
+      "to": "coracao-do-pinaculo"
+    },
+    {
+      "id": "coracao-do-pinaculo--rogue-path3",
+      "from": "rogue-path3",
+      "to": "coracao-do-pinaculo"
+    },
+    {
+      "id": "coracao-do-pinaculo--tank-path3",
+      "from": "tank-path3",
+      "to": "coracao-do-pinaculo"
+    },
+    {
+      "id": "curandeiro-branchL--curandeiro-midL",
+      "from": "curandeiro-branchL",
+      "to": "curandeiro-midL"
+    },
+    {
+      "id": "curandeiro-branchL--curandeiro-path1",
+      "from": "curandeiro-path1",
+      "to": "curandeiro-branchL"
+    },
+    {
+      "id": "curandeiro-branchL--curandeiro-t1L",
+      "from": "curandeiro-branchL",
+      "to": "curandeiro-t1L"
+    },
+    {
+      "id": "curandeiro-branchR--curandeiro-midR",
+      "from": "curandeiro-branchR",
+      "to": "curandeiro-midR"
+    },
+    {
+      "id": "curandeiro-branchR--curandeiro-path1",
+      "from": "curandeiro-path1",
+      "to": "curandeiro-branchR"
+    },
+    {
+      "id": "curandeiro-branchR--curandeiro-t1R",
+      "from": "curandeiro-branchR",
+      "to": "curandeiro-t1R"
+    },
+    {
+      "id": "curandeiro-capstone--curandeiro-cond",
+      "from": "curandeiro-cond",
+      "to": "curandeiro-capstone"
+    },
+    {
+      "id": "curandeiro-cond--curandeiro-utilL",
+      "from": "curandeiro-utilL",
+      "to": "curandeiro-cond"
+    },
+    {
+      "id": "curandeiro-cond--curandeiro-utilR",
+      "from": "curandeiro-utilR",
+      "to": "curandeiro-cond"
+    },
+    {
+      "id": "curandeiro-midL--curandeiro-t2L",
+      "from": "curandeiro-midL",
+      "to": "curandeiro-t2L"
+    },
+    {
+      "id": "curandeiro-midR--curandeiro-t2R",
+      "from": "curandeiro-midR",
+      "to": "curandeiro-t2R"
+    },
+    {
+      "id": "curandeiro-path1--curandeiro-path2",
+      "from": "curandeiro-path1",
+      "to": "curandeiro-path2"
+    },
+    {
+      "id": "curandeiro-path1--curandeiro-start",
+      "from": "curandeiro-start",
+      "to": "curandeiro-path1"
+    },
+    {
+      "id": "curandeiro-path2--curandeiro-path3",
+      "from": "curandeiro-path2",
+      "to": "curandeiro-path3"
+    },
+    {
+      "id": "curandeiro-start--curandeiro-utilL",
+      "from": "curandeiro-start",
+      "to": "curandeiro-utilL"
+    },
+    {
+      "id": "curandeiro-start--curandeiro-utilR",
+      "from": "curandeiro-start",
+      "to": "curandeiro-utilR"
+    },
+    {
+      "id": "curandeiro-statL--curandeiro-t1L",
+      "from": "curandeiro-t1L",
+      "to": "curandeiro-statL"
+    },
+    {
+      "id": "curandeiro-statR--curandeiro-t1R",
+      "from": "curandeiro-t1R",
+      "to": "curandeiro-statR"
+    },
+    {
+      "id": "curandeiro-t2L--ligacao-mago-curandeiro",
+      "from": "curandeiro-t2L",
+      "to": "ligacao-mago-curandeiro"
+    },
+    {
+      "id": "curandeiro-t2R--ligacao-curandeiro-tank",
+      "from": "curandeiro-t2R",
+      "to": "ligacao-curandeiro-tank"
+    },
+    {
+      "id": "guerreiro-branchL--guerreiro-midL",
+      "from": "guerreiro-branchL",
+      "to": "guerreiro-midL"
+    },
+    {
+      "id": "guerreiro-branchL--guerreiro-path1",
+      "from": "guerreiro-path1",
+      "to": "guerreiro-branchL"
+    },
+    {
+      "id": "guerreiro-branchL--guerreiro-t1L",
+      "from": "guerreiro-branchL",
+      "to": "guerreiro-t1L"
+    },
+    {
+      "id": "guerreiro-branchR--guerreiro-midR",
+      "from": "guerreiro-branchR",
+      "to": "guerreiro-midR"
+    },
+    {
+      "id": "guerreiro-branchR--guerreiro-path1",
+      "from": "guerreiro-path1",
+      "to": "guerreiro-branchR"
+    },
+    {
+      "id": "guerreiro-branchR--guerreiro-t1R",
+      "from": "guerreiro-branchR",
+      "to": "guerreiro-t1R"
+    },
+    {
+      "id": "guerreiro-capstone--guerreiro-cond",
+      "from": "guerreiro-cond",
+      "to": "guerreiro-capstone"
+    },
+    {
+      "id": "guerreiro-cond--guerreiro-utilL",
+      "from": "guerreiro-utilL",
+      "to": "guerreiro-cond"
+    },
+    {
+      "id": "guerreiro-cond--guerreiro-utilR",
+      "from": "guerreiro-utilR",
+      "to": "guerreiro-cond"
+    },
+    {
+      "id": "guerreiro-midL--guerreiro-t2L",
+      "from": "guerreiro-midL",
+      "to": "guerreiro-t2L"
+    },
+    {
+      "id": "guerreiro-midR--guerreiro-t2R",
+      "from": "guerreiro-midR",
+      "to": "guerreiro-t2R"
+    },
+    {
+      "id": "guerreiro-path1--guerreiro-path2",
+      "from": "guerreiro-path1",
+      "to": "guerreiro-path2"
+    },
+    {
+      "id": "guerreiro-path1--guerreiro-start",
+      "from": "guerreiro-start",
+      "to": "guerreiro-path1"
+    },
+    {
+      "id": "guerreiro-path2--guerreiro-path3",
+      "from": "guerreiro-path2",
+      "to": "guerreiro-path3"
+    },
+    {
+      "id": "guerreiro-start--guerreiro-utilL",
+      "from": "guerreiro-start",
+      "to": "guerreiro-utilL"
+    },
+    {
+      "id": "guerreiro-start--guerreiro-utilR",
+      "from": "guerreiro-start",
+      "to": "guerreiro-utilR"
+    },
+    {
+      "id": "guerreiro-statL--guerreiro-t1L",
+      "from": "guerreiro-t1L",
+      "to": "guerreiro-statL"
+    },
+    {
+      "id": "guerreiro-statR--guerreiro-t1R",
+      "from": "guerreiro-t1R",
+      "to": "guerreiro-statR"
+    },
+    {
+      "id": "guerreiro-t2L--ligacao-tank-guerreiro",
+      "from": "guerreiro-t2L",
+      "to": "ligacao-tank-guerreiro"
+    },
+    {
+      "id": "guerreiro-t2R--ligacao-guerreiro-rogue",
+      "from": "guerreiro-t2R",
+      "to": "ligacao-guerreiro-rogue"
+    },
+    {
+      "id": "ligacao-arqueiro-mago--mago-t2L",
+      "from": "mago-t2L",
+      "to": "ligacao-arqueiro-mago"
+    },
+    {
+      "id": "ligacao-curandeiro-tank--tank-t2L",
+      "from": "tank-t2L",
+      "to": "ligacao-curandeiro-tank"
+    },
+    {
+      "id": "ligacao-guerreiro-rogue--rogue-t2L",
+      "from": "rogue-t2L",
+      "to": "ligacao-guerreiro-rogue"
+    },
+    {
+      "id": "ligacao-mago-curandeiro--mago-t2R",
+      "from": "mago-t2R",
+      "to": "ligacao-mago-curandeiro"
+    },
+    {
+      "id": "ligacao-rogue-arqueiro--rogue-t2R",
+      "from": "rogue-t2R",
+      "to": "ligacao-rogue-arqueiro"
+    },
+    {
+      "id": "ligacao-tank-guerreiro--tank-t2R",
+      "from": "tank-t2R",
+      "to": "ligacao-tank-guerreiro"
+    },
+    {
+      "id": "mago-branchL--mago-midL",
+      "from": "mago-branchL",
+      "to": "mago-midL"
+    },
+    {
+      "id": "mago-branchL--mago-path1",
+      "from": "mago-path1",
+      "to": "mago-branchL"
+    },
+    {
+      "id": "mago-branchL--mago-t1L",
+      "from": "mago-branchL",
+      "to": "mago-t1L"
+    },
+    {
+      "id": "mago-branchR--mago-midR",
+      "from": "mago-branchR",
+      "to": "mago-midR"
+    },
+    {
+      "id": "mago-branchR--mago-path1",
+      "from": "mago-path1",
+      "to": "mago-branchR"
+    },
+    {
+      "id": "mago-branchR--mago-t1R",
+      "from": "mago-branchR",
+      "to": "mago-t1R"
+    },
+    {
+      "id": "mago-capstone--mago-cond",
+      "from": "mago-cond",
+      "to": "mago-capstone"
+    },
+    {
+      "id": "mago-cond--mago-utilL",
+      "from": "mago-utilL",
+      "to": "mago-cond"
+    },
+    {
+      "id": "mago-cond--mago-utilR",
+      "from": "mago-utilR",
+      "to": "mago-cond"
+    },
+    {
+      "id": "mago-midL--mago-t2L",
+      "from": "mago-midL",
+      "to": "mago-t2L"
+    },
+    {
+      "id": "mago-midR--mago-t2R",
+      "from": "mago-midR",
+      "to": "mago-t2R"
+    },
+    {
+      "id": "mago-path1--mago-path2",
+      "from": "mago-path1",
+      "to": "mago-path2"
+    },
+    {
+      "id": "mago-path1--mago-start",
+      "from": "mago-start",
+      "to": "mago-path1"
+    },
+    {
+      "id": "mago-path2--mago-path3",
+      "from": "mago-path2",
+      "to": "mago-path3"
+    },
+    {
+      "id": "mago-start--mago-utilL",
+      "from": "mago-start",
+      "to": "mago-utilL"
+    },
+    {
+      "id": "mago-start--mago-utilR",
+      "from": "mago-start",
+      "to": "mago-utilR"
+    },
+    {
+      "id": "mago-statL--mago-t1L",
+      "from": "mago-t1L",
+      "to": "mago-statL"
+    },
+    {
+      "id": "mago-statR--mago-t1R",
+      "from": "mago-t1R",
+      "to": "mago-statR"
+    },
+    {
+      "id": "rogue-branchL--rogue-midL",
+      "from": "rogue-branchL",
+      "to": "rogue-midL"
+    },
+    {
+      "id": "rogue-branchL--rogue-path1",
+      "from": "rogue-path1",
+      "to": "rogue-branchL"
+    },
+    {
+      "id": "rogue-branchL--rogue-t1L",
+      "from": "rogue-branchL",
+      "to": "rogue-t1L"
+    },
+    {
+      "id": "rogue-branchR--rogue-midR",
+      "from": "rogue-branchR",
+      "to": "rogue-midR"
+    },
+    {
+      "id": "rogue-branchR--rogue-path1",
+      "from": "rogue-path1",
+      "to": "rogue-branchR"
+    },
+    {
+      "id": "rogue-branchR--rogue-t1R",
+      "from": "rogue-branchR",
+      "to": "rogue-t1R"
+    },
+    {
+      "id": "rogue-capstone--rogue-cond",
+      "from": "rogue-cond",
+      "to": "rogue-capstone"
+    },
+    {
+      "id": "rogue-cond--rogue-utilL",
+      "from": "rogue-utilL",
+      "to": "rogue-cond"
+    },
+    {
+      "id": "rogue-cond--rogue-utilR",
+      "from": "rogue-utilR",
+      "to": "rogue-cond"
+    },
+    {
+      "id": "rogue-midL--rogue-t2L",
+      "from": "rogue-midL",
+      "to": "rogue-t2L"
+    },
+    {
+      "id": "rogue-midR--rogue-t2R",
+      "from": "rogue-midR",
+      "to": "rogue-t2R"
+    },
+    {
+      "id": "rogue-path1--rogue-path2",
+      "from": "rogue-path1",
+      "to": "rogue-path2"
+    },
+    {
+      "id": "rogue-path1--rogue-start",
+      "from": "rogue-start",
+      "to": "rogue-path1"
+    },
+    {
+      "id": "rogue-path2--rogue-path3",
+      "from": "rogue-path2",
+      "to": "rogue-path3"
+    },
+    {
+      "id": "rogue-start--rogue-utilL",
+      "from": "rogue-start",
+      "to": "rogue-utilL"
+    },
+    {
+      "id": "rogue-start--rogue-utilR",
+      "from": "rogue-start",
+      "to": "rogue-utilR"
+    },
+    {
+      "id": "rogue-statL--rogue-t1L",
+      "from": "rogue-t1L",
+      "to": "rogue-statL"
+    },
+    {
+      "id": "rogue-statR--rogue-t1R",
+      "from": "rogue-t1R",
+      "to": "rogue-statR"
+    },
+    {
+      "id": "tank-branchL--tank-midL",
+      "from": "tank-branchL",
+      "to": "tank-midL"
+    },
+    {
+      "id": "tank-branchL--tank-path1",
+      "from": "tank-path1",
+      "to": "tank-branchL"
+    },
+    {
+      "id": "tank-branchL--tank-t1L",
+      "from": "tank-branchL",
+      "to": "tank-t1L"
+    },
+    {
+      "id": "tank-branchR--tank-midR",
+      "from": "tank-branchR",
+      "to": "tank-midR"
+    },
+    {
+      "id": "tank-branchR--tank-path1",
+      "from": "tank-path1",
+      "to": "tank-branchR"
+    },
+    {
+      "id": "tank-branchR--tank-t1R",
+      "from": "tank-branchR",
+      "to": "tank-t1R"
+    },
+    {
+      "id": "tank-capstone--tank-cond",
+      "from": "tank-cond",
+      "to": "tank-capstone"
+    },
+    {
+      "id": "tank-cond--tank-utilL",
+      "from": "tank-utilL",
+      "to": "tank-cond"
+    },
+    {
+      "id": "tank-cond--tank-utilR",
+      "from": "tank-utilR",
+      "to": "tank-cond"
+    },
+    {
+      "id": "tank-midL--tank-t2L",
+      "from": "tank-midL",
+      "to": "tank-t2L"
+    },
+    {
+      "id": "tank-midR--tank-t2R",
+      "from": "tank-midR",
+      "to": "tank-t2R"
+    },
+    {
+      "id": "tank-path1--tank-path2",
+      "from": "tank-path1",
+      "to": "tank-path2"
+    },
+    {
+      "id": "tank-path1--tank-start",
+      "from": "tank-start",
+      "to": "tank-path1"
+    },
+    {
+      "id": "tank-path2--tank-path3",
+      "from": "tank-path2",
+      "to": "tank-path3"
+    },
+    {
+      "id": "tank-start--tank-utilL",
+      "from": "tank-start",
+      "to": "tank-utilL"
+    },
+    {
+      "id": "tank-start--tank-utilR",
+      "from": "tank-start",
+      "to": "tank-utilR"
+    },
+    {
+      "id": "tank-statL--tank-t1L",
+      "from": "tank-t1L",
+      "to": "tank-statL"
+    },
+    {
+      "id": "tank-statR--tank-t1R",
+      "from": "tank-t1R",
+      "to": "tank-statR"
+    }
+  ]
+}

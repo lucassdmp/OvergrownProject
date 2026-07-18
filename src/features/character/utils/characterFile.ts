@@ -1,17 +1,17 @@
-import type { CharacterV2 } from '../../../types/gameV2'
+import type { Character } from '../../../types/game'
 import type { TalentTree } from '../../../types/talentTree'
 
-export interface CharacterV2File {
+export interface CharacterFile {
   format: 'overgrown-character-v2'
   version: 1
-  character: CharacterV2
+  character: Character
   talentTree: TalentTree
 }
 
-export function createCharacterV2File(
-  character: CharacterV2,
+export function createCharacterFile(
+  character: Character,
   talentTree: TalentTree,
-): CharacterV2File {
+): CharacterFile {
   return {
     format: 'overgrown-character-v2',
     version: 1,
@@ -24,24 +24,24 @@ export function createCharacterV2File(
   }
 }
 
-export function serializeCharacterV2File(character: CharacterV2, talentTree: TalentTree): string {
-  return JSON.stringify(createCharacterV2File(character, talentTree), null, 2)
+export function serializeCharacterFile(character: Character, talentTree: TalentTree): string {
+  return JSON.stringify(createCharacterFile(character, talentTree), null, 2)
 }
 
-export function isCharacterV2File(value: unknown): value is CharacterV2File {
+export function isCharacterFile(value: unknown): value is CharacterFile {
   if (!value || typeof value !== 'object') return false
-  const candidate = value as Partial<CharacterV2File>
+  const candidate = value as Partial<CharacterFile>
   return (
     candidate.format === 'overgrown-character-v2' &&
     candidate.version === 1 &&
-    isLegacyCharacterV2(candidate.character) &&
+    isCharacterData(candidate.character) &&
     isTalentTree(candidate.talentTree)
   )
 }
 
-export function isLegacyCharacterV2(value: unknown): value is CharacterV2 {
+export function isCharacterData(value: unknown): value is Character {
   if (!value || typeof value !== 'object') return false
-  const candidate = value as Partial<CharacterV2>
+  const candidate = value as Partial<Character>
   return (
     typeof candidate.id === 'string' &&
     typeof candidate.name === 'string' &&

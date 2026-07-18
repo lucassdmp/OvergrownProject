@@ -1,9 +1,9 @@
-import type { AttributeName, Character } from '../../../types/game'
-import { useCharacterStore, remainingAttributePoints, totalAttributePoints } from '../store/characterStore'
-import IntegerInput from '../../../components/ui/IntegerInput'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import type { AttributeName } from '../../../types/game'
+import { useCharacterStats } from '../hooks/useCharacterStats'
 
-// ── Pentagon geometry ─────────────────────────────────────────────────────────
-// viewBox: 0 0 500 480,  center: (250, 230),  radius: 155
+// ── Pentagon geometry ──────────────────────────────────────────────────────────
 const CX = 250
 const CY = 230
 const R = 155
@@ -22,133 +22,63 @@ const ATTRS: { id: AttributeName; label: string; angle: number }[] = [
 ]
 
 const V = ATTRS.map((a) => vertex(a.angle))
-
-// Pentagon outline path
 const pentagonPath = V.map((v, i) => `${i === 0 ? 'M' : 'L'} ${v.x},${v.y}`).join(' ') + ' Z'
-
-// Pentagram star path: skip one vertex each step  (0→2→4→1→3→0)
 const starOrder = [0, 2, 4, 1, 3]
-const starPath =
-  starOrder.map((i, j) => `${j === 0 ? 'M' : 'L'} ${V[i].x},${V[i].y}`).join(' ') + ' Z'
+const starPath = starOrder.map((i, j) => `${j === 0 ? 'M' : 'L'} ${V[i].x},${V[i].y}`).join(' ') + ' Z'
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Sum of attributeBonus effects from active inventory items for each attribute. */
-function getItemAttrBonuses(character: Character): Partial<Record<AttributeName, number>> {
-  const bonuses: Partial<Record<AttributeName, number>> = {}
-  const activeItems = (character.inventory ?? []).filter((it) =>
-    it.type === 'weapon' || it.type === 'armor' ? it.equipped === true : it.quantity > 0
-  )
-  for (const item of activeItems) {
-    for (const ef of item.effects) {
-      if (ef.type === 'attributeBonus' && ef.attribute && ef.value != null) {
-        bonuses[ef.attribute] = (bonuses[ef.attribute] ?? 0) + ef.value
-      }
-    }
-  }
-  return bonuses
-}
-
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-interface AttrControlProps {
-  id: AttributeName
-  label: string
-  /** Base value (allocated points) */
-  value: number
-  /** Bonus coming from equipped/active items */
-  itemBonus: number
-  canIncrease: boolean
-  onChange: (v: number) => void
-  leftPct: number
-  topPct: number
-}
-
-function AttributeControl({ id, label, value, itemBonus, canIncrease, onChange, leftPct, topPct }: AttrControlProps) {
-  void id
-  const total = value + itemBonus
-
-  const getDiceValue = (val: number) => {
-    if (val <= 5) return '1D20'
-    if (val <= 10) return '2D20'
-    if (val <= 15) return '3D20'
-    if (val <= 20) return '4D20'
-    return '5D20'
-  }
-
-  return (
-    <div
-      className="absolute flex flex-col items-center gap-0.5"
-      style={{ left: `${leftPct}%`, top: `${topPct}%`, transform: 'translate(-50%, -50%)' }}
-    >
-      <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400/90">{label}</span>
-      <div className="flex items-center gap-0.5">
-        <button
-          disabled={value <= 0}
-          onClick={() => onChange(value - 1)}
-          className="flex h-5 w-5 items-center justify-center rounded bg-gray-200 dark:bg-gray-700/80 text-xs font-bold text-gray-700 dark:text-gray-300 transition hover:bg-gray-300 dark:hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-30"
-        >
-          −
-        </button>
-        <IntegerInput
-          min={0}
-          value={value}
-          onChange={onChange}
-          className="h-8 w-8 rounded-full border border-amber-400/60 dark:border-amber-700/50 bg-white dark:bg-gray-900/90 text-center text-xl font-bold text-gray-900 dark:text-white shadow focus:border-amber-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-        />
-        <button
-          disabled={!canIncrease}
-          onClick={() => onChange(value + 1)}
-          className="flex h-5 w-5 items-center justify-center rounded bg-gray-200 dark:bg-gray-700/80 text-xs font-bold text-gray-700 dark:text-gray-300 transition hover:bg-gray-300 dark:hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-30"
-        >
-          +
-        </button>
-      </div>
-      <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 mt-0.5">{getDiceValue(total)}</span>
-      {itemBonus > 0 && (
-        <span className="text-[10px] font-bold text-violet-500 dark:text-violet-400">+{itemBonus} item</span>
-      )}
-    </div>
-  )
+function getDiceValue(val: number) {
+  if (val <= 5) return '1D20'
+  if (val <= 10) return '2D20'
+  if (val <= 15) return '3D20'
+  if (val <= 20) return '4D20'
+  return '5D20'
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
 
 export default function AttributePentagon() {
-  const character = useCharacterStore((s) => s.character)
-  const setAttribute = useCharacterStore((s) => s.setAttribute)
-  const setDivinity = useCharacterStore((s) => s.setDivinity)
+  const { attributes } = useCharacterStats()
+  const navigate = useNavigate()
+  const [connecting, setConnecting] = useState(false)
 
-  const remaining = remainingAttributePoints(character.attributes, character.divinity)
-  const total = totalAttributePoints(character.divinity)
-  const itemBonuses = getItemAttrBonuses(character)
+  function handleConnect() {
+    if (connecting) return
+    setConnecting(true)
+    setTimeout(() => navigate('/arvore'), 1000)
+  }
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {/* Point counter */}
-      <div className="flex items-center gap-3 text-sm">
-        <span className="text-gray-500 dark:text-gray-400">Pontos de Talento em atributos:</span>
-        <span className={remaining < 0 ? 'font-bold text-red-500 dark:text-red-400' : 'font-bold text-amber-600 dark:text-amber-400'}>
-          {remaining} restantes
-        </span>
-        <span className="text-gray-400 dark:text-gray-600">/ {total} total</span>
-      </div>
-      {remaining < 0 && (
-        <p className="rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-center text-xs font-semibold text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400">
-          Ficha antiga acima do orçamento atual em {Math.abs(remaining)} ponto(s). Os atributos foram preservados.
-        </p>
-      )}
+      <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-lg px-3 py-1.5 border border-amber-200 dark:border-amber-800/40 text-center">
+        Atributos provenientes da Árvore de Talento, clique no Pináculo para gerenciar nós
+      </p>
 
       {/* Pentagon container */}
-      <div className="relative w-full max-w-[440px]" style={{ aspectRatio: '500/480' }}>
+      <div
+        className={`relative w-full max-w-[440px] cursor-pointer transition-all duration-700 ${
+          connecting ? 'scale-95 opacity-60' : 'hover:scale-[1.02]'
+        }`}
+        style={{ aspectRatio: '500/480' }}
+        onClick={handleConnect}
+        title="Clique para conectar com o Pináculo"
+      >
+        {/* Animated glow ring when connecting */}
+        {connecting && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+            <div className="w-48 h-48 rounded-full border-4 border-amber-400 animate-ping opacity-75" />
+          </div>
+        )}
+
         {/* SVG decorative layer */}
         <svg
           viewBox="0 0 500 480"
-          className="absolute inset-0 h-full w-full"
+          className={`absolute inset-0 h-full w-full transition-all duration-700 ${
+            connecting ? 'drop-shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
+          }`}
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            <filter id="glow">
+            <filter id="glow-v2">
               <feGaussianBlur stdDeviation="3" result="coloredBlur" />
               <feMerge>
                 <feMergeNode in="coloredBlur" />
@@ -157,59 +87,80 @@ export default function AttributePentagon() {
             </filter>
           </defs>
 
-          {/* Outer pentagon fill */}
           <path d={pentagonPath} fill="rgba(180,120,40,0.04)" stroke="rgba(180,120,40,0.2)" strokeWidth="1" />
-
-          {/* Pentagram star */}
           <path
             d={starPath}
             fill="rgba(180,120,40,0.06)"
-            stroke="rgba(255,180,50,0.55)"
-            strokeWidth="1.5"
-            filter="url(#glow)"
+            stroke={connecting ? 'rgba(251,191,36,0.9)' : 'rgba(255,180,50,0.55)'}
+            strokeWidth={connecting ? '3' : '1.5'}
+            filter="url(#glow-v2)"
+            className="transition-all duration-500"
           />
-
-          {/* Vertex circles */}
           {V.map((v, i) => (
             <circle key={i} cx={v.x} cy={v.y} r="5" fill="#b45309" opacity="0.7" />
           ))}
-
-          {/* Center circle */}
-          <circle cx={CX} cy={CY} r="38" className="fill-white dark:fill-[rgba(30,25,15,0.9)]" stroke="rgba(180,120,40,0.4)" strokeWidth="1.5" />
+          <circle
+            cx={CX} cy={CY} r="44"
+            className="fill-white dark:fill-[rgba(30,25,15,0.9)] transition-all duration-500"
+            stroke={connecting ? 'rgba(251,191,36,0.9)' : 'rgba(180,120,40,0.4)'}
+            strokeWidth={connecting ? '3' : '1.5'}
+          />
         </svg>
 
-        {/* Attribute controls – absolutely positioned over the SVG */}
+        {/* Attribute display – read-only */}
         {ATTRS.map((attr, i) => (
-          <AttributeControl
+          <div
             key={attr.id}
-            id={attr.id}
-            label={attr.label}
-            value={character.attributes[attr.id]}
-            itemBonus={itemBonuses[attr.id] ?? 0}
-            canIncrease={remaining > 0}
-            onChange={(v) => setAttribute(attr.id, v)}
-            leftPct={(V[i].x / 500) * 100}
-            topPct={(V[i].y / 480) * 100}
-          />
+            className="absolute flex flex-col items-center gap-0.5 pointer-events-none"
+            style={{ left: `${(V[i].x / 500) * 100}%`, top: `${(V[i].y / 480) * 100}%`, transform: 'translate(-50%, -50%)' }}
+          >
+            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400/90">
+              {attr.label}
+            </span>
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-amber-400/60 dark:border-amber-700/50 bg-white dark:bg-gray-900/90 text-xl font-bold text-gray-900 dark:text-white shadow"
+            >
+              {attributes[attr.id]}
+            </div>
+            <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400">
+              {getDiceValue(attributes[attr.id])}
+            </span>
+          </div>
         ))}
 
-        {/* Center – Divinity */}
+        {/* Center – Pináculo button */}
         <div
           className="absolute flex flex-col items-center gap-0.5"
           style={{ left: `${(CX / 500) * 100}%`, top: `${(CY / 480) * 100}%`, transform: 'translate(-50%,-50%)' }}
         >
-          <span className="text-[9px] font-bold uppercase tracking-wider text-amber-600/90 dark:text-amber-600/80">
-            Divindade
+          <span className="text-[8px] font-bold uppercase tracking-wider text-amber-600/90 dark:text-amber-600/80 text-center leading-tight">
+            {connecting ? '✦' : '⬡'}
           </span>
-          <IntegerInput
-            min={0}
-            max={100}
-            value={character.divinity}
-            onChange={setDivinity}
-            className="w-10 rounded bg-transparent text-center text-lg font-bold text-amber-700 focus:outline-none dark:text-amber-300"
-          />
         </div>
       </div>
+
+      {/* Connect button below pentagon */}
+      <button
+        onClick={handleConnect}
+        disabled={connecting}
+        className={`flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition-all duration-300 ${
+          connecting
+            ? 'bg-amber-300 text-amber-900 cursor-not-allowed opacity-60'
+            : 'bg-amber-500 hover:bg-amber-600 text-white shadow-lg hover:shadow-amber-400/30'
+        }`}
+      >
+        {connecting ? (
+          <>
+            <span className="inline-block animate-spin">✦</span>
+            Conectando…
+          </>
+        ) : (
+          <>
+            <span>✦</span>
+            Conectar com o Pináculo
+          </>
+        )}
+      </button>
     </div>
   )
 }

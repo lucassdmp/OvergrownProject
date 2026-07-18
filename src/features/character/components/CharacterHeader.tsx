@@ -1,12 +1,52 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
-import { useCharacter } from '../hooks/useCharacter'
+import { useCharacterStats } from '../hooks/useCharacterStats'
 import { ALL_ORIGINS } from '../../../data/origins'
-import { ALL_SKILLS } from '../../../data/skills'
 import Modal from '../../../components/ui/Modal'
 import IntegerInput from '../../../components/ui/IntegerInput'
-import RestModal from './modals/RestModal'
-import { calculateEquipmentDefense } from '../../../lib/equipmentRules'
+import { useSaveShortcut } from '../../../hooks/useSaveShortcut'
+import { downloadTextFile, fileNamePart } from '../../../utils/downloadFile'
+import { useTalentTreeStore } from '../../talentTree/store/talentTreeStore'
+import {
+  isCharacterFile,
+  isCharacterData,
+  serializeCharacterFile,
+} from '../utils/characterFile'
+
+// ── Avatar resize helper ───────────────────────────────────────────────────────
+const AVATAR_MAX_DIMENSION = 512
+const AVATAR_JPEG_QUALITY = 0.85
+const AVATAR_SIZE_THRESHOLD_BYTES = 300 * 1024
+
+function resizeAvatarImage(base64: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      const { width, height } = img
+      const approxBytes = (base64.length * 3) / 4
+      const needsResize = width > AVATAR_MAX_DIMENSION || height > AVATAR_MAX_DIMENSION
+      if (!needsResize && approxBytes <= AVATAR_SIZE_THRESHOLD_BYTES) {
+        resolve(base64)
+        return
+      }
+      const scale = Math.min(1, AVATAR_MAX_DIMENSION / Math.max(width, height))
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.round(width * scale)
+      canvas.height = Math.round(height * scale)
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        resolve(base64)
+        return
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+      resolve(canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY))
+    }
+    img.onerror = () => resolve(base64)
+    img.src = base64
+  })
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
 
 function ResourcePip({
   label,
@@ -14,30 +54,29 @@ function ResourcePip({
   max,
   color,
   onCurrentChange,
-  temporary = 0,
 }: {
   label: string
   current: number
   max: number
   color: string
   onCurrentChange: (v: number) => void
-  temporary?: number
 }) {
   return (
-    <div className="flex flex-col items-center gap-0.5 min-w-0">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">{label}</span>
+    <div className="flex min-w-0 flex-col items-center gap-0.5">
+      <span className="text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
+        {label}
+      </span>
       <div className="flex items-center gap-1">
         <IntegerInput
           min={0}
           max={max}
           value={current}
           onChange={onCurrentChange}
-          className={`w-14 rounded bg-gray-100 dark:bg-gray-800 px-1 py-0.5 text-center text-lg font-bold ${color} border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none`}
+          className={`w-14 rounded bg-gray-100 px-1 py-0.5 text-center text-lg font-bold dark:bg-gray-800 ${color} border border-gray-300 focus:border-amber-500 focus:outline-none dark:border-gray-700`}
         />
         <span className="text-gray-500">/</span>
         <span className="text-base font-semibold text-gray-600 dark:text-gray-300">{max}</span>
       </div>
-      {temporary > 0 && <span className="text-[10px] font-bold text-emerald-500">+{temporary} temporário</span>}
     </div>
   )
 }
@@ -57,165 +96,205 @@ function CoinField({
 }) {
   return (
     <div className="flex flex-col items-center gap-0.5">
-      <span className={`text-[10px] font-semibold uppercase tracking-widest ${labelColor}`}>{label}</span>
+      <span className={`text-[10px] font-semibold tracking-widest uppercase ${labelColor}`}>
+        {label}
+      </span>
       <div className="relative flex items-center">
-        <span className="absolute left-2 text-sm z-10">🪙</span>
+        <span className="absolute left-2 z-10 text-sm">🪙</span>
         <IntegerInput
           min={0}
           value={value}
           onChange={onChange}
-          className={`w-full min-w-[80px] rounded-full pl-7 pr-2 py-0.5 text-center text-lg font-bold border focus:outline-none ${inputColor}`}
+          className={`w-full min-w-[80px] rounded-full border py-0.5 pr-2 pl-7 text-center text-lg font-bold focus:outline-none ${inputColor}`}
         />
       </div>
     </div>
   )
 }
 
-// ── Avatar image downscaling ────────────────────────────────────────────────
-const AVATAR_MAX_DIMENSION = 512
-const AVATAR_JPEG_QUALITY = 0.85
-const AVATAR_SIZE_THRESHOLD_BYTES = 300 * 1024
-
-/**
- * Shrinks large avatar images so they don't bloat the exported/saved JSON.
- * Small images are left untouched (dimensions and original encoding kept).
- */
-function resizeAvatarImage(base64: string): Promise<string> {
-  return new Promise((resolve) => {
-    const img = new Image()
-    img.onload = () => {
-      const { width, height } = img
-      const approxBytes = (base64.length * 3) / 4
-      const needsResize = width > AVATAR_MAX_DIMENSION || height > AVATAR_MAX_DIMENSION
-      if (!needsResize && approxBytes <= AVATAR_SIZE_THRESHOLD_BYTES) {
-        resolve(base64)
-        return
-      }
-
-      const scale = Math.min(1, AVATAR_MAX_DIMENSION / Math.max(width, height))
-      const canvas = document.createElement('canvas')
-      canvas.width = Math.round(width * scale)
-      canvas.height = Math.round(height * scale)
-      const ctx = canvas.getContext('2d')
-      if (!ctx) {
-        resolve(base64)
-        return
-      }
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-      resolve(canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY))
-    }
-    img.onerror = () => resolve(base64)
-    img.src = base64
-  })
-}
-
 function StatBadge({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex flex-col items-center gap-0.5">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">{label}</span>
+      <span className="text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
+        {label}
+      </span>
       <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{value}</span>
     </div>
   )
 }
 
+// ── Avatar Editor Modal ───────────────────────────────────────────────────────
+
+function AvatarEditorModal({
+  base64,
+  x,
+  y,
+  scale,
+  aspectRatio,
+  onX,
+  onY,
+  onScale,
+  onApply,
+  onClose,
+}: {
+  base64: string
+  x: number
+  y: number
+  scale: number
+  aspectRatio: number
+  onX: (v: number) => void
+  onY: (v: number) => void
+  onScale: (v: number) => void
+  onApply: () => void
+  onClose: () => void
+}) {
+  const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v))
+  return (
+    <Modal title="Ajustar Avatar" onClose={onClose} size="lg">
+      <div className="flex flex-col gap-4">
+        <div
+          className="mx-auto overflow-hidden rounded-xl border-2 border-gray-600"
+          style={{ width: '240px', height: `${240 / aspectRatio}px` }}
+        >
+          <img
+            src={base64}
+            alt="preview"
+            className="h-full w-full object-cover"
+            style={{
+              objectPosition: `${x}% ${y}%`,
+              transformOrigin: `${x}% ${y}%`,
+              transform: `scale(${scale})`,
+            }}
+          />
+        </div>
+        <div className="flex flex-col gap-3">
+          <div>
+            <label className="text-xs text-gray-400">Posição Horizontal: {Math.round(x)}%</label>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={x}
+              onChange={(e) => onX(clamp(Number(e.target.value), 0, 100))}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400">Posição Vertical: {Math.round(y)}%</label>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={y}
+              onChange={(e) => onY(clamp(Number(e.target.value), 0, 100))}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400">Zoom: {scale.toFixed(2)}×</label>
+            <input
+              type="range"
+              min={0.5}
+              max={2.5}
+              step={0.05}
+              value={scale}
+              onChange={(e) => onScale(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+        </div>
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={onClose}
+            className="rounded px-4 py-1.5 text-sm text-gray-400 hover:text-white"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={onApply}
+            className="rounded-lg bg-amber-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-amber-500"
+          >
+            Aplicar
+          </button>
+        </div>
+      </div>
+    </Modal>
+  )
+}
+
+// ── Main Header ───────────────────────────────────────────────────────────────
+
 export default function CharacterHeader() {
-  const { character, derivedStats } = useCharacter()
+  const character = useCharacterStore((s) => s.character)
+  const characters = useCharacterStore((s) => s.characters)
   const store = useCharacterStore()
+  const tree = useTalentTreeStore((s) => s.tree)
+  const importTree = useTalentTreeStore((s) => s.importTree)
+  const { derivedStats } = useCharacterStats()
+
   const fileInputRef = useRef<HTMLInputElement>(null)
   const avatarInputRef = useRef<HTMLInputElement>(null)
   const avatarBoxRef = useRef<HTMLDivElement>(null)
   const [importError, setImportError] = useState<string | null>(null)
   const [confirmReset, setConfirmReset] = useState(false)
-  const [restOpen, setRestOpen] = useState(false)
   const [avatarEditorOpen, setAvatarEditorOpen] = useState(false)
-  const [pendingAvatarBase64, setPendingAvatarBase64] = useState<string | null>(null)
-  const [pendingAvatarX, setPendingAvatarX] = useState(50)
-  const [pendingAvatarY, setPendingAvatarY] = useState(50)
-  const [pendingAvatarScale, setPendingAvatarScale] = useState(1)
-  // Aspect ratio (width / height) of the real avatar box, captured when the editor opens,
-  // so the preview matches how the photo will actually be framed on the sheet.
-  const [previewAspectRatio, setPreviewAspectRatio] = useState(1)
-  const equipmentDefense = calculateEquipmentDefense(character.inventory, character.attributes)
+  const [pendingBase64, setPendingBase64] = useState<string | null>(null)
+  const [pendingX, setPendingX] = useState(50)
+  const [pendingY, setPendingY] = useState(50)
+  const [pendingScale, setPendingScale] = useState(1)
+  const [previewAspect, setPreviewAspect] = useState(1)
 
-  function captureAvatarBoxAspectRatio() {
-    const box = avatarBoxRef.current
-    if (box && box.offsetWidth > 0 && box.offsetHeight > 0) {
-      setPreviewAspectRatio(box.offsetWidth / box.offsetHeight)
-    }
+  const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v))
+
+  function parsePos(pos?: string) {
+    if (!pos) return { x: 50, y: 50 }
+    const m = pos.trim().match(/^(-?\d+(?:\.\d+)?)%?\s+(-?\d+(?:\.\d+)?)%?$/)
+    if (!m) return { x: 50, y: 50 }
+    return { x: clamp(Number(m[1]), 0, 100), y: clamp(Number(m[2]), 0, 100) }
   }
 
-  const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
-  const parseAvatarPosition = (position?: string) => {
-    if (!position) return { x: 50, y: 50 }
-    const match = position.trim().match(/^(-?\d+(?:\.\d+)?)%?\s+(-?\d+(?:\.\d+)?)%?$/)
-    if (!match) return { x: 50, y: 50 }
-    return {
-      x: clamp(Number(match[1]), 0, 100),
-      y: clamp(Number(match[2]), 0, 100),
-    }
-  }
-
-  const currentAvatarPos = parseAvatarPosition(character.avatarPosition)
-  const currentAvatarScale = clamp(character.avatarScale ?? 1, 0.5, 2.5)
-
-  // ── Avatar ──────────────────────────────────────────────────────────────────
-  function handleAvatarClick() {
-    avatarInputRef.current?.click()
-  }
+  const avatarPos = parsePos(character.avatarPosition)
+  const avatarScale = clamp(character.avatarScale ?? 1, 0.5, 2.5)
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-
     const reader = new FileReader()
     reader.onload = async (ev) => {
       const base64 = ev.target?.result as string
       if (!base64) return
       const resized = await resizeAvatarImage(base64)
-      setPendingAvatarBase64(resized)
-      setPendingAvatarX(50)
-      setPendingAvatarY(50)
-      setPendingAvatarScale(1)
-      captureAvatarBoxAspectRatio()
+      setPendingBase64(resized)
+      setPendingX(50)
+      setPendingY(50)
+      setPendingScale(1)
+      const box = avatarBoxRef.current
+      if (box && box.offsetWidth > 0 && box.offsetHeight > 0)
+        setPreviewAspect(box.offsetWidth / box.offsetHeight)
       setAvatarEditorOpen(true)
     }
     reader.readAsDataURL(file)
     e.target.value = ''
   }
 
-  function handleOpenAvatarEditor() {
-    if (!character.avatarBase64) return
-    const pos = parseAvatarPosition(character.avatarPosition)
-    setPendingAvatarBase64(character.avatarBase64)
-    setPendingAvatarX(pos.x)
-    setPendingAvatarY(pos.y)
-    setPendingAvatarScale(clamp(character.avatarScale ?? 1, 0.5, 2.5))
-    captureAvatarBoxAspectRatio()
-    setAvatarEditorOpen(true)
-  }
-
-  function handleApplyAvatarEditor() {
-    if (!pendingAvatarBase64) return
-    store.setAvatarBase64(pendingAvatarBase64)
-    store.setAvatarPosition(`${pendingAvatarX}% ${pendingAvatarY}%`)
-    store.setAvatarScale(pendingAvatarScale)
+  function applyAvatar() {
+    if (!pendingBase64) return
+    store.setAvatarBase64(pendingBase64)
+    store.setAvatarPosition(`${pendingX}% ${pendingY}%`)
+    store.setAvatarScale(pendingScale)
     setAvatarEditorOpen(false)
   }
 
-  // ── Export ──────────────────────────────────────────────────────────────────
-  function handleExport() {
-    const json = JSON.stringify(character, null, 2)
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${character.name.replace(/\s+/g, '_') || 'personagem'}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
+  const handleExport = useCallback(() => {
+    downloadTextFile(
+      serializeCharacterFile(character, tree),
+      `${fileNamePart(character.name, 'personagem')}_v2.json`,
+    )
+  }, [character, tree])
 
-  // ── Import ──────────────────────────────────────────────────────────────────
-  function handleImportClick() {
+  useSaveShortcut(handleExport)
+
+  function handleImport() {
     setImportError(null)
     fileInputRef.current?.click()
   }
@@ -226,415 +305,307 @@ export default function CharacterHeader() {
     const reader = new FileReader()
     reader.onload = (ev) => {
       try {
-        const parsed = JSON.parse(ev.target?.result as string)
-        if (!parsed || typeof parsed !== 'object') throw new Error('JSON inválido')
-        // Basic validation of required fields for a character file
-        if (!parsed.name && !parsed.attributes) throw new Error('Formato inválido: nome ou atributos faltando')
-        
-        store.loadCharacter(parsed)
+        const parsed: unknown = JSON.parse(ev.target?.result as string)
+        if (isCharacterFile(parsed)) {
+          importTree(parsed.talentTree)
+          store.loadCharacter(parsed.character)
+        } else if (isCharacterData(parsed)) {
+          store.loadCharacter(parsed)
+        } else {
+          throw new Error('JSON inválido')
+        }
         setImportError(null)
       } catch {
-        setImportError('Arquivo inválido. Use um JSON exportado desta ficha.')
+        setImportError('Arquivo inválido. Use um JSON exportado da ficha.')
       }
     }
     reader.readAsText(file)
-    // reset so the same file can be re-imported
     e.target.value = ''
   }
 
-  return (
-    <div className="rounded-xl border border-amber-200 dark:border-amber-900/30 bg-white dark:bg-gray-900/80 px-4 py-3 shadow-sm dark:shadow-lg">
-      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-800">
-        <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Selecionar Ficha</label>
-        <select
-          value={character.id}
-          onChange={(e) => {
-            const val = e.target.value
-            if (val === 'NEW') {
-              store.createNewCharacter()
-            } else {
-              store.switchCharacter(val)
-            }
-          }}
-          className="rounded bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none min-w-[200px]"
-        >
-          {Object.values(store.characters || {}).map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name || 'Sem Nome'}{c.race ? `, ${c.race}` : ''}. Nível {c.divinity}
-            </option>
-          ))}
-          <option value="NEW">+ Criar Novo Personagem</option>
-        </select>
-        
-        {Object.keys(store.characters || {}).length > 1 && (
-          <button
-            onClick={() => {
-              if (window.confirm('Tem certeza que deseja apagar esta ficha?')) {
-                store.deleteCharacter(character.id)
-              }
-            }}
-            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-semibold transition"
-          >
-            Excluir Ficha
-          </button>
-        )}
-      </div>
+  const inpBase =
+    'rounded bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-2 py-1 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none'
 
-      <div className="flex flex-col md:flex-row gap-6 items-stretch">
-        {/* Avatar */}
-        <div className="flex flex-col gap-2 shrink-0 self-center md:self-stretch md:w-56 md:min-w-56">
-          <div
-            ref={avatarBoxRef}
-            onClick={handleAvatarClick}
-            className="group relative h-56 w-56 md:h-full md:w-full cursor-pointer overflow-hidden rounded-xl border-2 border-gray-300 bg-gray-100 transition hover:border-amber-500 dark:border-gray-700 dark:bg-gray-800 shadow-inner"
-            title="Clique para alterar a foto (max 256x256)"
+  return (
+    <>
+      {avatarEditorOpen && pendingBase64 && (
+        <AvatarEditorModal
+          base64={pendingBase64}
+          x={pendingX}
+          y={pendingY}
+          scale={pendingScale}
+          aspectRatio={previewAspect}
+          onX={setPendingX}
+          onY={setPendingY}
+          onScale={setPendingScale}
+          onApply={applyAvatar}
+          onClose={() => setAvatarEditorOpen(false)}
+        />
+      )}
+
+      <div className="rounded-xl border border-amber-200 bg-white px-4 py-3 shadow-sm dark:border-amber-900/30 dark:bg-gray-900/80 dark:shadow-lg">
+        {/* Character selector */}
+        <div className="mb-4 flex items-center gap-3 border-b border-gray-200 pb-3 dark:border-gray-800">
+          <label className="text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
+            Ficha
+          </label>
+          <select
+            value={character.id}
+            onChange={(e) => {
+              const val = e.target.value
+              if (val === 'NEW') store.createNewCharacter()
+              else store.switchCharacter(val)
+            }}
+            className={inpBase + ' min-w-[200px]'}
           >
-            {character.avatarBase64 ? (
-              <img 
-                src={character.avatarBase64} 
-                alt="Avatar" 
-                className="h-full w-full object-cover transition-transform" 
-                style={{
-                  objectPosition: `${currentAvatarPos.x}% ${currentAvatarPos.y}%`,
-                  transformOrigin: `${currentAvatarPos.x}% ${currentAvatarPos.y}%`,
-                  transform: `scale(${currentAvatarScale})`
-                }}
-              />
-            ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center text-gray-400 dark:text-gray-500 group-hover:opacity-90">
-                <span className="text-4xl mb-2">📷</span>
-                <span className="text-[10px] uppercase font-bold tracking-widest opacity-60">Foto</span>
-              </div>
-            )}
-            {character.avatarBase64 && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="text-white text-xs font-bold tracking-wider">TROCAR FOTO</span>
-              </div>
-            )}
-          </div>
-          {character.avatarBase64 && (
+            {Object.values(characters || {}).map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name || 'Sem Nome'} {c.race ? `(${c.race})` : ''}
+              </option>
+            ))}
+            <option value="NEW">+ Criar Novo Personagem</option>
+          </select>
+          {Object.keys(characters || {}).length > 1 && (
             <button
-              type="button"
-              onClick={handleOpenAvatarEditor}
-              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-2.5 py-1.5 text-[10px] font-semibold tracking-wider text-gray-600 dark:text-gray-300 transition hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400"
+              onClick={() => {
+                if (window.confirm('Apagar esta ficha?')) store.deleteCharacter(character.id)
+              }}
+              className="text-xs font-semibold text-red-500 hover:text-red-700 dark:text-red-400"
             >
-              AJUSTAR ENQUADRAMENTO
+              Excluir
             </button>
           )}
         </div>
-        <input
-          ref={avatarInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleAvatarChange}
-        />
 
-        <div className="flex flex-1 flex-col gap-5 justify-center">
-          {/* Top Row: Name, Race, Origin */}
-          <div className="flex flex-wrap items-end gap-4">
-            {/* Name */}
-            <div className="flex flex-col gap-0.5 min-w-[200px] flex-1">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Nome</label>
-              <input
-                value={character.name}
-                onChange={(e) => store.setCharacterName(e.target.value)}
-                placeholder="Nome do personagem"
-                className="rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-lg font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none"
-              />
+        <div className="flex flex-col items-stretch gap-6 md:flex-row">
+          {/* Avatar */}
+          <div className="flex shrink-0 flex-col gap-2 self-center md:w-56 md:min-w-56 md:self-stretch">
+            <div
+              ref={avatarBoxRef}
+              onClick={() => avatarInputRef.current?.click()}
+              className="group relative h-56 w-56 cursor-pointer overflow-hidden rounded-xl border-2 border-gray-300 bg-gray-100 transition hover:border-amber-500 md:h-full md:w-full dark:border-gray-700 dark:bg-gray-800"
+            >
+              {character.avatarBase64 ? (
+                <img
+                  src={character.avatarBase64}
+                  alt="Avatar"
+                  className="h-full w-full object-cover"
+                  style={{
+                    objectPosition: `${avatarPos.x}% ${avatarPos.y}%`,
+                    transformOrigin: `${avatarPos.x}% ${avatarPos.y}%`,
+                    transform: `scale(${avatarScale})`,
+                  }}
+                />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+                  <span className="mb-2 text-4xl">📷</span>
+                  <span className="text-[10px] font-bold tracking-widest uppercase opacity-60">
+                    Foto
+                  </span>
+                </div>
+              )}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/20">
+                <span className="text-xs font-bold text-white opacity-0 transition group-hover:opacity-100">
+                  Alterar
+                </span>
+              </div>
             </div>
-
-            {/* Race */}
-            <div className="flex flex-col gap-0.5 min-w-[140px]">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Raça</label>
-              <input
-                value={character.race}
-                onChange={(e) => store.setRace(e.target.value)}
-                placeholder="Raça"
-                className="rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-base font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none"
-              />
-            </div>
-
-            {/* Origin */}
-            <div className="flex flex-col gap-0.5 min-w-[180px]">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
-                Origem
-                {character.origin && (() => {
-                  const originDef = ALL_ORIGINS.find((o) => o.id === character.origin)
-                  const skillName = originDef ? (ALL_SKILLS.find((s) => s.id === originDef.skillId)?.name ?? originDef.skillId) : null
-                  return skillName ? (
-                    <span className="ml-1.5 normal-case font-normal text-violet-500 dark:text-violet-400">
-                      → {skillName}
-                    </span>
-                  ) : null
-                })()}
-              </label>
-              <select
-                value={character.origin ?? ''}
-                onChange={(e) => store.setOrigin(e.target.value)}
-                className="rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-base font-semibold text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:border-amber-500 focus:outline-none"
+            {character.avatarBase64 && (
+              <button
+                onClick={() => {
+                  const pos = parsePos(character.avatarPosition)
+                  setPendingBase64(character.avatarBase64!)
+                  setPendingX(pos.x)
+                  setPendingY(pos.y)
+                  setPendingScale(clamp(character.avatarScale ?? 1, 0.5, 2.5))
+                  const box = avatarBoxRef.current
+                  if (box && box.offsetWidth > 0 && box.offsetHeight > 0)
+                    setPreviewAspect(box.offsetWidth / box.offsetHeight)
+                  setAvatarEditorOpen(true)
+                }}
+                className="text-center text-[10px] text-amber-500 hover:underline"
               >
-                <option value="">Sem origem</option>
-                {ALL_ORIGINS.map((o) => (
-                  <option key={o.id} value={o.id}>{o.name}</option>
-                ))}
-              </select>
-            </div>
+                Ajustar posição
+              </button>
+            )}
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
           </div>
 
-          <hr className="border-gray-200 dark:border-gray-800 w-full" />
-
-          {/* Bottom Row: Stats and Resources */}
-          <div className="flex flex-wrap items-center gap-6">
-            <div className="flex items-center gap-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80">
-              {/* Resistência */}
-              <StatBadge label="Resistência" value={derivedStats.resistencia} />
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-              {/* Esquiva */}
-              <StatBadge label="Esquiva" value={derivedStats.esquiva} />
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-              <StatBadge label="VB" value={equipmentDefense.blockValue} />
+          {/* Character info */}
+          <div className="flex flex-1 flex-col gap-4">
+            {/* Name, race, origin */}
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <div>
+                <label className="mb-0.5 block text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
+                  Nome
+                </label>
+                <input
+                  type="text"
+                  value={character.name}
+                  onChange={(e) => store.setCharacterName(e.target.value)}
+                  className={inpBase + ' w-full'}
+                  placeholder="Nome do personagem"
+                />
+              </div>
+              <div>
+                <label className="mb-0.5 block text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
+                  Raça
+                </label>
+                <input
+                  type="text"
+                  value={character.race}
+                  onChange={(e) => store.setRace(e.target.value)}
+                  className={inpBase + ' w-full'}
+                  placeholder="Raça"
+                />
+              </div>
+              <div>
+                <label className="mb-0.5 block text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
+                  Origem
+                </label>
+                <select
+                  value={character.origin ?? ''}
+                  onChange={(e) => store.setOrigin(e.target.value)}
+                  className={inpBase + ' w-full'}
+                >
+                  <option value="">— Selecionar —</option>
+                  {ALL_ORIGINS.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            <div className="flex items-center gap-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80">
-              {/* Vida */}
+            {/* Resources */}
+            <div className="flex flex-wrap items-center gap-4">
               <ResourcePip
                 label="Vida"
                 current={character.currentResources.vida}
                 max={derivedStats.vida}
-                color="text-rose-400"
-                onCurrentChange={store.setCurrentVida}
-                temporary={character.temporaryResources.vida}
+                color="text-rose-600 dark:text-rose-400"
+                onCurrentChange={(v) => store.setCurrentVida(v)}
               />
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-              {/* IEP */}
               <ResourcePip
                 label="IEP"
                 current={character.currentResources.iep}
                 max={derivedStats.iep}
-                color="text-sky-400"
-                onCurrentChange={store.setCurrentIep}
-                temporary={character.temporaryResources.iep}
+                color="text-violet-600 dark:text-violet-400"
+                onCurrentChange={(v) => store.setCurrentIep(v)}
               />
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-              {/* PC */}
               <ResourcePip
-                label="Pontos de Combate"
+                label="PC"
                 current={character.currentResources.pc}
                 max={derivedStats.pc}
-                color="text-orange-400"
-                onCurrentChange={store.setCurrentPc}
+                color="text-amber-600 dark:text-amber-400"
+                onCurrentChange={(v) => store.setCurrentPc(v)}
               />
+              <div className="h-8 w-px bg-gray-200 dark:bg-gray-700" />
+              <StatBadge label="Resistência" value={derivedStats.resistencia} />
+              <StatBadge label="Esquiva" value={derivedStats.esquiva} />
             </div>
-            
-            <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-100 dark:border-gray-800/80 min-w-[280px] flex items-center justify-center gap-3 flex-wrap">
-              {/* Money */}
+
+            {/* Money */}
+            <div className="flex flex-wrap items-center gap-3">
               <CoinField
                 label="Platina"
                 value={character.money.platina}
+                labelColor="text-slate-300 dark:text-slate-400"
+                inputColor="text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/60"
                 onChange={(v) => store.setMoney('platina', v)}
-                labelColor="text-cyan-500 dark:text-cyan-400"
-                inputColor="bg-white dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800/50 focus:border-cyan-500"
               />
               <CoinField
                 label="Ouro"
                 value={character.money.ouro}
+                labelColor="text-yellow-600 dark:text-yellow-400"
+                inputColor="text-yellow-700 dark:text-yellow-200 border-yellow-400 dark:border-yellow-700 bg-yellow-50 dark:bg-yellow-900/30"
                 onChange={(v) => store.setMoney('ouro', v)}
-                labelColor="text-amber-500 dark:text-amber-400"
-                inputColor="bg-white dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/50 focus:border-amber-500"
               />
               <CoinField
                 label="Prata"
                 value={character.money.prata}
+                labelColor="text-gray-400 dark:text-gray-300"
+                inputColor="text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/60"
                 onChange={(v) => store.setMoney('prata', v)}
-                labelColor="text-gray-500 dark:text-gray-400"
-                inputColor="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 focus:border-gray-500"
               />
               <CoinField
                 label="Bronze"
                 value={character.money.bronze}
+                labelColor="text-orange-600 dark:text-orange-400"
+                inputColor="text-orange-700 dark:text-orange-200 border-orange-300 dark:border-orange-700 bg-orange-50 dark:bg-orange-900/20"
                 onChange={(v) => store.setMoney('bronze', v)}
-                labelColor="text-orange-700 dark:text-orange-400"
-                inputColor="bg-white dark:bg-orange-950/30 text-orange-800 dark:text-orange-400 border-orange-200 dark:border-orange-800/50 focus:border-orange-500"
               />
             </div>
 
+            {/* Action buttons */}
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() =>
+                  store.restoreAllResources(derivedStats.vida, derivedStats.iep, derivedStats.pc)
+                }
+                className="rounded-lg border border-emerald-400/60 px-3 py-1 text-xs font-bold text-emerald-600 transition hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
+              >
+                🌿 Descanso
+              </button>
+              <button
+                onClick={handleExport}
+                className="rounded-lg border border-amber-400/60 px-3 py-1 text-xs font-bold text-amber-600 transition hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/30"
+              >
+                ↓ Exportar
+              </button>
+              <button
+                onClick={handleImport}
+                className="rounded-lg border border-gray-300 px-3 py-1 text-xs font-bold text-gray-600 transition hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800"
+              >
+                ↑ Importar
+              </button>
+              {!confirmReset ? (
+                <button
+                  onClick={() => setConfirmReset(true)}
+                  className="rounded-lg border border-gray-200 px-3 py-1 text-xs text-gray-400 transition hover:border-red-300 hover:text-red-500 dark:border-gray-700"
+                >
+                  Resetar
+                </button>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-red-500">Confirmar?</span>
+                  <button
+                    onClick={() => {
+                      store.resetCharacter()
+                      setConfirmReset(false)
+                    }}
+                    className="text-xs font-bold text-red-500 hover:text-red-700"
+                  >
+                    Sim
+                  </button>
+                  <button
+                    onClick={() => setConfirmReset(false)}
+                    className="text-xs text-gray-400 hover:text-gray-600"
+                  >
+                    Não
+                  </button>
+                </div>
+              )}
+            </div>
+            {importError && <p className="text-xs text-red-500">{importError}</p>}
           </div>
         </div>
       </div>
 
-      <hr className="border-gray-200 dark:border-gray-800 w-full my-4" />
-
-      {/* Action buttons */}
-      <div className="flex items-center gap-2 flex-wrap justify-end">
-        {/* Restore */}
-        <button
-          onClick={() => setRestOpen(true)}
-          title="Realizar Pausa Breve ou Descanso Pleno"
-          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 transition hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400"
-        >
-          ⟳ Descansar
-        </button>
-
-        {/* Divider */}
-        <div className="h-5 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
-
-        {/* Export */}
-        <button
-          onClick={handleExport}
-          title="Exportar ficha como JSON"
-          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 transition hover:border-sky-500 hover:text-sky-600 dark:hover:text-sky-400"
-        >
-          ↓ Exportar
-        </button>
-
-        {/* Import */}
-        <button
-          onClick={handleImportClick}
-          title="Importar ficha de um JSON"
-          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 transition hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400"
-        >
-          ↑ Importar
-        </button>
-
-        {/* Divider */}
-        <div className="h-5 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
-
-        {/* Reset */}
-        {confirmReset ? (
-          <span className="flex items-center gap-1.5">
-            <span className="text-xs text-red-500 dark:text-red-400 font-semibold">Apagar ficha?</span>
-            <button
-              onClick={() => { store.resetCharacter(); setConfirmReset(false) }}
-              className="rounded-lg border border-red-400 bg-red-50 dark:bg-red-950/40 px-2.5 py-1.5 text-xs font-semibold text-red-600 dark:text-red-400 transition hover:bg-red-100 dark:hover:bg-red-900/60"
-            >
-              Sim
-            </button>
-            <button
-              onClick={() => setConfirmReset(false)}
-              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 px-2.5 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 transition hover:border-gray-400"
-            >
-              Não
-            </button>
-          </span>
-        ) : (
-          <button
-            onClick={() => setConfirmReset(true)}
-            title="Resetar ficha para o estado inicial"
-            className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 transition hover:border-red-500 hover:text-red-500 dark:hover:text-red-400"
-          >
-            ✕ Resetar
-          </button>
-        )}
-
-        {/* Hidden file input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json,application/json"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-      </div>
-
-      {/* Import error */}
-      {importError && (
-        <p className="mt-2 text-xs text-red-400">{importError}</p>
-      )}
-
-      {restOpen && <RestModal onClose={() => setRestOpen(false)} />}
-
-      {avatarEditorOpen && pendingAvatarBase64 && (
-        <Modal title="Ajustar Foto" onClose={() => setAvatarEditorOpen(false)} size="md">
-          <div className="flex flex-col gap-4">
-            <div
-              className="mx-auto w-full max-w-xs overflow-hidden rounded-xl border border-gray-700 bg-gray-800"
-              style={{ aspectRatio: previewAspectRatio }}
-            >
-              <img
-                src={pendingAvatarBase64}
-                alt="Pré-visualização"
-                className="h-full w-full object-cover"
-                style={{
-                  objectPosition: `${pendingAvatarX}% ${pendingAvatarY}%`,
-                  transformOrigin: `${pendingAvatarX}% ${pendingAvatarY}%`,
-                  transform: `scale(${pendingAvatarScale})`,
-                }}
-              />
-            </div>
-            <p className="text-center text-[10px] text-gray-500">
-              A pré-visualização usa a mesma proporção do quadro da ficha.
-            </p>
-
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs text-gray-300">
-                  <span>Zoom</span>
-                  <span>{Math.round(pendingAvatarScale * 100)}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0.5"
-                  max="2.5"
-                  step="0.1"
-                  value={pendingAvatarScale}
-                  onChange={(e) => setPendingAvatarScale(clamp(Number(e.target.value), 0.5, 2.5))}
-                  className="w-full accent-amber-500"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs text-gray-300">
-                  <span>Posição X</span>
-                  <span>{pendingAvatarX}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  step="1"
-                  value={pendingAvatarX}
-                  onChange={(e) => setPendingAvatarX(clamp(Number(e.target.value), 0, 100))}
-                  className="w-full accent-amber-500"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs text-gray-300">
-                  <span>Posição Y</span>
-                  <span>{pendingAvatarY}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  step="1"
-                  value={pendingAvatarY}
-                  onChange={(e) => setPendingAvatarY(clamp(Number(e.target.value), 0, 100))}
-                  className="w-full accent-amber-500"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setAvatarEditorOpen(false)}
-                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:border-gray-500"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={handleApplyAvatarEditor}
-                className="rounded-lg border border-amber-700 bg-amber-900/30 px-3 py-1.5 text-xs font-semibold text-amber-300 hover:border-amber-500"
-              >
-                Aplicar
-              </button>
-            </div>
-          </div>
-        </Modal>
-      )}
-    </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/json,.json"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+    </>
   )
 }

@@ -1,12 +1,10 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import RootLayout from '@/layouts/RootLayout'
-import HomePage from '@/pages/HomePage'
+import CharacterSheetPage from '@/pages/CharacterSheetPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import PdfPage from '@/pages/PdfPage'
 import TalentTreeBuilderPage from '@/pages/TalentTreeBuilderPage'
-import V2Page from '@/pages/V2Page'
 import TalentTreePlayerPage from '@/pages/TalentTreePlayerPage'
-import CombatTestPage from '@/pages/CombatTestPage'
 
 export const router = createBrowserRouter([
   {
@@ -15,19 +13,16 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <CharacterSheetPage />,
       },
       {
         path: 'livro',
         element: <PdfPage />,
       },
       {
+        // Legacy URL – the sheet now lives at the root
         path: 'v2',
-        element: <V2Page />,
-      },
-      {
-        path: 'combat-test',
-        element: <CombatTestPage />,
+        element: <Navigate to="/" replace />,
       },
     ],
   },
@@ -37,7 +32,7 @@ export const router = createBrowserRouter([
     element: <TalentTreeBuilderPage />,
   },
   {
-    // Player-facing talent tree view – reached from the V2 sheet pentagon
+    // Player-facing talent tree view – reached from the sheet pentagon
     path: '/arvore',
     element: <TalentTreePlayerPage />,
   },

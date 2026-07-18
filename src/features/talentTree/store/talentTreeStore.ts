@@ -42,6 +42,8 @@ interface TalentTreeState {
   removeNode: (id: string) => void
   moveNode: (id: string, x: number, y: number) => void
   updateNodeData: (id: string, data: TalentNodeData) => void
+  /** Set the talent point cost of a node (undefined = default cost) */
+  updateNodeCost: (id: string, cost: number | undefined) => void
 
   addEdge: (from: string, to: string) => void
   removeEdge: (id: string) => void
@@ -118,6 +120,18 @@ export const useTalentTreeStore = create<TalentTreeState>()(
             }),
             false,
             'updateNodeData',
+          ),
+
+        updateNodeCost: (id, cost) =>
+          set(
+            (s) => ({
+              tree: {
+                ...s.tree,
+                nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, cost } : n)),
+              },
+            }),
+            false,
+            'updateNodeCost',
           ),
 
         addEdge: (from, to) => {
