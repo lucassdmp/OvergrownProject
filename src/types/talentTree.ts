@@ -2,7 +2,14 @@
 // OverGrown – Talent Tree Type Definitions
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { AttributeName, DerivedStats, ElementId, MagicTypeId, SpellLevel, SpellLevelEntry } from './game'
+import type {
+  AttributeName,
+  DerivedStats,
+  ElementId,
+  MagicTypeId,
+  SpellLevel,
+  SpellLevelEntry,
+} from './game'
 import type { ArmorTag, WeaponTag } from './game'
 
 // ── Node type discriminator ───────────────────────────────────────────────────
@@ -38,19 +45,25 @@ export type BaseAttackTarget =
 export type AttackTarget = BaseAttackTarget | MagicTypeId | ElementId
 
 export const BASE_ATTACK_TARGETS: BaseAttackTarget[] = [
-  'magias', 'projeteis', 'corpo-a-corpo', 'melee',
-  'armas-cortantes', 'armas-perfurantes', 'armas-contundentes', 'arcos',
+  'magias',
+  'projeteis',
+  'corpo-a-corpo',
+  'melee',
+  'armas-cortantes',
+  'armas-perfurantes',
+  'armas-contundentes',
+  'arcos',
 ]
 
 export const BASE_ATTACK_TARGET_LABELS: Record<BaseAttackTarget, string> = {
-  'magias':             'Mágias',
-  'projeteis':          'Projéteis',
-  'corpo-a-corpo':      'Corpo a Corpo',
-  'melee':              'Melee',
-  'armas-cortantes':    'Armas Cortantes',
-  'armas-perfurantes':  'Armas Perfurantes',
+  magias: 'Mágias',
+  projeteis: 'Projéteis',
+  'corpo-a-corpo': 'Corpo a Corpo',
+  melee: 'Melee',
+  'armas-cortantes': 'Armas Cortantes',
+  'armas-perfurantes': 'Armas Perfurantes',
   'armas-contundentes': 'Armas Contundentes',
-  'arcos':              'Arcos',
+  arcos: 'Arcos',
 }
 
 // ── Per-type data shapes ──────────────────────────────────────────────────────
@@ -100,6 +113,12 @@ export interface CombatAbilityNodeData {
   skillName: string
   skillDescription: string
   skillCost: string
+  /** Permanent attribute/skill prerequisites copied from the current book. */
+  skillRequirement?: string
+  /** Action economy copied from the current book. */
+  skillAction?: string
+  /** Design intent/scenario covered by the technique. */
+  skillPurpose?: string
   /**
    * Extra attribute bonuses the ability also grants.
    * Regra de design: toda habilidade dá atributos — quanto maior o investimento
@@ -133,10 +152,10 @@ export interface HealingNodeData {
 export type WeaponBonusType = 'damage' | 'threatRange' | 'critMultiplier' | 'hitBonus'
 
 export const WEAPON_BONUS_TYPE_LABELS: Record<WeaponBonusType, string> = {
-  damage:         'Dano Extra',
-  threatRange:    'Margem de Ameaça (-)',
+  damage: 'Dano Extra',
+  threatRange: 'Margem de Ameaça (-)',
   critMultiplier: 'Multiplicador de Crítico (+)',
-  hitBonus:       'Bônus de Acerto (+)',
+  hitBonus: 'Bônus de Acerto (+)',
 }
 
 /** Passive bonus applied when an equipped weapon has the required tags */
@@ -158,10 +177,10 @@ export type SpellModifierEffectType =
   | 'damageBonus'
 
 export const SPELL_MODIFIER_EFFECT_LABELS: Record<SpellModifierEffectType, string> = {
-  costReduction:   'Redução de Custo (IEP)',
+  costReduction: 'Redução de Custo (IEP)',
   extraProjectile: 'Projétil Extra (+)',
-  duration:        'Duração Extra (rodadas)',
-  damageBonus:     'Dano Extra',
+  duration: 'Duração Extra (rodadas)',
+  damageBonus: 'Dano Extra',
 }
 
 /** Passive modifier applied when a cast spell matches the condition tags */
@@ -236,13 +255,13 @@ export type ConditionalEffect =
 
 export const CONDITIONAL_EFFECT_KIND_LABELS: Record<ConditionalEffect['kind'], string> = {
   attributeBonus: 'Bônus de Atributo',
-  statBonus:      'Bônus de Stat',
-  extraDamage:    'Dano Extra',
-  defense:        'Redução de Dano',
-  blockBonus:     'Bônus de Block',
-  healingBonus:   'Bônus de Cura',
-  spellModifier:  'Modificador de Magia',
-  custom:         'Efeito Customizado',
+  statBonus: 'Bônus de Stat',
+  extraDamage: 'Dano Extra',
+  defense: 'Redução de Dano',
+  blockBonus: 'Bônus de Block',
+  healingBonus: 'Bônus de Cura',
+  spellModifier: 'Modificador de Magia',
+  custom: 'Efeito Customizado',
 }
 
 export interface ConditionalNodeData {
@@ -270,36 +289,39 @@ export type TalentNodeData =
 
 // ── Node shape colors (CSS hex) ───────────────────────────────────────────────
 
-export const NODE_TYPE_COLORS: Record<TalentNodeType, { fill: string; stroke: string; text: string }> = {
-  player:        { fill: '#f0f9ff', stroke: '#0284c7', text: '#0c4a6e' },
-  attribute:     { fill: '#fef3c7', stroke: '#d97706', text: '#92400e' },
-  magic:         { fill: '#ede9fe', stroke: '#7c3aed', text: '#4c1d95' },
-  stat:          { fill: '#d1fae5', stroke: '#059669', text: '#064e3b' },
+export const NODE_TYPE_COLORS: Record<
+  TalentNodeType,
+  { fill: string; stroke: string; text: string }
+> = {
+  player: { fill: '#f0f9ff', stroke: '#0284c7', text: '#0c4a6e' },
+  attribute: { fill: '#fef3c7', stroke: '#d97706', text: '#92400e' },
+  magic: { fill: '#ede9fe', stroke: '#7c3aed', text: '#4c1d95' },
+  stat: { fill: '#d1fae5', stroke: '#059669', text: '#064e3b' },
   combatAbility: { fill: '#ffe4e6', stroke: '#e11d48', text: '#881337' },
-  extraDamage:   { fill: '#ffedd5', stroke: '#ea580c', text: '#7c2d12' },
-  healing:       { fill: '#dcfce7', stroke: '#16a34a', text: '#14532d' },
-  weaponBonus:   { fill: '#fdf2f8', stroke: '#9d174d', text: '#701a75' },
+  extraDamage: { fill: '#ffedd5', stroke: '#ea580c', text: '#7c2d12' },
+  healing: { fill: '#dcfce7', stroke: '#16a34a', text: '#14532d' },
+  weaponBonus: { fill: '#fdf2f8', stroke: '#9d174d', text: '#701a75' },
   spellModifier: { fill: '#f5f3ff', stroke: '#6d28d9', text: '#3b0764' },
-  defenseBonus:  { fill: '#f0fdf4', stroke: '#166534', text: '#14532d' },
-  skillBonus:    { fill: '#fff7ed', stroke: '#c2410c', text: '#7c2d12' },
-  link:          { fill: '#f8fafc', stroke: '#64748b', text: '#334155' },
-  conditional:   { fill: '#fefce8', stroke: '#a16207', text: '#713f12' },
+  defenseBonus: { fill: '#f0fdf4', stroke: '#166534', text: '#14532d' },
+  skillBonus: { fill: '#fff7ed', stroke: '#c2410c', text: '#7c2d12' },
+  link: { fill: '#f8fafc', stroke: '#64748b', text: '#334155' },
+  conditional: { fill: '#fefce8', stroke: '#a16207', text: '#713f12' },
 }
 
 export const NODE_TYPE_LABELS: Record<TalentNodeType, string> = {
-  player:        'Jogador',
-  attribute:     'Atributo',
-  magic:         'Magia',
-  stat:          'Stat',
+  player: 'Jogador',
+  attribute: 'Atributo',
+  magic: 'Magia',
+  stat: 'Stat',
   combatAbility: 'Habilidade de Combate',
-  extraDamage:   'Dano Extra',
-  healing:       'Cura',
-  weaponBonus:   'Bônus de Arma',
+  extraDamage: 'Dano Extra',
+  healing: 'Cura',
+  weaponBonus: 'Bônus de Arma',
   spellModifier: 'Modificador de Magia',
-  defenseBonus:  'Bônus de Defesa',
-  skillBonus:    'Bônus de Perícia',
-  link:          'Ligação',
-  conditional:   'Condicional',
+  defenseBonus: 'Bônus de Defesa',
+  skillBonus: 'Bônus de Perícia',
+  link: 'Ligação',
+  conditional: 'Condicional',
 }
 
 // ── Tree primitives ───────────────────────────────────────────────────────────
@@ -375,7 +397,17 @@ export function defaultNodeData(type: TalentNodeType): TalentNodeData {
     case 'stat':
       return { type: 'stat', stat: 'vida', value: 5 }
     case 'combatAbility':
-      return { type: 'combatAbility', skillId: '', skillName: '', skillDescription: '', skillCost: '', attributeBonuses: [] }
+      return {
+        type: 'combatAbility',
+        skillId: '',
+        skillName: '',
+        skillDescription: '',
+        skillCost: '',
+        skillRequirement: '',
+        skillAction: '',
+        skillPurpose: '',
+        attributeBonuses: [],
+      }
     case 'extraDamage':
       return { type: 'extraDamage', dice: '1d6', flat: undefined, attackTargets: [] }
     case 'healing':
@@ -383,7 +415,13 @@ export function defaultNodeData(type: TalentNodeType): TalentNodeData {
     case 'weaponBonus':
       return { type: 'weaponBonus', requiredTags: [], bonusType: 'damage', value: 5 }
     case 'spellModifier':
-      return { type: 'spellModifier', conditionElements: [], conditionTypes: [], effectType: 'costReduction', value: 10 }
+      return {
+        type: 'spellModifier',
+        conditionElements: [],
+        conditionTypes: [],
+        effectType: 'costReduction',
+        value: 10,
+      }
     case 'defenseBonus':
       return { type: 'defenseBonus', damageType: 'physical', value: 5 }
     case 'skillBonus':
@@ -403,30 +441,49 @@ export function defaultNodeData(type: TalentNodeType): TalentNodeData {
 
 export function defaultConditionalEffect(kind: ConditionalEffect['kind']): ConditionalEffect {
   switch (kind) {
-    case 'attributeBonus': return { kind, attribute: 'might', value: 1 }
-    case 'statBonus':      return { kind, stat: 'vida', value: 5 }
-    case 'extraDamage':    return { kind, dice: '1d4', flat: undefined, attackTargets: [] }
-    case 'defense':        return { kind, damageType: 'physical', value: 2 }
-    case 'blockBonus':     return { kind, value: 2 }
-    case 'healingBonus':   return { kind, dice: undefined, flat: 2, element: null }
-    case 'spellModifier':  return { kind, conditionElements: [], conditionTypes: [], effectType: 'costReduction', value: 2 }
-    case 'custom':         return { kind, description: '' }
+    case 'attributeBonus':
+      return { kind, attribute: 'might', value: 1 }
+    case 'statBonus':
+      return { kind, stat: 'vida', value: 5 }
+    case 'extraDamage':
+      return { kind, dice: '1d4', flat: undefined, attackTargets: [] }
+    case 'defense':
+      return { kind, damageType: 'physical', value: 2 }
+    case 'blockBonus':
+      return { kind, value: 2 }
+    case 'healingBonus':
+      return { kind, dice: undefined, flat: 2, element: null }
+    case 'spellModifier':
+      return {
+        kind,
+        conditionElements: [],
+        conditionTypes: [],
+        effectType: 'costReduction',
+        value: 2,
+      }
+    case 'custom':
+      return { kind, description: '' }
   }
 }
 
 export function conditionalEffectSummary(effect: ConditionalEffect): string {
   switch (effect.kind) {
-    case 'attributeBonus': return `+${effect.value} ${effect.attribute}`
-    case 'statBonus':      return `+${effect.value} ${effect.stat}`
+    case 'attributeBonus':
+      return `+${effect.value} ${effect.attribute}`
+    case 'statBonus':
+      return `+${effect.value} ${effect.stat}`
     case 'extraDamage': {
       const parts: string[] = []
       if (effect.dice) parts.push(effect.dice)
       if (effect.flat) parts.push(`+${effect.flat}`)
-      const targets = effect.attackTargets.length > 0 ? effect.attackTargets.join(', ') : 'todos ataques'
+      const targets =
+        effect.attackTargets.length > 0 ? effect.attackTargets.join(', ') : 'todos ataques'
       return `Dano ${parts.join(' ') || '—'} (${targets})`
     }
-    case 'defense':        return `-${effect.value} dano (${effect.damageType})`
-    case 'blockBonus':     return `+${effect.value} block`
+    case 'defense':
+      return `-${effect.value} dano (${effect.damageType})`
+    case 'blockBonus':
+      return `+${effect.value} block`
     case 'healingBonus': {
       const parts: string[] = []
       if (effect.dice) parts.push(effect.dice)
@@ -437,11 +494,14 @@ export function conditionalEffectSummary(effect: ConditionalEffect): string {
       const scope = [
         effect.conditionTypes.length > 0 ? effect.conditionTypes.join('/') : null,
         effect.conditionElements.length > 0 ? effect.conditionElements.join('/') : null,
-      ].filter(Boolean).join(' · ')
+      ]
+        .filter(Boolean)
+        .join(' · ')
       const diceStr = effect.dice ? `${effect.dice}+` : ''
       return `${SPELL_MODIFIER_EFFECT_LABELS[effect.effectType]}: ${diceStr}${effect.value}${scope ? ` (${scope})` : ''}`
     }
-    case 'custom':         return effect.description || 'Efeito customizado'
+    case 'custom':
+      return effect.description || 'Efeito customizado'
   }
 }
 
@@ -451,7 +511,11 @@ export function nodeTooltip(data: TalentNodeData): string {
       return `★ ${data.name || 'Jogador'}\n${data.description || ''}`
     case 'attribute': {
       const labels: Record<AttributeName, string> = {
-        might: 'Might', grace: 'Grace', wisdom: 'Wisdom', sense: 'Sense', fortitude: 'Fortitude',
+        might: 'Might',
+        grace: 'Grace',
+        wisdom: 'Wisdom',
+        sense: 'Sense',
+        fortitude: 'Fortitude',
       }
       const attrLabel = data.attribute ? labels[data.attribute] : '(jogador escolhe)'
       return `+${data.value} ${attrLabel}`
@@ -472,14 +536,25 @@ export function nodeTooltip(data: TalentNodeData): string {
     }
     case 'stat': {
       const labels: Record<keyof DerivedStats, string> = {
-        vida: 'Vida', iep: 'IEP', pc: 'PC', resistencia: 'Resistência', esquiva: 'Esquiva',
+        vida: 'Vida',
+        iep: 'IEP',
+        pc: 'PC',
+        resistencia: 'Resistência',
+        esquiva: 'Esquiva',
       }
       return `+${data.value} ${labels[data.stat]}`
     }
     case 'combatAbility': {
       if (!data.skillName) return 'Habilidade de Combate (não configurada)'
       const bonuses = (data.attributeBonuses ?? []).map((b) => `+${b.value} ${b.attribute}`)
-      return [`⚔ ${data.skillName}`, `Custo: ${data.skillCost}`, data.skillDescription, ...bonuses]
+      return [
+        `⚔ ${data.skillName}`,
+        `Custo: ${data.skillCost} PC`,
+        data.skillRequirement ? `Requisito: ${data.skillRequirement}` : null,
+        data.skillAction ? `Ação: ${data.skillAction}` : null,
+        data.skillDescription,
+        ...bonuses,
+      ]
         .filter(Boolean)
         .join('\n')
     }
@@ -503,7 +578,8 @@ export function nodeTooltip(data: TalentNodeData): string {
       return `⚔ ${WEAPON_BONUS_TYPE_LABELS[data.bonusType]}: ${diceStr}${data.value}\nArmas: ${tags}`
     }
     case 'spellModifier': {
-      const elems = data.conditionElements.length > 0 ? data.conditionElements.join(', ') : 'todos elementos'
+      const elems =
+        data.conditionElements.length > 0 ? data.conditionElements.join(', ') : 'todos elementos'
       const types = data.conditionTypes.length > 0 ? data.conditionTypes.join(', ') : 'todos tipos'
       const effectLabel = SPELL_MODIFIER_EFFECT_LABELS[data.effectType]
       const diceStr = data.dice ? `${data.dice}+` : ''

@@ -6,7 +6,7 @@
 // automaticamente quando:
 //   • não existe árvore local (primeiro acesso), ou
 //   • a árvore local é a oficial e o arquivo embarcado tem versão maior
-//     (deploy novo → todos os jogadores recebem a atualização).
+//     (deploy novo → todos recebem a atualização).
 //
 // Para publicar uma nova versão: use "Salvar Oficial" no builder (baixa o
 // defaultTalentTree.json com a versão incrementada) e substitua o arquivo em
@@ -32,19 +32,19 @@ export function shouldLoadDefaultTree(current: TalentTree): boolean {
   return false
 }
 
-/** Carrega a árvore oficial automaticamente após a hidratação do store */
 export function useDefaultTreeAutoLoad() {
-  const importTree = useTalentTreeStore((s) => s.importTree)
+  const importTree = useTalentTreeStore((state) => state.importTree)
 
   useEffect(() => {
-    const check = () => {
+    const loadWhenNeeded = () => {
       const { tree } = useTalentTreeStore.getState()
-      if (shouldLoadDefaultTree(tree)) importTree(DEFAULT_TREE)
+      if (shouldLoadDefaultTree(tree)) importTree(structuredClone(DEFAULT_TREE))
     }
+
     if (useTalentTreeStore.persist.hasHydrated()) {
-      check()
+      loadWhenNeeded()
       return
     }
-    return useTalentTreeStore.persist.onFinishHydration(check)
+    return useTalentTreeStore.persist.onFinishHydration(loadWhenNeeded)
   }, [importTree])
 }

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTalentTreeStore } from '../features/talentTree/store/talentTreeStore'
 import { useCharacterStore } from '../features/character/store/characterStore'
@@ -18,6 +18,7 @@ import { ATTRIBUTE_LABELS, type AttributeName } from '../types/game'
 import { useSaveShortcut } from '../hooks/useSaveShortcut'
 import { downloadTextFile, fileNamePart } from '../utils/downloadFile'
 import { serializeCharacterFile } from '../features/character/utils/characterFile'
+import { nodeMatchesSearch } from '../features/talentTree/nodeSearch'
 
 // ── Point cost (player/link nodes are free; per-node override via node.cost) ──
 const nodeCost = talentNodeCost
@@ -118,17 +119,11 @@ function NodeContextMenu({
   const { stroke } = NODE_TYPE_COLORS[node.data.type]
   const lines = nodeTooltip(node.data).split('\n')
 
-  // Adjust position so menu stays on screen
-  const menuRef = useRef<HTMLDivElement>(null)
-  const [pos, setPos] = useState({ left: sx, top: sy })
-  useEffect(() => {
-    if (!menuRef.current) return
-    const rect = menuRef.current.getBoundingClientRect()
-    setPos({
-      left: sx + rect.width > window.innerWidth ? sx - rect.width : sx,
-      top: sy + rect.height > window.innerHeight ? sy - rect.height : sy,
-    })
-  }, [sx, sy])
+  // Clamp against a conservative menu footprint; CSS may render it smaller.
+  const pos = {
+    left: Math.max(8, Math.min(sx, window.innerWidth - 280)),
+    top: Math.max(8, Math.min(sy, window.innerHeight - 420)),
+  }
 
   return (
     <>
@@ -141,7 +136,6 @@ function NodeContextMenu({
         }}
       />
       <div
-        ref={menuRef}
         className="fixed z-50 min-w-[190px] rounded-xl border border-gray-700 bg-gray-900 py-1.5 text-sm shadow-2xl"
         style={{ left: pos.left, top: pos.top }}
       >
@@ -230,7 +224,6 @@ function NodeContextMenu({
 
 export default function TalentTreePlayerPage() {
   const navigate = useNavigate()
-  // Carrega a árvore oficial (src/data/defaultTalentTree.json) automaticamente
   useDefaultTreeAutoLoad()
   const tree = useTalentTreeStore((s) => s.tree)
   const character = useCharacterStore((s) => s.character)
@@ -250,10 +243,7 @@ export default function TalentTreePlayerPage() {
   // Hydration guard
   const [hydrated, setHydrated] = useState(() => useTalentTreeStore.persist.hasHydrated())
   useEffect(() => {
-    if (useTalentTreeStore.persist.hasHydrated()) {
-      setHydrated(true)
-      return
-    }
+    if (useTalentTreeStore.persist.hasHydrated()) return
     const unsub = useTalentTreeStore.persist.onFinishHydration(() => setHydrated(true))
     return unsub
   }, [])
@@ -265,6 +255,15 @@ export default function TalentTreePlayerPage() {
   const unacquiredPlayerNodes = playerNodes.filter((n) => !acquiredSet.has(n.id))
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const selectedNode = tree.nodes.find((n) => n.id === selectedNodeId) ?? null
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchActive = searchQuery.trim().length > 0
+  const matchingNodeIds = useMemo(
+    () =>
+      new Set(
+        tree.nodes.filter((node) => nodeMatchesSearch(node, searchQuery)).map((node) => node.id),
+      ),
+    [searchQuery, tree.nodes],
+  )
 
   // Context menu
   const [ctxMenu, setCtxMenu] = useState<{ node: TalentTreeNode; sx: number; sy: number } | null>(
@@ -281,7 +280,7 @@ export default function TalentTreePlayerPage() {
   // Nós de jogador: sempre acessíveis, custo escalonado — o 1º é gratuito,
   // o 2º custa 1, o 3º custa 2, e assim por diante (independe da ordem).
   const divinity = character.divinity ?? 0
-  const totalPoints = divinity * 5
+  const totalPoints = (divinity + 1) * 5
   const nextPlayerNodeCost = acquiredPlayerCount
   const playerNodesSpent = (acquiredPlayerCount * (acquiredPlayerCount - 1)) / 2
   const spentPoints =
@@ -374,7 +373,6 @@ export default function TalentTreePlayerPage() {
     }
   }
 
-
   function confirmAttrPicker() {
     if (!attrPicker || !attrPicker.current) return
     setNodeConfig(attrPicker.nodeId, { attribute: attrPicker.current })
@@ -466,6 +464,30 @@ export default function TalentTreePlayerPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
+          <label className="relative flex w-60 items-center">
+            <span className="pointer-events-none absolute left-2.5 text-xs text-gray-500">⌕</span>
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Buscar nós…"
+              aria-label="Buscar nós da árvore"
+              className="w-full rounded-lg border border-gray-700 bg-gray-800 py-1.5 pr-16 pl-7 text-xs text-gray-200 transition outline-none focus:border-amber-500"
+            />
+            {searchQuery && (
+              <span className="absolute right-2 flex items-center gap-1 text-[10px] text-gray-500">
+                {matchingNodeIds.size}
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Limpar busca"
+                  className="rounded px-0.5 text-sm leading-none hover:text-white"
+                >
+                  ×
+                </button>
+              </span>
+            )}
+          </label>
           <span className="text-xs text-gray-400">
             Personagem: <span className="font-semibold text-amber-400">{character.name}</span>
           </span>
@@ -489,7 +511,7 @@ export default function TalentTreePlayerPage() {
               {remainingPoints}
             </span>
             <span className="text-xs text-gray-600">/ {totalPoints}</span>
-            <span className="text-[10px] text-gray-600">Div. {divinity} × 5</span>
+            <span className="text-[10px] text-gray-600">5 × (Div. {divinity} + 1)</span>
           </div>
         </div>
       </div>
@@ -514,6 +536,8 @@ export default function TalentTreePlayerPage() {
               const to = tree.nodes.find((n) => n.id === edge.to)
               if (!from || !to) return null
               const bothAcquired = acquiredSet.has(from.id) && acquiredSet.has(to.id)
+              const touchesMatch = matchingNodeIds.has(from.id) || matchingNodeIds.has(to.id)
+              const dimmed = searchActive && !touchesMatch
               return (
                 <line
                   key={edge.id}
@@ -521,7 +545,13 @@ export default function TalentTreePlayerPage() {
                   y1={from.y}
                   x2={to.x}
                   y2={to.y}
-                  stroke={bothAcquired ? 'rgba(245,158,11,0.6)' : 'rgba(75,85,99,0.5)'}
+                  stroke={
+                    dimmed
+                      ? 'rgba(107,114,128,0.12)'
+                      : bothAcquired
+                        ? 'rgba(245,158,11,0.6)'
+                        : 'rgba(75,85,99,0.5)'
+                  }
                   strokeWidth={bothAcquired ? 3 : 1.5}
                   strokeDasharray={bothAcquired ? undefined : '6 3'}
                 />
@@ -533,6 +563,7 @@ export default function TalentTreePlayerPage() {
               const acquired = acquiredSet.has(node.id)
               const selected = selectedNodeId === node.id
               const reachable = isReachable(node.id, acquiredSet, tree)
+              const dimmed = searchActive && !matchingNodeIds.has(node.id)
               const { fill, stroke, text } = NODE_TYPE_COLORS[node.data.type]
 
               const nodeFill = acquired
@@ -557,7 +588,12 @@ export default function TalentTreePlayerPage() {
                   transform={`translate(${node.x},${node.y})`}
                   style={{
                     cursor: 'pointer',
-                    filter: acquired ? 'drop-shadow(0 0 6px rgba(245,158,11,0.6))' : undefined,
+                    opacity: dimmed ? 0.2 : 1,
+                    filter: dimmed
+                      ? 'grayscale(1)'
+                      : acquired
+                        ? 'drop-shadow(0 0 6px rgba(245,158,11,0.6))'
+                        : undefined,
                   }}
                   onMouseDown={(e) => e.stopPropagation()}
                   onClick={(e) => {
@@ -648,7 +684,7 @@ export default function TalentTreePlayerPage() {
                   }}
                 />
               </div>
-              <p className="text-[10px] text-gray-600">Divindade {divinity} × 5 pontos</p>
+              <p className="text-[10px] text-gray-600">5 × (Divindade {divinity} + 1) pontos</p>
             </div>
           </div>
 
@@ -681,13 +717,17 @@ export default function TalentTreePlayerPage() {
                 Pontos de Partida
               </p>
               <p className="text-[10px] leading-relaxed text-gray-500">
-                Nós de jogador podem ser adquiridos a qualquer momento. O primeiro é
-                gratuito; cada início seguinte custa 1 ponto a mais que o anterior.
+                Nós de jogador podem ser adquiridos a qualquer momento. O primeiro é gratuito; cada
+                início seguinte custa 1 ponto a mais que o anterior.
               </p>
               <p className="mt-1.5 text-xs text-gray-400">
                 Próximo início:{' '}
-                <span className={`font-bold ${nextPlayerNodeCost === 0 ? 'text-emerald-400' : 'text-sky-400'}`}>
-                  {nextPlayerNodeCost === 0 ? 'Gratuito' : `${nextPlayerNodeCost} ponto${nextPlayerNodeCost > 1 ? 's' : ''}`}
+                <span
+                  className={`font-bold ${nextPlayerNodeCost === 0 ? 'text-emerald-400' : 'text-sky-400'}`}
+                >
+                  {nextPlayerNodeCost === 0
+                    ? 'Gratuito'
+                    : `${nextPlayerNodeCost} ponto${nextPlayerNodeCost > 1 ? 's' : ''}`}
                 </span>
               </p>
             </div>
@@ -724,7 +764,9 @@ export default function TalentTreePlayerPage() {
                           <span
                             className={`text-[10px] font-bold ${canAfford(selectedNode) ? 'text-amber-400' : 'text-red-400'}`}
                           >
-                            {canAfford(selectedNode) ? `${cost} ponto${cost > 1 ? 's' : ''}` : 'Sem pontos'}
+                            {canAfford(selectedNode)
+                              ? `${cost} ponto${cost > 1 ? 's' : ''}`
+                              : 'Sem pontos'}
                           </span>
                         )}
                         {!reachable && !acquired && (

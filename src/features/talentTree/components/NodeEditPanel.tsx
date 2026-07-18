@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTalentTreeStore } from '../store/talentTreeStore'
 import {
   NODE_TYPE_LABELS,
@@ -32,92 +32,146 @@ import {
   type ConditionalNodeData,
   type ConditionalEffect,
 } from '../../../types/talentTree'
-import type { AttributeName, DerivedStats, ElementId, MagicTypeId, SpellLevelEntry } from '../../../types/game'
+import type {
+  AttributeName,
+  DerivedStats,
+  ElementId,
+  MagicTypeId,
+  SpellLevelEntry,
+} from '../../../types/game'
 import { SPELL_LEVEL_LABELS } from '../../../types/game'
 import { ELEMENTS } from '../../../data/elements'
 import { MAGIC_TYPES } from '../../../data/magicTypes'
-import { ALL_COMBAT_SKILLS } from '../../../data/combatSkills'
+import { ALL_COMBAT_SKILLS, combatSkillDependencyRequirement } from '../../../data/combatSkills'
 import { ALL_SKILLS } from '../../../data/skills'
 import {
-  WEAPON_TAG_LABELS, WEAPON_TAGS_MELEE, WEAPON_TAGS_RANGED, WEAPON_TAGS_CATEGORY,
-  ARMOR_TAG_LABELS, ARMOR_TAGS_SPECIFIC, ARMOR_TAGS_CATEGORY,
-  type WeaponTag, type ArmorTag,
+  WEAPON_TAG_LABELS,
+  WEAPON_TAGS_MELEE,
+  WEAPON_TAGS_RANGED,
+  WEAPON_TAGS_CATEGORY,
+  ARMOR_TAG_LABELS,
+  ARMOR_TAGS_SPECIFIC,
+  ARMOR_TAGS_CATEGORY,
+  type WeaponTag,
+  type ArmorTag,
 } from '../../../types/game'
 
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ATTR_OPTIONS: { value: AttributeName; label: string }[] = [
-  { value: 'might',     label: 'Might' },
-  { value: 'grace',     label: 'Grace' },
-  { value: 'wisdom',    label: 'Wisdom' },
-  { value: 'sense',     label: 'Sense' },
+  { value: 'might', label: 'Might' },
+  { value: 'grace', label: 'Grace' },
+  { value: 'wisdom', label: 'Wisdom' },
+  { value: 'sense', label: 'Sense' },
   { value: 'fortitude', label: 'Fortitude' },
 ]
 
 const STAT_OPTIONS: { value: keyof DerivedStats; label: string }[] = [
-  { value: 'vida',        label: 'Vida' },
-  { value: 'iep',         label: 'IEP' },
-  { value: 'pc',          label: 'Pontos de Combate' },
+  { value: 'vida', label: 'Vida' },
+  { value: 'iep', label: 'IEP' },
+  { value: 'pc', label: 'Pontos de Combate' },
   { value: 'resistencia', label: 'Resistência' },
-  { value: 'esquiva',     label: 'Esquiva' },
+  { value: 'esquiva', label: 'Esquiva' },
 ]
 
 const NODE_TYPES: TalentNodeType[] = [
-  'player', 'attribute', 'magic', 'stat', 'combatAbility', 'extraDamage', 'healing',
-  'weaponBonus', 'spellModifier', 'defenseBonus', 'skillBonus', 'link', 'conditional',
+  'player',
+  'attribute',
+  'magic',
+  'stat',
+  'combatAbility',
+  'extraDamage',
+  'healing',
+  'weaponBonus',
+  'spellModifier',
+  'defenseBonus',
+  'skillBonus',
+  'link',
+  'conditional',
 ]
 
 const NODE_TYPES_EXTRA: TalentNodeType[] = [
-  'weaponBonus', 'spellModifier', 'defenseBonus', 'skillBonus', 'link', 'conditional',
+  'weaponBonus',
+  'spellModifier',
+  'defenseBonus',
+  'skillBonus',
+  'link',
+  'conditional',
 ]
 
 // ── Primitive field components ────────────────────────────────────────────────
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-0.5">
+    <label className="mb-0.5 block text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
       {children}
     </label>
   )
 }
 
-function TextInput({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
+function TextInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string
+  onChange: (v: string) => void
+  placeholder?: string
+}) {
   return (
     <input
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-amber-500 focus:outline-none"
+      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
     />
   )
 }
 
-function NumberInput({ value, onChange, min = 1 }: { value: number; onChange: (v: number) => void; min?: number }) {
+function NumberInput({
+  value,
+  onChange,
+  min = 1,
+}: {
+  value: number
+  onChange: (v: number) => void
+  min?: number
+}) {
   return (
     <input
       type="number"
       value={value ?? ''}
       min={min}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
     />
   )
 }
 
-function TextArea({ value, onChange, rows = 3 }: { value: string; onChange: (v: string) => void; rows?: number }) {
+function TextArea({
+  value,
+  onChange,
+  rows = 3,
+}: {
+  value: string
+  onChange: (v: string) => void
+  rows?: number
+}) {
   return (
     <textarea
       value={value}
       rows={rows}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-amber-500 focus:outline-none resize-none"
+      className="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
     />
   )
 }
 
 function Select<T extends string>({
-  value, onChange, options,
+  value,
+  onChange,
+  options,
 }: {
   value: T
   onChange: (v: T) => void
@@ -127,48 +181,78 @@ function Select<T extends string>({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value as T)}
-      className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
     >
-      {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
     </select>
   )
 }
 
 // ── Sub-editors ────────────────────────────────────────────────────────────────
 
-function PlayerEditor({ data, onChange }: { data: PlayerNodeData; onChange: (d: PlayerNodeData) => void }) {
+function PlayerEditor({
+  data,
+  onChange,
+}: {
+  data: PlayerNodeData
+  onChange: (d: PlayerNodeData) => void
+}) {
   return (
     <div className="flex flex-col gap-3">
       <div>
         <Label>Nome</Label>
-        <TextInput value={data.name} onChange={(v) => onChange({ ...data, name: v })} placeholder="Jogador" />
+        <TextInput
+          value={data.name}
+          onChange={(v) => onChange({ ...data, name: v })}
+          placeholder="Jogador"
+        />
       </div>
       <div>
         <Label>Descrição</Label>
-        <TextArea value={data.description} onChange={(v) => onChange({ ...data, description: v })} />
+        <TextArea
+          value={data.description}
+          onChange={(v) => onChange({ ...data, description: v })}
+        />
       </div>
-      <p className="text-[10px] text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 rounded-lg px-2.5 py-1.5 border border-blue-200 dark:border-blue-900/40">
-        Este é um ponto de partida da árvore. Você pode criar vários nós de Jogador para permitir múltiplos inícios.
+      <p className="rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-[10px] text-blue-500 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-400">
+        Este é um ponto de partida da árvore. Você pode criar vários nós de Jogador para permitir
+        múltiplos inícios.
       </p>
     </div>
   )
 }
 
-function AttributeEditor({ data, onChange }: { data: AttributeNodeData; onChange: (d: AttributeNodeData) => void }) {
+function AttributeEditor({
+  data,
+  onChange,
+}: {
+  data: AttributeNodeData
+  onChange: (d: AttributeNodeData) => void
+}) {
   return (
     <div className="flex flex-col gap-3">
       <div>
         <Label>Atributo</Label>
         <select
           value={data.attribute ?? ''}
-          onChange={(e) => onChange({ ...data, attribute: (e.target.value as AttributeName) || null })}
-          className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+          onChange={(e) =>
+            onChange({ ...data, attribute: (e.target.value as AttributeName) || null })
+          }
+          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         >
           <option value="">— Jogador escolhe —</option>
-          {ATTR_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          {ATTR_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
         </select>
         {!data.attribute && (
-          <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">
+          <p className="mt-0.5 text-[10px] text-amber-600 dark:text-amber-400">
             O jogador escolherá o atributo ao pegar este nó na árvore.
           </p>
         )}
@@ -182,7 +266,8 @@ function AttributeEditor({ data, onChange }: { data: AttributeNodeData; onChange
 }
 
 function SpellLevelRow({
-  entry, onChange,
+  entry,
+  onChange,
 }: {
   entry: SpellLevelEntry
   onChange: (e: SpellLevelEntry) => void
@@ -190,10 +275,10 @@ function SpellLevelRow({
   const label = SPELL_LEVEL_LABELS[entry.level]
   const isDivino = entry.level === 'divino'
   return (
-    <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60 p-2 flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 bg-gray-50 p-2 dark:border-gray-700 dark:bg-gray-800/60">
       <div className="flex items-center gap-1.5">
         <span
-          className="shrink-0 w-8 h-6 rounded flex items-center justify-center text-[10px] font-bold"
+          className="flex h-6 w-8 shrink-0 items-center justify-center rounded text-[10px] font-bold"
           style={{
             background: isDivino ? '#6d28d9' : '#374151',
             color: isDivino ? '#fff' : '#d1d5db',
@@ -206,7 +291,7 @@ function SpellLevelRow({
           placeholder="Custo (ex: 6 IEP)"
           value={entry.cost}
           onChange={(e) => onChange({ ...entry, cost: e.target.value })}
-          className="flex-1 rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-xs text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+          className="flex-1 rounded border border-gray-200 bg-white px-2 py-1 text-xs text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
         />
       </div>
       <input
@@ -214,34 +299,49 @@ function SpellLevelRow({
         placeholder="Escalonamento (ex: 2D8 + WIS)"
         value={entry.scaling}
         onChange={(e) => onChange({ ...entry, scaling: e.target.value })}
-        className="w-full rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-xs text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+        className="w-full rounded border border-gray-200 bg-white px-2 py-1 text-xs text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
       />
       <input
         type="text"
         placeholder="Habilidade especial (opcional)"
         value={entry.special ?? ''}
         onChange={(e) => onChange({ ...entry, special: e.target.value || null })}
-        className="w-full rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:border-amber-500 focus:outline-none"
+        className="w-full rounded border border-gray-200 bg-white px-2 py-1 text-xs text-gray-900 placeholder-gray-400 focus:border-amber-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
       />
     </div>
   )
 }
 
-function MagicEditor({ data, onChange }: { data: MagicNodeData; onChange: (d: MagicNodeData) => void }) {
+function MagicEditor({
+  data,
+  onChange,
+}: {
+  data: MagicNodeData
+  onChange: (d: MagicNodeData) => void
+}) {
   function toggleElement(id: ElementId) {
     const has = data.elements.includes(id)
-    onChange({ ...data, elements: has ? data.elements.filter((e) => e !== id) : [...data.elements, id] })
+    onChange({
+      ...data,
+      elements: has ? data.elements.filter((e) => e !== id) : [...data.elements, id],
+    })
   }
   function toggleMagicType(id: MagicTypeId) {
     const has = data.magicTypes.includes(id)
-    onChange({ ...data, magicTypes: has ? data.magicTypes.filter((t) => t !== id) : [...data.magicTypes, id] })
+    onChange({
+      ...data,
+      magicTypes: has ? data.magicTypes.filter((t) => t !== id) : [...data.magicTypes, id],
+    })
   }
   function updateLevel(entry: SpellLevelEntry) {
     const next = data.levels.map((l) => (l.level === entry.level ? entry : l))
     onChange({ ...data, levels: next })
   }
   function addAttrBonus() {
-    onChange({ ...data, attributeBonuses: [...data.attributeBonuses, { attribute: 'might', value: 1 }] })
+    onChange({
+      ...data,
+      attributeBonuses: [...data.attributeBonuses, { attribute: 'might', value: 1 }],
+    })
   }
   function addStatBonus() {
     onChange({ ...data, statBonuses: [...data.statBonuses, { stat: 'vida', value: 5 }] })
@@ -255,28 +355,38 @@ function MagicEditor({ data, onChange }: { data: MagicNodeData; onChange: (d: Ma
       </div>
       <div>
         <Label>Categoria</Label>
-        <TextInput value={data.category} onChange={(v) => onChange({ ...data, category: v })} placeholder="ex: Ataque, Cura, Alcance…" />
+        <TextInput
+          value={data.category}
+          onChange={(v) => onChange({ ...data, category: v })}
+          placeholder="ex: Ataque, Cura, Alcance…"
+        />
       </div>
       <div>
         <Label>Descrição</Label>
-        <TextArea value={data.description} onChange={(v) => onChange({ ...data, description: v })} />
+        <TextArea
+          value={data.description}
+          onChange={(v) => onChange({ ...data, description: v })}
+        />
       </div>
       <div>
         <Label>Notas</Label>
-        <TextInput value={data.notes ?? ''} onChange={(v) => onChange({ ...data, notes: v || undefined })} />
+        <TextInput
+          value={data.notes ?? ''}
+          onChange={(v) => onChange({ ...data, notes: v || undefined })}
+        />
       </div>
 
       {/* Elements */}
       <div>
         <Label>Elementos</Label>
-        <div className="flex flex-wrap gap-1 mt-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {ELEMENTS.map((el) => {
             const active = data.elements.includes(el.id)
             return (
               <button
                 key={el.id}
                 onClick={() => toggleElement(el.id)}
-                className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
+                className="rounded border px-1.5 py-0.5 text-[10px] font-bold transition"
                 style={{
                   background: active ? el.color : 'transparent',
                   borderColor: el.color,
@@ -293,14 +403,14 @@ function MagicEditor({ data, onChange }: { data: MagicNodeData; onChange: (d: Ma
       {/* Magic types */}
       <div>
         <Label>Tipos de Magia</Label>
-        <div className="flex flex-wrap gap-1 mt-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {MAGIC_TYPES.map((mt) => {
             const active = data.magicTypes.includes(mt.id)
             return (
               <button
                 key={mt.id}
                 onClick={() => toggleMagicType(mt.id)}
-                className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
+                className="rounded border px-1.5 py-0.5 text-[10px] font-bold transition"
                 style={{
                   background: active ? mt.color : 'transparent',
                   borderColor: mt.color,
@@ -317,7 +427,7 @@ function MagicEditor({ data, onChange }: { data: MagicNodeData; onChange: (d: Ma
       {/* Levels table */}
       <div>
         <Label>Níveis (0 – Divino)</Label>
-        <div className="flex flex-col gap-1.5 mt-1">
+        <div className="mt-1 flex flex-col gap-1.5">
           {data.levels.map((entry) => (
             <SpellLevelRow key={String(entry.level)} entry={entry} onChange={updateLevel} />
           ))}
@@ -326,64 +436,93 @@ function MagicEditor({ data, onChange }: { data: MagicNodeData; onChange: (d: Ma
 
       {/* Attribute bonuses */}
       <div>
-        <div className="flex items-center justify-between mb-1">
+        <div className="mb-1 flex items-center justify-between">
           <Label>Bônus de Atributo</Label>
-          <button onClick={addAttrBonus} className="text-[10px] text-amber-600 dark:text-amber-400 hover:underline">+ Adicionar</button>
+          <button
+            onClick={addAttrBonus}
+            className="text-[10px] text-amber-600 hover:underline dark:text-amber-400"
+          >
+            + Adicionar
+          </button>
         </div>
         {data.attributeBonuses.map((b, i) => (
-          <div key={i} className="flex gap-1.5 mb-1 items-center">
+          <div key={i} className="mb-1 flex items-center gap-1.5">
             <Select<AttributeName>
               value={b.attribute}
               onChange={(v) => {
-                const next = [...data.attributeBonuses]; next[i] = { ...b, attribute: v }
+                const next = [...data.attributeBonuses]
+                next[i] = { ...b, attribute: v }
                 onChange({ ...data, attributeBonuses: next })
               }}
               options={ATTR_OPTIONS}
             />
             <input
-              type="number" min={1} value={b.value}
+              type="number"
+              min={1}
+              value={b.value}
               onChange={(e) => {
-                const next = [...data.attributeBonuses]; next[i] = { ...b, value: Number(e.target.value) }
+                const next = [...data.attributeBonuses]
+                next[i] = { ...b, value: Number(e.target.value) }
                 onChange({ ...data, attributeBonuses: next })
               }}
-              className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-sm text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+              className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             />
             <button
-              onClick={() => onChange({ ...data, attributeBonuses: data.attributeBonuses.filter((_, j) => j !== i) })}
-              className="text-rose-400 hover:text-rose-600 text-sm leading-none"
-            >✕</button>
+              onClick={() =>
+                onChange({
+                  ...data,
+                  attributeBonuses: data.attributeBonuses.filter((_, j) => j !== i),
+                })
+              }
+              className="text-sm leading-none text-rose-400 hover:text-rose-600"
+            >
+              ✕
+            </button>
           </div>
         ))}
       </div>
 
       {/* Stat bonuses */}
       <div>
-        <div className="flex items-center justify-between mb-1">
+        <div className="mb-1 flex items-center justify-between">
           <Label>Bônus de Stat</Label>
-          <button onClick={addStatBonus} className="text-[10px] text-amber-600 dark:text-amber-400 hover:underline">+ Adicionar</button>
+          <button
+            onClick={addStatBonus}
+            className="text-[10px] text-amber-600 hover:underline dark:text-amber-400"
+          >
+            + Adicionar
+          </button>
         </div>
         {data.statBonuses.map((b, i) => (
-          <div key={i} className="flex gap-1.5 mb-1 items-center">
+          <div key={i} className="mb-1 flex items-center gap-1.5">
             <Select<keyof DerivedStats>
               value={b.stat}
               onChange={(v) => {
-                const next = [...data.statBonuses]; next[i] = { ...b, stat: v }
+                const next = [...data.statBonuses]
+                next[i] = { ...b, stat: v }
                 onChange({ ...data, statBonuses: next })
               }}
               options={STAT_OPTIONS}
             />
             <input
-              type="number" min={1} value={b.value}
+              type="number"
+              min={1}
+              value={b.value}
               onChange={(e) => {
-                const next = [...data.statBonuses]; next[i] = { ...b, value: Number(e.target.value) }
+                const next = [...data.statBonuses]
+                next[i] = { ...b, value: Number(e.target.value) }
                 onChange({ ...data, statBonuses: next })
               }}
-              className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-sm text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+              className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             />
             <button
-              onClick={() => onChange({ ...data, statBonuses: data.statBonuses.filter((_, j) => j !== i) })}
-              className="text-rose-400 hover:text-rose-600 text-sm leading-none"
-            >✕</button>
+              onClick={() =>
+                onChange({ ...data, statBonuses: data.statBonuses.filter((_, j) => j !== i) })
+              }
+              className="text-sm leading-none text-rose-400 hover:text-rose-600"
+            >
+              ✕
+            </button>
           </div>
         ))}
       </div>
@@ -391,12 +530,22 @@ function MagicEditor({ data, onChange }: { data: MagicNodeData; onChange: (d: Ma
   )
 }
 
-function StatEditor({ data, onChange }: { data: StatNodeData; onChange: (d: StatNodeData) => void }) {
+function StatEditor({
+  data,
+  onChange,
+}: {
+  data: StatNodeData
+  onChange: (d: StatNodeData) => void
+}) {
   return (
     <div className="flex flex-col gap-3">
       <div>
         <Label>Stat</Label>
-        <Select<keyof DerivedStats> value={data.stat} onChange={(v) => onChange({ ...data, stat: v })} options={STAT_OPTIONS} />
+        <Select<keyof DerivedStats>
+          value={data.stat}
+          onChange={(v) => onChange({ ...data, stat: v })}
+          options={STAT_OPTIONS}
+        />
       </div>
       <div>
         <Label>Valor (+)</Label>
@@ -406,7 +555,13 @@ function StatEditor({ data, onChange }: { data: StatNodeData; onChange: (d: Stat
   )
 }
 
-function CombatAbilityEditor({ data, onChange }: { data: CombatAbilityNodeData; onChange: (d: CombatAbilityNodeData) => void }) {
+function CombatAbilityEditor({
+  data,
+  onChange,
+}: {
+  data: CombatAbilityNodeData
+  onChange: (d: CombatAbilityNodeData) => void
+}) {
   const [search, setSearch] = useState('')
   const filtered = search.trim()
     ? ALL_COMBAT_SKILLS.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
@@ -420,63 +575,101 @@ function CombatAbilityEditor({ data, onChange }: { data: CombatAbilityNodeData; 
         <Label>Buscar Habilidade</Label>
         <TextInput value={search} onChange={setSearch} placeholder="Nome da habilidade…" />
       </div>
-      <div className="max-h-48 overflow-y-auto flex flex-col gap-0.5 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="flex max-h-48 flex-col gap-0.5 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
         {filtered.map((sk) => {
           const active = data.skillId === sk.id
           return (
             <button
               key={sk.id}
-              onClick={() => onChange({ ...data, skillId: sk.id, skillName: sk.name, skillDescription: sk.description, skillCost: sk.cost })}
-              className={`w-full text-left px-3 py-1.5 text-xs transition ${active ? 'bg-rose-600 text-white' : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'}`}
+              onClick={() =>
+                onChange({
+                  ...data,
+                  skillId: sk.id,
+                  skillName: sk.name,
+                  skillDescription: sk.description,
+                  skillCost: sk.cost,
+                  skillRequirement: combatSkillDependencyRequirement(sk),
+                  skillAction: sk.action,
+                  skillPurpose: sk.purpose,
+                })
+              }
+              className={`w-full px-3 py-1.5 text-left text-xs transition ${active ? 'bg-rose-600 text-white' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'}`}
             >
               <span className="font-semibold">{sk.name}</span>
-              <span className={`ml-1.5 text-[10px] ${active ? 'text-rose-100' : 'text-gray-400'}`}>PC: {sk.cost}</span>
+              <span className={`ml-1.5 text-[10px] ${active ? 'text-rose-100' : 'text-gray-400'}`}>
+                PC: {sk.cost}
+              </span>
             </button>
           )
         })}
       </div>
       {data.skillName && (
-        <div className="rounded-lg bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 px-3 py-2 text-xs text-rose-700 dark:text-rose-300">
-          <p className="font-bold mb-0.5">{data.skillName}</p>
+        <div className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/30 dark:text-rose-300">
+          <p className="mb-0.5 font-bold">{data.skillName}</p>
+          {data.skillRequirement && (
+            <p>
+              <strong>Requisito:</strong> {data.skillRequirement}
+            </p>
+          )}
+          {data.skillAction && (
+            <p>
+              <strong>Ação:</strong> {data.skillAction}
+            </p>
+          )}
           <p>{data.skillDescription}</p>
         </div>
       )}
 
       {/* Bônus de atributo — toda habilidade deve dar atributos */}
       <div>
-        <div className="flex items-center justify-between mb-1">
+        <div className="mb-1 flex items-center justify-between">
           <Label>Bônus de Atributo</Label>
           <button
-            onClick={() => onChange({ ...data, attributeBonuses: [...attributeBonuses, { attribute: 'might', value: 1 }] })}
-            className="text-[10px] text-amber-600 dark:text-amber-400 hover:underline"
-          >+ Adicionar</button>
+            onClick={() =>
+              onChange({
+                ...data,
+                attributeBonuses: [...attributeBonuses, { attribute: 'might', value: 1 }],
+              })
+            }
+            className="text-[10px] text-amber-600 hover:underline dark:text-amber-400"
+          >
+            + Adicionar
+          </button>
         </div>
-        <p className="text-[10px] text-gray-400 mb-1">
-          Regra: toda habilidade dá atributos. Escale com o investimento necessário
-          (~5 pts → +1, ~15 pts → +3).
+        <p className="mb-1 text-[10px] text-gray-400">
+          Regra: toda habilidade dá atributos. Escale com o investimento necessário (~5 pts → +1,
+          ~15 pts → +3).
         </p>
         {attributeBonuses.map((b, i) => (
-          <div key={i} className="flex gap-1.5 mb-1 items-center">
+          <div key={i} className="mb-1 flex items-center gap-1.5">
             <Select<AttributeName>
               value={b.attribute}
               onChange={(v) => {
-                const next = [...attributeBonuses]; next[i] = { ...b, attribute: v }
+                const next = [...attributeBonuses]
+                next[i] = { ...b, attribute: v }
                 onChange({ ...data, attributeBonuses: next })
               }}
               options={ATTR_OPTIONS}
             />
             <input
-              type="number" min={1} value={b.value}
+              type="number"
+              min={1}
+              value={b.value}
               onChange={(e) => {
-                const next = [...attributeBonuses]; next[i] = { ...b, value: Number(e.target.value) }
+                const next = [...attributeBonuses]
+                next[i] = { ...b, value: Number(e.target.value) }
                 onChange({ ...data, attributeBonuses: next })
               }}
-              className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-sm text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+              className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             />
             <button
-              onClick={() => onChange({ ...data, attributeBonuses: attributeBonuses.filter((_, j) => j !== i) })}
-              className="text-rose-400 hover:text-rose-600 text-sm leading-none"
-            >✕</button>
+              onClick={() =>
+                onChange({ ...data, attributeBonuses: attributeBonuses.filter((_, j) => j !== i) })
+              }
+              className="text-sm leading-none text-rose-400 hover:text-rose-600"
+            >
+              ✕
+            </button>
           </div>
         ))}
         {attributeBonuses.length === 0 && (
@@ -487,10 +680,19 @@ function CombatAbilityEditor({ data, onChange }: { data: CombatAbilityNodeData; 
   )
 }
 
-function ExtraDamageEditor({ data, onChange }: { data: ExtraDamageNodeData; onChange: (d: ExtraDamageNodeData) => void }) {
+function ExtraDamageEditor({
+  data,
+  onChange,
+}: {
+  data: ExtraDamageNodeData
+  onChange: (d: ExtraDamageNodeData) => void
+}) {
   function toggleTarget(id: AttackTarget) {
     const has = data.attackTargets.includes(id)
-    onChange({ ...data, attackTargets: has ? data.attackTargets.filter((t) => t !== id) : [...data.attackTargets, id] })
+    onChange({
+      ...data,
+      attackTargets: has ? data.attackTargets.filter((t) => t !== id) : [...data.attackTargets, id],
+    })
   }
 
   return (
@@ -509,25 +711,27 @@ function ExtraDamageEditor({ data, onChange }: { data: ExtraDamageNodeData; onCh
           type="number"
           min={0}
           value={data.flat ?? ''}
-          onChange={(e) => onChange({ ...data, flat: e.target.value ? Number(e.target.value) : undefined })}
+          onChange={(e) =>
+            onChange({ ...data, flat: e.target.value ? Number(e.target.value) : undefined })
+          }
           placeholder="0"
-          className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         />
       </div>
 
       {/* Base attack targets */}
       <div>
         <Label>Aplicar a – Físico / Geral</Label>
-        <div className="flex flex-wrap gap-1 mt-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {BASE_ATTACK_TARGETS.map((t) => {
             const active = data.attackTargets.includes(t)
             return (
               <button
                 key={t}
                 onClick={() => toggleTarget(t)}
-                className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${
+                className={`rounded border px-1.5 py-0.5 text-[10px] font-bold transition ${
                   active
-                    ? 'bg-orange-500 border-orange-500 text-white'
+                    ? 'border-orange-500 bg-orange-500 text-white'
                     : 'border-orange-400 text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/30'
                 }`}
               >
@@ -541,14 +745,14 @@ function ExtraDamageEditor({ data, onChange }: { data: ExtraDamageNodeData; onCh
       {/* Magic types */}
       <div>
         <Label>Aplicar a – Tipos de Magia</Label>
-        <div className="flex flex-wrap gap-1 mt-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {MAGIC_TYPES.map((mt) => {
             const active = data.attackTargets.includes(mt.id as AttackTarget)
             return (
               <button
                 key={mt.id}
                 onClick={() => toggleTarget(mt.id as AttackTarget)}
-                className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
+                className="rounded border px-1.5 py-0.5 text-[10px] font-bold transition"
                 style={{
                   background: active ? mt.color : 'transparent',
                   borderColor: mt.color,
@@ -565,14 +769,14 @@ function ExtraDamageEditor({ data, onChange }: { data: ExtraDamageNodeData; onCh
       {/* Elements */}
       <div>
         <Label>Aplicar a – Elementos (dano)</Label>
-        <div className="flex flex-wrap gap-1 mt-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {ELEMENTS.map((el) => {
             const active = data.attackTargets.includes(el.id as AttackTarget)
             return (
               <button
                 key={el.id}
                 onClick={() => toggleTarget(el.id as AttackTarget)}
-                className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
+                className="rounded border px-1.5 py-0.5 text-[10px] font-bold transition"
                 style={{
                   background: active ? el.color : 'transparent',
                   borderColor: el.color,
@@ -587,7 +791,9 @@ function ExtraDamageEditor({ data, onChange }: { data: ExtraDamageNodeData; onCh
       </div>
 
       {data.attackTargets.length === 0 && (
-        <p className="text-[10px] text-gray-400">Nenhum alvo selecionado — selecione ao menos um acima.</p>
+        <p className="text-[10px] text-gray-400">
+          Nenhum alvo selecionado — selecione ao menos um acima.
+        </p>
       )}
     </div>
   )
@@ -596,16 +802,25 @@ function ExtraDamageEditor({ data, onChange }: { data: ExtraDamageNodeData; onCh
 // ── V2 Editors ─────────────────────────────────────────────────────────────────
 
 const WEAPON_BONUS_OPTIONS: { value: WeaponBonusType; label: string }[] = [
-  { value: 'damage',         label: WEAPON_BONUS_TYPE_LABELS['damage'] },
-  { value: 'threatRange',    label: WEAPON_BONUS_TYPE_LABELS['threatRange'] },
+  { value: 'damage', label: WEAPON_BONUS_TYPE_LABELS['damage'] },
+  { value: 'threatRange', label: WEAPON_BONUS_TYPE_LABELS['threatRange'] },
   { value: 'critMultiplier', label: WEAPON_BONUS_TYPE_LABELS['critMultiplier'] },
-  { value: 'hitBonus',       label: WEAPON_BONUS_TYPE_LABELS['hitBonus'] },
+  { value: 'hitBonus', label: WEAPON_BONUS_TYPE_LABELS['hitBonus'] },
 ]
 
-function WeaponBonusEditor({ data, onChange }: { data: WeaponBonusNodeData; onChange: (d: WeaponBonusNodeData) => void }) {
+function WeaponBonusEditor({
+  data,
+  onChange,
+}: {
+  data: WeaponBonusNodeData
+  onChange: (d: WeaponBonusNodeData) => void
+}) {
   function toggleTag(tag: WeaponTag) {
     const has = data.requiredTags.includes(tag)
-    onChange({ ...data, requiredTags: has ? data.requiredTags.filter((t) => t !== tag) : [...data.requiredTags, tag] })
+    onChange({
+      ...data,
+      requiredTags: has ? data.requiredTags.filter((t) => t !== tag) : [...data.requiredTags, tag],
+    })
   }
 
   return (
@@ -621,7 +836,11 @@ function WeaponBonusEditor({ data, onChange }: { data: WeaponBonusNodeData; onCh
       {data.bonusType === 'damage' && (
         <div>
           <Label>Dados de Dano (ex: 1d6)</Label>
-          <TextInput value={data.dice ?? ''} onChange={(v) => onChange({ ...data, dice: v || undefined })} placeholder="1d6" />
+          <TextInput
+            value={data.dice ?? ''}
+            onChange={(v) => onChange({ ...data, dice: v || undefined })}
+            placeholder="1d6"
+          />
         </div>
       )}
       <div>
@@ -630,15 +849,18 @@ function WeaponBonusEditor({ data, onChange }: { data: WeaponBonusNodeData; onCh
       </div>
       <div>
         <Label>Tags de Arma Requeridas (pelo menos uma)</Label>
-        <p className="text-[10px] text-gray-400 mb-1">Vazio = aplica a qualquer arma</p>
+        <p className="mb-1 text-[10px] text-gray-400">Vazio = aplica a qualquer arma</p>
         <div className="mb-1">
-          <p className="text-[9px] text-gray-500 uppercase tracking-widest">Corpo a Corpo</p>
-          <div className="flex flex-wrap gap-1 mt-0.5">
+          <p className="text-[9px] tracking-widest text-gray-500 uppercase">Corpo a Corpo</p>
+          <div className="mt-0.5 flex flex-wrap gap-1">
             {WEAPON_TAGS_MELEE.map((tag) => {
               const active = data.requiredTags.includes(tag)
               return (
-                <button key={tag} onClick={() => toggleTag(tag)}
-                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-rose-600 border-rose-600 text-white' : 'border-rose-400 text-rose-400 hover:bg-rose-900/20'}`}>
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`rounded border px-1.5 py-0.5 text-[10px] font-bold transition ${active ? 'border-rose-600 bg-rose-600 text-white' : 'border-rose-400 text-rose-400 hover:bg-rose-900/20'}`}
+                >
                   {WEAPON_TAG_LABELS[tag]}
                 </button>
               )
@@ -646,13 +868,16 @@ function WeaponBonusEditor({ data, onChange }: { data: WeaponBonusNodeData; onCh
           </div>
         </div>
         <div className="mb-1">
-          <p className="text-[9px] text-gray-500 uppercase tracking-widest">Distância</p>
-          <div className="flex flex-wrap gap-1 mt-0.5">
+          <p className="text-[9px] tracking-widest text-gray-500 uppercase">Distância</p>
+          <div className="mt-0.5 flex flex-wrap gap-1">
             {WEAPON_TAGS_RANGED.map((tag) => {
               const active = data.requiredTags.includes(tag)
               return (
-                <button key={tag} onClick={() => toggleTag(tag)}
-                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-sky-600 border-sky-600 text-white' : 'border-sky-400 text-sky-400 hover:bg-sky-900/20'}`}>
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`rounded border px-1.5 py-0.5 text-[10px] font-bold transition ${active ? 'border-sky-600 bg-sky-600 text-white' : 'border-sky-400 text-sky-400 hover:bg-sky-900/20'}`}
+                >
                   {WEAPON_TAG_LABELS[tag]}
                 </button>
               )
@@ -660,13 +885,16 @@ function WeaponBonusEditor({ data, onChange }: { data: WeaponBonusNodeData; onCh
           </div>
         </div>
         <div>
-          <p className="text-[9px] text-gray-500 uppercase tracking-widest">Categorias</p>
-          <div className="flex flex-wrap gap-1 mt-0.5">
+          <p className="text-[9px] tracking-widest text-gray-500 uppercase">Categorias</p>
+          <div className="mt-0.5 flex flex-wrap gap-1">
             {WEAPON_TAGS_CATEGORY.map((tag) => {
               const active = data.requiredTags.includes(tag)
               return (
-                <button key={tag} onClick={() => toggleTag(tag)}
-                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-amber-600 border-amber-600 text-white' : 'border-amber-400 text-amber-400 hover:bg-amber-900/20'}`}>
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`rounded border px-1.5 py-0.5 text-[10px] font-bold transition ${active ? 'border-amber-600 bg-amber-600 text-white' : 'border-amber-400 text-amber-400 hover:bg-amber-900/20'}`}
+                >
                   {WEAPON_TAG_LABELS[tag]}
                 </button>
               )
@@ -679,20 +907,36 @@ function WeaponBonusEditor({ data, onChange }: { data: WeaponBonusNodeData; onCh
 }
 
 const SPELL_MOD_OPTIONS: { value: SpellModifierEffectType; label: string }[] = [
-  { value: 'costReduction',   label: SPELL_MODIFIER_EFFECT_LABELS['costReduction'] },
+  { value: 'costReduction', label: SPELL_MODIFIER_EFFECT_LABELS['costReduction'] },
   { value: 'extraProjectile', label: SPELL_MODIFIER_EFFECT_LABELS['extraProjectile'] },
-  { value: 'duration',        label: SPELL_MODIFIER_EFFECT_LABELS['duration'] },
-  { value: 'damageBonus',     label: SPELL_MODIFIER_EFFECT_LABELS['damageBonus'] },
+  { value: 'duration', label: SPELL_MODIFIER_EFFECT_LABELS['duration'] },
+  { value: 'damageBonus', label: SPELL_MODIFIER_EFFECT_LABELS['damageBonus'] },
 ]
 
-function SpellModifierEditor({ data, onChange }: { data: SpellModifierNodeData; onChange: (d: SpellModifierNodeData) => void }) {
+function SpellModifierEditor({
+  data,
+  onChange,
+}: {
+  data: SpellModifierNodeData
+  onChange: (d: SpellModifierNodeData) => void
+}) {
   function toggleElement(id: ElementId) {
     const has = data.conditionElements.includes(id)
-    onChange({ ...data, conditionElements: has ? data.conditionElements.filter((e) => e !== id) : [...data.conditionElements, id] })
+    onChange({
+      ...data,
+      conditionElements: has
+        ? data.conditionElements.filter((e) => e !== id)
+        : [...data.conditionElements, id],
+    })
   }
   function toggleType(id: MagicTypeId) {
     const has = data.conditionTypes.includes(id)
-    onChange({ ...data, conditionTypes: has ? data.conditionTypes.filter((t) => t !== id) : [...data.conditionTypes, id] })
+    onChange({
+      ...data,
+      conditionTypes: has
+        ? data.conditionTypes.filter((t) => t !== id)
+        : [...data.conditionTypes, id],
+    })
   }
 
   return (
@@ -708,22 +952,41 @@ function SpellModifierEditor({ data, onChange }: { data: SpellModifierNodeData; 
       {data.effectType === 'damageBonus' && (
         <div>
           <Label>Dados de Dano (ex: 1d6)</Label>
-          <TextInput value={data.dice ?? ''} onChange={(v) => onChange({ ...data, dice: v || undefined })} placeholder="1d6" />
+          <TextInput
+            value={data.dice ?? ''}
+            onChange={(v) => onChange({ ...data, dice: v || undefined })}
+            placeholder="1d6"
+          />
         </div>
       )}
       <div>
-        <Label>Valor ({data.effectType === 'costReduction' ? 'IEP reduzido' : data.effectType === 'duration' ? 'rodadas extras' : 'bônus'})</Label>
+        <Label>
+          Valor (
+          {data.effectType === 'costReduction'
+            ? 'IEP reduzido'
+            : data.effectType === 'duration'
+              ? 'rodadas extras'
+              : 'bônus'}
+          )
+        </Label>
         <NumberInput value={data.value} onChange={(v) => onChange({ ...data, value: v })} min={0} />
       </div>
       <div>
         <Label>Condição – Elementos (vazio = todos)</Label>
-        <div className="flex flex-wrap gap-1 mt-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {ELEMENTS.map((el) => {
             const active = data.conditionElements.includes(el.id)
             return (
-              <button key={el.id} onClick={() => toggleElement(el.id)}
-                className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
-                style={{ background: active ? el.color : 'transparent', borderColor: el.color, color: active ? el.textColor : el.color }}>
+              <button
+                key={el.id}
+                onClick={() => toggleElement(el.id)}
+                className="rounded border px-1.5 py-0.5 text-[10px] font-bold transition"
+                style={{
+                  background: active ? el.color : 'transparent',
+                  borderColor: el.color,
+                  color: active ? el.textColor : el.color,
+                }}
+              >
                 {el.label}
               </button>
             )
@@ -732,22 +995,30 @@ function SpellModifierEditor({ data, onChange }: { data: SpellModifierNodeData; 
       </div>
       <div>
         <Label>Condição – Tipos de Magia (vazio = todos)</Label>
-        <div className="flex flex-wrap gap-1 mt-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {MAGIC_TYPES.map((mt) => {
             const active = data.conditionTypes.includes(mt.id)
             return (
-              <button key={mt.id} onClick={() => toggleType(mt.id)}
-                className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
-                style={{ background: active ? mt.color : 'transparent', borderColor: mt.color, color: active ? mt.textColor : mt.color }}>
+              <button
+                key={mt.id}
+                onClick={() => toggleType(mt.id)}
+                className="rounded border px-1.5 py-0.5 text-[10px] font-bold transition"
+                style={{
+                  background: active ? mt.color : 'transparent',
+                  borderColor: mt.color,
+                  color: active ? mt.textColor : mt.color,
+                }}
+              >
                 {mt.label}
               </button>
             )
           })}
         </div>
       </div>
-      <p className="text-[10px] text-gray-400 bg-gray-50 dark:bg-gray-800/60 rounded p-2">
-        Este nó afeta magias que tenham <em>pelo menos um</em> dos elementos e <em>pelo menos um</em> dos tipos selecionados.
-        Condições vazias aplicam a <em>todas</em> as magias.
+      <p className="rounded bg-gray-50 p-2 text-[10px] text-gray-400 dark:bg-gray-800/60">
+        Este nó afeta magias que tenham <em>pelo menos um</em> dos elementos e{' '}
+        <em>pelo menos um</em> dos tipos selecionados. Condições vazias aplicam a <em>todas</em> as
+        magias.
       </p>
     </div>
   )
@@ -759,31 +1030,49 @@ const DEFENSE_TYPE_OPTIONS: { value: string; label: string }[] = [
   ...ELEMENTS.map((el) => ({ value: el.id, label: `Elemental – ${el.label}` })),
 ]
 
-function DefenseBonusEditor({ data, onChange }: { data: DefenseBonusNodeData; onChange: (d: DefenseBonusNodeData) => void }) {
+function DefenseBonusEditor({
+  data,
+  onChange,
+}: {
+  data: DefenseBonusNodeData
+  onChange: (d: DefenseBonusNodeData) => void
+}) {
   return (
     <div className="flex flex-col gap-3">
       <div>
         <Label>Tipo de Dano Reduzido</Label>
         <select
           value={data.damageType}
-          onChange={(e) => onChange({ ...data, damageType: e.target.value as DefenseBonusNodeData['damageType'] })}
-          className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+          onChange={(e) =>
+            onChange({ ...data, damageType: e.target.value as DefenseBonusNodeData['damageType'] })
+          }
+          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         >
-          {DEFENSE_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          {DEFENSE_TYPE_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
         </select>
       </div>
       <div>
         <Label>Redução de Dano (valor fixo)</Label>
         <NumberInput value={data.value} onChange={(v) => onChange({ ...data, value: v })} min={1} />
       </div>
-      <p className="text-[10px] text-gray-400 bg-gray-50 dark:bg-gray-800/60 rounded p-2">
+      <p className="rounded bg-gray-50 p-2 text-[10px] text-gray-400 dark:bg-gray-800/60">
         Reduz o dano recebido deste tipo em {data.value} pontos por ataque.
       </p>
     </div>
   )
 }
 
-function SkillBonusEditor({ data, onChange }: { data: SkillBonusNodeData; onChange: (d: SkillBonusNodeData) => void }) {
+function SkillBonusEditor({
+  data,
+  onChange,
+}: {
+  data: SkillBonusNodeData
+  onChange: (d: SkillBonusNodeData) => void
+}) {
   const [search, setSearch] = useState('')
   const filtered = search.trim()
     ? ALL_SKILLS.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
@@ -795,14 +1084,14 @@ function SkillBonusEditor({ data, onChange }: { data: SkillBonusNodeData; onChan
         <Label>Buscar Perícia</Label>
         <TextInput value={search} onChange={setSearch} placeholder="Nome da perícia…" />
       </div>
-      <div className="max-h-48 overflow-y-auto flex flex-col gap-0.5 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="flex max-h-48 flex-col gap-0.5 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
         {filtered.map((sk) => {
           const active = data.skillId === sk.id
           return (
             <button
               key={sk.id}
               onClick={() => onChange({ ...data, skillId: sk.id, skillName: sk.name })}
-              className={`w-full text-left px-3 py-1.5 text-xs transition ${active ? 'bg-orange-600 text-white' : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'}`}
+              className={`w-full px-3 py-1.5 text-left text-xs transition ${active ? 'bg-orange-600 text-white' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'}`}
             >
               {sk.name}
             </button>
@@ -810,7 +1099,7 @@ function SkillBonusEditor({ data, onChange }: { data: SkillBonusNodeData; onChan
         })}
       </div>
       {data.skillName && (
-        <div className="rounded-lg bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/40 px-3 py-2 text-xs text-orange-700 dark:text-orange-300">
+        <div className="rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-xs text-orange-700 dark:border-orange-900/40 dark:bg-orange-950/30 dark:text-orange-300">
           Perícia selecionada: <strong>{data.skillName}</strong>
         </div>
       )}
@@ -822,7 +1111,13 @@ function SkillBonusEditor({ data, onChange }: { data: SkillBonusNodeData; onChan
   )
 }
 
-function HealingEditor({ data, onChange }: { data: HealingNodeData; onChange: (d: HealingNodeData) => void }) {
+function HealingEditor({
+  data,
+  onChange,
+}: {
+  data: HealingNodeData
+  onChange: (d: HealingNodeData) => void
+}) {
   return (
     <div className="flex flex-col gap-3">
       <div>
@@ -839,9 +1134,11 @@ function HealingEditor({ data, onChange }: { data: HealingNodeData; onChange: (d
           type="number"
           min={0}
           value={data.flat ?? ''}
-          onChange={(e) => onChange({ ...data, flat: e.target.value ? Number(e.target.value) : undefined })}
+          onChange={(e) =>
+            onChange({ ...data, flat: e.target.value ? Number(e.target.value) : undefined })
+          }
           placeholder="0"
-          className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         />
       </div>
       <div>
@@ -849,14 +1146,16 @@ function HealingEditor({ data, onChange }: { data: HealingNodeData; onChange: (d
         <select
           value={data.element ?? ''}
           onChange={(e) => onChange({ ...data, element: (e.target.value as ElementId) || null })}
-          className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2.5 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         >
           <option value="">— Geral (toda cura) —</option>
           {ELEMENTS.map((el) => (
-            <option key={el.id} value={el.id}>{el.label}</option>
+            <option key={el.id} value={el.id}>
+              {el.label}
+            </option>
           ))}
         </select>
-        <p className="text-[10px] text-gray-400 mt-0.5">
+        <p className="mt-0.5 text-[10px] text-gray-400">
           {data.element
             ? `Aumenta apenas curas do elemento: ${ELEMENTS.find((e) => e.id === data.element)?.label ?? data.element}`
             : 'Aumenta toda e qualquer cura (geral).'}
@@ -868,16 +1167,26 @@ function HealingEditor({ data, onChange }: { data: HealingNodeData; onChange: (d
 
 // ── Link editor ───────────────────────────────────────────────────────────────
 
-function LinkEditor({ data, onChange }: { data: LinkNodeData; onChange: (d: LinkNodeData) => void }) {
+function LinkEditor({
+  data,
+  onChange,
+}: {
+  data: LinkNodeData
+  onChange: (d: LinkNodeData) => void
+}) {
   return (
     <div className="flex flex-col gap-3">
       <div>
         <Label>Nome</Label>
-        <TextInput value={data.name} onChange={(v) => onChange({ ...data, name: v })} placeholder="Ligação" />
+        <TextInput
+          value={data.name}
+          onChange={(v) => onChange({ ...data, name: v })}
+          placeholder="Ligação"
+        />
       </div>
-      <p className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/40 rounded-lg px-2.5 py-1.5 border border-slate-200 dark:border-slate-700">
-        Nó de Ligação (custo 0): ponte rúnica entre ramificações distantes.
-        Permite saltar entre especializações sem gastar pontos, facilitando builds híbridas.
+      <p className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[10px] text-slate-500 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400">
+        Nó de Ligação (custo 0): ponte rúnica entre ramificações distantes. Permite saltar entre
+        especializações sem gastar pontos, facilitando builds híbridas.
       </p>
     </div>
   )
@@ -885,25 +1194,33 @@ function LinkEditor({ data, onChange }: { data: LinkNodeData; onChange: (d: Link
 
 // ── Conditional editor ────────────────────────────────────────────────────────
 
-const EFFECT_KIND_OPTIONS = (Object.keys(CONDITIONAL_EFFECT_KIND_LABELS) as ConditionalEffect['kind'][])
-  .map((k) => ({ value: k, label: CONDITIONAL_EFFECT_KIND_LABELS[k] }))
+const EFFECT_KIND_OPTIONS = (
+  Object.keys(CONDITIONAL_EFFECT_KIND_LABELS) as ConditionalEffect['kind'][]
+).map((k) => ({ value: k, label: CONDITIONAL_EFFECT_KIND_LABELS[k] }))
 
 function ConditionalEffectRow({
-  effect, onChange, onRemove,
+  effect,
+  onChange,
+  onRemove,
 }: {
   effect: ConditionalEffect
   onChange: (e: ConditionalEffect) => void
   onRemove: () => void
 }) {
   return (
-    <div className="rounded-lg border border-yellow-300 dark:border-yellow-800/60 bg-yellow-50/60 dark:bg-yellow-950/20 p-2 flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5 rounded-lg border border-yellow-300 bg-yellow-50/60 p-2 dark:border-yellow-800/60 dark:bg-yellow-950/20">
       <div className="flex items-center gap-1.5">
         <Select<ConditionalEffect['kind']>
           value={effect.kind}
           onChange={(kind) => onChange(defaultConditionalEffect(kind))}
           options={EFFECT_KIND_OPTIONS}
         />
-        <button onClick={onRemove} className="text-rose-400 hover:text-rose-600 text-sm leading-none shrink-0">✕</button>
+        <button
+          onClick={onRemove}
+          className="shrink-0 text-sm leading-none text-rose-400 hover:text-rose-600"
+        >
+          ✕
+        </button>
       </div>
 
       {effect.kind === 'attributeBonus' && (
@@ -913,9 +1230,12 @@ function ConditionalEffectRow({
             onChange={(v) => onChange({ ...effect, attribute: v })}
             options={ATTR_OPTIONS}
           />
-          <input type="number" value={effect.value}
+          <input
+            type="number"
+            value={effect.value}
             onChange={(e) => onChange({ ...effect, value: Number(e.target.value) })}
-            className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-sm text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
+            className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
         </div>
       )}
       {effect.kind === 'statBonus' && (
@@ -925,31 +1245,50 @@ function ConditionalEffectRow({
             onChange={(v) => onChange({ ...effect, stat: v })}
             options={STAT_OPTIONS}
           />
-          <input type="number" value={effect.value}
+          <input
+            type="number"
+            value={effect.value}
             onChange={(e) => onChange({ ...effect, value: Number(e.target.value) })}
-            className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-sm text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
+            className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
         </div>
       )}
       {effect.kind === 'extraDamage' && (
         <div className="flex flex-col gap-1.5">
           <div className="flex gap-1.5">
-            <input type="text" placeholder="Dados (1d4)" value={effect.dice ?? ''}
+            <input
+              type="text"
+              placeholder="Dados (1d4)"
+              value={effect.dice ?? ''}
               onChange={(e) => onChange({ ...effect, dice: e.target.value || undefined })}
-              className="flex-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-xs text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
-            <input type="number" placeholder="Fixo" value={effect.flat ?? ''}
-              onChange={(e) => onChange({ ...effect, flat: e.target.value ? Number(e.target.value) : undefined })}
-              className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-xs text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
+              className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            <input
+              type="number"
+              placeholder="Fixo"
+              value={effect.flat ?? ''}
+              onChange={(e) =>
+                onChange({ ...effect, flat: e.target.value ? Number(e.target.value) : undefined })
+              }
+              className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-xs text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
           </div>
           <div className="flex flex-wrap gap-1">
             {BASE_ATTACK_TARGETS.map((t) => {
               const active = effect.attackTargets.includes(t)
               return (
-                <button key={t}
-                  onClick={() => onChange({
-                    ...effect,
-                    attackTargets: active ? effect.attackTargets.filter((x) => x !== t) : [...effect.attackTargets, t],
-                  })}
-                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-orange-500 border-orange-500 text-white' : 'border-orange-400 text-orange-500'}`}>
+                <button
+                  key={t}
+                  onClick={() =>
+                    onChange({
+                      ...effect,
+                      attackTargets: active
+                        ? effect.attackTargets.filter((x) => x !== t)
+                        : [...effect.attackTargets, t],
+                    })
+                  }
+                  className={`rounded border px-1.5 py-0.5 text-[10px] font-bold transition ${active ? 'border-orange-500 bg-orange-500 text-white' : 'border-orange-400 text-orange-500'}`}
+                >
                   {BASE_ATTACK_TARGET_LABELS[t]}
                 </button>
               )
@@ -959,36 +1298,66 @@ function ConditionalEffectRow({
       )}
       {effect.kind === 'defense' && (
         <div className="flex gap-1.5">
-          <select value={effect.damageType}
-            onChange={(e) => onChange({ ...effect, damageType: e.target.value as typeof effect.damageType })}
-            className="flex-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-xs text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none">
+          <select
+            value={effect.damageType}
+            onChange={(e) =>
+              onChange({ ...effect, damageType: e.target.value as typeof effect.damageType })
+            }
+            className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          >
             <option value="physical">Físico</option>
             <option value="all">Todos</option>
-            {ELEMENTS.map((el) => <option key={el.id} value={el.id}>{el.label}</option>)}
+            {ELEMENTS.map((el) => (
+              <option key={el.id} value={el.id}>
+                {el.label}
+              </option>
+            ))}
           </select>
-          <input type="number" value={effect.value}
+          <input
+            type="number"
+            value={effect.value}
             onChange={(e) => onChange({ ...effect, value: Number(e.target.value) })}
-            className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-sm text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
+            className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
         </div>
       )}
       {effect.kind === 'blockBonus' && (
-        <input type="number" value={effect.value}
+        <input
+          type="number"
+          value={effect.value}
           onChange={(e) => onChange({ ...effect, value: Number(e.target.value) })}
-          className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-sm text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
+          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+        />
       )}
       {effect.kind === 'healingBonus' && (
         <div className="flex gap-1.5">
-          <input type="text" placeholder="Dados (1d6)" value={effect.dice ?? ''}
+          <input
+            type="text"
+            placeholder="Dados (1d6)"
+            value={effect.dice ?? ''}
             onChange={(e) => onChange({ ...effect, dice: e.target.value || undefined })}
-            className="flex-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-xs text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
-          <input type="number" placeholder="Fixo" value={effect.flat ?? ''}
-            onChange={(e) => onChange({ ...effect, flat: e.target.value ? Number(e.target.value) : undefined })}
-            className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-xs text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
-          <select value={effect.element ?? ''}
+            className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
+          <input
+            type="number"
+            placeholder="Fixo"
+            value={effect.flat ?? ''}
+            onChange={(e) =>
+              onChange({ ...effect, flat: e.target.value ? Number(e.target.value) : undefined })
+            }
+            className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-xs text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
+          <select
+            value={effect.element ?? ''}
             onChange={(e) => onChange({ ...effect, element: e.target.value || null })}
-            className="flex-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-xs text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none">
+            className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          >
             <option value="">Geral</option>
-            {ELEMENTS.map((el) => <option key={el.id} value={el.id}>{el.label}</option>)}
+            {ELEMENTS.map((el) => (
+              <option key={el.id} value={el.id}>
+                {el.label}
+              </option>
+            ))}
           </select>
         </div>
       )}
@@ -1000,21 +1369,34 @@ function ConditionalEffectRow({
               onChange={(v) => onChange({ ...effect, effectType: v })}
               options={SPELL_MOD_OPTIONS}
             />
-            <input type="number" value={effect.value}
+            <input
+              type="number"
+              value={effect.value}
               onChange={(e) => onChange({ ...effect, value: Number(e.target.value) })}
-              className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1.5 text-sm text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none" />
+              className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
           </div>
           <div className="flex flex-wrap gap-1">
             {MAGIC_TYPES.map((mt) => {
               const active = effect.conditionTypes.includes(mt.id)
               return (
-                <button key={mt.id}
-                  onClick={() => onChange({
-                    ...effect,
-                    conditionTypes: active ? effect.conditionTypes.filter((x) => x !== mt.id) : [...effect.conditionTypes, mt.id],
-                  })}
-                  className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
-                  style={{ background: active ? mt.color : 'transparent', borderColor: mt.color, color: active ? mt.textColor : mt.color }}>
+                <button
+                  key={mt.id}
+                  onClick={() =>
+                    onChange({
+                      ...effect,
+                      conditionTypes: active
+                        ? effect.conditionTypes.filter((x) => x !== mt.id)
+                        : [...effect.conditionTypes, mt.id],
+                    })
+                  }
+                  className="rounded border px-1.5 py-0.5 text-[10px] font-bold transition"
+                  style={{
+                    background: active ? mt.color : 'transparent',
+                    borderColor: mt.color,
+                    color: active ? mt.textColor : mt.color,
+                  }}
+                >
                   {mt.label}
                 </button>
               )
@@ -1024,13 +1406,23 @@ function ConditionalEffectRow({
             {ELEMENTS.map((el) => {
               const active = effect.conditionElements.includes(el.id)
               return (
-                <button key={el.id}
-                  onClick={() => onChange({
-                    ...effect,
-                    conditionElements: active ? effect.conditionElements.filter((x) => x !== el.id) : [...effect.conditionElements, el.id],
-                  })}
-                  className="rounded px-1.5 py-0.5 text-[10px] font-bold border transition"
-                  style={{ background: active ? el.color : 'transparent', borderColor: el.color, color: active ? el.textColor : el.color }}>
+                <button
+                  key={el.id}
+                  onClick={() =>
+                    onChange({
+                      ...effect,
+                      conditionElements: active
+                        ? effect.conditionElements.filter((x) => x !== el.id)
+                        : [...effect.conditionElements, el.id],
+                    })
+                  }
+                  className="rounded border px-1.5 py-0.5 text-[10px] font-bold transition"
+                  style={{
+                    background: active ? el.color : 'transparent',
+                    borderColor: el.color,
+                    color: active ? el.textColor : el.color,
+                  }}
+                >
                   {el.label}
                 </button>
               )
@@ -1039,15 +1431,25 @@ function ConditionalEffectRow({
         </div>
       )}
       {effect.kind === 'custom' && (
-        <TextArea value={effect.description} onChange={(v) => onChange({ ...effect, description: v })} rows={2} />
+        <TextArea
+          value={effect.description}
+          onChange={(v) => onChange({ ...effect, description: v })}
+          rows={2}
+        />
       )}
 
-      <p className="text-[9px] text-gray-500 font-mono">{conditionalEffectSummary(effect)}</p>
+      <p className="font-mono text-[9px] text-gray-500">{conditionalEffectSummary(effect)}</p>
     </div>
   )
 }
 
-function ConditionalEditor({ data, onChange }: { data: ConditionalNodeData; onChange: (d: ConditionalNodeData) => void }) {
+function ConditionalEditor({
+  data,
+  onChange,
+}: {
+  data: ConditionalNodeData
+  onChange: (d: ConditionalNodeData) => void
+}) {
   function toggleWeaponTag(tag: WeaponTag) {
     const has = data.conditions.weaponTagsAnyOf.includes(tag)
     onChange({
@@ -1073,7 +1475,11 @@ function ConditionalEditor({ data, onChange }: { data: ConditionalNodeData; onCh
     })
   }
 
-  const allWeaponTags: WeaponTag[] = [...WEAPON_TAGS_CATEGORY, ...WEAPON_TAGS_MELEE, ...WEAPON_TAGS_RANGED]
+  const allWeaponTags: WeaponTag[] = [
+    ...WEAPON_TAGS_CATEGORY,
+    ...WEAPON_TAGS_MELEE,
+    ...WEAPON_TAGS_RANGED,
+  ]
   const allArmorTags: ArmorTag[] = [...ARMOR_TAGS_CATEGORY, ...ARMOR_TAGS_SPECIFIC]
 
   return (
@@ -1084,18 +1490,24 @@ function ConditionalEditor({ data, onChange }: { data: ConditionalNodeData; onCh
       </div>
       <div>
         <Label>Descrição</Label>
-        <TextArea value={data.description} onChange={(v) => onChange({ ...data, description: v })} />
+        <TextArea
+          value={data.description}
+          onChange={(v) => onChange({ ...data, description: v })}
+        />
       </div>
 
       <div>
         <Label>Condição – Armas Equipadas (pelo menos uma)</Label>
-        <p className="text-[10px] text-gray-400 mb-1">Vazio = ignora armas</p>
+        <p className="mb-1 text-[10px] text-gray-400">Vazio = ignora armas</p>
         <div className="flex flex-wrap gap-1">
           {allWeaponTags.map((tag) => {
             const active = data.conditions.weaponTagsAnyOf.includes(tag)
             return (
-              <button key={tag} onClick={() => toggleWeaponTag(tag)}
-                className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-rose-600 border-rose-600 text-white' : 'border-rose-400 text-rose-400 hover:bg-rose-900/20'}`}>
+              <button
+                key={tag}
+                onClick={() => toggleWeaponTag(tag)}
+                className={`rounded border px-1.5 py-0.5 text-[10px] font-bold transition ${active ? 'border-rose-600 bg-rose-600 text-white' : 'border-rose-400 text-rose-400 hover:bg-rose-900/20'}`}
+              >
                 {WEAPON_TAG_LABELS[tag]}
               </button>
             )
@@ -1105,13 +1517,16 @@ function ConditionalEditor({ data, onChange }: { data: ConditionalNodeData; onCh
 
       <div>
         <Label>Condição – Armaduras Equipadas (pelo menos uma)</Label>
-        <p className="text-[10px] text-gray-400 mb-1">Vazio = ignora armaduras</p>
+        <p className="mb-1 text-[10px] text-gray-400">Vazio = ignora armaduras</p>
         <div className="flex flex-wrap gap-1">
           {allArmorTags.map((tag) => {
             const active = data.conditions.armorTagsAnyOf.includes(tag)
             return (
-              <button key={tag} onClick={() => toggleArmorTag(tag)}
-                className={`rounded px-1.5 py-0.5 text-[10px] font-bold border transition ${active ? 'bg-sky-600 border-sky-600 text-white' : 'border-sky-400 text-sky-400 hover:bg-sky-900/20'}`}>
+              <button
+                key={tag}
+                onClick={() => toggleArmorTag(tag)}
+                className={`rounded border px-1.5 py-0.5 text-[10px] font-bold transition ${active ? 'border-sky-600 bg-sky-600 text-white' : 'border-sky-400 text-sky-400 hover:bg-sky-900/20'}`}
+              >
                 {ARMOR_TAG_LABELS[tag]}
               </button>
             )
@@ -1119,19 +1534,27 @@ function ConditionalEditor({ data, onChange }: { data: ConditionalNodeData; onCh
         </div>
       </div>
 
-      {data.conditions.weaponTagsAnyOf.length === 0 && data.conditions.armorTagsAnyOf.length === 0 && (
-        <p className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg px-2.5 py-1.5 border border-emerald-200 dark:border-emerald-900/40">
-          Sem condições = sempre ativo (útil para Nós Supremos com múltiplos efeitos).
-        </p>
-      )}
+      {data.conditions.weaponTagsAnyOf.length === 0 &&
+        data.conditions.armorTagsAnyOf.length === 0 && (
+          <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-[10px] text-emerald-600 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-400">
+            Sem condições = sempre ativo (útil para Nós Supremos com múltiplos efeitos).
+          </p>
+        )}
 
       <div>
-        <div className="flex items-center justify-between mb-1">
+        <div className="mb-1 flex items-center justify-between">
           <Label>Efeitos</Label>
           <button
-            onClick={() => onChange({ ...data, effects: [...data.effects, defaultConditionalEffect('attributeBonus')] })}
-            className="text-[10px] text-amber-600 dark:text-amber-400 hover:underline"
-          >+ Adicionar efeito</button>
+            onClick={() =>
+              onChange({
+                ...data,
+                effects: [...data.effects, defaultConditionalEffect('attributeBonus')],
+              })
+            }
+            className="text-[10px] text-amber-600 hover:underline dark:text-amber-400"
+          >
+            + Adicionar efeito
+          </button>
         </div>
         <div className="flex flex-col gap-1.5">
           {data.effects.map((effect, i) => (
@@ -1139,10 +1562,13 @@ function ConditionalEditor({ data, onChange }: { data: ConditionalNodeData; onCh
               key={i}
               effect={effect}
               onChange={(e) => {
-                const next = [...data.effects]; next[i] = e
+                const next = [...data.effects]
+                next[i] = e
                 onChange({ ...data, effects: next })
               }}
-              onRemove={() => onChange({ ...data, effects: data.effects.filter((_, j) => j !== i) })}
+              onRemove={() =>
+                onChange({ ...data, effects: data.effects.filter((_, j) => j !== i) })
+              }
             />
           ))}
           {data.effects.length === 0 && (
@@ -1161,15 +1587,14 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
   const node = tree.nodes.find((n) => n.id === nodeId)
 
   // Local draft so edits aren't committed on every keystroke
-  const [draft, setDraft] = useState<TalentNodeData | null>(null)
-
-  useEffect(() => {
-    setDraft(node ? { ...node.data } : null)
-  }, [nodeId]) // reset draft when different node is selected
+  const [draftState, setDraftState] = useState<{ nodeId: string; data: TalentNodeData } | null>(
+    node ? { nodeId, data: { ...node.data } } : null,
+  )
+  const draft = draftState?.nodeId === nodeId ? draftState.data : node ? { ...node.data } : null
 
   if (!node || !draft) {
     return (
-      <div className="flex items-center justify-center h-full text-sm text-gray-400 dark:text-gray-600 px-4 text-center">
+      <div className="flex h-full items-center justify-center px-4 text-center text-sm text-gray-400 dark:text-gray-600">
         Selecione um nó para editar suas propriedades
       </div>
     )
@@ -1177,7 +1602,7 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
 
   function save(data: TalentNodeData) {
     updateNodeData(nodeId, data)
-    setDraft(data)
+    setDraftState({ nodeId, data })
   }
 
   function changeType(newType: TalentNodeType) {
@@ -1188,20 +1613,22 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
   const { stroke } = NODE_TYPE_COLORS[draft.type]
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden">
       {/* Panel header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+      <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
         <h3 className="text-sm font-bold text-gray-900 dark:text-white">Editar Nó</h3>
         <button
           onClick={() => removeNode(nodeId)}
-          className="rounded px-2 py-1 text-xs text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition"
-        >✕ Remover</button>
+          className="rounded px-2 py-1 text-xs text-rose-500 transition hover:bg-rose-50 dark:hover:bg-rose-950/40"
+        >
+          ✕ Remover
+        </button>
       </div>
 
       {/* Type selector */}
-      <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 shrink-0">
+      <div className="shrink-0 border-b border-gray-100 px-4 py-3 dark:border-gray-800">
         <Label>Tipo do Nó</Label>
-        <div className="flex flex-wrap gap-1 mt-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {NODE_TYPES.filter((t) => !NODE_TYPES_EXTRA.includes(t)).map((t) => {
             const active = draft.type === t
             const c = NODE_TYPE_COLORS[t]
@@ -1209,7 +1636,7 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
               <button
                 key={t}
                 onClick={() => changeType(t)}
-                className="rounded-full px-2.5 py-0.5 text-[10px] font-bold border transition"
+                className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition"
                 style={{
                   background: active ? c.stroke : 'transparent',
                   borderColor: c.stroke,
@@ -1221,8 +1648,10 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
             )
           })}
         </div>
-        <div className="flex flex-wrap gap-1 mt-1.5 pt-1.5 border-t border-gray-100 dark:border-gray-800">
-          <span className="text-[9px] font-bold uppercase tracking-widest text-amber-500 self-center mr-1">＋</span>
+        <div className="mt-1.5 flex flex-wrap gap-1 border-t border-gray-100 pt-1.5 dark:border-gray-800">
+          <span className="mr-1 self-center text-[9px] font-bold tracking-widest text-amber-500 uppercase">
+            ＋
+          </span>
           {NODE_TYPES_EXTRA.map((t) => {
             const active = draft.type === t
             const c = NODE_TYPE_COLORS[t]
@@ -1230,7 +1659,7 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
               <button
                 key={t}
                 onClick={() => changeType(t)}
-                className="rounded-full px-2.5 py-0.5 text-[10px] font-bold border transition"
+                className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition"
                 style={{
                   background: active ? c.stroke : 'transparent',
                   borderColor: c.stroke,
@@ -1245,12 +1674,14 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
       </div>
 
       {/* Node ID hint */}
-      <div className="px-4 pt-2 shrink-0">
-        <p className="text-[9px] text-gray-300 dark:text-gray-700 font-mono truncate">id: {nodeId}</p>
+      <div className="shrink-0 px-4 pt-2">
+        <p className="truncate font-mono text-[9px] text-gray-300 dark:text-gray-700">
+          id: {nodeId}
+        </p>
       </div>
 
       {/* Custo em pontos de talento */}
-      <div className="px-4 pt-2 shrink-0 flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-2 px-4 pt-2">
         <Label>Custo (pontos)</Label>
         <input
           type="number"
@@ -1260,60 +1691,38 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
             const v = Number(e.target.value)
             updateNodeCost(nodeId, Number.isNaN(v) ? undefined : v)
           }}
-          className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1 text-sm text-center text-gray-900 dark:text-white focus:border-amber-500 focus:outline-none"
+          className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
         />
         <button
           onClick={() => updateNodeCost(nodeId, undefined)}
           title="Voltar ao custo padrão (1; jogador/ligação = 0)"
           className="text-[10px] text-gray-400 hover:text-amber-500"
-        >padrão</button>
+        >
+          padrão
+        </button>
       </div>
 
       {/* Type-specific form */}
       <div className="flex-1 overflow-y-auto px-4 py-3">
-        <div className="pb-1 mb-3 border-b-2" style={{ borderColor: stroke }}>
-          <span className="text-xs font-bold" style={{ color: stroke }}>{NODE_TYPE_LABELS[draft.type]}</span>
+        <div className="mb-3 border-b-2 pb-1" style={{ borderColor: stroke }}>
+          <span className="text-xs font-bold" style={{ color: stroke }}>
+            {NODE_TYPE_LABELS[draft.type]}
+          </span>
         </div>
 
-        {draft.type === 'player' && (
-          <PlayerEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'attribute' && (
-          <AttributeEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'magic' && (
-          <MagicEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'stat' && (
-          <StatEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'combatAbility' && (
-          <CombatAbilityEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'extraDamage' && (
-          <ExtraDamageEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'healing' && (
-          <HealingEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'weaponBonus' && (
-          <WeaponBonusEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'spellModifier' && (
-          <SpellModifierEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'defenseBonus' && (
-          <DefenseBonusEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'skillBonus' && (
-          <SkillBonusEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'link' && (
-          <LinkEditor data={draft} onChange={save} />
-        )}
-        {draft.type === 'conditional' && (
-          <ConditionalEditor data={draft} onChange={save} />
-        )}
+        {draft.type === 'player' && <PlayerEditor data={draft} onChange={save} />}
+        {draft.type === 'attribute' && <AttributeEditor data={draft} onChange={save} />}
+        {draft.type === 'magic' && <MagicEditor data={draft} onChange={save} />}
+        {draft.type === 'stat' && <StatEditor data={draft} onChange={save} />}
+        {draft.type === 'combatAbility' && <CombatAbilityEditor data={draft} onChange={save} />}
+        {draft.type === 'extraDamage' && <ExtraDamageEditor data={draft} onChange={save} />}
+        {draft.type === 'healing' && <HealingEditor data={draft} onChange={save} />}
+        {draft.type === 'weaponBonus' && <WeaponBonusEditor data={draft} onChange={save} />}
+        {draft.type === 'spellModifier' && <SpellModifierEditor data={draft} onChange={save} />}
+        {draft.type === 'defenseBonus' && <DefenseBonusEditor data={draft} onChange={save} />}
+        {draft.type === 'skillBonus' && <SkillBonusEditor data={draft} onChange={save} />}
+        {draft.type === 'link' && <LinkEditor data={draft} onChange={save} />}
+        {draft.type === 'conditional' && <ConditionalEditor data={draft} onChange={save} />}
       </div>
     </div>
   )

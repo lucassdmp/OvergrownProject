@@ -18,7 +18,7 @@ const DEFAULT_CHARACTER: Character = {
   name: 'Novo Personagem',
   race: '',
   origin: undefined,
-  divinity: 1,
+  divinity: 0,
   avatarBase64: undefined,
   avatarPosition: '50% 50%',
   avatarScale: 1,
@@ -84,19 +84,23 @@ export const useCharacterStore = create<CharacterState>()(
     persist(
       (rawSet, get) => {
         const set: typeof rawSet = (updater, replace, action) => {
-          rawSet((state) => {
-            const nextState = typeof updater === 'function' ? updater(state) : updater
-            if (nextState && nextState.character) {
-              const newChar = nextState.character
-              const baseCharacters =
-                nextState.characters !== undefined ? nextState.characters : state.characters || {}
-              return {
-                ...nextState,
-                characters: { ...baseCharacters, [newChar.id]: newChar },
-              } as Partial<CharacterState>
-            }
-            return nextState as Partial<CharacterState>
-          }, replace as false, action as never)
+          rawSet(
+            (state) => {
+              const nextState = typeof updater === 'function' ? updater(state) : updater
+              if (nextState && nextState.character) {
+                const newChar = nextState.character
+                const baseCharacters =
+                  nextState.characters !== undefined ? nextState.characters : state.characters || {}
+                return {
+                  ...nextState,
+                  characters: { ...baseCharacters, [newChar.id]: newChar },
+                } as Partial<CharacterState>
+              }
+              return nextState as Partial<CharacterState>
+            },
+            replace as false,
+            action as never,
+          )
         }
 
         return {
@@ -106,35 +110,46 @@ export const useCharacterStore = create<CharacterState>()(
           createNewCharacter: () => {
             const newChar: Character = { ...DEFAULT_CHARACTER, id: crypto.randomUUID() }
             set(
-              (s) => ({ character: newChar, characters: { ...(s.characters || {}), [newChar.id]: newChar } }),
+              (s) => ({
+                character: newChar,
+                characters: { ...(s.characters || {}), [newChar.id]: newChar },
+              }),
               false,
               'createNewCharacter',
             )
           },
 
           switchCharacter: (id) => {
-            set((s) => {
-              const char = (s.characters || {})[id]
-              return char ? { character: char } : {}
-            }, false, 'switchCharacter')
+            set(
+              (s) => {
+                const char = (s.characters || {})[id]
+                return char ? { character: char } : {}
+              },
+              false,
+              'switchCharacter',
+            )
           },
 
           deleteCharacter: (id) => {
-            set((s) => {
-              const chars = { ...(s.characters || {}) }
-              delete chars[id]
-              const remainingIds = Object.keys(chars)
-              let nextChar = s.character
-              if (s.character.id === id) {
-                if (remainingIds.length > 0) {
-                  nextChar = chars[remainingIds[0]]
-                } else {
-                  nextChar = { ...DEFAULT_CHARACTER, id: crypto.randomUUID() }
-                  chars[nextChar.id] = nextChar
+            set(
+              (s) => {
+                const chars = { ...(s.characters || {}) }
+                delete chars[id]
+                const remainingIds = Object.keys(chars)
+                let nextChar = s.character
+                if (s.character.id === id) {
+                  if (remainingIds.length > 0) {
+                    nextChar = chars[remainingIds[0]]
+                  } else {
+                    nextChar = { ...DEFAULT_CHARACTER, id: crypto.randomUUID() }
+                    chars[nextChar.id] = nextChar
+                  }
                 }
-              }
-              return { characters: chars, character: nextChar }
-            }, false, 'deleteCharacter')
+                return { characters: chars, character: nextChar }
+              },
+              false,
+              'deleteCharacter',
+            )
           },
 
           setCharacterName: (name) =>
@@ -144,173 +159,292 @@ export const useCharacterStore = create<CharacterState>()(
             set((s) => ({ character: { ...s.character, race } }), false, 'setRace'),
 
           setDivinity: (divinity) =>
-            set((s) => ({ character: { ...s.character, divinity: Math.max(1, divinity) } }), false, 'setDivinity'),
+            set(
+              (s) => ({
+                character: { ...s.character, divinity: Math.min(100, Math.max(0, divinity)) },
+              }),
+              false,
+              'setDivinity',
+            ),
 
           setOrigin: (originId) =>
-            set((s) => ({ character: { ...s.character, origin: originId || undefined } }), false, 'setOrigin'),
+            set(
+              (s) => ({ character: { ...s.character, origin: originId || undefined } }),
+              false,
+              'setOrigin',
+            ),
 
           setAvatarBase64: (avatarBase64) =>
             set((s) => ({ character: { ...s.character, avatarBase64 } }), false, 'setAvatarBase64'),
 
           setAvatarPosition: (avatarPosition) =>
-            set((s) => ({ character: { ...s.character, avatarPosition } }), false, 'setAvatarPosition'),
+            set(
+              (s) => ({ character: { ...s.character, avatarPosition } }),
+              false,
+              'setAvatarPosition',
+            ),
 
           setAvatarScale: (avatarScale) =>
             set((s) => ({ character: { ...s.character, avatarScale } }), false, 'setAvatarScale'),
 
           setConnectedTreeId: (connectedTreeId) =>
-            set((s) => ({ character: { ...s.character, connectedTreeId } }), false, 'setConnectedTreeId'),
+            set(
+              (s) => ({ character: { ...s.character, connectedTreeId } }),
+              false,
+              'setConnectedTreeId',
+            ),
 
           acquireNode: (nodeId) =>
-            set((s) => ({
-              character: {
-                ...s.character,
-                acquiredNodeIds: s.character.acquiredNodeIds.includes(nodeId)
-                  ? s.character.acquiredNodeIds
-                  : [...s.character.acquiredNodeIds, nodeId],
-              },
-            }), false, 'acquireNode'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  acquiredNodeIds: s.character.acquiredNodeIds.includes(nodeId)
+                    ? s.character.acquiredNodeIds
+                    : [...s.character.acquiredNodeIds, nodeId],
+                },
+              }),
+              false,
+              'acquireNode',
+            ),
 
           removeNode: (nodeId) =>
-            set((s) => ({
-              character: {
-                ...s.character,
-                acquiredNodeIds: s.character.acquiredNodeIds.filter((id) => id !== nodeId),
-              },
-            }), false, 'removeNode'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  acquiredNodeIds: s.character.acquiredNodeIds.filter((id) => id !== nodeId),
+                },
+              }),
+              false,
+              'removeNode',
+            ),
 
           setAcquiredNodes: (nodeIds) =>
-            set((s) => ({ character: { ...s.character, acquiredNodeIds: nodeIds } }), false, 'setAcquiredNodes'),
+            set(
+              (s) => ({ character: { ...s.character, acquiredNodeIds: nodeIds } }),
+              false,
+              'setAcquiredNodes',
+            ),
 
           setNodeConfig: (nodeId, config) =>
-            set((s) => ({
-              character: {
-                ...s.character,
-                nodeConfigs: { ...(s.character.nodeConfigs ?? {}), [nodeId]: config },
-              },
-            }), false, 'setNodeConfig'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  nodeConfigs: { ...(s.character.nodeConfigs ?? {}), [nodeId]: config },
+                },
+              }),
+              false,
+              'setNodeConfig',
+            ),
 
           setMoney: (currency, amount) =>
-            set((s) => ({
-              character: { ...s.character, money: { ...s.character.money, [currency]: Math.max(0, amount) } },
-            }), false, 'setMoney'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  money: { ...s.character.money, [currency]: Math.max(0, amount) },
+                },
+              }),
+              false,
+              'setMoney',
+            ),
 
           setCurrentVida: (value) =>
-            set((s) => ({
-              character: { ...s.character, currentResources: { ...s.character.currentResources, vida: value } },
-            }), false, 'setCurrentVida'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  currentResources: { ...s.character.currentResources, vida: value },
+                },
+              }),
+              false,
+              'setCurrentVida',
+            ),
 
           setCurrentIep: (value) =>
-            set((s) => ({
-              character: { ...s.character, currentResources: { ...s.character.currentResources, iep: value } },
-            }), false, 'setCurrentIep'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  currentResources: { ...s.character.currentResources, iep: value },
+                },
+              }),
+              false,
+              'setCurrentIep',
+            ),
 
           setCurrentPc: (value) =>
-            set((s) => ({
-              character: { ...s.character, currentResources: { ...s.character.currentResources, pc: value } },
-            }), false, 'setCurrentPc'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  currentResources: { ...s.character.currentResources, pc: value },
+                },
+              }),
+              false,
+              'setCurrentPc',
+            ),
 
           restoreAllResources: (maxVida, maxIep, maxPc) =>
-            set((s) => ({
-              character: { ...s.character, currentResources: { vida: maxVida, iep: maxIep, pc: maxPc } },
-            }), false, 'restoreAllResources'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  currentResources: { vida: maxVida, iep: maxIep, pc: maxPc },
+                },
+              }),
+              false,
+              'restoreAllResources',
+            ),
 
           setNotes: (notes) =>
             set((s) => ({ character: { ...s.character, notes } }), false, 'setNotes'),
 
           setSkillMastery: (skillId, mastery) =>
-            set((s) => ({
-              character: { ...s.character, skills: { ...(s.character.skills ?? {}), [skillId]: mastery } },
-            }), false, 'setSkillMastery'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  skills: { ...(s.character.skills ?? {}), [skillId]: mastery },
+                },
+              }),
+              false,
+              'setSkillMastery',
+            ),
 
           addItem: (item) =>
-            set((s) => ({
-              character: { ...s.character, inventory: [...(s.character.inventory ?? []), item] },
-            }), false, 'addItem'),
+            set(
+              (s) => ({
+                character: { ...s.character, inventory: [...(s.character.inventory ?? []), item] },
+              }),
+              false,
+              'addItem',
+            ),
 
           removeItem: (id) =>
-            set((s) => ({
-              character: { ...s.character, inventory: (s.character.inventory ?? []).filter((it) => it.id !== id) },
-            }), false, 'removeItem'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  inventory: (s.character.inventory ?? []).filter((it) => it.id !== id),
+                },
+              }),
+              false,
+              'removeItem',
+            ),
 
           updateItem: (item) =>
-            set((s) => ({
-              character: {
-                ...s.character,
-                inventory: (s.character.inventory ?? []).map((it) => (it.id === item.id ? item : it)),
-              },
-            }), false, 'updateItem'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  inventory: (s.character.inventory ?? []).map((it) =>
+                    it.id === item.id ? item : it,
+                  ),
+                },
+              }),
+              false,
+              'updateItem',
+            ),
 
           updateItemQuantity: (id, delta) =>
-            set((s) => ({
-              character: {
-                ...s.character,
-                inventory: (s.character.inventory ?? []).map((it) =>
-                  it.id === id ? { ...it, quantity: Math.max(0, it.quantity + delta) } : it,
-                ),
-              },
-            }), false, 'updateItemQuantity'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  inventory: (s.character.inventory ?? []).map((it) =>
+                    it.id === id ? { ...it, quantity: Math.max(0, it.quantity + delta) } : it,
+                  ),
+                },
+              }),
+              false,
+              'updateItemQuantity',
+            ),
 
           toggleEquipped: (id) =>
-            set((s) => ({
-              character: {
-                ...s.character,
-                inventory: (s.character.inventory ?? []).map((it) =>
-                  it.id === id ? { ...it, equipped: !it.equipped } : it,
-                ),
-              },
-            }), false, 'toggleEquipped'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  inventory: (s.character.inventory ?? []).map((it) =>
+                    it.id === id ? { ...it, equipped: !it.equipped } : it,
+                  ),
+                },
+              }),
+              false,
+              'toggleEquipped',
+            ),
 
           toggleBroken: (id) =>
-            set((s) => ({
-              character: {
-                ...s.character,
-                inventory: (s.character.inventory ?? []).map((it) =>
-                  it.id === id ? { ...it, broken: !it.broken } : it,
-                ),
-              },
-            }), false, 'toggleBroken'),
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  inventory: (s.character.inventory ?? []).map((it) =>
+                    it.id === id ? { ...it, broken: !it.broken } : it,
+                  ),
+                },
+              }),
+              false,
+              'toggleBroken',
+            ),
 
           useItem: (id, values) => {
             const { character } = get()
             const item = (character.inventory ?? []).find((it) => it.id === id)
             if (!item || item.quantity <= 0) return
-            const newVida = values.vida != null
-              ? character.currentResources.vida + values.vida
-              : character.currentResources.vida
-            const newIep = values.iep != null
-              ? character.currentResources.iep + values.iep
-              : character.currentResources.iep
-            set((s) => ({
-              character: {
-                ...s.character,
-                currentResources: { ...s.character.currentResources, vida: newVida, iep: newIep },
-                inventory: (s.character.inventory ?? []).map((it) =>
-                  it.id === id ? { ...it, quantity: it.quantity - 1 } : it,
-                ),
-              },
-            }), false, 'useItem')
+            const newVida =
+              values.vida != null
+                ? character.currentResources.vida + values.vida
+                : character.currentResources.vida
+            const newIep =
+              values.iep != null
+                ? character.currentResources.iep + values.iep
+                : character.currentResources.iep
+            set(
+              (s) => ({
+                character: {
+                  ...s.character,
+                  currentResources: { ...s.character.currentResources, vida: newVida, iep: newIep },
+                  inventory: (s.character.inventory ?? []).map((it) =>
+                    it.id === id ? { ...it, quantity: it.quantity - 1 } : it,
+                  ),
+                },
+              }),
+              false,
+              'useItem',
+            )
           },
 
           loadCharacter: (loaded) =>
-            set(() => ({
-              character: {
-                ...DEFAULT_CHARACTER,
-                ...loaded,
-                acquiredNodeIds: loaded.acquiredNodeIds ?? [],
-                nodeConfigs: loaded.nodeConfigs ?? {},
-                skills: loaded.skills ?? {},
-                inventory: loaded.inventory ?? [],
-                money: loaded.money ?? { ...DEFAULT_MONEY },
-                currentResources: loaded.currentResources ?? DEFAULT_CHARACTER.currentResources,
-                avatarBase64: loaded.avatarBase64,
-                avatarPosition: loaded.avatarPosition ?? '50% 50%',
-                avatarScale: loaded.avatarScale ?? 1,
-              },
-            }), false, 'loadCharacter'),
+            set(
+              () => ({
+                character: {
+                  ...DEFAULT_CHARACTER,
+                  ...loaded,
+                  acquiredNodeIds: loaded.acquiredNodeIds ?? [],
+                  nodeConfigs: loaded.nodeConfigs ?? {},
+                  skills: loaded.skills ?? {},
+                  inventory: loaded.inventory ?? [],
+                  money: loaded.money ?? { ...DEFAULT_MONEY },
+                  currentResources: loaded.currentResources ?? DEFAULT_CHARACTER.currentResources,
+                  avatarBase64: loaded.avatarBase64,
+                  avatarPosition: loaded.avatarPosition ?? '50% 50%',
+                  avatarScale: loaded.avatarScale ?? 1,
+                },
+              }),
+              false,
+              'loadCharacter',
+            ),
 
           resetCharacter: () =>
-            set(() => ({ character: { ...DEFAULT_CHARACTER, id: crypto.randomUUID() } }), false, 'resetCharacter'),
+            set(
+              () => ({ character: { ...DEFAULT_CHARACTER, id: crypto.randomUUID() } }),
+              false,
+              'resetCharacter',
+            ),
         }
       },
       {

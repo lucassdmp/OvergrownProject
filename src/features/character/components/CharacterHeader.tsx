@@ -7,11 +7,8 @@ import IntegerInput from '../../../components/ui/IntegerInput'
 import { useSaveShortcut } from '../../../hooks/useSaveShortcut'
 import { downloadTextFile, fileNamePart } from '../../../utils/downloadFile'
 import { useTalentTreeStore } from '../../talentTree/store/talentTreeStore'
-import {
-  isCharacterFile,
-  isCharacterData,
-  serializeCharacterFile,
-} from '../utils/characterFile'
+import { calculateEquipmentDefense } from '../../../lib/equipmentRules'
+import { isCharacterFile, isCharacterData, serializeCharacterFile } from '../utils/characterFile'
 
 // ── Avatar resize helper ───────────────────────────────────────────────────────
 const AVATAR_MAX_DIMENSION = 512
@@ -230,7 +227,9 @@ export default function CharacterHeader() {
   const store = useCharacterStore()
   const tree = useTalentTreeStore((s) => s.tree)
   const importTree = useTalentTreeStore((s) => s.importTree)
-  const { derivedStats } = useCharacterStats()
+  const { derivedStats, attributes, conditionalBlockBonus } = useCharacterStats()
+  const equipmentDefense = calculateEquipmentDefense(character.inventory ?? [], attributes)
+  const totalBlockValue = equipmentDefense.blockValue + conditionalBlockBonus
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const avatarInputRef = useRef<HTMLInputElement>(null)
@@ -440,7 +439,7 @@ export default function CharacterHeader() {
           {/* Character info */}
           <div className="flex flex-1 flex-col gap-4">
             {/* Name, race, origin */}
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-4">
               <div>
                 <label className="mb-0.5 block text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
                   Nome
@@ -482,6 +481,18 @@ export default function CharacterHeader() {
                   ))}
                 </select>
               </div>
+              <div>
+                <label className="mb-0.5 block text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
+                  Divindade
+                </label>
+                <IntegerInput
+                  min={0}
+                  max={100}
+                  value={character.divinity}
+                  onChange={store.setDivinity}
+                  className={inpBase + ' w-full'}
+                />
+              </div>
             </div>
 
             {/* Resources */}
@@ -510,6 +521,7 @@ export default function CharacterHeader() {
               <div className="h-8 w-px bg-gray-200 dark:bg-gray-700" />
               <StatBadge label="Resistência" value={derivedStats.resistencia} />
               <StatBadge label="Esquiva" value={derivedStats.esquiva} />
+              <StatBadge label="VB" value={totalBlockValue} />
             </div>
 
             {/* Money */}

@@ -16,6 +16,7 @@ import {
 } from '../features/character/utils/characterFile'
 import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
 import { serializeTree } from '../features/talentTree/store/talentTreeStore'
+import { nodeMatchesSearch } from '../features/talentTree/nodeSearch'
 
 // ── Toolbar button ────────────────────────────────────────────────────────────
 
@@ -55,7 +56,6 @@ const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
 
 export default function TalentTreeBuilderPage() {
   const { tree, setTreeName, setTreeDescription, importTree, resetTree } = useTalentTreeStore()
-  // Carrega a árvore oficial (src/data/defaultTalentTree.json) automaticamente
   useDefaultTreeAutoLoad()
   const character = useCharacterStore((s) => s.character)
   const loadCharacter = useCharacterStore((s) => s.loadCharacter)
@@ -69,6 +69,10 @@ export default function TalentTreeBuilderPage() {
   const [confirmReset, setConfirmReset] = useState(false)
   const [editingName, setEditingName] = useState(false)
   const [editingDesc, setEditingDesc] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchMatchCount = searchQuery.trim()
+    ? tree.nodes.filter((node) => nodeMatchesSearch(node, searchQuery)).length
+    : 0
 
   // Grid & snap
   const [gridEnabled, setGridEnabled] = useState(false)
@@ -89,7 +93,7 @@ export default function TalentTreeBuilderPage() {
   // ── Salvar árvore oficial ──────────────────────────────────────────────────
   // Baixa defaultTalentTree.json com a versão incrementada. Substitua o arquivo
   // em src/data/ manualmente e faça deploy — as páginas carregam a nova versão
-  // automaticamente (na Vercel não é possível gravar o arquivo pelo servidor).
+  // automaticamente (na Vercel não é possível gravar no servidor).
   const handleSaveOfficial = useCallback(() => {
     const nextVersion = (tree.version ?? 0) + 1
     const official = { ...tree, version: nextVersion }
@@ -400,6 +404,31 @@ export default function TalentTreeBuilderPage() {
 
           <div className="flex-1" />
 
+          <label className="relative flex w-64 shrink-0 items-center">
+            <span className="pointer-events-none absolute left-2.5 text-xs text-gray-400">⌕</span>
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Buscar nós…"
+              aria-label="Buscar nós da árvore"
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 py-1 pr-16 pl-7 text-xs text-gray-700 transition outline-none focus:border-amber-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+            />
+            {searchQuery && (
+              <span className="absolute right-2 flex items-center gap-1 text-[10px] text-gray-400">
+                {searchMatchCount}
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Limpar busca"
+                  className="rounded px-0.5 text-sm leading-none hover:text-gray-700 dark:hover:text-white"
+                >
+                  ×
+                </button>
+              </span>
+            )}
+          </label>
+
           {/* Hint */}
           <span className="text-[10px] text-gray-300 dark:text-gray-700">
             Scroll = zoom · Arrastar fundo = mover · Del = remover · Shift+Arrastar = selecionar
@@ -422,6 +451,7 @@ export default function TalentTreeBuilderPage() {
               gridEnabled={gridEnabled}
               gridSize={gridSize}
               snapEnabled={snapEnabled}
+              searchQuery={searchQuery}
             />
           </div>
 
