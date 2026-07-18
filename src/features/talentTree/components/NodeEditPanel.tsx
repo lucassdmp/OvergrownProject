@@ -1462,6 +1462,19 @@ function ConditionalEditor({
       },
     })
   }
+  function toggleRequiredWeaponTag(tag: WeaponTag) {
+    const requiredTags = data.conditions.weaponTagsAllOf ?? []
+    const has = requiredTags.includes(tag)
+    onChange({
+      ...data,
+      conditions: {
+        ...data.conditions,
+        weaponTagsAllOf: has
+          ? requiredTags.filter((existingTag) => existingTag !== tag)
+          : [...requiredTags, tag],
+      },
+    })
+  }
   function toggleArmorTag(tag: ArmorTag) {
     const has = data.conditions.armorTagsAnyOf.includes(tag)
     onChange({
@@ -1516,6 +1529,27 @@ function ConditionalEditor({
       </div>
 
       <div>
+        <Label>Condição – Armas Obrigatórias (todas)</Label>
+        <p className="mb-1 text-[10px] text-gray-400">
+          Use para combinações, como espada de uma mão + escudo
+        </p>
+        <div className="flex flex-wrap gap-1">
+          {allWeaponTags.map((tag) => {
+            const active = (data.conditions.weaponTagsAllOf ?? []).includes(tag)
+            return (
+              <button
+                key={tag}
+                onClick={() => toggleRequiredWeaponTag(tag)}
+                className={`rounded border px-1.5 py-0.5 text-[10px] font-bold transition ${active ? 'border-violet-600 bg-violet-600 text-white' : 'border-violet-400 text-violet-400 hover:bg-violet-900/20'}`}
+              >
+                {WEAPON_TAG_LABELS[tag]}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div>
         <Label>Condição – Armaduras Equipadas (pelo menos uma)</Label>
         <p className="mb-1 text-[10px] text-gray-400">Vazio = ignora armaduras</p>
         <div className="flex flex-wrap gap-1">
@@ -1534,8 +1568,25 @@ function ConditionalEditor({
         </div>
       </div>
 
+      <label className="flex items-center gap-2 rounded-lg border border-gray-200 px-2.5 py-2 text-xs text-gray-600 dark:border-gray-700 dark:text-gray-300">
+        <input
+          type="checkbox"
+          checked={data.conditions.requiresNoArmor ?? false}
+          onChange={(event) =>
+            onChange({
+              ...data,
+              conditions: { ...data.conditions, requiresNoArmor: event.target.checked },
+            })
+          }
+          className="accent-amber-500"
+        />
+        Exigir que nenhuma armadura esteja equipada
+      </label>
+
       {data.conditions.weaponTagsAnyOf.length === 0 &&
-        data.conditions.armorTagsAnyOf.length === 0 && (
+        (data.conditions.weaponTagsAllOf ?? []).length === 0 &&
+        data.conditions.armorTagsAnyOf.length === 0 &&
+        !data.conditions.requiresNoArmor && (
           <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-[10px] text-emerald-600 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-400">
             Sem condições = sempre ativo (útil para Nós Supremos com múltiplos efeitos).
           </p>

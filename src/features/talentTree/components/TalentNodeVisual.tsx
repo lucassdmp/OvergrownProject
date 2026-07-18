@@ -35,10 +35,11 @@ export function pentagPts(r: number): string {
   }).join(' ')
 }
 
-export function nodeRadius(data: TalentNodeData): number {
-  if (data.type === 'attribute') return NODE_R * 0.62
+export function nodeRadius(data: TalentNodeData, tier?: TalentTreeNode['tier']): number {
+  const tierScale = tier === 'keystone' ? 1.28 : tier === 'notable' ? 1.12 : 1
+  if (data.type === 'attribute') return NODE_R * 0.62 * tierScale
   if (data.type === 'link') return NODE_R * 0.45
-  return NODE_R
+  return NODE_R * tierScale
 }
 
 // ── Icon + sublabel ───────────────────────────────────────────────────────────
@@ -123,7 +124,7 @@ export function TalentNodeVisual({
   textColor,
   attrOverride,
 }: Props) {
-  const r = nodeRadius(node.data)
+  const r = nodeRadius(node.data, node.tier)
   const { icon, sublabel } = nodeIconAndSublabel(node.data, attrOverride)
 
   if (node.data.type === 'attribute') {
@@ -133,9 +134,10 @@ export function TalentNodeVisual({
       'M -3.4 -14 L 3.4 -14 L 4.6 -5.2 L 14 -3.4 L 14 3.4 L 4.6 5.2 L 3.4 14 L -3.4 14 L -4.6 5.2 L -14 3.4 L -14 -3.4 L -4.6 -5.2 Z'
 
     return (
-      <g style={{ filter: `drop-shadow(0 0 3px ${attributeColor}88)` }}>
+      <g>
         <circle r={r} fill="#090d16" stroke={attributeColor} strokeWidth={2.4} />
         <circle
+          className="talent-node-detail"
           r={r - 4}
           fill={attributeColor}
           fillOpacity={0.13}
@@ -144,6 +146,7 @@ export function TalentNodeVisual({
           strokeWidth={0.8}
         />
         <path
+          className="talent-node-detail"
           d={mythicalPlus}
           fill={attributeColor}
           stroke={attribute === 'sense' ? '#64748b' : '#ffffff'}
@@ -151,9 +154,15 @@ export function TalentNodeVisual({
           strokeWidth={0.9}
           strokeLinejoin="round"
         />
-        <circle r={2.4} fill="#ffffff" fillOpacity={0.8} />
+        <circle className="talent-node-detail" r={2.4} fill="#ffffff" fillOpacity={0.8} />
         {strokeWidth >= 2.5 && (
-          <circle r={r + 5} fill="none" stroke={stroke} strokeWidth={strokeWidth} />
+          <circle
+            className="talent-node-decoration"
+            r={r + 5}
+            fill="none"
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+          />
         )}
       </g>
     )
@@ -198,8 +207,29 @@ export function TalentNodeVisual({
 
   return (
     <g>
+      {node.tier === 'keystone' && (
+        <circle
+          className="talent-node-decoration"
+          r={r + 9}
+          fill="none"
+          stroke={stroke}
+          strokeWidth={2}
+          strokeDasharray="3 3"
+        />
+      )}
+      {node.tier === 'notable' && (
+        <circle
+          className="talent-node-decoration"
+          r={r + 5}
+          fill="none"
+          stroke={stroke}
+          strokeWidth={1.2}
+          opacity={0.7}
+        />
+      )}
       {shape}
       <text
+        className="talent-node-detail"
         y={iconY}
         textAnchor="middle"
         dominantBaseline="middle"
@@ -211,6 +241,7 @@ export function TalentNodeVisual({
         {icon}
       </text>
       <text
+        className="talent-node-detail talent-node-sublabel"
         y={subY}
         textAnchor="middle"
         dominantBaseline="middle"

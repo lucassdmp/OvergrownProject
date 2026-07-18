@@ -45,7 +45,7 @@ function BuilderNode({
         : stroke
   const commonWidth = selected || multiSelected || connectPending ? 3.5 : 2
   return (
-    <g opacity={dimmed ? 0.2 : 1} style={{ filter: dimmed ? 'grayscale(1)' : undefined }}>
+    <g opacity={dimmed ? 0.2 : 1}>
       <TalentNodeVisual
         node={node}
         fill={fill}
@@ -83,6 +83,7 @@ export default function TalentTreeCanvas({
   const { tree, addNode, removeNode, moveNode, toggleEdge, moveNodes, addNodes, removeNodes } =
     useTalentTreeStore()
   const svgRef = useRef<SVGSVGElement>(null)
+  const nodeElementRefs = useRef(new Map<string, SVGGElement>())
   const searchActive = searchQuery.trim().length > 0
   const matchingNodeIds = useMemo(
     () =>
@@ -91,8 +92,10 @@ export default function TalentTreeCanvas({
       ),
     [searchQuery, tree.nodes],
   )
+  const nodeById = useMemo(() => new Map(tree.nodes.map((node) => [node.id, node])), [tree.nodes])
 
-  const [viewport, setViewport] = useState<Viewport>({ x: 80, y: 80, zoom: 1 })
+  const [viewport, setViewport] = useState<Viewport>({ x: 80, y: 80, zoom: 0.1 })
+  const fittedTreeKey = useRef<string | null>(null)
   const [connectingFrom, setConnectingFrom] = useState<string | null>(null)
   const [ctrlConnectFrom, setCtrlConnectFrom] = useState<string | null>(null)
   const [tooltip, setTooltip] = useState<{ nodeId: string; sx: number; sy: number } | null>(null)
@@ -124,6 +127,7 @@ export default function TalentTreeCanvas({
     startWX: number
     startWY: number
     hasMoved: boolean
+    previewMoves?: { id: string; x: number; y: number }[]
   } | null>(null)
 
   // ── helpers ────────────────────────────────────────────────────────────────
@@ -153,7 +157,8 @@ export default function TalentTreeCanvas({
     for (const node of [...tree.nodes].reverse()) {
       const nx = rect.left + viewport.x + node.x * viewport.zoom
       const ny = rect.top + viewport.y + node.y * viewport.zoom
-      if (Math.hypot(sx - nx, sy - ny) <= nodeRadius(node.data) * viewport.zoom + 6) return node
+      if (Math.hypot(sx - nx, sy - ny) <= nodeRadius(node.data, node.tier) * viewport.zoom + 6)
+        return node
     }
     return null
   }
@@ -312,14 +317,30 @@ export default function TalentTreeCanvas({
     if (type === 'pan') {
       setViewport((v) => ({ ...v, x: startX + dx, y: startY + dy }))
     } else if (type === 'node' && hasMoved) {
-      moveNode(nodeId!, snap(startX + dx / viewport.zoom), snap(startY + dy / viewport.zoom))
+      const preview = {
+        id: nodeId!,
+        x: snap(startX + dx / viewport.zoom),
+        y: snap(startY + dy / viewport.zoom),
+      }
+      drag.current.previewMoves = [preview]
+      nodeElementRefs.current
+        .get(preview.id)
+        ?.setAttribute('transform', `translate(${preview.x} ${preview.y})`)
       setTooltip(null)
     } else if (type === 'multi' && hasMoved && startPositions) {
       const dxWorld = dx / viewport.zoom
       const dyWorld = dy / viewport.zoom
-      moveNodes(
-        startPositions.map((p) => ({ id: p.id, x: snap(p.x + dxWorld), y: snap(p.y + dyWorld) })),
-      )
+      const previews = startPositions.map((p) => ({
+        id: p.id,
+        x: snap(p.x + dxWorld),
+        y: snap(p.y + dyWorld),
+      }))
+      drag.current.previewMoves = previews
+      for (const preview of previews) {
+        nodeElementRefs.current
+          .get(preview.id)
+          ?.setAttribute('transform', `translate(${preview.x} ${preview.y})`)
+      }
       setTooltip(null)
     } else if (type === 'select-box') {
       const wp = svgPoint(e.clientX, e.clientY)
@@ -328,6 +349,15 @@ export default function TalentTreeCanvas({
   }
 
   function onMouseUp() {
+    const completedDrag = drag.current
+    if (completedDrag?.hasMoved && completedDrag.previewMoves?.length) {
+      if (completedDrag.type === 'node') {
+        const [move] = completedDrag.previewMoves
+        moveNode(move.id, move.x, move.y)
+      } else if (completedDrag.type === 'multi') {
+        moveNodes(completedDrag.previewMoves)
+      }
+    }
     if (drag.current?.type === 'select-box' && selBox) {
       const minX = Math.min(selBox.wx1, selBox.wx2)
       const maxX = Math.max(selBox.wx1, selBox.wx2)
@@ -355,11 +385,36 @@ export default function TalentTreeCanvas({
     const my = e.clientY - r.top
     const factor = e.deltaY < 0 ? 1.1 : 0.9
     setViewport((v) => {
-      const newZoom = Math.min(4, Math.max(0.15, v.zoom * factor))
+      const newZoom = Math.min(4, Math.max(0.04, v.zoom * factor))
       const scale = newZoom / v.zoom
       return { zoom: newZoom, x: mx - scale * (mx - v.x), y: my - scale * (my - v.y) }
     })
   }
+
+  const fitTree = useCallback(() => {
+    const rect = svgRef.current?.getBoundingClientRect()
+    if (!rect || tree.nodes.length === 0) return
+    const minX = Math.min(...tree.nodes.map((node) => node.x))
+    const maxX = Math.max(...tree.nodes.map((node) => node.x))
+    const minY = Math.min(...tree.nodes.map((node) => node.y))
+    const maxY = Math.max(...tree.nodes.map((node) => node.y))
+    const width = Math.max(1, maxX - minX + 240)
+    const height = Math.max(1, maxY - minY + 240)
+    const zoom = Math.max(0.04, Math.min(1, (rect.width - 48) / width, (rect.height - 48) / height))
+    setViewport({
+      zoom,
+      x: rect.width / 2 - ((minX + maxX) / 2) * zoom,
+      y: rect.height / 2 - ((minY + maxY) / 2) * zoom,
+    })
+  }, [tree.nodes])
+
+  useEffect(() => {
+    const key = `${tree.id}:${tree.version ?? 0}`
+    if (fittedTreeKey.current === key || tree.nodes.length === 0) return
+    fittedTreeKey.current = key
+    const frame = requestAnimationFrame(fitTree)
+    return () => cancelAnimationFrame(frame)
+  }, [fitTree, tree.id, tree.nodes.length, tree.version])
 
   // ── right click ────────────────────────────────────────────────────────────
 
@@ -455,6 +510,65 @@ export default function TalentTreeCanvas({
 
   // ── cursor ─────────────────────────────────────────────────────────────────
 
+  const edgePaths = useMemo(() => {
+    const paths = { normal: '', dimmed: '' }
+    for (const edge of tree.edges) {
+      const from = nodeById.get(edge.from)
+      const to = nodeById.get(edge.to)
+      if (!from || !to) continue
+      const segment = `M${from.x} ${from.y}L${to.x} ${to.y}`
+      const touchesMatch = matchingNodeIds.has(from.id) || matchingNodeIds.has(to.id)
+      if (searchActive && !touchesMatch) paths.dimmed += segment
+      else paths.normal += segment
+    }
+    return paths
+  }, [matchingNodeIds, nodeById, searchActive, tree.edges])
+
+  const renderedNodes = useMemo(
+    () =>
+      tree.nodes.map((node) => (
+        <g
+          key={node.id}
+          ref={(element) => {
+            if (element) nodeElementRefs.current.set(node.id, element)
+            else nodeElementRefs.current.delete(node.id)
+          }}
+          className="talent-tree-node"
+          transform={`translate(${node.x} ${node.y})`}
+          style={{ cursor: mode === 'select' ? 'grab' : 'pointer' }}
+          onMouseEnter={(event) => {
+            if (!drag.current?.hasMoved)
+              setTooltip({ nodeId: node.id, sx: event.clientX, sy: event.clientY })
+          }}
+          onMouseLeave={() => setTooltip(null)}
+          onMouseMove={(event) => {
+            if (!drag.current?.hasMoved)
+              setTooltip((current) =>
+                current ? { ...current, sx: event.clientX, sy: event.clientY } : null,
+              )
+          }}
+        >
+          <BuilderNode
+            node={node}
+            selected={selectedNodeId === node.id}
+            multiSelected={multiIds.has(node.id)}
+            connectPending={connectingFrom === node.id || ctrlConnectFrom === node.id}
+            dimmed={searchActive && !matchingNodeIds.has(node.id)}
+          />
+        </g>
+      )),
+    [
+      connectingFrom,
+      ctrlConnectFrom,
+      matchingNodeIds,
+      mode,
+      multiIds,
+      searchActive,
+      selectedNodeId,
+      tree.nodes,
+    ],
+  )
+
   const cursor = mode.startsWith('add-')
     ? 'crosshair'
     : mode === 'connect'
@@ -516,54 +630,31 @@ export default function TalentTreeCanvas({
           fill={gridEnabled ? 'url(#ttgrid-lines)' : 'url(#ttgrid-dots)'}
         />
 
-        <g transform={`translate(${viewport.x} ${viewport.y}) scale(${viewport.zoom})`}>
+        <g
+          className="talent-tree-world"
+          data-lod={viewport.zoom < 0.16 ? 'low' : viewport.zoom < 0.32 ? 'medium' : 'full'}
+          transform={`translate(${viewport.x} ${viewport.y}) scale(${viewport.zoom})`}
+        >
           {/* Edges */}
-          {tree.edges.map((edge) => {
-            const A = tree.nodes.find((n) => n.id === edge.from)
-            const B = tree.nodes.find((n) => n.id === edge.to)
-            if (!A || !B) return null
-            const touchesMatch = matchingNodeIds.has(A.id) || matchingNodeIds.has(B.id)
-            const dimmed = searchActive && !touchesMatch
-            return (
-              <line
-                key={edge.id}
-                x1={A.x}
-                y1={A.y}
-                x2={B.x}
-                y2={B.y}
-                stroke={dimmed ? '#6b7280' : '#64748b'}
-                strokeWidth={2}
-                strokeLinecap="round"
-                opacity={dimmed ? 0.12 : 0.7}
-              />
-            )
-          })}
+          <path
+            d={edgePaths.dimmed}
+            fill="none"
+            stroke="#6b7280"
+            strokeWidth={2}
+            strokeLinecap="round"
+            opacity={0.12}
+          />
+          <path
+            d={edgePaths.normal}
+            fill="none"
+            stroke="#64748b"
+            strokeWidth={2}
+            strokeLinecap="round"
+            opacity={0.7}
+          />
 
           {/* Nodes */}
-          {tree.nodes.map((node) => (
-            <g
-              key={node.id}
-              transform={`translate(${node.x} ${node.y})`}
-              style={{ cursor: mode === 'select' ? 'grab' : 'pointer' }}
-              onMouseEnter={(e) => {
-                if (!drag.current?.hasMoved)
-                  setTooltip({ nodeId: node.id, sx: e.clientX, sy: e.clientY })
-              }}
-              onMouseLeave={() => setTooltip(null)}
-              onMouseMove={(e) => {
-                if (!drag.current?.hasMoved)
-                  setTooltip((t) => (t ? { ...t, sx: e.clientX, sy: e.clientY } : null))
-              }}
-            >
-              <BuilderNode
-                node={node}
-                selected={selectedNodeId === node.id}
-                multiSelected={multiIds.has(node.id)}
-                connectPending={connectingFrom === node.id || ctrlConnectFrom === node.id}
-                dimmed={searchActive && !matchingNodeIds.has(node.id)}
-              />
-            </g>
-          ))}
+          {renderedNodes}
 
           {/* Area selection box */}
           {selBox && (

@@ -61,6 +61,10 @@ const SPECIFIC_WEAPON_TAG: Record<string, WeaponTag> = {
   Rapieira: 'rapieira',
   Soqueiras: 'soqueiras',
   Tonfa: 'tonfa',
+  'Adagas Gêmeas': 'adagas-gemeas',
+  'Espadas Gêmeas': 'espadas-gemeas',
+  'Machados Gêmeos': 'machados-gemeos',
+  'Tonfas Gêmeas': 'tonfas-gemeas',
   'Arco Composto': 'arco-composto',
   'Arco Leve': 'arco-leve',
   'Arco Recurvo': 'arco-recurvo',
@@ -74,6 +78,8 @@ const SPECIFIC_WEAPON_TAG: Record<string, WeaponTag> = {
   Pistola: 'pistola',
   'Rifle de Precisão': 'rifle-de-precisao',
   Varinha: 'varinha',
+  'Bestas Leves Gêmeas': 'bestas-leves-gemeas',
+  'Pistolas Gêmeas': 'pistolas-gemeas',
 }
 
 function inferWeaponTags(name: string, isRanged: boolean): WeaponTag[] {
@@ -127,6 +133,11 @@ function parseWeapons(): EquipmentPreset[] {
         : 'luta'
     const blockBonus =
       name === 'Escudo' ? 5 : ['Espada de Duas Mãos', 'Martelo de Duas Mãos'].includes(name) ? 3 : 0
+    const weaponTags = inferWeaponTags(name, isRangedSection || isRangedDual)
+    const effectiveScaling =
+      weaponTags.includes('distancia') && !weaponTags.includes('magica')
+        ? [{ attribute: 'sense' as const, multiplier: 1 }]
+        : parsedDamage.scaling
     rows.push({
       name,
       description: `${damageText}. Requisito: ${requirement}. ${property}`,
@@ -135,11 +146,12 @@ function parseWeapons(): EquipmentPreset[] {
       weight,
       threat: String(threat),
       weaponDetails: {
-        ...parsedDamage,
+        damage: parsedDamage.damage,
+        scaling: effectiveScaling,
         combatSkill,
         critical: { rangeMin: threat, multiplier: 2 },
       },
-      weaponTags: inferWeaponTags(name, isRangedSection || isRangedDual),
+      weaponTags,
       armorDetails:
         blockBonus > 0 || name === 'Escudo'
           ? {

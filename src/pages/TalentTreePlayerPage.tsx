@@ -7,7 +7,6 @@ import {
   NODE_TYPE_LABELS,
   nodeTooltip,
   talentNodeCost,
-  type TalentTree,
   type TalentTreeNode,
 } from '../types/talentTree'
 import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
@@ -24,18 +23,6 @@ import { nodeMatchesSearch } from '../features/talentTree/nodeSearch'
 const nodeCost = talentNodeCost
 
 // ── Adjacency: node is reachable if it's connected to any acquired node ───────
-function isReachable(nodeId: string, acquiredSet: Set<string>, tree: TalentTree): boolean {
-  const node = tree.nodes.find((n) => n.id === nodeId)
-  if (!node) return false
-  if (node.data.type === 'player') return true
-  // Nós de ligação e condicionais seguem a regra normal de adjacência
-  const edges = tree.edges.filter((e) => e.from === nodeId || e.to === nodeId)
-  return edges.some((e) => {
-    const neighborId = e.from === nodeId ? e.to : e.from
-    return acquiredSet.has(neighborId)
-  })
-}
-
 // ── Attribute picker modal ────────────────────────────────────────────────────
 
 const ATTRIBUTES: AttributeName[] = ['might', 'grace', 'wisdom', 'sense', 'fortitude']
@@ -248,13 +235,45 @@ export default function TalentTreePlayerPage() {
     return unsub
   }, [])
 
-  const acquiredSet = new Set(character.acquiredNodeIds)
+  const acquiredSet = useMemo(() => new Set(character.acquiredNodeIds), [character.acquiredNodeIds])
+  const nodeById = useMemo(() => new Map(tree.nodes.map((node) => [node.id, node])), [tree.nodes])
+  const adjacency = useMemo(() => {
+    const map = new Map<string, string[]>(tree.nodes.map((node) => [node.id, []]))
+    for (const edge of tree.edges) {
+      map.get(edge.from)?.push(edge.to)
+      map.get(edge.to)?.push(edge.from)
+    }
+    return map
+  }, [tree.edges, tree.nodes])
+  const reachableSet = useMemo(() => {
+    const reachable = new Set<string>()
+    for (const node of tree.nodes) {
+      if (node.data.type === 'player') {
+        reachable.add(node.id)
+        continue
+      }
+      if (node.prerequisiteNodeIds?.some((requiredId) => !acquiredSet.has(requiredId))) continue
+      if ((adjacency.get(node.id) ?? []).some((neighborId) => acquiredSet.has(neighborId))) {
+        reachable.add(node.id)
+      }
+    }
+    return reachable
+  }, [acquiredSet, adjacency, tree.nodes])
   const nodeConfigs = character.nodeConfigs ?? {}
-  const playerNodes = tree.nodes.filter((n) => n.data.type === 'player')
-  const acquiredPlayerCount = playerNodes.filter((n) => acquiredSet.has(n.id)).length
-  const unacquiredPlayerNodes = playerNodes.filter((n) => !acquiredSet.has(n.id))
+  const playerNodes = useMemo(
+    () => tree.nodes.filter((node) => node.data.type === 'player'),
+    [tree.nodes],
+  )
+  const acquiredPlayerCount = useMemo(
+    () => playerNodes.filter((node) => acquiredSet.has(node.id)).length,
+    [acquiredSet, playerNodes],
+  )
+  const unacquiredPlayerNodes = useMemo(
+    () => playerNodes.filter((node) => !acquiredSet.has(node.id)),
+    [acquiredSet, playerNodes],
+  )
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
-  const selectedNode = tree.nodes.find((n) => n.id === selectedNodeId) ?? null
+  const selectedNode = selectedNodeId ? (nodeById.get(selectedNodeId) ?? null) : null
   const [searchQuery, setSearchQuery] = useState('')
   const searchActive = searchQuery.trim().length > 0
   const matchingNodeIds = useMemo(
@@ -264,6 +283,20 @@ export default function TalentTreePlayerPage() {
       ),
     [searchQuery, tree.nodes],
   )
+  const edgePaths = useMemo(() => {
+    const paths = { acquired: '', available: '', dimmed: '' }
+    for (const edge of tree.edges) {
+      const from = nodeById.get(edge.from)
+      const to = nodeById.get(edge.to)
+      if (!from || !to) continue
+      const segment = `M${from.x} ${from.y}L${to.x} ${to.y}`
+      const touchesMatch = matchingNodeIds.has(from.id) || matchingNodeIds.has(to.id)
+      if (searchActive && !touchesMatch) paths.dimmed += segment
+      else if (acquiredSet.has(from.id) && acquiredSet.has(to.id)) paths.acquired += segment
+      else paths.available += segment
+    }
+    return paths
+  }, [acquiredSet, matchingNodeIds, nodeById, searchActive, tree.edges])
 
   // Context menu
   const [ctxMenu, setCtxMenu] = useState<{ node: TalentTreeNode; sx: number; sy: number } | null>(
@@ -283,10 +316,13 @@ export default function TalentTreePlayerPage() {
   const totalPoints = (divinity + 1) * 5
   const nextPlayerNodeCost = acquiredPlayerCount
   const playerNodesSpent = (acquiredPlayerCount * (acquiredPlayerCount - 1)) / 2
-  const spentPoints =
-    tree.nodes
-      .filter((n) => acquiredSet.has(n.id) && n.data.type !== 'player')
-      .reduce((s, n) => s + nodeCost(n), 0) + playerNodesSpent
+  const spentPoints = useMemo(
+    () =>
+      tree.nodes
+        .filter((node) => acquiredSet.has(node.id) && node.data.type !== 'player')
+        .reduce((sum, node) => sum + nodeCost(node), 0) + playerNodesSpent,
+    [acquiredSet, playerNodesSpent, tree.nodes],
+  )
   const remainingPoints = totalPoints - spentPoints
   const effectiveCost = (node: TalentTreeNode) =>
     node.data.type === 'player'
@@ -297,58 +333,113 @@ export default function TalentTreePlayerPage() {
   const canAfford = (node: TalentTreeNode) => remainingPoints >= effectiveCost(node)
 
   // ── Viewport pan/zoom ─────────────────────────────────────────────────────
-  const [vp, setVp] = useState({ x: 0, y: 0, zoom: 1 })
   const svgRef = useRef<SVGSVGElement>(null)
+  const worldRef = useRef<SVGGElement>(null)
+  const viewportRef = useRef({ x: 0, y: 0, zoom: 1 })
+  const pendingViewportRef = useRef({ x: 0, y: 0, zoom: 1 })
+  const viewportFrameRef = useRef<number | null>(null)
+  const fittedTreeKey = useRef<string | null>(null)
   const panning = useRef(false)
   const panStart = useRef({ x: 0, y: 0, vx: 0, vy: 0 })
 
-  const onMouseDown = useCallback(
-    (e: React.MouseEvent<SVGSVGElement>) => {
-      if (e.button !== 0 && e.button !== 1) return
-      panning.current = true
-      panStart.current = { x: e.clientX, y: e.clientY, vx: vp.x, vy: vp.y }
+  const applyViewport = useCallback((next: { x: number; y: number; zoom: number }) => {
+    viewportRef.current = next
+    pendingViewportRef.current = next
+    if (viewportFrameRef.current !== null) return
+    viewportFrameRef.current = requestAnimationFrame(() => {
+      const viewport = pendingViewportRef.current
+      const world = worldRef.current
+      if (world) {
+        world.setAttribute(
+          'transform',
+          `translate(${viewport.x},${viewport.y}) scale(${viewport.zoom})`,
+        )
+        world.dataset.lod = viewport.zoom < 0.16 ? 'low' : viewport.zoom < 0.32 ? 'medium' : 'full'
+      }
+      viewportFrameRef.current = null
+    })
+  }, [])
+
+  useEffect(
+    () => () => {
+      if (viewportFrameRef.current !== null) cancelAnimationFrame(viewportFrameRef.current)
     },
-    [vp],
+    [],
   )
 
-  const onMouseMove = useCallback((e: React.MouseEvent<SVGSVGElement>) => {
-    if (!panning.current) return
-    setVp((v) => ({
-      ...v,
-      x: panStart.current.vx + e.clientX - panStart.current.x,
-      y: panStart.current.vy + e.clientY - panStart.current.y,
-    }))
+  const onMouseDown = useCallback((e: React.MouseEvent<SVGSVGElement>) => {
+    if (e.button !== 0 && e.button !== 1) return
+    panning.current = true
+    const viewport = viewportRef.current
+    panStart.current = { x: e.clientX, y: e.clientY, vx: viewport.x, vy: viewport.y }
   }, [])
+
+  const onMouseMove = useCallback(
+    (e: React.MouseEvent<SVGSVGElement>) => {
+      if (!panning.current) return
+      applyViewport({
+        zoom: viewportRef.current.zoom,
+        x: panStart.current.vx + e.clientX - panStart.current.x,
+        y: panStart.current.vy + e.clientY - panStart.current.y,
+      })
+    },
+    [applyViewport],
+  )
 
   const onMouseUp = useCallback(() => {
     panning.current = false
   }, [])
 
-  const onWheel = useCallback((e: React.WheelEvent<SVGSVGElement>) => {
-    e.preventDefault()
-    const factor = e.deltaY < 0 ? 1.1 : 0.9
-    setVp((v) => {
-      const newZoom = Math.max(0.2, Math.min(3, v.zoom * factor))
+  const onWheel = useCallback(
+    (e: React.WheelEvent<SVGSVGElement>) => {
+      e.preventDefault()
+      const factor = e.deltaY < 0 ? 1.1 : 0.9
+      const viewport = viewportRef.current
+      const newZoom = Math.max(0.04, Math.min(3, viewport.zoom * factor))
       const rect = svgRef.current?.getBoundingClientRect()
-      if (!rect) return { ...v, zoom: newZoom }
+      if (!rect) return applyViewport({ ...viewport, zoom: newZoom })
       const cx = e.clientX - rect.left
       const cy = e.clientY - rect.top
-      return {
+      applyViewport({
         zoom: newZoom,
-        x: cx - (cx - v.x) * (newZoom / v.zoom),
-        y: cy - (cy - v.y) * (newZoom / v.zoom),
-      }
+        x: cx - (cx - viewport.x) * (newZoom / viewport.zoom),
+        y: cy - (cy - viewport.y) * (newZoom / viewport.zoom),
+      })
+    },
+    [applyViewport],
+  )
+
+  const fitTree = useCallback(() => {
+    const rect = svgRef.current?.getBoundingClientRect()
+    if (!rect || tree.nodes.length === 0) return
+    const minX = Math.min(...tree.nodes.map((node) => node.x))
+    const maxX = Math.max(...tree.nodes.map((node) => node.x))
+    const minY = Math.min(...tree.nodes.map((node) => node.y))
+    const maxY = Math.max(...tree.nodes.map((node) => node.y))
+    const width = Math.max(1, maxX - minX + 240)
+    const height = Math.max(1, maxY - minY + 240)
+    const zoom = Math.max(0.04, Math.min(1, (rect.width - 48) / width, (rect.height - 48) / height))
+    applyViewport({
+      zoom,
+      x: rect.width / 2 - ((minX + maxX) / 2) * zoom,
+      y: rect.height / 2 - ((minY + maxY) / 2) * zoom,
     })
-  }, [])
+  }, [applyViewport, tree.nodes])
+
+  useEffect(() => {
+    const key = `${tree.id}:${tree.version ?? 0}`
+    if (fittedTreeKey.current === key || tree.nodes.length === 0) return
+    fittedTreeKey.current = key
+    const frame = requestAnimationFrame(fitTree)
+    return () => cancelAnimationFrame(frame)
+  }, [fitTree, tree.id, tree.nodes.length, tree.version])
 
   // ── Acquire helpers ───────────────────────────────────────────────────────
 
   function getAdjacentAttr(nodeId: string): AttributeName | null {
-    const edges = tree.edges.filter((e) => e.from === nodeId || e.to === nodeId)
-    for (const edge of edges) {
-      const neighborId = edge.from === nodeId ? edge.to : edge.from
+    for (const neighborId of adjacency.get(nodeId) ?? []) {
       if (!acquiredSet.has(neighborId)) continue
-      const neighbor = tree.nodes.find((n) => n.id === neighborId)
+      const neighbor = nodeById.get(neighborId)
       if (!neighbor || neighbor.data.type !== 'attribute') continue
       const cfg = nodeConfigs[neighborId]?.attribute
       const def = neighbor.data.type === 'attribute' ? neighbor.data.attribute : undefined
@@ -384,10 +475,15 @@ export default function TalentTreePlayerPage() {
   }
 
   // ── Stats ─────────────────────────────────────────────────────────────────
-  const acquiredCount = tree.nodes.filter(
-    (n) => acquiredSet.has(n.id) && n.data.type !== 'player',
-  ).length
-  const totalNodes = tree.nodes.filter((n) => n.data.type !== 'player').length
+  const acquiredCount = useMemo(
+    () =>
+      tree.nodes.filter((node) => acquiredSet.has(node.id) && node.data.type !== 'player').length,
+    [acquiredSet, tree.nodes],
+  )
+  const totalNodes = useMemo(
+    () => tree.nodes.filter((node) => node.data.type !== 'player').length,
+    [tree.nodes],
+  )
 
   // ── Loading / empty states ────────────────────────────────────────────────
   if (!hydrated) {
@@ -409,6 +505,12 @@ export default function TalentTreePlayerPage() {
             className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white hover:bg-amber-500"
           >
             ← Voltar para a Ficha
+          </button>
+          <button
+            onClick={fitTree}
+            className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-bold text-gray-300 transition hover:border-sky-500 hover:text-white"
+          >
+            Enquadrar
           </button>
         </div>
       </div>
@@ -432,7 +534,7 @@ export default function TalentTreePlayerPage() {
         (() => {
           const node = ctxMenu.node
           const acquired = acquiredSet.has(node.id)
-          const reachable = isReachable(node.id, acquiredSet, tree)
+          const reachable = reachableSet.has(node.id)
           const canAcquire = !acquired && reachable && canAfford(node)
           return (
             <NodeContextMenu
@@ -529,40 +631,34 @@ export default function TalentTreePlayerPage() {
           onWheel={onWheel}
           onContextMenu={(e) => e.preventDefault()}
         >
-          <g transform={`translate(${vp.x},${vp.y}) scale(${vp.zoom})`}>
+          <g ref={worldRef} className="talent-tree-world" data-lod="low">
             {/* Edges */}
-            {tree.edges.map((edge) => {
-              const from = tree.nodes.find((n) => n.id === edge.from)
-              const to = tree.nodes.find((n) => n.id === edge.to)
-              if (!from || !to) return null
-              const bothAcquired = acquiredSet.has(from.id) && acquiredSet.has(to.id)
-              const touchesMatch = matchingNodeIds.has(from.id) || matchingNodeIds.has(to.id)
-              const dimmed = searchActive && !touchesMatch
-              return (
-                <line
-                  key={edge.id}
-                  x1={from.x}
-                  y1={from.y}
-                  x2={to.x}
-                  y2={to.y}
-                  stroke={
-                    dimmed
-                      ? 'rgba(107,114,128,0.12)'
-                      : bothAcquired
-                        ? 'rgba(245,158,11,0.6)'
-                        : 'rgba(75,85,99,0.5)'
-                  }
-                  strokeWidth={bothAcquired ? 3 : 1.5}
-                  strokeDasharray={bothAcquired ? undefined : '6 3'}
-                />
-              )
-            })}
+            <path
+              d={edgePaths.dimmed}
+              fill="none"
+              stroke="rgba(107,114,128,0.12)"
+              strokeWidth={1.5}
+              strokeDasharray="6 3"
+            />
+            <path
+              d={edgePaths.available}
+              fill="none"
+              stroke="rgba(75,85,99,0.5)"
+              strokeWidth={1.5}
+              strokeDasharray="6 3"
+            />
+            <path
+              d={edgePaths.acquired}
+              fill="none"
+              stroke="rgba(245,158,11,0.6)"
+              strokeWidth={3}
+            />
 
             {/* Nodes */}
             {tree.nodes.map((node) => {
               const acquired = acquiredSet.has(node.id)
               const selected = selectedNodeId === node.id
-              const reachable = isReachable(node.id, acquiredSet, tree)
+              const reachable = reachableSet.has(node.id)
               const dimmed = searchActive && !matchingNodeIds.has(node.id)
               const { fill, stroke, text } = NODE_TYPE_COLORS[node.data.type]
 
@@ -585,15 +681,12 @@ export default function TalentTreePlayerPage() {
               return (
                 <g
                   key={node.id}
+                  className="talent-tree-node"
                   transform={`translate(${node.x},${node.y})`}
                   style={{
                     cursor: 'pointer',
                     opacity: dimmed ? 0.2 : 1,
-                    filter: dimmed
-                      ? 'grayscale(1)'
-                      : acquired
-                        ? 'drop-shadow(0 0 6px rgba(245,158,11,0.6))'
-                        : undefined,
+                    filter: acquired ? 'drop-shadow(0 0 5px rgba(245,158,11,0.5))' : undefined,
                   }}
                   onMouseDown={(e) => e.stopPropagation()}
                   onClick={(e) => {
@@ -613,7 +706,7 @@ export default function TalentTreePlayerPage() {
                     if (acquired) {
                       removeNode(node.id)
                     } else {
-                      const reachable = isReachable(node.id, acquiredSet, tree)
+                      const reachable = reachableSet.has(node.id)
                       if (reachable && canAfford(node)) {
                         handleAcquireNode(node)
                       }
@@ -627,7 +720,7 @@ export default function TalentTreePlayerPage() {
                 >
                   {selected && (
                     <circle
-                      r={nodeRadius(node.data) + 8}
+                      r={nodeRadius(node.data, node.tier) + 8}
                       fill="none"
                       stroke="#f59e0b"
                       strokeWidth={2}
@@ -647,8 +740,8 @@ export default function TalentTreePlayerPage() {
                   {acquired && (
                     <circle
                       r={6}
-                      cx={nodeRadius(node.data) * 0.72}
-                      cy={-nodeRadius(node.data) * 0.72}
+                      cx={nodeRadius(node.data, node.tier) * 0.72}
+                      cy={-nodeRadius(node.data, node.tier) * 0.72}
                       fill="#f59e0b"
                       stroke="#92400e"
                       strokeWidth={1}
@@ -738,7 +831,7 @@ export default function TalentTreePlayerPage() {
             {selectedNode ? (
               (() => {
                 const acquired = acquiredSet.has(selectedNode.id)
-                const reachable = isReachable(selectedNode.id, acquiredSet, tree)
+                const reachable = reachableSet.has(selectedNode.id)
                 const cost = effectiveCost(selectedNode)
                 const isFree = cost === 0
                 const canAcquire = !acquired && reachable && canAfford(selectedNode)

@@ -54,6 +54,12 @@ export function conditionsMet(conditions: NodeConditions, inventory: InventoryIt
     )
     if (!ok) return false
   }
+  for (const requiredTag of conditions.weaponTagsAllOf ?? []) {
+    const ok = equipped.some(
+      (it) => it.type === 'weapon' && (it.weaponTags ?? []).includes(requiredTag),
+    )
+    if (!ok) return false
+  }
   if (conditions.armorTagsAnyOf.length > 0) {
     const ok = equipped.some(
       (it) =>
@@ -62,6 +68,7 @@ export function conditionsMet(conditions: NodeConditions, inventory: InventoryIt
     )
     if (!ok) return false
   }
+  if (conditions.requiresNoArmor && equipped.some((it) => it.type === 'armor')) return false
   return true
 }
 

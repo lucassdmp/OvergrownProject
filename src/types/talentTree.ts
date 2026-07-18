@@ -232,8 +232,12 @@ export interface LinkNodeData {
 export interface NodeConditions {
   /** At least one EQUIPPED (not broken) weapon must have one of these tags */
   weaponTagsAnyOf: WeaponTag[]
+  /** Every tag must occur among EQUIPPED (not broken) weapons */
+  weaponTagsAllOf?: WeaponTag[]
   /** At least one EQUIPPED (not broken) armor must have one of these tags */
   armorTagsAnyOf: ArmorTag[]
+  /** Active only when no primary/underlayer armor is equipped */
+  requiresNoArmor?: boolean
 }
 
 export type ConditionalEffect =
@@ -336,6 +340,12 @@ export interface TalentTreeNode {
    * Padrão: 1. Nós de jogador e de ligação custam 0.
    */
   cost?: number
+  /** Visual/power tier used by the official tree and its validators. */
+  tier?: 'minor' | 'notable' | 'keystone'
+  /** Stable IDs from older official trees that migrate to this node. */
+  legacyIds?: string[]
+  /** Explicit acquisition gates (used chiefly by dependent book abilities). */
+  prerequisiteNodeIds?: string[]
 }
 
 /** Effective talent point cost of a node */
@@ -433,7 +443,12 @@ export function defaultNodeData(type: TalentNodeType): TalentNodeData {
         type: 'conditional',
         name: 'Novo Condicional',
         description: '',
-        conditions: { weaponTagsAnyOf: [], armorTagsAnyOf: [] },
+        conditions: {
+          weaponTagsAnyOf: [],
+          weaponTagsAllOf: [],
+          armorTagsAnyOf: [],
+          requiresNoArmor: false,
+        },
         effects: [],
       }
   }
@@ -595,8 +610,11 @@ export function nodeTooltip(data: TalentNodeData): string {
       const conds: string[] = []
       if (data.conditions.weaponTagsAnyOf.length > 0)
         conds.push(`Arma: ${data.conditions.weaponTagsAnyOf.join(', ')}`)
+      if ((data.conditions.weaponTagsAllOf ?? []).length > 0)
+        conds.push(`Armas obrigatórias: ${data.conditions.weaponTagsAllOf?.join(' + ')}`)
       if (data.conditions.armorTagsAnyOf.length > 0)
         conds.push(`Armadura: ${data.conditions.armorTagsAnyOf.join(', ')}`)
+      if (data.conditions.requiresNoArmor) conds.push('Sem armadura')
       const lines = [
         `⚙ ${data.name || 'Condicional'}`,
         data.description || null,

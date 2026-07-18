@@ -1,10 +1,12 @@
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import RootLayout from '@/layouts/RootLayout'
 import CharacterSheetPage from '@/pages/CharacterSheetPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import PdfPage from '@/pages/PdfPage'
-import TalentTreeBuilderPage from '@/pages/TalentTreeBuilderPage'
-import TalentTreePlayerPage from '@/pages/TalentTreePlayerPage'
+
+const TalentTreeBuilderPage = lazy(() => import('@/pages/TalentTreeBuilderPage'))
+const TalentTreePlayerPage = lazy(() => import('@/pages/TalentTreePlayerPage'))
 
 export const router = createBrowserRouter([
   {
@@ -29,12 +31,32 @@ export const router = createBrowserRouter([
   {
     // Hidden page – not linked from the nav. Access via /talent-tree-builder directly.
     path: '/talent-tree-builder',
-    element: <TalentTreeBuilderPage />,
+    element: (
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center bg-gray-950 text-sm text-gray-500">
+            Carregando árvore…
+          </div>
+        }
+      >
+        <TalentTreeBuilderPage />
+      </Suspense>
+    ),
   },
   {
     // Player-facing talent tree view – reached from the sheet pentagon
     path: '/arvore',
-    element: <TalentTreePlayerPage />,
+    element: (
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center bg-gray-950 text-sm text-gray-500">
+            Carregando árvore…
+          </div>
+        }
+      >
+        <TalentTreePlayerPage />
+      </Suspense>
+    ),
   },
   {
     path: '*',

@@ -15,8 +15,8 @@ import {
   serializeCharacterFile,
 } from '../features/character/utils/characterFile'
 import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
-import { serializeTree } from '../features/talentTree/store/talentTreeStore'
 import { nodeMatchesSearch } from '../features/talentTree/nodeSearch'
+import { useLocalTreeFileAutosave } from '../features/talentTree/useLocalTreeFileAutosave'
 
 // ── Toolbar button ────────────────────────────────────────────────────────────
 
@@ -73,6 +73,12 @@ export default function TalentTreeBuilderPage() {
   const searchMatchCount = searchQuery.trim()
     ? tree.nodes.filter((node) => nodeMatchesSearch(node, searchQuery)).length
     : 0
+  const {
+    saveNow,
+    status: saveStatus,
+    error: saveError,
+    lastSavedAt,
+  } = useLocalTreeFileAutosave(tree)
 
   // Grid & snap
   const [gridEnabled, setGridEnabled] = useState(false)
@@ -88,20 +94,12 @@ export default function TalentTreeBuilderPage() {
     )
   }, [character, tree])
 
-  useSaveShortcut(handleExport)
+  useSaveShortcut(() => {
+    void saveNow()
+  })
 
-  // ── Salvar árvore oficial ──────────────────────────────────────────────────
-  // Baixa defaultTalentTree.json com a versão incrementada. Substitua o arquivo
-  // em src/data/ manualmente e faça deploy — as páginas carregam a nova versão
-  // automaticamente (na Vercel não é possível gravar no servidor).
-  const handleSaveOfficial = useCallback(() => {
-    const nextVersion = (tree.version ?? 0) + 1
-    const official = { ...tree, version: nextVersion }
-    importTree(official) // mantém o store na mesma versão do arquivo salvo
-    downloadTextFile(serializeTree(official), 'defaultTalentTree.json')
-  }, [tree, importTree])
-
-  // ── Import ─────────────────────────────────────────────────────────────────
+  // ── Autosave e importação ──────────────────────────────────────────────────
+  // Importações também entram no mesmo fluxo de autosave local.
 
   function handleImportClick() {
     setImportError(null)
@@ -291,13 +289,33 @@ export default function TalentTreeBuilderPage() {
 
             <div className="h-4 w-px bg-gray-200 dark:bg-gray-700" />
 
-            <button
-              onClick={handleSaveOfficial}
-              title="Baixa defaultTalentTree.json (versão incrementada). Substitua o arquivo em src/data/ e faça deploy para publicar."
-              className="rounded-lg border border-amber-400 bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 transition hover:bg-amber-100 dark:border-amber-600 dark:bg-amber-950/30 dark:text-amber-400 dark:hover:bg-amber-900/40"
+            <span
+              title={
+                saveError ??
+                (lastSavedAt
+                  ? `Último salvamento: ${lastSavedAt.toLocaleTimeString()}`
+                  : 'O JSON é salvo automaticamente no projeto local.')
+              }
+              className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
+                saveStatus === 'error'
+                  ? 'border-red-400 bg-red-50 text-red-600 dark:bg-red-950/30'
+                  : saveStatus === 'saving' || saveStatus === 'pending'
+                    ? 'border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+                    : saveStatus === 'local-only'
+                      ? 'border-gray-300 text-gray-500 dark:border-gray-700'
+                      : 'border-emerald-400 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
+              }`}
             >
-              💾 Salvar Oficial{tree.version != null && ` (v${tree.version})`}
-            </button>
+              {saveStatus === 'error'
+                ? '⚠ Erro ao salvar'
+                : saveStatus === 'saving'
+                  ? '💾 Salvando…'
+                  : saveStatus === 'pending'
+                    ? '● Alterações pendentes'
+                    : saveStatus === 'local-only'
+                      ? 'Somente leitura fora do ambiente local'
+                      : '✓ JSON salvo automaticamente'}
+            </span>
             <button
               onClick={handleExport}
               className="rounded-lg border border-sky-300 bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-600 transition hover:bg-sky-100 dark:border-sky-700 dark:bg-sky-950/30 dark:text-sky-400 dark:hover:bg-sky-900/40"

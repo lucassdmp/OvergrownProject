@@ -24,6 +24,7 @@ import {
 import Modal from '../../../components/ui/Modal'
 import { ALL_SKILLS } from '../../../data/skills'
 import { EQUIPMENT_PRESETS } from '../../../data/equipment'
+import { resolveWeaponScaling, weaponRuleSummary } from '../../../lib/weaponRules'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -78,6 +79,9 @@ function AddItemModal({ onClose, existing }: ModalProps) {
   const [weaponScaling, setWeaponScaling] = useState<WeaponAttributeScaling[]>(
     existing?.weaponDetails?.scaling ?? [],
   )
+  const [weaponCombatSkill, setWeaponCombatSkill] = useState<
+    NonNullable<WeaponDetails['combatSkill']>
+  >(existing?.weaponDetails?.combatSkill ?? 'luta')
   const [critMult, setCritMult] = useState<number>(
     existing?.weaponDetails?.critical?.multiplier ?? 2,
   )
@@ -118,6 +122,7 @@ function AddItemModal({ onClose, existing }: ModalProps) {
         ? {
             damage: weaponDamage,
             scaling: weaponScaling,
+            combatSkill: weaponCombatSkill,
             critical: { multiplier: critMult, rangeMin: critRangeMin },
           }
         : undefined
@@ -358,6 +363,22 @@ function AddItemModal({ onClose, existing }: ModalProps) {
                   />
                 </div>
               </div>
+            </div>
+            <div>
+              <p className="mb-1 text-[10px] text-gray-400">Perícia do ataque</p>
+              <select
+                value={weaponCombatSkill}
+                onChange={(event) =>
+                  setWeaponCombatSkill(
+                    event.target.value as NonNullable<WeaponDetails['combatSkill']>,
+                  )
+                }
+                className={inp}
+              >
+                <option value="luta">Luta (corpo a corpo)</option>
+                <option value="pontaria">Pontaria (distância usa Sense)</option>
+                <option value="arcanismo">Arcanismo (mágica)</option>
+              </select>
             </div>
             <div>
               <p className="mb-1 text-[10px] text-gray-400">
@@ -794,10 +815,27 @@ function ItemCard({ item }: { item: InventoryItem }) {
           </button>
         </div>
 
-        {expanded && (item.description || item.effects.length > 0) && (
+        {expanded && (item.description || item.effects.length > 0 || item.weaponDetails) && (
           <div className="flex flex-col gap-1.5 border-t border-gray-100 px-3 py-2 dark:border-gray-800">
             {item.description && (
               <p className="text-xs text-gray-600 dark:text-gray-400">{item.description}</p>
+            )}
+            {item.weaponDetails && (
+              <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-amber-600 dark:text-amber-400">
+                <span>
+                  Dano:{' '}
+                  {item.weaponDetails.damage
+                    .map((roll) => `${roll.count}D${roll.die}`)
+                    .join(' + ') || '—'}
+                </span>
+                <span>{weaponRuleSummary(item)}</span>
+                <span>
+                  Escala:{' '}
+                  {resolveWeaponScaling(item)
+                    .map((scale) => `${ATTRIBUTE_LABELS[scale.attribute]} ×${scale.multiplier}`)
+                    .join(' + ')}
+                </span>
+              </div>
             )}
             {item.effects
               .filter((e) => !['heal', 'restoreIep'].includes(e.type))

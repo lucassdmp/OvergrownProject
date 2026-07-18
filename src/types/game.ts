@@ -296,6 +296,11 @@ export type WeaponTag =
   | 'rapieira'
   | 'soqueiras'
   | 'tonfa'
+  // ── Dual-wield configurations
+  | 'adagas-gemeas'
+  | 'espadas-gemeas'
+  | 'machados-gemeos'
+  | 'tonfas-gemeas'
   // ── Ranged weapons
   | 'arco-composto'
   | 'arco-leve'
@@ -310,6 +315,8 @@ export type WeaponTag =
   | 'pistola'
   | 'rifle-de-precisao'
   | 'varinha'
+  | 'bestas-leves-gemeas'
+  | 'pistolas-gemeas'
   // ── Category tags (can be combined with specific weapon tags)
   | 'corpo-a-corpo'
   | 'distancia'
@@ -345,6 +352,10 @@ export const WEAPON_TAG_LABELS: Record<WeaponTag, string> = {
   rapieira: 'Rapieira',
   soqueiras: 'Soqueiras',
   tonfa: 'Tonfa',
+  'adagas-gemeas': 'Adagas Gêmeas',
+  'espadas-gemeas': 'Espadas Gêmeas',
+  'machados-gemeos': 'Machados Gêmeos',
+  'tonfas-gemeas': 'Tonfas Gêmeas',
   // Ranged
   'arco-composto': 'Arco Composto',
   'arco-leve': 'Arco Leve',
@@ -359,6 +370,8 @@ export const WEAPON_TAG_LABELS: Record<WeaponTag, string> = {
   pistola: 'Pistola',
   'rifle-de-precisao': 'Rifle de Precisão',
   varinha: 'Varinha',
+  'bestas-leves-gemeas': 'Bestas Leves Gêmeas',
+  'pistolas-gemeas': 'Pistolas Gêmeas',
   // Categories
   'corpo-a-corpo': 'Corpo a Corpo',
   distancia: 'Distância',
@@ -395,6 +408,10 @@ export const WEAPON_TAGS_MELEE: WeaponTag[] = [
   'rapieira',
   'soqueiras',
   'tonfa',
+  'adagas-gemeas',
+  'espadas-gemeas',
+  'machados-gemeos',
+  'tonfas-gemeas',
 ]
 
 export const WEAPON_TAGS_RANGED: WeaponTag[] = [
@@ -411,6 +428,8 @@ export const WEAPON_TAGS_RANGED: WeaponTag[] = [
   'pistola',
   'rifle-de-precisao',
   'varinha',
+  'bestas-leves-gemeas',
+  'pistolas-gemeas',
 ]
 
 export const WEAPON_TAGS_CATEGORY: WeaponTag[] = [
