@@ -8,9 +8,9 @@
 //   • a árvore local é a oficial e o arquivo embarcado tem versão maior
 //     (deploy novo → todos recebem a atualização).
 //
-// No ambiente local, o builder salva cada alteração diretamente neste JSON por
-// meio do middleware de desenvolvimento do Vite. Em produção o arquivo é
-// somente leitura e continua sendo empacotado no build.
+// Na integração Firebase este módulo fica fora das páginas protegidas para não
+// publicar o conteúdo como asset. O JSON é importado manualmente pelo primeiro
+// editor autorizado e este módulo permanece para migrações/testes offline.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect } from 'react'
@@ -116,18 +116,10 @@ export function useDefaultTreeAutoLoad() {
   const importTree = useTalentTreeStore((state) => state.importTree)
 
   useEffect(() => {
-    const loadWhenNeeded = () => {
-      const { tree } = useTalentTreeStore.getState()
-      if (shouldLoadDefaultTree(tree)) {
-        migrateAllCharacters(tree)
-        importTree(structuredClone(DEFAULT_TREE))
-      }
+    const { tree } = useTalentTreeStore.getState()
+    if (shouldLoadDefaultTree(tree)) {
+      migrateAllCharacters(tree)
+      importTree(structuredClone(DEFAULT_TREE))
     }
-
-    if (useTalentTreeStore.persist.hasHydrated()) {
-      loadWhenNeeded()
-      return
-    }
-    return useTalentTreeStore.persist.onFinishHydration(loadWhenNeeded)
   }, [importTree])
 }

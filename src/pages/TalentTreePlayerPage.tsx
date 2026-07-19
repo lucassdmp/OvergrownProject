@@ -9,7 +9,6 @@ import {
   talentNodeCost,
   type TalentTreeNode,
 } from '../types/talentTree'
-import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
 import { nodeRadius, TalentNodeVisual } from '../features/talentTree/components/TalentNodeVisual'
 import { ELEMENTS } from '../data/elements'
 import { MAGIC_TYPES } from '../data/magicTypes'
@@ -18,6 +17,7 @@ import { useSaveShortcut } from '../hooks/useSaveShortcut'
 import { downloadTextFile, fileNamePart } from '../utils/downloadFile'
 import { serializeCharacterFile } from '../features/character/utils/characterFile'
 import { nodeMatchesSearch } from '../features/talentTree/nodeSearch'
+import { useFirebaseTalentTreeSync } from '../features/talentTree/useFirebaseTalentTreeSync'
 
 // ── Point cost (player/link nodes are free; per-node override via node.cost) ──
 const nodeCost = talentNodeCost
@@ -211,7 +211,7 @@ function NodeContextMenu({
 
 export default function TalentTreePlayerPage() {
   const navigate = useNavigate()
-  useDefaultTreeAutoLoad()
+  useFirebaseTalentTreeSync({ readOnly: true })
   const tree = useTalentTreeStore((s) => s.tree)
   const character = useCharacterStore((s) => s.character)
   const acquireNode = useCharacterStore((s) => s.acquireNode)
@@ -226,14 +226,6 @@ export default function TalentTreePlayerPage() {
   }, [character, tree])
 
   useSaveShortcut(handleExport)
-
-  // Hydration guard
-  const [hydrated, setHydrated] = useState(() => useTalentTreeStore.persist.hasHydrated())
-  useEffect(() => {
-    if (useTalentTreeStore.persist.hasHydrated()) return
-    const unsub = useTalentTreeStore.persist.onFinishHydration(() => setHydrated(true))
-    return unsub
-  }, [])
 
   const acquiredSet = useMemo(() => new Set(character.acquiredNodeIds), [character.acquiredNodeIds])
   const nodeById = useMemo(() => new Map(tree.nodes.map((node) => [node.id, node])), [tree.nodes])
@@ -486,14 +478,6 @@ export default function TalentTreePlayerPage() {
   )
 
   // ── Loading / empty states ────────────────────────────────────────────────
-  if (!hydrated) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950">
-        <span className="animate-pulse text-sm text-gray-500">Carregando árvore…</span>
-      </div>
-    )
-  }
-
   if (tree.nodes.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-950">
@@ -505,12 +489,6 @@ export default function TalentTreePlayerPage() {
             className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white hover:bg-amber-500"
           >
             ← Voltar para a Ficha
-          </button>
-          <button
-            onClick={fitTree}
-            className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-bold text-gray-300 transition hover:border-sky-500 hover:text-white"
-          >
-            Enquadrar
           </button>
         </div>
       </div>

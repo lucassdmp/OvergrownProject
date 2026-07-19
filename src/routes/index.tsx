@@ -7,6 +7,7 @@ import PdfPage from '@/pages/PdfPage'
 
 const TalentTreeBuilderPage = lazy(() => import('@/pages/TalentTreeBuilderPage'))
 const TalentTreePlayerPage = lazy(() => import('@/pages/TalentTreePlayerPage'))
+const FirebaseAccessGate = lazy(() => import('@/features/auth/FirebaseAccessGate'))
 
 export const router = createBrowserRouter([
   {
@@ -39,7 +40,9 @@ export const router = createBrowserRouter([
           </div>
         }
       >
-        <TalentTreeBuilderPage />
+        <FirebaseAccessGate requiredRole="editor">
+          <TalentTreeBuilderPage />
+        </FirebaseAccessGate>
       </Suspense>
     ),
   },

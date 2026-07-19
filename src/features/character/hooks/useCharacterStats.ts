@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import { useCharacterStore } from '../store/characterStore'
 import { useTalentTreeStore } from '../../talentTree/store/talentTreeStore'
 import {
@@ -101,14 +101,6 @@ export function useCharacterStats(): CharacterStats {
   const character = useCharacterStore((s) => s.character)
   // Subscribe to nodes and edges individually so React sees reference changes
   const treeNodes = useTalentTreeStore((s) => s.tree.nodes)
-
-  // Force a re-render when the talent tree store finishes hydrating
-  const [, forceUpdate] = useState(0)
-  useEffect(() => {
-    if (useTalentTreeStore.persist.hasHydrated()) return
-    const unsub = useTalentTreeStore.persist.onFinishHydration(() => forceUpdate((n) => n + 1))
-    return unsub
-  }, [])
 
   return useMemo(() => {
     if (!treeNodes.length) return EMPTY_STATS

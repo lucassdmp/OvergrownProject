@@ -103,4 +103,4 @@ npm run lint
 npm run build
 ```
 
-Depois inspecione `/arvore` e `/talent-tree-builder`, verificando busca, zoom, aquisição, dependências, movimentação, conexões e o indicador de autosave. Confirme no Git que somente as alterações pretendidas em `src/data/defaultTalentTree.json` foram registradas.
+Depois inspecione `/arvore` e `/talent-tree-builder`, verificando busca, zoom, aquisição, dependências, movimentação, conexões e o indicador de sincronização. Com Firebase configurado, valide a edição em duas janelas seguindo `docs/FIREBASE_REALTIME.md`; sem Firebase, confirme o fallback local.

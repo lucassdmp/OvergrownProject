@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 import type {
   TalentTree,
   TalentTreeNode,
@@ -68,173 +68,156 @@ interface TalentTreeState {
 
 export const useTalentTreeStore = create<TalentTreeState>()(
   devtools(
-    persist(
-      (set, get) => ({
-        tree: DEFAULT_TREE,
+    (set, get) => ({
+      tree: DEFAULT_TREE,
 
-        setTreeName: (name) =>
-          set((s) => ({ tree: { ...s.tree, name } }), false, 'setTreeName'),
+      setTreeName: (name) => set((s) => ({ tree: { ...s.tree, name } }), false, 'setTreeName'),
 
-        setTreeDescription: (desc) =>
-          set((s) => ({ tree: { ...s.tree, description: desc } }), false, 'setTreeDescription'),
+      setTreeDescription: (desc) =>
+        set((s) => ({ tree: { ...s.tree, description: desc } }), false, 'setTreeDescription'),
 
-        addNode: (x, y, type) => {
-          const id = crypto.randomUUID()
-          const node: TalentTreeNode = { id, x, y, data: defaultNodeData(type) }
+      addNode: (x, y, type) => {
+        const id = crypto.randomUUID()
+        const node: TalentTreeNode = { id, x, y, data: defaultNodeData(type) }
+        set((s) => ({ tree: { ...s.tree, nodes: [...s.tree.nodes, node] } }), false, 'addNode')
+        return id
+      },
+
+      removeNode: (id) =>
+        set(
+          (s) => ({
+            tree: {
+              ...s.tree,
+              nodes: s.tree.nodes.filter((n) => n.id !== id),
+              edges: s.tree.edges.filter((e) => e.from !== id && e.to !== id),
+            },
+          }),
+          false,
+          'removeNode',
+        ),
+
+      moveNode: (id, x, y) =>
+        set(
+          (s) => ({
+            tree: {
+              ...s.tree,
+              nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, x, y } : n)),
+            },
+          }),
+          false,
+          'moveNode',
+        ),
+
+      updateNodeData: (id, data) =>
+        set(
+          (s) => ({
+            tree: {
+              ...s.tree,
+              nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, data } : n)),
+            },
+          }),
+          false,
+          'updateNodeData',
+        ),
+
+      updateNodeAppearance: (id, appearance) =>
+        set(
+          (s) => ({
+            tree: {
+              ...s.tree,
+              nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, ...appearance } : n)),
+            },
+          }),
+          false,
+          'updateNodeAppearance',
+        ),
+
+      updateNodeCost: (id, cost) =>
+        set(
+          (s) => ({
+            tree: {
+              ...s.tree,
+              nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, cost } : n)),
+            },
+          }),
+          false,
+          'updateNodeCost',
+        ),
+
+      addEdge: (from, to) => {
+        const id = [from, to].sort().join('--')
+        // prevent duplicates
+        if (get().tree.edges.some((e) => e.id === id)) return
+        const edge: TalentTreeEdge = { id, from, to }
+        set((s) => ({ tree: { ...s.tree, edges: [...s.tree.edges, edge] } }), false, 'addEdge')
+      },
+
+      removeEdge: (id) =>
+        set(
+          (s) => ({ tree: { ...s.tree, edges: s.tree.edges.filter((e) => e.id !== id) } }),
+          false,
+          'removeEdge',
+        ),
+
+      toggleEdge: (from, to) => {
+        const id = [from, to].sort().join('--')
+        const exists = get().tree.edges.some((e) => e.id === id)
+        if (exists) {
           set(
-            (s) => ({ tree: { ...s.tree, nodes: [...s.tree.nodes, node] } }),
+            (s) => ({ tree: { ...s.tree, edges: s.tree.edges.filter((e) => e.id !== id) } }),
             false,
-            'addNode',
+            'toggleEdge/remove',
           )
-          return id
-        },
-
-        removeNode: (id) =>
-          set(
-            (s) => ({
-              tree: {
-                ...s.tree,
-                nodes: s.tree.nodes.filter((n) => n.id !== id),
-                edges: s.tree.edges.filter((e) => e.from !== id && e.to !== id),
-              },
-            }),
-            false,
-            'removeNode',
-          ),
-
-        moveNode: (id, x, y) =>
-          set(
-            (s) => ({
-              tree: {
-                ...s.tree,
-                nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, x, y } : n)),
-              },
-            }),
-            false,
-            'moveNode',
-          ),
-
-        updateNodeData: (id, data) =>
-          set(
-            (s) => ({
-              tree: {
-                ...s.tree,
-                nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, data } : n)),
-              },
-            }),
-            false,
-            'updateNodeData',
-          ),
-
-        updateNodeAppearance: (id, appearance) =>
-          set(
-            (s) => ({
-              tree: {
-                ...s.tree,
-                nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, ...appearance } : n)),
-              },
-            }),
-            false,
-            'updateNodeAppearance',
-          ),
-
-        updateNodeCost: (id, cost) =>
-          set(
-            (s) => ({
-              tree: {
-                ...s.tree,
-                nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, cost } : n)),
-              },
-            }),
-            false,
-            'updateNodeCost',
-          ),
-
-        addEdge: (from, to) => {
-          const id = [from, to].sort().join('--')
-          // prevent duplicates
-          if (get().tree.edges.some((e) => e.id === id)) return
+        } else {
           const edge: TalentTreeEdge = { id, from, to }
           set(
             (s) => ({ tree: { ...s.tree, edges: [...s.tree.edges, edge] } }),
             false,
-            'addEdge',
+            'toggleEdge/add',
           )
-        },
+        }
+      },
 
-        removeEdge: (id) =>
-          set(
-            (s) => ({ tree: { ...s.tree, edges: s.tree.edges.filter((e) => e.id !== id) } }),
-            false,
-            'removeEdge',
-          ),
+      moveNodes: (moves) =>
+        set(
+          (s) => ({
+            tree: {
+              ...s.tree,
+              nodes: s.tree.nodes.map((n) => {
+                const m = moves.find((mv) => mv.id === n.id)
+                return m ? { ...n, x: m.x, y: m.y } : n
+              }),
+            },
+          }),
+          false,
+          'moveNodes',
+        ),
 
-        toggleEdge: (from, to) => {
-          const id = [from, to].sort().join('--')
-          const exists = get().tree.edges.some((e) => e.id === id)
-          if (exists) {
-            set(
-              (s) => ({ tree: { ...s.tree, edges: s.tree.edges.filter((e) => e.id !== id) } }),
-              false,
-              'toggleEdge/remove',
-            )
-          } else {
-            const edge: TalentTreeEdge = { id, from, to }
-            set(
-              (s) => ({ tree: { ...s.tree, edges: [...s.tree.edges, edge] } }),
-              false,
-              'toggleEdge/add',
-            )
-          }
-        },
+      addNodes: (nodes) =>
+        set(
+          (s) => ({ tree: { ...s.tree, nodes: [...s.tree.nodes, ...nodes] } }),
+          false,
+          'addNodes',
+        ),
 
-        moveNodes: (moves) =>
-          set(
-            (s) => ({
-              tree: {
-                ...s.tree,
-                nodes: s.tree.nodes.map((n) => {
-                  const m = moves.find((mv) => mv.id === n.id)
-                  return m ? { ...n, x: m.x, y: m.y } : n
-                }),
-              },
-            }),
-            false,
-            'moveNodes',
-          ),
+      removeNodes: (ids) =>
+        set(
+          (s) => ({
+            tree: {
+              ...s.tree,
+              nodes: s.tree.nodes.filter((n) => !ids.includes(n.id)),
+              edges: s.tree.edges.filter((e) => !ids.includes(e.from) && !ids.includes(e.to)),
+            },
+          }),
+          false,
+          'removeNodes',
+        ),
 
-        addNodes: (nodes) =>
-          set(
-            (s) => ({ tree: { ...s.tree, nodes: [...s.tree.nodes, ...nodes] } }),
-            false,
-            'addNodes',
-          ),
+      importTree: (tree) => set(() => ({ tree }), false, 'importTree'),
 
-        removeNodes: (ids) =>
-          set(
-            (s) => ({
-              tree: {
-                ...s.tree,
-                nodes: s.tree.nodes.filter((n) => !ids.includes(n.id)),
-                edges: s.tree.edges.filter((e) => !ids.includes(e.from) && !ids.includes(e.to)),
-              },
-            }),
-            false,
-            'removeNodes',
-          ),
-
-        importTree: (tree) =>
-          set(() => ({ tree }), false, 'importTree'),
-
-        resetTree: () =>
-          set(
-            () => ({ tree: { ...DEFAULT_TREE, id: crypto.randomUUID() } }),
-            false,
-            'resetTree',
-          ),
-      }),
-      { name: 'overgrown-talent-tree' },
-    ),
+      resetTree: () =>
+        set(() => ({ tree: { ...DEFAULT_TREE, id: crypto.randomUUID() } }), false, 'resetTree'),
+    }),
     { name: 'TalentTreeStore' },
   ),
 )

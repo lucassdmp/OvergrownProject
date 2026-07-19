@@ -1,0 +1,80 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function userDocument() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function hasActiveRole(roles) {
+      return request.auth != null
+        && exists(userDocument())
+        && get(userDocument()).data.active == true
+        && get(userDocument()).data.role in roles;
+    }
+
+    function isAuthorizedUser() {
+      return hasActiveRole(['viewer', 'editor', 'admin']);
+    }
+
+    function canEditTree() {
+      return hasActiveRole(['editor', 'admin']);
+    }
+
+    function canAccessOwnCharacters(userId) {
+      return request.auth != null
+        && request.auth.uid == userId
+        && isAuthorizedUser()
+        && get(userDocument()).data.get('canSaveCharacters', false) == true;
+    }
+
+    function validCharacterWrite(userId) {
+      return canAccessOwnCharacters(userId)
+        && request.resource.data.keys().hasAll(['character', 'updatedAt', 'updatedBy'])
+        && request.resource.data.keys().hasOnly(['character', 'updatedAt', 'updatedBy'])
+        && request.resource.data.character is map
+        && request.resource.data.character.id is string
+        && request.resource.data.updatedAt is timestamp
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.updatedBy == request.auth.uid;
+    }
+
+    // Users may inspect only their own access document. Permission documents
+    // are managed in the Firebase Console or through a trusted Admin SDK.
+    match /users/{userId} {
+      allow get: if request.auth != null && request.auth.uid == userId;
+      allow list, create, update, delete: if false;
+
+      // Character sheets are private to their owner. Every role that grants
+      // application access may save, but no document may be updated more than
+      // once every 30 seconds. request.time is the Firestore server clock.
+      match /characters/{characterId} {
+        allow read: if canAccessOwnCharacters(userId);
+        allow create: if validCharacterWrite(userId)
+          && request.resource.data.character.id == characterId;
+        allow update: if validCharacterWrite(userId)
+          && request.resource.data.character.id == characterId
+          && resource.data.updatedAt is timestamp
+          && request.time >= resource.data.updatedAt + duration.value(30, 's');
+        allow delete: if false;
+      }
+    }
+
+    match /talentTrees/{treeId} {
+      // The published talent tree is public. Mutation remains restricted.
+      allow read: if true;
+      allow create, update: if canEditTree();
+      allow delete: if false;
+
+      match /nodes/{nodeId} {
+        allow read: if true;
+        allow write: if canEditTree();
+      }
+
+      match /edges/{edgeId} {
+        allow read: if true;
+        allow write: if canEditTree();
+      }
+    }
+  }
+}

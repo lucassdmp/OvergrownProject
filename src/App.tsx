@@ -1,6 +1,11 @@
 import { RouterProvider } from 'react-router-dom'
 import { router } from '@/routes'
+import { FirebaseSessionProvider } from '@/features/auth/FirebaseSession'
 
 export default function App() {
-  return <RouterProvider router={router} />
+  return (
+    <FirebaseSessionProvider>
+      <RouterProvider router={router} />
+    </FirebaseSessionProvider>
+  )
 }

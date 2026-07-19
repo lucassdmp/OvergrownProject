@@ -14,9 +14,8 @@ import {
   isTalentTree,
   serializeCharacterFile,
 } from '../features/character/utils/characterFile'
-import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
 import { nodeMatchesSearch } from '../features/talentTree/nodeSearch'
-import { useLocalTreeFileAutosave } from '../features/talentTree/useLocalTreeFileAutosave'
+import { useFirebaseTalentTreeSync } from '../features/talentTree/useFirebaseTalentTreeSync'
 
 // ── Toolbar button ────────────────────────────────────────────────────────────
 
@@ -56,7 +55,6 @@ const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
 
 export default function TalentTreeBuilderPage() {
   const { tree, setTreeName, setTreeDescription, importTree, resetTree } = useTalentTreeStore()
-  useDefaultTreeAutoLoad()
   const character = useCharacterStore((s) => s.character)
   const loadCharacter = useCharacterStore((s) => s.loadCharacter)
   const [isDark, toggleDark] = useDarkMode()
@@ -73,12 +71,7 @@ export default function TalentTreeBuilderPage() {
   const searchMatchCount = searchQuery.trim()
     ? tree.nodes.filter((node) => nodeMatchesSearch(node, searchQuery)).length
     : 0
-  const {
-    saveNow,
-    status: saveStatus,
-    error: saveError,
-    lastSavedAt,
-  } = useLocalTreeFileAutosave(tree)
+  const { saveNow, status: saveStatus, error: saveError, lastSavedAt } = useFirebaseTalentTreeSync()
 
   // Grid & snap
   const [gridEnabled, setGridEnabled] = useState(false)
@@ -98,8 +91,8 @@ export default function TalentTreeBuilderPage() {
     void saveNow()
   })
 
-  // ── Autosave e importação ──────────────────────────────────────────────────
-  // Importações também entram no mesmo fluxo de autosave local.
+  // ── Sincronização e importação ─────────────────────────────────────────────
+  // Importações também entram no fluxo de sincronização do Firebase.
 
   function handleImportClick() {
     setImportError(null)
@@ -294,27 +287,29 @@ export default function TalentTreeBuilderPage() {
                 saveError ??
                 (lastSavedAt
                   ? `Último salvamento: ${lastSavedAt.toLocaleTimeString()}`
-                  : 'O JSON é salvo automaticamente no projeto local.')
+                  : saveStatus === 'disabled'
+                    ? 'Configure o Firebase para ativar a colaboração em tempo real.'
+                    : 'A árvore é sincronizada automaticamente pelo Firebase.')
               }
               className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
                 saveStatus === 'error'
                   ? 'border-red-400 bg-red-50 text-red-600 dark:bg-red-950/30'
-                  : saveStatus === 'saving' || saveStatus === 'pending'
+                  : saveStatus === 'syncing' || saveStatus === 'connecting'
                     ? 'border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
-                    : saveStatus === 'local-only'
+                    : saveStatus === 'disabled'
                       ? 'border-gray-300 text-gray-500 dark:border-gray-700'
                       : 'border-emerald-400 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
               }`}
             >
               {saveStatus === 'error'
                 ? '⚠ Erro ao salvar'
-                : saveStatus === 'saving'
-                  ? '💾 Salvando…'
-                  : saveStatus === 'pending'
-                    ? '● Alterações pendentes'
-                    : saveStatus === 'local-only'
-                      ? 'Somente leitura fora do ambiente local'
-                      : '✓ JSON salvo automaticamente'}
+                : saveStatus === 'connecting'
+                  ? '◌ Conectando ao Firebase…'
+                  : saveStatus === 'syncing'
+                    ? '● Sincronizando…'
+                    : saveStatus === 'disabled'
+                      ? 'Firebase não configurado · cópia local'
+                      : '✓ Sincronizado em tempo real'}
             </span>
             <button
               onClick={handleExport}
