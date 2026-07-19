@@ -119,6 +119,8 @@ O salvamento é diferencial: campos inalterados não são enviados novamente, ar
 
 A coleção `characterSummaries` contém apenas nome, divindade e metadados mínimos. Ela só recebe escrita na criação da ficha ou quando nome ou divindade mudam. A consulta inicial nunca baixa inventário, notas, atributos nem avatar.
 
+Para reduzir leituras repetidas, os resumos ficam em `sessionStorage` por 60 segundos e as cinco últimas fichas completas ficam em um cache LRU no IndexedDB por até cinco minutos. O cache é separado por UID, não cria escritas adicionais no Firestore e é invalidado ao salvar ou excluir. Logout, troca de conta e revogação de `canSaveCharacters` removem o cache privado do usuário. Dentro da mesma sessão, uma ficha já aberta também é reutilizada diretamente da memória.
+
 O projeto não depende do Cloud Storage para as imagens. Desde fevereiro de 2026 esse produto exige o plano Blaze; manter o avatar em um documento separado do Firestore preserva a compatibilidade com o plano Spark e evita reenviar o Base64 nas alterações comuns da ficha.
 
 ## 8. Validar a colaboração

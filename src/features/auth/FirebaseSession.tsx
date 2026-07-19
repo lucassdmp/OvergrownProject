@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { onAuthStateChanged, type User } from 'firebase/auth'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { getFirebaseServices, signInWithGoogle, signOutFirebase } from '../../services/firebase'
+import { clearFirebaseCharacterCaches } from '../character/utils/firebaseCharacterCache'
 import {
   FirebaseSessionContext,
   firebaseErrorMessage,
@@ -23,6 +24,7 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
   const [accessReady, setAccessReady] = useState(false)
   const [signingIn, setSigningIn] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const previousUserUid = useRef<string | null>(null)
 
   useEffect(() => {
     window.localStorage.removeItem('overgrown-talent-tree')
@@ -36,6 +38,11 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
     return onAuthStateChanged(
       services.auth,
       (nextUser) => {
+        const previousUid = previousUserUid.current
+        if (previousUid && previousUid !== nextUser?.uid) {
+          void clearFirebaseCharacterCaches(previousUid)
+        }
+        previousUserUid.current = nextUser?.uid ?? null
         setUser(nextUser)
         setAuthReady(true)
         setAccess(null)
@@ -75,6 +82,12 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
     (access.role === 'viewer' || access.role === 'editor' || access.role === 'admin')
   const canSaveCharacters = authorized && access?.canSaveCharacters === true
 
+  useEffect(() => {
+    if (user && accessReady && !canSaveCharacters) {
+      void clearFirebaseCharacterCaches(user.uid)
+    }
+  }, [accessReady, canSaveCharacters, user])
+
   const hasRole = useCallback(
     (requiredRole: 'viewer' | 'editor') =>
       authorized && roleLevel[access!.role] >= roleLevel[requiredRole],
@@ -96,11 +109,12 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     setError(null)
     try {
+      if (user) await clearFirebaseCharacterCaches(user.uid)
       await signOutFirebase()
     } catch (logoutError) {
       setError(firebaseErrorMessage(logoutError))
     }
-  }, [])
+  }, [user])
 
   const value = useMemo<FirebaseSessionValue>(
     () => ({

@@ -15,6 +15,14 @@ import type { Character } from '../../../types/game'
 import { getFirebaseServices } from '../../../services/firebase'
 import { firebaseErrorMessage, useFirebaseSession } from '../../auth/firebaseSessionContext'
 import { useCharacterStore } from '../store/characterStore'
+import {
+  deleteCachedFirebaseCharacter,
+  getCachedFirebaseCharacter,
+  getCachedFirebaseCharacterSummaries,
+  setCachedFirebaseCharacter,
+  setCachedFirebaseCharacterSummaries,
+  type CachedFirebaseCharacter,
+} from '../utils/firebaseCharacterCache'
 
 const SAVE_INTERVAL_MS = 30_000
 
@@ -44,12 +52,7 @@ export interface CharacterSummary {
   hasDivinity: boolean
 }
 
-interface RemoteCharacter {
-  character: Character
-  updatedAtMs: number
-  avatarHash?: string
-  avatarContentType?: string
-}
+type RemoteCharacter = CachedFirebaseCharacter
 
 interface RemoteCharacterDocument {
   character?: Character
@@ -106,6 +109,7 @@ function remoteFromSnapshot(snapshot: DocumentSnapshot): RemoteCharacter | null 
     updatedAtMs: data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : 0,
     avatarHash: data.avatarHash,
     avatarContentType: data.avatarContentType,
+    avatarLoaded: !data.avatarHash,
   }
 }
 
@@ -122,21 +126,29 @@ export function useFirebaseCharacters() {
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const refreshSummaries = useCallback(async () => {
-    const services = getFirebaseServices()
-    if (!services || !user || !canSaveCharacters) {
-      setSummaries([])
-      return
-    }
+  const loadSummaries = useCallback(
+    async (force = false) => {
+      const services = getFirebaseServices()
+      if (!services || !user || !canSaveCharacters) {
+        setSummaries([])
+        return
+      }
 
-    setLoadingSummaries(true)
-    setError(null)
-    try {
-      const snapshot = await getDocs(
-        collection(services.firestore, 'users', user.uid, 'characterSummaries'),
-      )
-      setSummaries(
-        snapshot.docs
+      if (!force) {
+        const cached = getCachedFirebaseCharacterSummaries(user.uid)
+        if (cached) {
+          setSummaries(cached)
+          return
+        }
+      }
+
+      setLoadingSummaries(true)
+      setError(null)
+      try {
+        const snapshot = await getDocs(
+          collection(services.firestore, 'users', user.uid, 'characterSummaries'),
+        )
+        const nextSummaries = snapshot.docs
           .map((summaryDocument) => {
             const data = summaryDocument.data()
             return {
@@ -146,19 +158,24 @@ export function useFirebaseCharacters() {
               hasDivinity: typeof data.divinity === 'number',
             }
           })
-          .sort((left, right) => left.name.localeCompare(right.name, 'pt-BR')),
-      )
-    } catch (summaryError) {
-      setError(firebaseErrorMessage(summaryError))
-    } finally {
-      setLoadingSummaries(false)
-    }
-  }, [canSaveCharacters, user])
+          .sort((left, right) => left.name.localeCompare(right.name, 'pt-BR'))
+        setSummaries(nextSummaries)
+        setCachedFirebaseCharacterSummaries(user.uid, nextSummaries)
+      } catch (summaryError) {
+        setError(firebaseErrorMessage(summaryError))
+      } finally {
+        setLoadingSummaries(false)
+      }
+    },
+    [canSaveCharacters, user],
+  )
+
+  const refreshSummaries = useCallback(() => loadSummaries(true), [loadSummaries])
 
   useEffect(() => {
     setRemoteCache({})
-    void refreshSummaries()
-  }, [refreshSummaries])
+    void loadSummaries()
+  }, [loadSummaries])
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1_000)
@@ -301,6 +318,7 @@ export function useFirebaseCharacters() {
       await batch.commit()
       const cachedCharacter = {
         ...currentCloudCharacter,
+        avatarBase64: current.avatarBase64,
       } as Character
       const nextRemote: RemoteCharacter = {
         character: cachedCharacter,
@@ -309,11 +327,13 @@ export function useFirebaseCharacters() {
         avatarContentType: avatarRemoved
           ? undefined
           : (nextAvatarContentType ?? currentRemote?.avatarContentType),
+        avatarLoaded: true,
       }
       setRemoteCache((cache) => ({ ...cache, [current.id]: nextRemote }))
+      await setCachedFirebaseCharacter(user.uid, nextRemote)
       if (summaryChanged) {
-        setSummaries((currentSummaries) =>
-          [
+        setSummaries((currentSummaries) => {
+          const nextSummaries = [
             ...currentSummaries.filter((summary) => summary.id !== current.id),
             {
               id: current.id,
@@ -321,8 +341,10 @@ export function useFirebaseCharacters() {
               divinity: current.divinity,
               hasDivinity: true,
             },
-          ].sort((left, right) => left.name.localeCompare(right.name, 'pt-BR')),
-        )
+          ].sort((left, right) => left.name.localeCompare(right.name, 'pt-BR'))
+          setCachedFirebaseCharacterSummaries(user.uid, nextSummaries)
+          return nextSummaries
+        })
       }
       setLocalCooldowns((cooldowns) => ({
         ...cooldowns,
@@ -346,25 +368,35 @@ export function useFirebaseCharacters() {
       setError(null)
       setMessage(null)
       try {
-        // Deliberately fetch the selected full document only now. The list
-        // request above contains summaries, never complete character sheets.
-        const remote = await fetchRemoteCharacter(characterId)
+        let remote = remoteCache[characterId]
+        let cacheNeedsWrite = false
+        if (remote === undefined) {
+          remote = await getCachedFirebaseCharacter(user.uid, characterId)
+          if (remote) setRemoteCache((cache) => ({ ...cache, [characterId]: remote }))
+        }
+        if (remote === undefined || remote === null) {
+          // The list request contains summaries only. Fetch the complete sheet
+          // after selection when neither the session nor the short-lived LRU has it.
+          remote = await fetchRemoteCharacter(characterId)
+          cacheNeedsWrite = true
+        }
         if (!remote) throw new Error('A ficha selecionada não existe mais.')
 
-        let avatarBase64 = remote.character.avatarBase64
-        if (remote.avatarHash) {
+        if (!remote.avatarLoaded && remote.avatarHash) {
           const avatarSnapshot = await getDoc(
             avatarReference(services.firestore, user.uid, characterId),
           )
           const avatarData = avatarSnapshot.data() as AvatarDocument | undefined
-          avatarBase64 = avatarData?.dataUrl
+          remote = {
+            ...remote,
+            character: { ...remote.character, avatarBase64: avatarData?.dataUrl },
+            avatarLoaded: true,
+          }
+          cacheNeedsWrite = true
         }
-        useCharacterStore.getState().loadCharacter(
-          cleanValue({
-            ...remote.character,
-            avatarBase64,
-          }),
-        )
+        setRemoteCache((cache) => ({ ...cache, [characterId]: remote }))
+        if (cacheNeedsWrite) await setCachedFirebaseCharacter(user.uid, remote)
+        useCharacterStore.getState().loadCharacter(cleanValue(remote.character))
         setMessage(`Ficha “${remote.character.name || 'Sem nome'}” carregada.`)
       } catch (loadError) {
         setError(firebaseErrorMessage(loadError))
@@ -372,7 +404,7 @@ export function useFirebaseCharacters() {
         setLoadingCharacterId(null)
       }
     },
-    [canSaveCharacters, fetchRemoteCharacter, user],
+    [canSaveCharacters, fetchRemoteCharacter, remoteCache, user],
   )
 
   const deleteCharacter = useCallback(
@@ -380,6 +412,7 @@ export function useFirebaseCharacters() {
       const services = getFirebaseServices()
       const isRemote = summaries.some((summary) => summary.id === characterId)
       if (!isRemote) {
+        if (user) await deleteCachedFirebaseCharacter(user.uid, characterId)
         useCharacterStore.getState().deleteCharacter(characterId)
         return
       }
@@ -408,7 +441,12 @@ export function useFirebaseCharacters() {
         batch.delete(summaryReference(services.firestore, user.uid, characterId))
         await batch.commit()
 
-        setSummaries((current) => current.filter((summary) => summary.id !== characterId))
+        await deleteCachedFirebaseCharacter(user.uid, characterId)
+        setSummaries((current) => {
+          const nextSummaries = current.filter((summary) => summary.id !== characterId)
+          setCachedFirebaseCharacterSummaries(user.uid, nextSummaries)
+          return nextSummaries
+        })
         setRemoteCache((cache) => {
           const next = { ...cache }
           delete next[characterId]
