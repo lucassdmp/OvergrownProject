@@ -1,0 +1,781 @@
+{
+  "id": "da7569c2-44c1-47e9-9473-81aaaa13dd53",
+  "name": "Nova Árvore",
+  "description": "",
+  "nodes": [
+    {
+      "id": "01baadf4-d2f1-4c85-a1bb-eaee717cce3b",
+      "x": 6650,
+      "y": 2750,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "0430e181-ee31-4f20-b854-b64e04bfc566",
+      "x": 6950,
+      "y": 2550,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "05613ffe-49ad-4a32-a2dc-dad098ab6ac8",
+      "x": 6950,
+      "y": 2700,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "06c2ed90-ff71-475b-8a91-5955cb7dde4c",
+      "x": 6850,
+      "y": 2250,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "1adea370-d957-41cd-92be-161d9dcdd994",
+      "x": 6975,
+      "y": 2625,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "25e370be-e91d-4e4a-b72d-854aa714e8e9",
+      "x": 5610.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "2fd00ba8-a645-41ff-82dd-1bbec4ddfb5f",
+      "x": 7000,
+      "y": 2150,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "3bcdb18b-54ae-49c1-9e67-48d7cae0b45e",
+      "x": 5410.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "3f70dd5c-f3c7-400a-a069-78e1f48ac990",
+      "x": 6800,
+      "y": 2050,
+      "data": {
+        "type": "conditional",
+        "name": "Reverberating Muscle",
+        "description": "",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "weaponTagsAllOf": [],
+          "armorTagsAnyOf": [],
+          "requiresNoArmor": false
+        },
+        "effects": [
+          {
+            "kind": "statBonus",
+            "stat": "vida",
+            "value": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "4086a180-01de-4c98-9102-d07340285ff8",
+      "x": 6725,
+      "y": 2725,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "42c950e5-89e5-4fec-8196-ef6da8f7d63c",
+      "x": 6900,
+      "y": 2800,
+      "data": {
+        "type": "player",
+        "name": "Jogador",
+        "description": "Você pode começar aqui, todo nó adicional custará +1 ponto de atributo."
+      }
+    },
+    {
+      "id": "46c40c47-5259-4de0-8aa2-41ff21bb4196",
+      "x": 6800,
+      "y": 2850,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "48ae8a31-9584-4bf2-9f60-ab4e1061f813",
+      "x": 7170.466580130247,
+      "y": 1058.8677567255818,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "48b6d0e3-d1bf-44ed-929a-87855eeb0b0b",
+      "x": 6010.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "4a0542d7-e695-45de-bd32-38558f137d04",
+      "x": 6550,
+      "y": 2800,
+      "data": {
+        "type": "conditional",
+        "name": "Restless Defense",
+        "description": "",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "weaponTagsAllOf": [],
+          "armorTagsAnyOf": [],
+          "requiresNoArmor": false
+        },
+        "effects": [
+          {
+            "kind": "blockBonus",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "4fa28982-0f2c-41d5-bc66-8d757fb14790",
+      "x": 6850,
+      "y": 2550,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "51901a07-a15c-4619-be16-59a8fe78d977",
+      "x": 6450,
+      "y": 2800,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "57bd0b87-4f75-40e6-9bd4-496813609efa",
+      "x": 5910.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "5cdc50f0-49b6-4164-abc6-6ee6ff7d45dd",
+      "x": 5510.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "5db5fb77-7819-44bb-8e1e-37d4aa3a4849",
+      "x": 7170.466580130247,
+      "y": 1458.8677567255818,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "5f84a518-fa06-454c-a128-78b3ccd7b257",
+      "x": 7170.466580130247,
+      "y": 1558.8677567255818,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "61005074-9f4d-46aa-b832-7f25bd927f1d",
+      "x": 6800,
+      "y": 2150,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "61b4074a-2c13-42c2-bb1b-98afdb1226c7",
+      "x": 6700,
+      "y": 2600,
+      "data": {
+        "type": "combatAbility",
+        "skillId": "agarrar",
+        "skillName": "Agarrar",
+        "skillDescription": "Dispute MIG contra GRA de um alvo adjacente. Se vencer, ele fica Segurado e você deve manter uma mão ocupada. No início de cada turno, o alvo pode gastar Movimento para disputar MIG ou GRA contra seu MIG e escapar. Você pode soltá-lo como Ação Livre.",
+        "skillCost": "3",
+        "skillAction": "Padrão",
+        "skillPurpose": "Imobilizar um alvo móvel sem depender de dano",
+        "attributeBonuses": [
+          {
+            "attribute": "might",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "6887be0d-1108-4f28-9f33-ff977d7e6377",
+      "x": 5810.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "7807f4aa-ad50-404c-903a-e1c2dd664890",
+      "x": 5710.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "8714a034-1c2f-43ba-9edc-1485baf9a1dd",
+      "x": 6800,
+      "y": 1950,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "87b8ee30-17d8-4792-af27-1025b0cdd196",
+      "x": 6900,
+      "y": 2350,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "914c1559-954f-4e4d-8241-934ad851c4bd",
+      "x": 7170.466580130247,
+      "y": 1258.8677567255818,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "a5da40db-d517-4f9e-ba61-81daf3ec34f8",
+      "x": 6900,
+      "y": 1850,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "a73f6fa9-6977-4280-9d1a-1e714e8cb1a8",
+      "x": 7000,
+      "y": 2050,
+      "data": {
+        "type": "conditional",
+        "name": "Invogorating Might",
+        "description": "",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "weaponTagsAllOf": [],
+          "armorTagsAnyOf": [],
+          "requiresNoArmor": false
+        },
+        "effects": [
+          {
+            "kind": "attributeBonus",
+            "attribute": "might",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "ad03d66d-4e38-4835-87b2-a629eb4a76de",
+      "x": 5210.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "afafb181-f904-42b9-94f5-49e3c043a8d2",
+      "x": 7170.466580130247,
+      "y": 1358.8677567255818,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "c1a45823-3c30-4678-90e8-69616a8d7572",
+      "x": 6550,
+      "y": 2650,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "c364ad52-51e4-4cf8-afb5-17a522c82a4d",
+      "x": 6210.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "c4ace146-b2b4-4096-a039-1faa0d066670",
+      "x": 5110.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "c4f149a8-f82d-43a8-a37e-cf6fc5500916",
+      "x": 6850,
+      "y": 2700,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "c6204eba-cc9a-4fb9-be77-41a77d0cb992",
+      "x": 6725,
+      "y": 2875,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "c9e6657f-4d3f-4f4a-9fef-bfbb107c6278",
+      "x": 6950,
+      "y": 2250,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "ccf8ac05-b51e-4cfb-b651-cfa6fe24fc49",
+      "x": 6825,
+      "y": 2625,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "dd854a62-8ef7-4a9c-a8f3-bed20d4e05a7",
+      "x": 5310.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "e0f9d350-43b3-41ec-a34a-e0ee5f82143d",
+      "x": 6110.3328315720855,
+      "y": 3143.625573116298,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "e538524b-ddbb-4fcb-ae9c-fe90da2d5f16",
+      "x": 6750,
+      "y": 2450,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "ea867f68-b7a6-4217-8ad5-42149391146c",
+      "x": 6900,
+      "y": 2450,
+      "data": {
+        "type": "conditional",
+        "name": "Brutal",
+        "description": "",
+        "conditions": {
+          "weaponTagsAnyOf": [],
+          "weaponTagsAllOf": [],
+          "armorTagsAnyOf": [],
+          "requiresNoArmor": false
+        },
+        "effects": [
+          {
+            "kind": "extraDamage",
+            "dice": "1d4",
+            "attackTargets": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "eabbe619-6154-482a-b99a-bef76f0602f6",
+      "x": 6650,
+      "y": 2850,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "edddfaeb-18a2-494c-bedd-f8cf3d989867",
+      "x": 7170.466580130247,
+      "y": 1158.8677567255818,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    },
+    {
+      "id": "f0ab5168-bed7-446c-9234-9b9686731126",
+      "x": 6800,
+      "y": 2750,
+      "data": {
+        "type": "attribute",
+        "attribute": "fortitude",
+        "value": 1
+      }
+    },
+    {
+      "id": "fd5814f5-94be-4b73-93cb-e576f2dce0d3",
+      "x": 7000,
+      "y": 1950,
+      "data": {
+        "type": "attribute",
+        "attribute": "might",
+        "value": 1
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "01baadf4-d2f1-4c85-a1bb-eaee717cce3b--4086a180-01de-4c98-9102-d07340285ff8",
+      "from": "4086a180-01de-4c98-9102-d07340285ff8",
+      "to": "01baadf4-d2f1-4c85-a1bb-eaee717cce3b"
+    },
+    {
+      "id": "01baadf4-d2f1-4c85-a1bb-eaee717cce3b--4a0542d7-e695-45de-bd32-38558f137d04",
+      "from": "01baadf4-d2f1-4c85-a1bb-eaee717cce3b",
+      "to": "4a0542d7-e695-45de-bd32-38558f137d04"
+    },
+    {
+      "id": "0430e181-ee31-4f20-b854-b64e04bfc566--1adea370-d957-41cd-92be-161d9dcdd994",
+      "from": "1adea370-d957-41cd-92be-161d9dcdd994",
+      "to": "0430e181-ee31-4f20-b854-b64e04bfc566"
+    },
+    {
+      "id": "0430e181-ee31-4f20-b854-b64e04bfc566--ea867f68-b7a6-4217-8ad5-42149391146c",
+      "from": "0430e181-ee31-4f20-b854-b64e04bfc566",
+      "to": "ea867f68-b7a6-4217-8ad5-42149391146c"
+    },
+    {
+      "id": "05613ffe-49ad-4a32-a2dc-dad098ab6ac8--1adea370-d957-41cd-92be-161d9dcdd994",
+      "from": "05613ffe-49ad-4a32-a2dc-dad098ab6ac8",
+      "to": "1adea370-d957-41cd-92be-161d9dcdd994"
+    },
+    {
+      "id": "05613ffe-49ad-4a32-a2dc-dad098ab6ac8--42c950e5-89e5-4fec-8196-ef6da8f7d63c",
+      "from": "42c950e5-89e5-4fec-8196-ef6da8f7d63c",
+      "to": "05613ffe-49ad-4a32-a2dc-dad098ab6ac8"
+    },
+    {
+      "id": "06c2ed90-ff71-475b-8a91-5955cb7dde4c--61005074-9f4d-46aa-b832-7f25bd927f1d",
+      "from": "06c2ed90-ff71-475b-8a91-5955cb7dde4c",
+      "to": "61005074-9f4d-46aa-b832-7f25bd927f1d"
+    },
+    {
+      "id": "06c2ed90-ff71-475b-8a91-5955cb7dde4c--87b8ee30-17d8-4792-af27-1025b0cdd196",
+      "from": "87b8ee30-17d8-4792-af27-1025b0cdd196",
+      "to": "06c2ed90-ff71-475b-8a91-5955cb7dde4c"
+    },
+    {
+      "id": "25e370be-e91d-4e4a-b72d-854aa714e8e9--5cdc50f0-49b6-4164-abc6-6ee6ff7d45dd",
+      "from": "25e370be-e91d-4e4a-b72d-854aa714e8e9",
+      "to": "5cdc50f0-49b6-4164-abc6-6ee6ff7d45dd"
+    },
+    {
+      "id": "25e370be-e91d-4e4a-b72d-854aa714e8e9--7807f4aa-ad50-404c-903a-e1c2dd664890",
+      "from": "7807f4aa-ad50-404c-903a-e1c2dd664890",
+      "to": "25e370be-e91d-4e4a-b72d-854aa714e8e9"
+    },
+    {
+      "id": "2fd00ba8-a645-41ff-82dd-1bbec4ddfb5f--a73f6fa9-6977-4280-9d1a-1e714e8cb1a8",
+      "from": "2fd00ba8-a645-41ff-82dd-1bbec4ddfb5f",
+      "to": "a73f6fa9-6977-4280-9d1a-1e714e8cb1a8"
+    },
+    {
+      "id": "2fd00ba8-a645-41ff-82dd-1bbec4ddfb5f--c9e6657f-4d3f-4f4a-9fef-bfbb107c6278",
+      "from": "c9e6657f-4d3f-4f4a-9fef-bfbb107c6278",
+      "to": "2fd00ba8-a645-41ff-82dd-1bbec4ddfb5f"
+    },
+    {
+      "id": "3bcdb18b-54ae-49c1-9e67-48d7cae0b45e--5cdc50f0-49b6-4164-abc6-6ee6ff7d45dd",
+      "from": "5cdc50f0-49b6-4164-abc6-6ee6ff7d45dd",
+      "to": "3bcdb18b-54ae-49c1-9e67-48d7cae0b45e"
+    },
+    {
+      "id": "3bcdb18b-54ae-49c1-9e67-48d7cae0b45e--dd854a62-8ef7-4a9c-a8f3-bed20d4e05a7",
+      "from": "3bcdb18b-54ae-49c1-9e67-48d7cae0b45e",
+      "to": "dd854a62-8ef7-4a9c-a8f3-bed20d4e05a7"
+    },
+    {
+      "id": "3f70dd5c-f3c7-400a-a069-78e1f48ac990--61005074-9f4d-46aa-b832-7f25bd927f1d",
+      "from": "61005074-9f4d-46aa-b832-7f25bd927f1d",
+      "to": "3f70dd5c-f3c7-400a-a069-78e1f48ac990"
+    },
+    {
+      "id": "3f70dd5c-f3c7-400a-a069-78e1f48ac990--8714a034-1c2f-43ba-9edc-1485baf9a1dd",
+      "from": "3f70dd5c-f3c7-400a-a069-78e1f48ac990",
+      "to": "8714a034-1c2f-43ba-9edc-1485baf9a1dd"
+    },
+    {
+      "id": "4086a180-01de-4c98-9102-d07340285ff8--f0ab5168-bed7-446c-9234-9b9686731126",
+      "from": "f0ab5168-bed7-446c-9234-9b9686731126",
+      "to": "4086a180-01de-4c98-9102-d07340285ff8"
+    },
+    {
+      "id": "42c950e5-89e5-4fec-8196-ef6da8f7d63c--46c40c47-5259-4de0-8aa2-41ff21bb4196",
+      "from": "42c950e5-89e5-4fec-8196-ef6da8f7d63c",
+      "to": "46c40c47-5259-4de0-8aa2-41ff21bb4196"
+    },
+    {
+      "id": "42c950e5-89e5-4fec-8196-ef6da8f7d63c--c4f149a8-f82d-43a8-a37e-cf6fc5500916",
+      "from": "42c950e5-89e5-4fec-8196-ef6da8f7d63c",
+      "to": "c4f149a8-f82d-43a8-a37e-cf6fc5500916"
+    },
+    {
+      "id": "42c950e5-89e5-4fec-8196-ef6da8f7d63c--f0ab5168-bed7-446c-9234-9b9686731126",
+      "from": "42c950e5-89e5-4fec-8196-ef6da8f7d63c",
+      "to": "f0ab5168-bed7-446c-9234-9b9686731126"
+    },
+    {
+      "id": "46c40c47-5259-4de0-8aa2-41ff21bb4196--c6204eba-cc9a-4fb9-be77-41a77d0cb992",
+      "from": "46c40c47-5259-4de0-8aa2-41ff21bb4196",
+      "to": "c6204eba-cc9a-4fb9-be77-41a77d0cb992"
+    },
+    {
+      "id": "48ae8a31-9584-4bf2-9f60-ab4e1061f813--edddfaeb-18a2-494c-bedd-f8cf3d989867",
+      "from": "edddfaeb-18a2-494c-bedd-f8cf3d989867",
+      "to": "48ae8a31-9584-4bf2-9f60-ab4e1061f813"
+    },
+    {
+      "id": "48b6d0e3-d1bf-44ed-929a-87855eeb0b0b--57bd0b87-4f75-40e6-9bd4-496813609efa",
+      "from": "48b6d0e3-d1bf-44ed-929a-87855eeb0b0b",
+      "to": "57bd0b87-4f75-40e6-9bd4-496813609efa"
+    },
+    {
+      "id": "48b6d0e3-d1bf-44ed-929a-87855eeb0b0b--e0f9d350-43b3-41ec-a34a-e0ee5f82143d",
+      "from": "e0f9d350-43b3-41ec-a34a-e0ee5f82143d",
+      "to": "48b6d0e3-d1bf-44ed-929a-87855eeb0b0b"
+    },
+    {
+      "id": "4a0542d7-e695-45de-bd32-38558f137d04--51901a07-a15c-4619-be16-59a8fe78d977",
+      "from": "4a0542d7-e695-45de-bd32-38558f137d04",
+      "to": "51901a07-a15c-4619-be16-59a8fe78d977"
+    },
+    {
+      "id": "4a0542d7-e695-45de-bd32-38558f137d04--c1a45823-3c30-4678-90e8-69616a8d7572",
+      "from": "4a0542d7-e695-45de-bd32-38558f137d04",
+      "to": "c1a45823-3c30-4678-90e8-69616a8d7572"
+    },
+    {
+      "id": "4a0542d7-e695-45de-bd32-38558f137d04--eabbe619-6154-482a-b99a-bef76f0602f6",
+      "from": "eabbe619-6154-482a-b99a-bef76f0602f6",
+      "to": "4a0542d7-e695-45de-bd32-38558f137d04"
+    },
+    {
+      "id": "4fa28982-0f2c-41d5-bc66-8d757fb14790--ccf8ac05-b51e-4cfb-b651-cfa6fe24fc49",
+      "from": "ccf8ac05-b51e-4cfb-b651-cfa6fe24fc49",
+      "to": "4fa28982-0f2c-41d5-bc66-8d757fb14790"
+    },
+    {
+      "id": "4fa28982-0f2c-41d5-bc66-8d757fb14790--ea867f68-b7a6-4217-8ad5-42149391146c",
+      "from": "4fa28982-0f2c-41d5-bc66-8d757fb14790",
+      "to": "ea867f68-b7a6-4217-8ad5-42149391146c"
+    },
+    {
+      "id": "57bd0b87-4f75-40e6-9bd4-496813609efa--6887be0d-1108-4f28-9f33-ff977d7e6377",
+      "from": "57bd0b87-4f75-40e6-9bd4-496813609efa",
+      "to": "6887be0d-1108-4f28-9f33-ff977d7e6377"
+    },
+    {
+      "id": "5db5fb77-7819-44bb-8e1e-37d4aa3a4849--5f84a518-fa06-454c-a128-78b3ccd7b257",
+      "from": "5f84a518-fa06-454c-a128-78b3ccd7b257",
+      "to": "5db5fb77-7819-44bb-8e1e-37d4aa3a4849"
+    },
+    {
+      "id": "5db5fb77-7819-44bb-8e1e-37d4aa3a4849--afafb181-f904-42b9-94f5-49e3c043a8d2",
+      "from": "5db5fb77-7819-44bb-8e1e-37d4aa3a4849",
+      "to": "afafb181-f904-42b9-94f5-49e3c043a8d2"
+    },
+    {
+      "id": "61b4074a-2c13-42c2-bb1b-98afdb1226c7--c1a45823-3c30-4678-90e8-69616a8d7572",
+      "from": "c1a45823-3c30-4678-90e8-69616a8d7572",
+      "to": "61b4074a-2c13-42c2-bb1b-98afdb1226c7"
+    },
+    {
+      "id": "61b4074a-2c13-42c2-bb1b-98afdb1226c7--e538524b-ddbb-4fcb-ae9c-fe90da2d5f16",
+      "from": "e538524b-ddbb-4fcb-ae9c-fe90da2d5f16",
+      "to": "61b4074a-2c13-42c2-bb1b-98afdb1226c7"
+    },
+    {
+      "id": "6887be0d-1108-4f28-9f33-ff977d7e6377--7807f4aa-ad50-404c-903a-e1c2dd664890",
+      "from": "6887be0d-1108-4f28-9f33-ff977d7e6377",
+      "to": "7807f4aa-ad50-404c-903a-e1c2dd664890"
+    },
+    {
+      "id": "8714a034-1c2f-43ba-9edc-1485baf9a1dd--a5da40db-d517-4f9e-ba61-81daf3ec34f8",
+      "from": "a5da40db-d517-4f9e-ba61-81daf3ec34f8",
+      "to": "8714a034-1c2f-43ba-9edc-1485baf9a1dd"
+    },
+    {
+      "id": "87b8ee30-17d8-4792-af27-1025b0cdd196--c9e6657f-4d3f-4f4a-9fef-bfbb107c6278",
+      "from": "87b8ee30-17d8-4792-af27-1025b0cdd196",
+      "to": "c9e6657f-4d3f-4f4a-9fef-bfbb107c6278"
+    },
+    {
+      "id": "87b8ee30-17d8-4792-af27-1025b0cdd196--ea867f68-b7a6-4217-8ad5-42149391146c",
+      "from": "ea867f68-b7a6-4217-8ad5-42149391146c",
+      "to": "87b8ee30-17d8-4792-af27-1025b0cdd196"
+    },
+    {
+      "id": "914c1559-954f-4e4d-8241-934ad851c4bd--afafb181-f904-42b9-94f5-49e3c043a8d2",
+      "from": "afafb181-f904-42b9-94f5-49e3c043a8d2",
+      "to": "914c1559-954f-4e4d-8241-934ad851c4bd"
+    },
+    {
+      "id": "914c1559-954f-4e4d-8241-934ad851c4bd--edddfaeb-18a2-494c-bedd-f8cf3d989867",
+      "from": "914c1559-954f-4e4d-8241-934ad851c4bd",
+      "to": "edddfaeb-18a2-494c-bedd-f8cf3d989867"
+    },
+    {
+      "id": "a5da40db-d517-4f9e-ba61-81daf3ec34f8--fd5814f5-94be-4b73-93cb-e576f2dce0d3",
+      "from": "fd5814f5-94be-4b73-93cb-e576f2dce0d3",
+      "to": "a5da40db-d517-4f9e-ba61-81daf3ec34f8"
+    },
+    {
+      "id": "a73f6fa9-6977-4280-9d1a-1e714e8cb1a8--fd5814f5-94be-4b73-93cb-e576f2dce0d3",
+      "from": "a73f6fa9-6977-4280-9d1a-1e714e8cb1a8",
+      "to": "fd5814f5-94be-4b73-93cb-e576f2dce0d3"
+    },
+    {
+      "id": "ad03d66d-4e38-4835-87b2-a629eb4a76de--c4ace146-b2b4-4096-a039-1faa0d066670",
+      "from": "ad03d66d-4e38-4835-87b2-a629eb4a76de",
+      "to": "c4ace146-b2b4-4096-a039-1faa0d066670"
+    },
+    {
+      "id": "ad03d66d-4e38-4835-87b2-a629eb4a76de--dd854a62-8ef7-4a9c-a8f3-bed20d4e05a7",
+      "from": "dd854a62-8ef7-4a9c-a8f3-bed20d4e05a7",
+      "to": "ad03d66d-4e38-4835-87b2-a629eb4a76de"
+    },
+    {
+      "id": "c364ad52-51e4-4cf8-afb5-17a522c82a4d--e0f9d350-43b3-41ec-a34a-e0ee5f82143d",
+      "from": "c364ad52-51e4-4cf8-afb5-17a522c82a4d",
+      "to": "e0f9d350-43b3-41ec-a34a-e0ee5f82143d"
+    },
+    {
+      "id": "c4f149a8-f82d-43a8-a37e-cf6fc5500916--ccf8ac05-b51e-4cfb-b651-cfa6fe24fc49",
+      "from": "c4f149a8-f82d-43a8-a37e-cf6fc5500916",
+      "to": "ccf8ac05-b51e-4cfb-b651-cfa6fe24fc49"
+    },
+    {
+      "id": "c6204eba-cc9a-4fb9-be77-41a77d0cb992--eabbe619-6154-482a-b99a-bef76f0602f6",
+      "from": "c6204eba-cc9a-4fb9-be77-41a77d0cb992",
+      "to": "eabbe619-6154-482a-b99a-bef76f0602f6"
+    },
+    {
+      "id": "e538524b-ddbb-4fcb-ae9c-fe90da2d5f16--ea867f68-b7a6-4217-8ad5-42149391146c",
+      "from": "ea867f68-b7a6-4217-8ad5-42149391146c",
+      "to": "e538524b-ddbb-4fcb-ae9c-fe90da2d5f16"
+    }
+  ],
+  "version": 444
+}

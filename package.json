@@ -10,10 +10,14 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "validate:weapons": "esbuild scripts/validateWeaponRules.ts --bundle --format=esm --platform=node --outfile=node_modules/.cache/validateWeaponRules.mjs && node node_modules/.cache/validateWeaponRules.mjs",
+    "validate:migration": "esbuild scripts/validateTalentMigration.ts --bundle --format=esm --platform=node --outfile=node_modules/.cache/validateTalentMigration.mjs && node node_modules/.cache/validateTalentMigration.mjs",
+    "test": "npm run validate:weapons && npm run validate:migration"
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "firebase": "^12.16.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.13.1",

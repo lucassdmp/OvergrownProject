@@ -173,65 +173,6 @@ export interface CombatSkill {
   effect?: string
 }
 
-// ── Talent Tree ───────────────────────────────────────────────────────────────
-
-export type TalentNodeEffect =
-  | { type: 'attributeBonus'; attribute: AttributeName; value: number }
-  | { type: 'resourceBonus'; resource: ResourceName; value: number }
-  | { type: 'unlockSkill'; skillId: string }
-  | { type: 'upgradeSkill'; skillId: string; upgradeKey: string }
-  | { type: 'custom'; description: string }
-
-export interface TalentNode {
-  id: string
-  name: string
-  description: string
-  /** IDs of nodes that must be acquired first */
-  requires: string[]
-  /** Talent point cost to acquire */
-  cost: number
-  effects: TalentNodeEffect[]
-  /** Layout position for tree canvas rendering */
-  position: { x: number; y: number }
-  tier: number
-}
-
-export interface TalentTree {
-  id: string
-  name: string
-  description: string
-  nodes: TalentNode[]
-}
-
-// ── Custom Spell (manually added to character sheet) ─────────────────────────
-
-export interface CustomSpell {
-  id: string
-  name: string
-  elements: ElementId[]
-  description: string
-  levels: SpellLevelEntry[]
-  specialDescriptions: Record<string, string>
-  category: string
-  types: MagicTypeId[]
-  notes?: string
-}
-
-// ── Character Attack (manually added; single-level, consumes PC) ──────────────
-
-export interface CharacterAttack {
-  id: string
-  name: string
-  /** PC cost display string */
-  cost: string
-  description: string
-  damage?: string
-  category: CombatCategory
-  requirement?: string
-  action?: string
-  purpose?: string
-}
-
 // ── Perícias (Skills) ────────────────────────────────────────────────────────
 
 /** 0 = untrained; 1-4 = Maestria I–IV */
@@ -258,7 +199,14 @@ export const MASTERY_BONUS: Record<MasteryLevel, number> = {
 export type ItemType = 'weapon' | 'armor' | 'potion-vida' | 'potion-iep' | 'misc'
 
 export interface ItemEffect {
-  type: 'attributeBonus' | 'statBonus' | 'skillBonus' | 'skillUnlock' | 'heal' | 'restoreIep' | 'custom'
+  type:
+    | 'attributeBonus'
+    | 'statBonus'
+    | 'skillBonus'
+    | 'skillUnlock'
+    | 'heal'
+    | 'restoreIep'
+    | 'custom'
   /** For attributeBonus */
   attribute?: AttributeName
   /** For statBonus: which derived stat to add to */
@@ -319,53 +267,261 @@ export interface InventoryItem {
   broken?: boolean
   /** Item weight in load units (carga); optional for backward compatibility */
   weight?: number
+  /** Weapon only: tags used by talent-tree conditions and bonuses */
+  weaponTags?: WeaponTag[]
+  /** Armor only: tags used by talent-tree conditions and bonuses */
+  armorTags?: ArmorTag[]
 }
 
+// ── Weapon Tags ───────────────────────────────────────────────────────────────
+// Specific weapon names from 6-armas_e_armaduras.tex plus category tags.
+// These tags allow talent tree nodes to target specific weapon types.
+
+export type WeaponTag =
+  // ── Melee weapons
+  | 'adaga'
+  | 'alabarda'
+  | 'bo'
+  | 'clava'
+  | 'escudo'
+  | 'espada-duas-maos'
+  | 'espada-uma-mao'
+  | 'lanca'
+  | 'machado-uma-mao'
+  | 'machado-duas-maos'
+  | 'maca-uma-mao'
+  | 'maca-duas-maos'
+  | 'martelo-uma-mao'
+  | 'martelo-duas-maos'
+  | 'rapieira'
+  | 'soqueiras'
+  | 'tonfa'
+  // ── Dual-wield configurations
+  | 'adagas-gemeas'
+  | 'espadas-gemeas'
+  | 'machados-gemeos'
+  | 'tonfas-gemeas'
+  // ── Ranged weapons
+  | 'arco-composto'
+  | 'arco-leve'
+  | 'arco-recurvo'
+  | 'besta-leve'
+  | 'besta-pesada'
+  | 'bola-de-cristal'
+  | 'bucaneira'
+  | 'cajado'
+  | 'espingarda-de-caca'
+  | 'grimorio'
+  | 'pistola'
+  | 'rifle-de-precisao'
+  | 'varinha'
+  | 'bestas-leves-gemeas'
+  | 'pistolas-gemeas'
+  // ── Category tags (can be combined with specific weapon tags)
+  | 'corpo-a-corpo'
+  | 'distancia'
+  | 'magica'
+  | 'duas-maos'
+  | 'uma-mao'
+  | 'dual-wield'
+  | 'leve'
+  | 'cortante'
+  | 'perfurante'
+  | 'impacto'
+  | 'haste'
+  | 'arco'
+  | 'besta'
+  | 'arma-de-fogo'
+
+export const WEAPON_TAG_LABELS: Record<WeaponTag, string> = {
+  // Melee
+  adaga: 'Adaga',
+  alabarda: 'Alabarda',
+  bo: 'Bo',
+  clava: 'Clava',
+  escudo: 'Escudo (arma)',
+  'espada-duas-maos': 'Espada (2 mãos)',
+  'espada-uma-mao': 'Espada (1 mão)',
+  lanca: 'Lança',
+  'machado-uma-mao': 'Machado (1 mão)',
+  'machado-duas-maos': 'Machado (2 mãos)',
+  'maca-uma-mao': 'Maça (1 mão)',
+  'maca-duas-maos': 'Maça (2 mãos)',
+  'martelo-uma-mao': 'Martelo (1 mão)',
+  'martelo-duas-maos': 'Martelo (2 mãos)',
+  rapieira: 'Rapieira',
+  soqueiras: 'Soqueiras',
+  tonfa: 'Tonfa',
+  'adagas-gemeas': 'Adagas Gêmeas',
+  'espadas-gemeas': 'Espadas Gêmeas',
+  'machados-gemeos': 'Machados Gêmeos',
+  'tonfas-gemeas': 'Tonfas Gêmeas',
+  // Ranged
+  'arco-composto': 'Arco Composto',
+  'arco-leve': 'Arco Leve',
+  'arco-recurvo': 'Arco Recurvo',
+  'besta-leve': 'Besta Leve',
+  'besta-pesada': 'Besta Pesada',
+  'bola-de-cristal': 'Bola de Cristal',
+  bucaneira: 'Bucaneira',
+  cajado: 'Cajado',
+  'espingarda-de-caca': 'Espingarda de Caça',
+  grimorio: 'Grimório',
+  pistola: 'Pistola',
+  'rifle-de-precisao': 'Rifle de Precisão',
+  varinha: 'Varinha',
+  'bestas-leves-gemeas': 'Bestas Leves Gêmeas',
+  'pistolas-gemeas': 'Pistolas Gêmeas',
+  // Categories
+  'corpo-a-corpo': 'Corpo a Corpo',
+  distancia: 'Distância',
+  magica: 'Mágica',
+  'duas-maos': 'Duas Mãos',
+  'uma-mao': 'Uma Mão',
+  'dual-wield': 'Dual Wield',
+  leve: 'Leve',
+  cortante: 'Cortante',
+  perfurante: 'Perfurante',
+  impacto: 'Impacto',
+  haste: 'Haste',
+  arco: 'Arco',
+  besta: 'Besta',
+  'arma-de-fogo': 'Arma de Fogo',
+}
+
+// Groups for UI display
+export const WEAPON_TAGS_MELEE: WeaponTag[] = [
+  'adaga',
+  'alabarda',
+  'bo',
+  'clava',
+  'escudo',
+  'espada-duas-maos',
+  'espada-uma-mao',
+  'lanca',
+  'machado-uma-mao',
+  'machado-duas-maos',
+  'maca-uma-mao',
+  'maca-duas-maos',
+  'martelo-uma-mao',
+  'martelo-duas-maos',
+  'rapieira',
+  'soqueiras',
+  'tonfa',
+  'adagas-gemeas',
+  'espadas-gemeas',
+  'machados-gemeos',
+  'tonfas-gemeas',
+]
+
+export const WEAPON_TAGS_RANGED: WeaponTag[] = [
+  'arco-composto',
+  'arco-leve',
+  'arco-recurvo',
+  'besta-leve',
+  'besta-pesada',
+  'bola-de-cristal',
+  'bucaneira',
+  'cajado',
+  'espingarda-de-caca',
+  'grimorio',
+  'pistola',
+  'rifle-de-precisao',
+  'varinha',
+  'bestas-leves-gemeas',
+  'pistolas-gemeas',
+]
+
+export const WEAPON_TAGS_CATEGORY: WeaponTag[] = [
+  'corpo-a-corpo',
+  'distancia',
+  'magica',
+  'duas-maos',
+  'uma-mao',
+  'dual-wield',
+  'leve',
+  'cortante',
+  'perfurante',
+  'impacto',
+  'haste',
+  'arco',
+  'besta',
+  'arma-de-fogo',
+]
+
+// ── Armor Tags ────────────────────────────────────────────────────────────────
+
+export type ArmorTag =
+  | 'vestes-de-pano'
+  | 'gambeson'
+  | 'armadura-de-couro'
+  | 'cota-de-malha'
+  | 'couraca-de-metal'
+  | 'armadura-de-placas'
+  | 'escudo-item'
+  | 'leve'
+  | 'media'
+  | 'pesada'
+
+export const ARMOR_TAG_LABELS: Record<ArmorTag, string> = {
+  'vestes-de-pano': 'Vestes de Pano',
+  gambeson: 'Gambeson',
+  'armadura-de-couro': 'Armadura de Couro',
+  'cota-de-malha': 'Cota de Malha',
+  'couraca-de-metal': 'Couraça de Metal',
+  'armadura-de-placas': 'Armadura de Placas',
+  'escudo-item': 'Escudo (proteção)',
+  leve: 'Leve',
+  media: 'Média',
+  pesada: 'Pesada',
+}
+
+export const ARMOR_TAGS_SPECIFIC: ArmorTag[] = [
+  'vestes-de-pano',
+  'gambeson',
+  'armadura-de-couro',
+  'cota-de-malha',
+  'couraca-de-metal',
+  'armadura-de-placas',
+  'escudo-item',
+]
+
+export const ARMOR_TAGS_CATEGORY: ArmorTag[] = ['leve', 'media', 'pesada']
+
 // ── Character ─────────────────────────────────────────────────────────────────
+// Attributes, spells, and attacks all come from the talent tree.
+// The character sheet only tracks what the player controls directly.
 
 export interface Character {
   id: string
   name: string
-  playerName: string
   race: string
-  level: number
-  /** Each point of divinity grants 5 attribute points (base = 10) */
-  divinity: number
-  attributes: Attributes
-  /** IDs of acquired talent nodes */
-  acquiredTalents: string[]
-  /** Manually added spells */
-  customSpells: CustomSpell[]
-  /** Manually added attacks / combat skills */
-  characterAttacks: CharacterAttack[]
-  /** Inventory items */
-  inventory: InventoryItem[]
-  /** Skill mastery levels – key = skill id, value = MasteryLevel (0 = untrained) */
-  skills: Record<string, MasteryLevel>
-  /** Selected origin id – grants 1 free skill at Mastery I */
   origin?: string
-  /** Current resource values (can be below max during play) */
-  currentResources: {
-    vida: number
-    iep: number
-    pc: number
-  }
-  temporaryResources: {
-    vida: number
-    iep: number
-  }
-  shortRestsUsed: number
+  divinity: number
+  avatarBase64?: string
+  avatarPosition?: string
+  avatarScale?: number
+  /** ID of the talent tree this character is connected to */
+  connectedTreeId?: string
+  /** IDs of talent tree nodes this character has acquired */
+  acquiredNodeIds: string[]
+  /** Per-node player configuration (e.g. chosen attribute for flexible attribute nodes) */
+  nodeConfigs: Record<string, { attribute?: AttributeName }>
+  /** Perícia mastery levels – controlled by the player */
+  skills: Record<string, MasteryLevel>
+  /** Inventory with weapon/armor tag support */
+  inventory: InventoryItem[]
+  notes?: string
   money: {
     platina: number
     ouro: number
     prata: number
     bronze: number
   }
-  notes?: string
-  /** Base64 encoded avatar image */
-  avatarBase64?: string
-  /** Image position within the avatar container (e.g. "50% 50%") */
-  avatarPosition?: string
-  /** Image scale relative to container (e.g. 1.0 for cover) */
-  avatarScale?: number
+  /** Current (in-play) resource values */
+  currentResources: {
+    vida: number
+    iep: number
+    pc: number
+  }
 }

@@ -1,14 +1,30 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/* Level of detail for the large talent tree. At overview zooms the topology is
+   more useful than thousands of tiny labels, glows and decorative rings. */
+.talent-tree-world[data-lod='low'] .talent-node-detail,
+.talent-tree-world[data-lod='low'] .talent-node-decoration {
+  display: none;
+}
+
+.talent-tree-world[data-lod='low'] .talent-tree-node {
+  filter: none !important;
+}
+
+.talent-tree-world[data-lod='medium'] .talent-node-sublabel,
+.talent-tree-world[data-lod='medium'] .talent-node-decoration {
+  display: none;
+}
 
 /* Class-based dark mode: add `dark` class to <html> to activate */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Hide number input spinners globally */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }

@@ -1,12 +1,14 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import RootLayout from '@/layouts/RootLayout'
-import HomePage from '@/pages/HomePage'
+import CharacterSheetPage from '@/pages/CharacterSheetPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import PdfPage from '@/pages/PdfPage'
-import TalentTreeBuilderPage from '@/pages/TalentTreeBuilderPage'
-import V2Page from '@/pages/V2Page'
-import TalentTreePlayerPage from '@/pages/TalentTreePlayerPage'
-import CombatTestPage from '@/pages/CombatTestPage'
+
+const TalentTreeBuilderPage = lazy(() => import('@/pages/TalentTreeBuilderPage'))
+const TalentTreePlayerPage = lazy(() => import('@/pages/TalentTreePlayerPage'))
+const AdminUsersPage = lazy(() => import('@/pages/AdminUsersPage'))
+const FirebaseAccessGate = lazy(() => import('@/features/auth/FirebaseAccessGate'))
 
 export const router = createBrowserRouter([
   {
@@ -15,31 +17,66 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <CharacterSheetPage />,
       },
       {
         path: 'livro',
         element: <PdfPage />,
       },
       {
-        path: 'v2',
-        element: <V2Page />,
+        path: 'admin',
+        element: (
+          <Suspense
+            fallback={
+              <div className="flex min-h-[calc(100vh-3.5rem)] items-center justify-center text-sm text-gray-500">
+                Carregando administração…
+              </div>
+            }
+          >
+            <FirebaseAccessGate requiredRole="admin" showSessionBadge={false}>
+              <AdminUsersPage />
+            </FirebaseAccessGate>
+          </Suspense>
+        ),
       },
       {
-        path: 'combat-test',
-        element: <CombatTestPage />,
+        // Legacy URL – the sheet now lives at the root
+        path: 'v2',
+        element: <Navigate to="/" replace />,
       },
     ],
   },
   {
     // Hidden page – not linked from the nav. Access via /talent-tree-builder directly.
     path: '/talent-tree-builder',
-    element: <TalentTreeBuilderPage />,
+    element: (
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center bg-gray-950 text-sm text-gray-500">
+            Carregando árvore…
+          </div>
+        }
+      >
+        <FirebaseAccessGate requiredRole="editor">
+          <TalentTreeBuilderPage />
+        </FirebaseAccessGate>
+      </Suspense>
+    ),
   },
   {
-    // Player-facing talent tree view – reached from the V2 sheet pentagon
+    // Player-facing talent tree view – reached from the sheet pentagon
     path: '/arvore',
-    element: <TalentTreePlayerPage />,
+    element: (
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center bg-gray-950 text-sm text-gray-500">
+            Carregando árvore…
+          </div>
+        }
+      >
+        <TalentTreePlayerPage />
+      </Suspense>
+    ),
   },
   {
     path: '*',

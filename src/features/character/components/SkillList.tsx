@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCharacterStore } from '../store/characterStore'
+import { useCharacterStats } from '../hooks/useCharacterStats'
 import { ALL_SKILLS } from '../../../data/skills'
 import { ALL_ORIGINS } from '../../../data/origins'
 import type { MasteryLevel } from '../../../types/game'
@@ -13,50 +14,26 @@ import {
 } from '../../../lib/skillUtils'
 
 const MASTERY_LEVELS: MasteryLevel[] = [0, 1, 2, 3, 4]
-
 const MASTERY_DIV_REQ: Record<MasteryLevel, string | null> = {
   0: null, 1: null, 2: null, 3: 'Div. 20', 4: 'Div. 40',
 }
 
 function SkillRow({
-  name,
-  description,
-  requiresTraining,
-  mastery,
-  isOriginSkill,
-  itemBonus,
-  itemUnlocked,
-  maxMastery,
-  budgetForSkill,
-  onChange,
+  name, description, requiresTraining, mastery, isOriginSkill,
+  itemBonus, itemUnlocked, treeBonus, maxMastery, budgetForSkill, onChange,
 }: {
-  name: string
-  description: string
-  requiresTraining: boolean
-  mastery: MasteryLevel
-  isOriginSkill: boolean
-  itemBonus: number
-  itemUnlocked: boolean
-  maxMastery: MasteryLevel
-  budgetForSkill: number
-  onChange: (m: MasteryLevel) => void
+  name: string; description: string; requiresTraining: boolean; mastery: MasteryLevel
+  isOriginSkill: boolean; itemBonus: number; itemUnlocked: boolean; treeBonus: number
+  maxMastery: MasteryLevel; budgetForSkill: number; onChange: (m: MasteryLevel) => void
 }) {
-  const effectiveMastery = Math.max(
-    mastery,
-    isOriginSkill ? 1 : 0,
-    itemUnlocked ? 1 : 0,
-  ) as MasteryLevel
+  const effectiveMastery = Math.max(mastery, isOriginSkill ? 1 : 0, itemUnlocked ? 1 : 0) as MasteryLevel
   const trained = effectiveMastery > 0
-  const displayBonus = MASTERY_BONUS[effectiveMastery] + itemBonus
+  const displayBonus = MASTERY_BONUS[effectiveMastery] + itemBonus + treeBonus
 
   function isButtonDisabled(lvl: MasteryLevel): boolean {
-    // hard minimums: origin/item-unlocked skills can't go below I
     if (lvl === 0 && (isOriginSkill || itemUnlocked)) return true
-    // divinity cap: can't go above allowed mastery
     if (lvl > maxMastery) return true
-    // going DOWN (or staying) is always allowed – player must be able to free up points
     if (lvl <= mastery) return false
-    // going UP: check budget
     return getSkillCost(lvl, isOriginSkill) > budgetForSkill
   }
 
@@ -70,7 +47,6 @@ function SkillRow({
 
   return (
     <div className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 transition ${borderClass}`} title={description}>
-      {/* Mastery buttons */}
       <div className="flex shrink-0 gap-px">
         {MASTERY_LEVELS.map((lvl) => {
           const disabled = isButtonDisabled(lvl)
@@ -99,8 +75,6 @@ function SkillRow({
           )
         })}
       </div>
-
-      {/* Name */}
       <span className={`flex-1 truncate text-sm ${trained ? 'font-semibold text-gray-900 dark:text-white' : 'font-normal text-gray-500 dark:text-gray-500'}`}>
         {name}
         {requiresTraining && (
@@ -113,11 +87,16 @@ function SkillRow({
           <span className="ml-1 rounded bg-sky-100 dark:bg-sky-900/40 px-1 py-px text-[9px] font-bold text-sky-600 dark:text-sky-400">⬡ Item</span>
         )}
       </span>
-
-      {/* Bonus badge */}
       <div className="shrink-0 flex items-center gap-1">
         {itemBonus > 0 && (
-          <span className="rounded bg-sky-100 dark:bg-sky-900/30 px-1 py-px text-[9px] font-bold text-sky-600 dark:text-sky-400">+{itemBonus}⬡</span>
+          <span className="rounded bg-sky-100 dark:bg-sky-900/30 px-1 py-px text-[9px] font-bold text-sky-600 dark:text-sky-400">
+            +{itemBonus}⬡
+          </span>
+        )}
+        {treeBonus > 0 && (
+          <span className="rounded bg-amber-100 dark:bg-amber-900/30 px-1 py-px text-[9px] font-bold text-amber-600 dark:text-amber-400">
+            +{treeBonus}✦
+          </span>
         )}
         <span className={`rounded px-1.5 py-0.5 text-[11px] font-bold tabular-nums ${
           isOriginSkill && effectiveMastery === 1 && mastery === 0
@@ -128,7 +107,7 @@ function SkillRow({
             ? 'bg-amber-600 dark:bg-amber-500 text-white'
             : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
         }`}>
-          {trained ? `+${displayBonus}` : 'Não treinada'}
+          {trained || treeBonus > 0 ? `+${displayBonus}` : '—'}
         </span>
       </div>
     </div>
@@ -138,16 +117,18 @@ function SkillRow({
 export default function SkillList() {
   const character = useCharacterStore((s) => s.character)
   const setSkillMastery = useCharacterStore((s) => s.setSkillMastery)
+  const { skillBonuses } = useCharacterStats()
   const [search, setSearch] = useState('')
 
   const skills = character.skills ?? {}
   const divinity = character.divinity
   const originSkillId = ALL_ORIGINS.find((o) => o.id === character.origin)?.skillId ?? null
-
   const maxMastery = getMasteryCapForDivinity(divinity)
   const budget = getSkillBudget(divinity)
   const spent = getSkillPointsSpent(skills, originSkillId)
-  const { bonuses: itemBonuses, unlocked: itemUnlocked } = getItemSkillEffects(character)
+
+  // For V2, we use character.inventory which now is InventoryItem (compatible with Character type's getItemSkillEffects)
+  const { bonuses: itemBonuses, unlocked: itemUnlocked } = getItemSkillEffects(character as never)
 
   const trainedCount = ALL_SKILLS.filter(
     (sk) => (skills[sk.id] ?? 0) > 0 || sk.id === originSkillId || itemUnlocked.has(sk.id),
@@ -162,7 +143,6 @@ export default function SkillList() {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Header */}
       <div className="flex flex-wrap items-center gap-3">
         <h2 className="text-base font-bold text-gray-900 dark:text-white tracking-wide">Perícias</h2>
         <span className="rounded-full bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-400">
@@ -179,7 +159,6 @@ export default function SkillList() {
         </div>
       </div>
 
-      {/* Budget bar */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between text-[11px]">
           <span className="font-semibold text-gray-600 dark:text-gray-400">Pontos de Perícia</span>
@@ -193,49 +172,36 @@ export default function SkillList() {
             style={{ width: `${budgetPct}%` }}
           />
         </div>
-        {budgetOver && (
-          <p className="text-[10px] text-red-500 dark:text-red-400">Excedendo o limite. Remova perícias ou aumente a Divindade.</p>
-        )}
-        <p className="text-[10px] text-gray-400 dark:text-gray-600">
-          A cada 5 Divindades: +2 novas perícias (I) ou +1 nível em uma existente.
-          Maestria II requer Div.&nbsp;20 · III requer Div.&nbsp;30 · IV requer Div.&nbsp;40.
-        </p>
       </div>
 
-      {/* Legend */}
-      <p className="text-[10px] text-gray-400 dark:text-gray-600">
-        <span className="font-bold text-rose-500 dark:text-rose-400 align-super text-[8px]">✦</span> Requer treinamento formal.&ensp;
-        Cinza escuro = bloqueado pela Divindade.&ensp;
-        <span className="text-sky-500">⬡</span> = bônus de item.
-      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+        {filtered.map((sk) => {
+          const mastery = (skills[sk.id] ?? 0) as MasteryLevel
+          const isOriginSkill = sk.id === originSkillId
+          const itemBonus = itemBonuses[sk.id] ?? 0
+          const treeBonus = skillBonuses[sk.id] ?? 0
+          const unlocked = itemUnlocked.has(sk.id)
+          const cost = getSkillCost(mastery, isOriginSkill)
+          const budgetForSkill = budget - spent + cost
 
-      {/* Two-column grid */}
-      {filtered.length === 0 ? (
-        <p className="text-sm text-gray-400 dark:text-gray-600 italic">Nenhuma perícia encontrada.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-          {filtered.map((sk) => {
-            const isOriginSkill = sk.id === originSkillId
-            const currentMastery = (skills[sk.id] ?? 0) as MasteryLevel
-            const spentOnOthers = spent - getSkillCost(currentMastery, isOriginSkill)
-            return (
-              <SkillRow
-                key={sk.id}
-                name={sk.name}
-                description={sk.description}
-                requiresTraining={sk.requiresTraining}
-                mastery={currentMastery}
-                isOriginSkill={isOriginSkill}
-                itemBonus={itemBonuses[sk.id] ?? 0}
-                itemUnlocked={itemUnlocked.has(sk.id)}
-                maxMastery={maxMastery}
-                budgetForSkill={budget - spentOnOthers}
-                onChange={(m) => setSkillMastery(sk.id, m)}
-              />
-            )
-          })}
-        </div>
-      )}
+          return (
+            <SkillRow
+              key={sk.id}
+              name={sk.name}
+              description={sk.description}
+              requiresTraining={sk.requiresTraining}
+              mastery={mastery}
+              isOriginSkill={isOriginSkill}
+              itemBonus={itemBonus}
+              itemUnlocked={unlocked}
+              treeBonus={treeBonus}
+              maxMastery={maxMastery}
+              budgetForSkill={budgetForSkill}
+              onChange={(m) => setSkillMastery(sk.id, m)}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }

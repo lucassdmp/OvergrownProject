@@ -13,4 +13,3 @@ export {
   ALL_COMBAT_SKILLS,
   COMBAT_SKILLS_MAP,
 } from './combatSkills'
-export { default as talentTreeData } from './talentTree.json'

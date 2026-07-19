@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { AttributeName } from '../types/game'
-import { calculateEquipmentDefense, meetsArmorRequirement } from '../lib/equipmentRules'
+
 // ── Formula primitive ─────────────────────────────────────────────────────────
 
 /**
@@ -83,7 +83,7 @@ export const defaultGameConfig: GameConfig = {
 
 // ── Calculator ────────────────────────────────────────────────────────────────
 
-import type { Attributes, DerivedStats, Character } from '../types/game'
+import type { Attributes, DerivedStats } from '../types/game'
 
 export function calculateAttributeModifiers(
   attributes: Attributes,
@@ -129,56 +129,3 @@ export function calculateDerivedStats(
   }
 }
 
-/**
- * Like calculateDerivedStats but also factors in passive item bonuses
- * (attributeBonus and statBonus effects on items with quantity > 0).
- */
-export function calculateEffectiveDerivedStats(
-  character: Character,
-  config: GameConfig = defaultGameConfig,
-): DerivedStats {
-  // Only include passive bonuses from items that are "active":
-  // - weapons/armor must be equipped AND not broken
-  // - everything else must have quantity > 0
-  const equipmentDefense = calculateEquipmentDefense(character.inventory ?? [], character.attributes)
-  const activeItems = (character.inventory ?? []).filter((it) =>
-    it.type === 'weapon' || it.type === 'armor'
-      ? it.equipped === true && !it.broken && (!it.armorDetails || equipmentDefense.activeItemIds.has(it.id) || equipmentDefense.invalidItemIds.has(it.id))
-      : it.quantity > 0
-  )
-
-  const grantsPositiveEffects = (item: Character['inventory'][number]) =>
-    !equipmentDefense.invalidItemIds.has(item.id) && meetsArmorRequirement(item, character.attributes)
-
-  // 1. Sum attributeBonus effects into a copy of the attributes
-  const boostedAttrs: Attributes = { ...character.attributes }
-  for (const item of activeItems) {
-    if (!grantsPositiveEffects(item)) continue
-    for (const ef of item.effects) {
-      if (ef.type === 'attributeBonus' && ef.attribute && ef.value != null) {
-        boostedAttrs[ef.attribute] = (boostedAttrs[ef.attribute] ?? 0) + ef.value
-      }
-    }
-  }
-
-  // 2. Calculate base derived stats from boosted attributes
-  const stats = calculateDerivedStats(boostedAttrs, config)
-
-  // 3. Add statBonus effects directly
-  for (const item of activeItems) {
-    for (const ef of item.effects) {
-      const isApplicablePenalty = equipmentDefense.invalidItemIds.has(item.id) && (ef.value ?? 0) < 0
-      if (ef.type === 'statBonus' && ef.stat && ef.value != null && (grantsPositiveEffects(item) || isApplicablePenalty)) {
-        stats[ef.stat] = (stats[ef.stat] ?? 0) + ef.value
-      }
-    }
-  }
-
-  // 4. Perícia Reflexos adds +5 to Esquiva per mastery level
-  const reflexosMastery = (character.skills?.['reflexos'] ?? 0) as number
-  if (reflexosMastery > 0) {
-    stats.esquiva += reflexosMastery * 5
-  }
-
-  return stats
-}

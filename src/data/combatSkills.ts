@@ -7,204 +7,366 @@ import type { CombatSkill } from '../types/game'
 
 // ── Melee Habilidades ─────────────────────────────────────────────────────────
 
+function bookCombatSkill(
+  id: string,
+  name: string,
+  cost: string,
+  requirement: string,
+  action: string,
+  purpose: string,
+  effect: string,
+  category: CombatSkill['category'] = 'melee',
+): CombatSkill {
+  return { id, name, cost, requirement, action, purpose, effect, description: effect, category }
+}
+
 export const MELEE_SKILLS: CombatSkill[] = [
-  {
-    id: 'furia',
-    name: 'Fúria',
-    cost: '2',
-    category: 'melee',
-    description:
-      'Você entra em um estado de Luta ou Fuga instintivo. Seu personagem fica compelido a atacar quem considera inimigo, ganhando mais um ataque por turno e RD contra danos físicos durante 1D6+1 rodadas. Toda lógica cede ao instinto.',
-  },
-  {
-    id: 'furia-descontrolada',
-    name: 'Fúria Descontrolada',
-    cost: '3',
-    category: 'melee',
-    description:
-      'Requer Fúria ativa. Ascende o estado de fúria ao limite absoluto: aumenta a duração em +3 rodadas, concede mais um ataque por turno e estende a RD para danos mágicos. A violência desse estado cobra um custo em vida a cada rodada que permanece ativo.',
-  },
-  {
-    id: 'pontos-fatais',
-    name: 'Pontos Fatais',
-    cost: '3',
-    category: 'melee',
-    description:
-      'Gaste sua Reação para realizar um teste de Discernimento contra a DT do alvo. Ao passar, você identifica uma abertura em suas defesas, reduzindo sua RD apenas para os seus ataques. Se a redução ultrapassar a RD total, você também ganha +2 na Margem de Ameaça contra esse alvo.',
-  },
-  {
-    id: 'hemorragia-interna',
-    name: 'Hemorragia Interna',
-    cost: '1',
-    category: 'melee',
-    description:
-      'Ao acertar um ataque em um inimigo que já está Sangrando, você aprofunda o ferimento girando a lâmina. O alvo sofre imediatamente 1 tique do sangramento como dano extra, adicional ao dano do ataque.',
-  },
-  {
-    id: 'garrote',
-    name: 'Garrote',
-    cost: '2',
-    category: 'melee',
-    description:
-      'O primeiro Ataque Furtivo bem-sucedido contra um alvo o deixa Silenciado por 2 turnos, incapaz de conjurar magias ou emitir sons que pudessem alertar aliados.',
-  },
-  {
-    id: 'emboscar',
-    name: 'Emboscar',
-    cost: '3',
-    category: 'melee',
-    description:
-      'O primeiro Ataque Furtivo bem-sucedido contra um alvo inflige 1,5× o dano normal. A surpresa transforma o primeiro golpe em uma execução quase perfeita.',
-  },
-  {
-    id: 'marcar-para-a-morte',
-    name: 'Marcar para a Morte',
-    cost: '4',
-    category: 'melee',
-    description:
-      'Você foca toda sua letalidade em um único alvo. Ganha bônus em acerto, Margem de Ameaça e dano contra ele. Em contrapartida, o dano recebido de todas as outras fontes aumenta e você não pode desviar ou resistir ao que não vem do alvo marcado. Aprimorado: As penalidades são progressivamente removidas conforme a habilidade é refinada na Árvore de Talentos.',
-  },
-  {
-    id: 'ultima-resistencia',
-    name: 'Última Resistência',
-    cost: '5 por turno',
-    category: 'melee',
-    description:
-      'Ao receber um dano que seria fatal, ao invés de entrar em Morrendo, você permanece com 1 de vida, zerando seus PC. Role 1D4+X: durante esses turnos você está imune à condição Morrendo. Sobreviver tem um preço.',
-  },
-  {
-    id: 'vicio-em-sangue',
-    name: 'Vício em Sangue',
-    cost: '2',
-    category: 'melee',
-    description:
-      'Se um alvo com metade da vida ou menos estiver em alcance médio, você se arremessa até ele sem gastar sua Ação de Movimento. O cheiro de sangue aguça o instinto predatório.',
-  },
-  {
-    id: 'sede-de-sangue',
-    name: 'Sede de Sangue',
-    cost: '3',
-    category: 'melee',
-    description:
-      'Ao executar um inimigo, você canaliza o ímpeto da matança em vitalidade. Cure uma quantidade de pontos de vida igual ao dano do seu último ataque contra o alvo abatido.',
-  },
-  {
-    id: 'instinto-sanguinario',
-    name: 'Instinto Sanguinário',
-    cost: '4',
-    category: 'melee',
-    description:
-      'Você abandona a capacidade de Reagir em troca de instinto puro. Ganha bônus de dano progressivo baseado no estado físico de todos os envolvidos no combate — quanto mais feridos todos estiverem, mais letal você se torna.',
-  },
-  {
-    id: 'elipse-carmesim',
-    name: 'Elipse Carmesim',
-    cost: '3 / 5',
-    category: 'melee',
-    description:
-      'Você gira e corta tudo ao seu redor: causa o dano da arma em todos os inimigos em alcance curto que estejam Sangrando. Aprimorado (5 PC): O ataque pode resultar em crítico em cada inimigo acertado, não apenas no alvo principal.',
-  },
+  bookCombatSkill(
+    'furia',
+    'Fúria',
+    '12',
+    'MIG 10 e FOR 10',
+    'Padrão',
+    'Romper uma linha inimiga quando cautela já não basta',
+    'Ao ativar, realize um ataque básico. Até o fim dos seus próximos 2 turnos, quando usar sua Ação Padrão para atacar, realize um ataque básico adicional. Durante o efeito, receba 3 RD física e aproxime-se e ataque um inimigo quando puder. Não pode usar Guarda Total ou Postura de Muralha. Os ataques gerados não concedem outros ataques extras.',
+  ),
+  bookCombatSkill(
+    'furia-descontrolada',
+    'Fúria Descontrolada',
+    '12',
+    'MIG 15, FOR 15 e Fúria',
+    'Livre, durante Fúria',
+    'Transformar uma Fúria comum em uma aposta extrema de sobrevivência',
+    'Estenda a Fúria em 2 rodadas e eleve a RD para 6 contra dano físico e mágico. No final de cada um dos seus turnos, perca 1D4 HP; essa perda ignora Bloqueio e RD. Concede outro ataque além daquele fornecido por Fúria.',
+  ),
+  bookCombatSkill(
+    'pontos-fatais',
+    'Pontos Fatais',
+    '6',
+    'SEN 10 e Discernimento treinado',
+    'Movimento',
+    'Superar inimigos protegidos por estudo, não por força bruta',
+    'Escolha um alvo visível e dispute Discernimento contra a Percepção dele. Em caso de sucesso, seus ataques ignoram 3 RD desse alvo até o fim da cena. Só pode obter sucesso uma vez por alvo em cada combate.',
+  ),
+  bookCombatSkill(
+    'hemorragia-interna',
+    'Hemorragia Interna',
+    '4',
+    '(MIG 10 ou GRA 10) e arma cortante ou perfurante',
+    'Livre, após acertar',
+    'Punir um alvo cujo sangramento já foi estabelecido',
+    'Uma vez por turno, ao acertar um alvo com Sangramento Ardiloso ou Brutal, provoque imediatamente um tique do sangramento ativo. O ataque normal ainda causa dano.',
+  ),
+  bookCombatSkill(
+    'golpe-perfurante',
+    'Golpe Perfurante',
+    '6',
+    'MIG 15 e arma perfurante',
+    'Livre, antes de atacar',
+    'Abrir armaduras pesadas sem invalidar escudos',
+    'Se o ataque acertar e o alvo Bloquear, o VB da armadura é 0 contra esse ataque; bônus de escudo, arma e habilidade permanecem. Não pode ser combinado com Postura de Muralha ou outro efeito que ignore VB.',
+  ),
+  bookCombatSkill(
+    'golpe-duplo',
+    'Golpe Duplo',
+    '4',
+    'GRA 10 e duas armas leves',
+    'Padrão',
+    'Trocar precisão por duas oportunidades de acerto',
+    'Realize um ataque com cada arma contra o mesmo alvo. Ambos sofrem −2 de acerto, podem resultar em crítico e são instâncias separadas. Não pode ser combinado com Ataque Secundário.',
+  ),
+  bookCombatSkill(
+    'ataque-secundario',
+    'Ataque Secundário',
+    '5',
+    'MIG 15 ou GRA 15',
+    'Livre, após um ataque básico',
+    'Investir PC para pressionar um único alvo sem depender de duas armas',
+    'Uma vez por turno, realize um segundo ataque básico contra o mesmo alvo. Esse ataque não pode ativar Golpe Duplo, Comando de Assalto, Contra-Ataque ou outro efeito que conceda ataque adicional.',
+  ),
+  bookCombatSkill(
+    'garrote',
+    'Garrote',
+    '6',
+    'GRA 10, SEN 10 e Furtividade treinada',
+    'Padrão',
+    'Impedir que sentinelas ou conjuradores deem o alarme',
+    'Realize um ataque corpo a corpo contra um alvo Desprevenido usando arma leve ou garrote. Ao acertar, cause o dano normal e aplique Silenciado por 1 rodada. Depois de sofrer este efeito, o alvo fica imune a Garrote até o fim da cena.',
+  ),
+  bookCombatSkill(
+    'emboscar',
+    'Emboscar',
+    '8',
+    'GRA 15, SEN 10 e Furtividade treinada',
+    'Padrão',
+    'Converter preparação furtiva em dano inicial, sem repetir a explosão',
+    'Uma vez por combate, ataque um alvo que ainda não tenha percebido você. Ao acertar, aumente cada grupo de dados base da arma em 50%, arredondando a quantidade de dados adicionais para baixo. MOD e danos adicionais não são multiplicados.',
+  ),
+  bookCombatSkill(
+    'marcar-para-a-morte',
+    'Marcar para a Morte',
+    '12',
+    'SEN 15 e (MIG 15 ou GRA 15)',
+    'Movimento',
+    'Criar um duelo de alto risco contra um inimigo prioritário',
+    'Marque um alvo visível até o fim da cena. Em ataques corpo a corpo contra ele, receba +2 no acerto, +1 na Margem de Ameaça e +1D6 de dano uma vez por turno. Dano de outras fontes contra você aumenta 25%, arredondado para cima, e você não pode usar Esquiva ou Bloqueio contra essas fontes. Só um alvo pode estar marcado.',
+  ),
+  bookCombatSkill(
+    'execucao',
+    'Execução',
+    '10',
+    '(MIG 20 ou GRA 20) e Marcar para a Morte',
+    'Padrão',
+    'Finalizar o alvo do duelo sem multiplicar todos os bônus da construção',
+    'Ataque corpo a corpo o alvo marcado quando ele estiver com 25% ou menos do HP máximo. O ataque tem Vantagem e, ao acertar, dobra somente os dados base da arma. MOD e dano adicional não dobram. Só pode ser tentada uma vez por alvo em cada combate.',
+  ),
+  bookCombatSkill(
+    'vicio-em-sangue',
+    'Vício em Sangue',
+    '4',
+    'MIG 10 e SEN 10',
+    'Livre, antes de mover',
+    'Alcançar rapidamente um inimigo ferido sem ganhar mobilidade irrestrita',
+    'Uma vez por turno, escolha um inimigo visível com metade do HP ou menos. Mova até 3 unidades em direção a ele; esse deslocamento não consome seu Movimento, mas provoca ataques de oportunidade normalmente.',
+  ),
+  bookCombatSkill(
+    'sede-de-sangue',
+    'Sede de Sangue',
+    '8',
+    'FOR 15 e Vício em Sangue',
+    'Livre, ao reduzir um inimigo a 0 HP',
+    'Converter uma vitória perigosa em sustentação limitada',
+    'Uma vez por combate, ao derrotar um inimigo que tenha causado dano a você na cena, cure metade do dano do golpe final, limitado a 2 × FOR. Não ativa ao derrotar aliado, invocação própria ou alvo indefeso criado para esse fim.',
+  ),
+  bookCombatSkill(
+    'instinto-sanguinario',
+    'Instinto Sanguinário',
+    '7',
+    'SEN 15 e Fúria',
+    'Livre, durante Fúria',
+    'Acelerar o fim de um combate quando o sangue já domina o campo',
+    'Até a Fúria terminar, uma vez por turno cause +1D4 de dano se houver inimigo com metade do HP ou menos; cause +2D4 em vez disso se você também estiver com metade do HP ou menos.',
+  ),
+  bookCombatSkill(
+    'elipse-carmesim',
+    'Elipse Carmesim',
+    '10',
+    'GRA 15 e Hemorragia Interna; arma cortante',
+    'Padrão',
+    'Transformar sangramentos preparados em pressão contra vários inimigos',
+    'Ataque separadamente todos os inimigos adjacentes que tenham Sangramento Ardiloso ou Brutal. Cada acerto causa apenas os dados base da arma, sem MOD, e não pode resultar em crítico.',
+  ),
+  bookCombatSkill(
+    'elipse-carmesim-suprema',
+    'Elipse Carmesim Suprema',
+    '15',
+    'GRA 20 e Elipse Carmesim',
+    'Padrão',
+    'Evoluir a técnica de área para confrontos avançados',
+    'Ataque separadamente inimigos com Sangramento a até 2 unidades. Use o dano normal da arma e permita críticos. Cada alvo só pode ser atingido uma vez e ataques gerados não ativam Hemorragia Interna.',
+  ),
+  bookCombatSkill(
+    'pisada-de-impacto',
+    'Pisada de Impacto',
+    '8',
+    'MIG 15 e Fúria',
+    'Padrão',
+    'Quebrar formações frágeis durante uma investida',
+    'Cause 1D6 + MOD de MIG em cone de 3 unidades. Cada alvo disputa FOR contra seu teste de MIG; quem perder fica Derrubado. Um alvo que resistir fica imune à sua Pisada até o início do próximo turno.',
+  ),
+  bookCombatSkill(
+    'controle-de-zona',
+    'Controle de Zona',
+    '8',
+    'MIG 15 e SEN 10',
+    'Movimento',
+    'Punir deslocamento inimigo sem conceder ataques ilimitados',
+    'Até o início do próximo turno, crie zona de 2 unidades ao redor de você. Quando um inimigo entrar, sair ou mover-se dentro dela, você pode gastar uma Reação para realizar um ataque de oportunidade. Cada Reação permite somente um ataque.',
+  ),
+  bookCombatSkill(
+    'golpe-atordoante',
+    'Golpe Atordoante',
+    '8',
+    'MIG 15 e arma de impacto',
+    'Padrão',
+    'Trocar dano por controle contra um inimigo perigoso',
+    'Realize um ataque que não causa dano. Se acertar, o alvo disputa FOR contra o resultado do ataque; se perder, sofre Concussão. Depois do teste, fica imune a Golpe Atordoante por 1 rodada.',
+  ),
 ]
 
 // ── Mecânicas de Esforço ───────────────────────────────────────────────────────
 
 export const EFFORT_SKILLS: CombatSkill[] = [
-  {
-    id: 'agarrar',
-    name: 'Agarrar',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Realiza uma manobra de imobilização. Teste de Força contra o teste de Esquiva do alvo. Alvos agarrados não podem se mover, sofrem Desvantagem em ataques e precisam passar num teste de Força ou ser auxiliados por aliados para se libertar.',
-  },
-  {
-    id: 'impulsao',
-    name: 'Impulsão',
-    cost: '1',
-    category: 'effort',
-    description:
-      'Gaste PC para ganhar +5 metros na sua Ação de Movimento neste turno, canalizando um burst de energia física para cobrir mais terreno.',
-  },
-  {
-    id: 'contra-ataque',
-    name: 'Contra-Ataque',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Se um inimigo errar um ataque contra você, use sua Reação para responder imediatamente com um ataque contra ele.',
-  },
-  {
-    id: 'desarranjar',
-    name: 'Desarranjar',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Realiza uma manobra de afastamento que nega ataques de oportunidade ao se reposicionar, quebrando o engajamento sem expor a guarda.',
-  },
-  {
-    id: 'recuar-estrategico',
-    name: 'Recuar Estratégico',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Ao desengajar, use esta técnica para se afastar o dobro da distância normal, criando uma zona de segurança entre você e o oponente.',
-  },
-  {
-    id: 'inabalavel',
-    name: 'Inabalável',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Use como Reação para consumir PC e prevenir as condições Atordoado ou Caído antes que entrem em efeito.',
-  },
-  {
-    id: 'estocada-interruptora',
-    name: 'Estocada Interruptora',
-    cost: '3',
-    category: 'effort',
-    description:
-      'Use sua Reação para interromper uma habilidade ou magia em execução pelo inimigo, forçando-o a gastar a ação sem efeito.',
-  },
-  {
-    id: 'comando-de-assalto',
-    name: 'Comando de Assalto',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Gaste sua Ação de Movimento para emitir uma ordem tática a um aliado. Ele realiza um ataque fora do seu turno contra o inimigo de sua escolha.',
-  },
-  {
-    id: 'analisar-padrao',
-    name: 'Analisar Padrão',
-    cost: '3',
-    category: 'effort',
-    description:
-      'Gaste seu turno inteiro estudando os movimentos do inimigo. Até o final do próximo turno, todos os ataques contra ele têm Vantagem.',
-  },
-  {
-    id: 'postura-de-muralha',
-    name: 'Postura de Muralha',
-    cost: '1 por rodada',
-    category: 'effort',
-    description:
-      'Você não pode atacar, mas dobra sua Armadura até o início do seu próximo turno. Uma defesa impenetrável para quem sabe que o maior dano é o recebido.',
-  },
-  {
-    id: 'desarmar',
-    name: 'Desarmar',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Tente arrancar a arma do alvo. Teste de Força contra o teste de Força do alvo. Se bem-sucedido, a arma cai no terreno adjacente.',
-  },
-  {
-    id: 'rasteira',
-    name: 'Rasteira',
-    cost: '2',
-    category: 'effort',
-    description:
-      'Tente derrubar o alvo aplicando a condição Derrubado. Teste de Esquiva do alvo contra o seu teste de Combate.',
-  },
+  bookCombatSkill(
+    'provocacao',
+    'Provocação',
+    '2',
+    'SEN 5 e Intimidação treinada',
+    'Movimento',
+    'Fazer um inimigo inteligente escolher o defensor ou atacar com menor eficiência',
+    'Escolha um inimigo inteligente a até 8 unidades e dispute Intimidação contra Temperança. Até o início do seu próximo turno, ele sofre Desvantagem em ataques que não incluam você como alvo. Depois, fica imune à sua Provocação por 1 rodada.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'pressao-constante',
+    'Pressão Constante',
+    '5 por rodada',
+    'MIG 15 e FOR 10',
+    'Padrão para ativar; Livre para manter',
+    'Proteger uma formação contra vários inimigos próximos',
+    'Enquanto mantida, inimigos adjacentes gastam +2 unidades de movimento para se afastar de você e sofrem Desvantagem ao atacar seus aliados adjacentes. Pague o custo no início de cada turno; termina se você ficar Incapacitado ou deixar de pagar.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'ultima-resistencia',
+    'Última Resistência',
+    'Todos (mín. 10)',
+    'FOR 20',
+    'Reação, ao sofrer dano fatal',
+    'Comprar uma última oportunidade de resgate para um defensor veterano',
+    'Gaste todos os PC restantes, exigindo pelo menos 10. Permaneça com 1 HP em vez de entrar em Morrendo. Até o fim do seu próximo turno, não pode entrar em Morrendo novamente. Uma vez por combate; não funciona contra efeitos que matem sem reduzir HP.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'escudo-humano',
+    'Escudo Humano',
+    '5',
+    'FOR 15 e Guarda Total',
+    'Reação',
+    'Interpor o próprio corpo quando um aliado adjacente seria atingido',
+    'Depois que um aliado adjacente for atingido, mas antes do dano, torne-se o alvo. Faça um Bloqueio como parte da mesma Reação. Você sofre todo o dano restante e efeitos associados; o aliado não sofre esse ataque.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'guarda-total',
+    'Guarda Total',
+    '0',
+    'FOR 5 e armadura com VB ou escudo',
+    'Padrão',
+    'Trocar toda a ofensiva por sobrevivência e mais respostas defensivas',
+    'Até o início do próximo turno, você não pode atacar nem causar dano, recebe +5 VB e uma Reação adicional exclusiva para Bloqueio. Não acumula consigo mesma ou com a Reação adicional de Postura de Muralha.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'desarmar',
+    'Desarmar',
+    '3',
+    'MIG 5 e uma mão livre ou arma corpo a corpo',
+    'Padrão',
+    'Retirar armas perigosas sem causar dano',
+    'Dispute MIG contra MIG de um alvo adjacente empunhando arma. Se vencer, não cause dano: a arma cai em espaço adjacente e o alvo fica Desprevenido até o início do próprio turno. Após resistir ou sofrer o efeito, fica imune a Desarmar por 1 rodada.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'desarranjar',
+    'Desarranjar',
+    '3',
+    'GRA 5',
+    'Padrão',
+    'Abrir uma rota curta de retirada através de pressão ofensiva',
+    'Realize um ataque corpo a corpo. Ao acertar, mova até 2 unidades sem provocar ataques de oportunidade do alvo atingido. Não amplia seu Movimento e não remove Reações de outros inimigos.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'agarrar',
+    'Agarrar',
+    '3',
+    'MIG 5 e uma mão livre',
+    'Padrão',
+    'Imobilizar um alvo móvel sem depender de dano',
+    'Dispute MIG contra GRA de um alvo adjacente. Se vencer, ele fica Segurado e você deve manter uma mão ocupada. No início de cada turno, o alvo pode gastar Movimento para disputar MIG ou GRA contra seu MIG e escapar. Você pode soltá-lo como Ação Livre.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'impulsao',
+    'Impulsão',
+    '2',
+    'MIG 5 ou GRA 5',
+    'Livre, antes de mover',
+    'Cobrir uma distância curta sem substituir técnicas completas de retirada',
+    'Uma vez por turno, aumente em 3 unidades uma Ação de Movimento realizada neste turno. Não concede nova ação, não evita ataques de oportunidade e não se combina com Recuar Estratégico ou Desengajar.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'contra-ataque',
+    'Contra-Ataque',
+    '6',
+    'GRA 15',
+    'Reação',
+    'Punir um erro inimigo em vez de evitar o golpe por Esquiva',
+    'Quando um inimigo errar um ataque corpo a corpo contra você, realize um ataque básico contra ele. Não pode ser usado se você declarou Esquiva ou Bloqueio contra o mesmo ataque, e o ataque gerado não concede ataques extras.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'recuar-estrategico',
+    'Recuar Estratégico',
+    '3',
+    'GRA 5',
+    'Movimento',
+    'Abandonar completamente um engajamento perigoso',
+    'Mova até o dobro do seu Movimento, apenas para se afastar dos inimigos visíveis. Esse deslocamento não provoca ataques de oportunidade. Você não pode se aproximar de nenhum inimigo durante a ação.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'inabalavel',
+    'Inabalável',
+    '5',
+    'FOR 15',
+    'Reação',
+    'Preservar posição e turno contra deslocamento ou perda de ação',
+    'Quando receber Atordoado ou Derrubado, ignore a condição. Deve ser declarado depois da falha no teste, antes da condição entrar em efeito. Uma vez por rodada.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'estocada-interruptora',
+    'Estocada Interruptora',
+    '8',
+    'GRA 15 e arma perfurante',
+    'Reação',
+    'Interromper uma técnica ou magia a alcance corpo a corpo',
+    'Quando um inimigo adjacente iniciar habilidade ou magia, realize um ataque básico. Se acertar, a ação e os recursos do inimigo são gastos sem efeito. O ataque não pode ser crítico nem gerar ataques adicionais.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'comando-de-assalto',
+    'Comando de Assalto',
+    '10',
+    'SEN 15',
+    'Padrão',
+    'Converter a própria ofensiva em uma oportunidade para o aliado melhor posicionado',
+    'Escolha um aliado a até 8 unidades que possa ouvir você. Ele pode gastar a própria Reação para realizar um ataque básico contra um alvo válido. Cada aliado só pode atender um Comando de Assalto por rodada; o ataque não gera ataques adicionais.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'analisar-padrao',
+    'Analisar Padrão',
+    '2',
+    'SEN 5',
+    'Movimento',
+    'Preparar um golpe confiável contra um adversário difícil de ler',
+    'Observe um alvo visível. Seu próximo ataque corpo a corpo contra ele, até o fim do próximo turno, recebe Vantagem. O benefício termina após um ataque, acerte ou erre.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'postura-de-muralha',
+    'Postura de Muralha',
+    '5 por rodada',
+    'FOR 15 e Guarda Total',
+    'Padrão',
+    'Evoluir a defesa pessoal para uma formação de linha de frente',
+    'Até o início do próximo turno, você não pode atacar nem causar dano, recebe uma Reação adicional exclusiva para Bloqueio e dobra apenas o VB da armadura; bônus de escudo, arma e habilidade não dobram. Aliados adjacentes recebem +2 VB. Renove com Ação Padrão e novo pagamento. Não acumula com Guarda Total.',
+    'effort',
+  ),
+  bookCombatSkill(
+    'rasteira',
+    'Rasteira',
+    '3',
+    'MIG 5 ou GRA 5',
+    'Padrão',
+    'Derrubar sem causar dano para criar vantagem coletiva',
+    'Dispute MIG ou GRA, escolhido ao declarar, contra GRA do alvo adjacente. Se vencer, não cause dano e aplique Derrubado. Depois de resistir ou sofrer o efeito, o alvo fica imune à sua Rasteira por 1 rodada.',
+    'effort',
+  ),
 ]
 
 // ── Ranged Habilidades ────────────────────────────────────────────────────────
@@ -343,3 +505,30 @@ export const ALL_COMBAT_SKILLS: CombatSkill[] = [
 export const COMBAT_SKILLS_MAP: Record<string, CombatSkill> = Object.fromEntries(
   ALL_COMBAT_SKILLS.map((skill) => [skill.id, skill]),
 )
+
+function normalizeDependencyText(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('pt-BR')
+}
+
+/**
+ * Extrai somente dependências entre habilidades do requisito editorial do livro.
+ * Atributos, equipamentos e perícias continuam no catálogo como referências de
+ * balanceamento, mas não são pré-requisitos mecânicos da árvore de talentos.
+ */
+export function combatSkillDependencyRequirement(skill: CombatSkill): string | undefined {
+  if (!skill.requirement) return undefined
+  const requirement = normalizeDependencyText(skill.requirement)
+  const dependencies = ALL_COMBAT_SKILLS.filter((candidate) => candidate.id !== skill.id)
+    .map((candidate) => ({
+      skill: candidate,
+      position: requirement.indexOf(normalizeDependencyText(candidate.name)),
+    }))
+    .filter(({ position }) => position >= 0)
+    .sort((a, b) => a.position - b.position || b.skill.name.length - a.skill.name.length)
+
+  const uniqueNames = [...new Set(dependencies.map(({ skill: dependency }) => dependency.name))]
+  return uniqueNames.length > 0 ? uniqueNames.join(' e ') : undefined
+}
