@@ -80,8 +80,17 @@ export default function TalentTreeCanvas({
   snapEnabled,
   searchQuery,
 }: Props) {
-  const { tree, addNode, removeNode, moveNode, toggleEdge, moveNodes, addNodes, removeNodes } =
-    useTalentTreeStore()
+  const {
+    tree,
+    addNode,
+    removeNode,
+    removeEdge,
+    moveNode,
+    toggleEdge,
+    moveNodes,
+    addNodes,
+    removeNodes,
+  } = useTalentTreeStore()
   const svgRef = useRef<SVGSVGElement>(null)
   const nodeElementRefs = useRef(new Map<string, SVGGElement>())
   const searchActive = searchQuery.trim().length > 0
@@ -652,6 +661,36 @@ export default function TalentTreeCanvas({
             strokeLinecap="round"
             opacity={0.7}
           />
+
+          {/* Wide invisible targets make individual edges easy to remove with right click. */}
+          {tree.edges.map((edge) => {
+            const from = nodeById.get(edge.from)
+            const to = nodeById.get(edge.to)
+            if (!from || !to) return null
+            return (
+              <line
+                key={`edge-hit-${edge.id}`}
+                x1={from.x}
+                y1={from.y}
+                x2={to.x}
+                y2={to.y}
+                fill="none"
+                stroke="transparent"
+                strokeWidth={14}
+                vectorEffect="non-scaling-stroke"
+                pointerEvents="stroke"
+                style={{ cursor: 'context-menu' }}
+                onContextMenu={(event) => {
+                  event.preventDefault()
+                  event.stopPropagation()
+                  setCtxMenu(null)
+                  setConnectingFrom(null)
+                  setCtrlConnectFrom(null)
+                  removeEdge(edge.id)
+                }}
+              />
+            )
+          })}
 
           {/* Nodes */}
           {renderedNodes}

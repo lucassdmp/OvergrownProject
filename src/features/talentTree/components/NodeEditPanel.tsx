@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTalentTreeStore } from '../store/talentTreeStore'
 import {
   NODE_TYPE_LABELS,
@@ -38,7 +38,10 @@ import type {
   ElementId,
   MagicTypeId,
   SpellLevelEntry,
+  CombatCategory,
 } from '../../../types/game'
+import ImageCropModal from '../../../components/ui/ImageCropModal'
+import { optimizeEmbeddedImage } from '../../../utils/image'
 import { SPELL_LEVEL_LABELS } from '../../../types/game'
 import { ELEMENTS } from '../../../data/elements'
 import { MAGIC_TYPES } from '../../../data/magicTypes'
@@ -563,9 +566,24 @@ function CombatAbilityEditor({
   onChange: (d: CombatAbilityNodeData) => void
 }) {
   const [search, setSearch] = useState('')
-  const filtered = search.trim()
-    ? ALL_COMBAT_SKILLS.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
-    : ALL_COMBAT_SKILLS
+  const [categoryFilter, setCategoryFilter] = useState<'all' | CombatCategory>('all')
+  const normalizedSearch = search.trim().toLocaleLowerCase('pt-BR')
+  const filtered = ALL_COMBAT_SKILLS.filter(
+    (skill) =>
+      (categoryFilter === 'all' || skill.category === categoryFilter) &&
+      (!normalizedSearch || skill.name.toLocaleLowerCase('pt-BR').includes(normalizedSearch)),
+  )
+  const categoryFilters: Array<{ value: 'all' | CombatCategory; label: string }> = [
+    { value: 'all', label: 'Todas' },
+    { value: 'melee', label: 'Melee' },
+    { value: 'ranged', label: 'Ranged' },
+    { value: 'effort', label: 'Esforço' },
+  ]
+  const categoryLabels: Record<CombatCategory, string> = {
+    melee: 'Melee',
+    ranged: 'Ranged',
+    effort: 'Esforço',
+  }
 
   const attributeBonuses = data.attributeBonuses ?? []
 
@@ -574,6 +592,31 @@ function CombatAbilityEditor({
       <div>
         <Label>Buscar Habilidade</Label>
         <TextInput value={search} onChange={setSearch} placeholder="Nome da habilidade…" />
+      </div>
+      <div>
+        <Label>Categoria</Label>
+        <div className="mt-1 flex flex-wrap gap-1">
+          {categoryFilters.map((filter) => {
+            const active = categoryFilter === filter.value
+            return (
+              <button
+                key={filter.value}
+                type="button"
+                onClick={() => setCategoryFilter(filter.value)}
+                className={`rounded-full border px-2.5 py-1 text-[10px] font-bold transition ${
+                  active
+                    ? 'border-rose-600 bg-rose-600 text-white'
+                    : 'border-gray-300 text-gray-500 hover:border-rose-400 hover:text-rose-600 dark:border-gray-700 dark:text-gray-400'
+                }`}
+              >
+                {filter.label}
+              </button>
+            )
+          })}
+        </div>
+        <p className="mt-1 text-[9px] text-gray-400">
+          {filtered.length} {filtered.length === 1 ? 'habilidade encontrada' : 'habilidades encontradas'}
+        </p>
       </div>
       <div className="flex max-h-48 flex-col gap-0.5 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
         {filtered.map((sk) => {
@@ -596,12 +639,28 @@ function CombatAbilityEditor({
               className={`w-full px-3 py-1.5 text-left text-xs transition ${active ? 'bg-rose-600 text-white' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'}`}
             >
               <span className="font-semibold">{sk.name}</span>
-              <span className={`ml-1.5 text-[10px] ${active ? 'text-rose-100' : 'text-gray-400'}`}>
-                PC: {sk.cost}
+              <span className="flex items-center justify-between gap-2">
+                <span className={`text-[10px] ${active ? 'text-rose-100' : 'text-gray-400'}`}>
+                  PC: {sk.cost}
+                </span>
+                <span
+                  className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold ${
+                    active
+                      ? 'bg-white/15 text-white'
+                      : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
+                  }`}
+                >
+                  {categoryLabels[sk.category]}
+                </span>
               </span>
             </button>
           )
         })}
+        {filtered.length === 0 && (
+          <p className="px-3 py-4 text-center text-[10px] text-gray-400">
+            Nenhuma habilidade encontrada neste filtro.
+          </p>
+        )}
       </div>
       {data.skillName && (
         <div className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/30 dark:text-rose-300">
@@ -1634,8 +1693,15 @@ function ConditionalEditor({
 // ── Main panel ────────────────────────────────────────────────────────────────
 
 export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
-  const { tree, updateNodeData, updateNodeCost, removeNode } = useTalentTreeStore()
+  const { tree, updateNodeData, updateNodeAppearance, updateNodeCost, removeNode } =
+    useTalentTreeStore()
   const node = tree.nodes.find((n) => n.id === nodeId)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const [imageEditorOpen, setImageEditorOpen] = useState(false)
+  const [pendingImage, setPendingImage] = useState<string | null>(null)
+  const [pendingImageX, setPendingImageX] = useState(50)
+  const [pendingImageY, setPendingImageY] = useState(50)
+  const [pendingImageScale, setPendingImageScale] = useState(1)
 
   // Local draft so edits aren't committed on every keystroke
   const [draftState, setDraftState] = useState<{ nodeId: string; data: TalentNodeData } | null>(
@@ -1650,6 +1716,7 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
       </div>
     )
   }
+  const selectedNode = node
 
   function save(data: TalentNodeData) {
     updateNodeData(nodeId, data)
@@ -1661,120 +1728,250 @@ export default function NodeEditPanel({ nodeId }: { nodeId: string }) {
     save(newData)
   }
 
+  function readImagePosition(position?: string) {
+    const match = position?.match(/(-?\d+(?:\.\d+)?)%?\s+(-?\d+(?:\.\d+)?)%?/)
+    const clamp = (value: number) => Math.min(100, Math.max(0, value))
+    return match ? { x: clamp(Number(match[1])), y: clamp(Number(match[2])) } : { x: 50, y: 50 }
+  }
+
+  function openImageEditor(base64: string, reset = false) {
+    const position = reset ? { x: 50, y: 50 } : readImagePosition(selectedNode.imagePosition)
+    setPendingImage(base64)
+    setPendingImageX(position.x)
+    setPendingImageY(position.y)
+    setPendingImageScale(reset ? 1 : Math.min(2.5, Math.max(0.5, selectedNode.imageScale ?? 1)))
+    setImageEditorOpen(true)
+  }
+
+  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = async (loadEvent) => {
+      const base64 = loadEvent.target?.result as string
+      if (!base64) return
+      openImageEditor(await optimizeEmbeddedImage(base64), true)
+    }
+    reader.readAsDataURL(file)
+    event.target.value = ''
+  }
+
+  function applyNodeImage() {
+    if (!pendingImage) return
+    updateNodeAppearance(nodeId, {
+      imageBase64: pendingImage,
+      imagePosition: `${pendingImageX}% ${pendingImageY}%`,
+      imageScale: pendingImageScale,
+    })
+    setImageEditorOpen(false)
+  }
+
   const { stroke } = NODE_TYPE_COLORS[draft.type]
 
   return (
-    <div className="flex h-full flex-col overflow-hidden">
-      {/* Panel header */}
-      <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white">Editar Nó</h3>
-        <button
-          onClick={() => removeNode(nodeId)}
-          className="rounded px-2 py-1 text-xs text-rose-500 transition hover:bg-rose-50 dark:hover:bg-rose-950/40"
-        >
-          ✕ Remover
-        </button>
-      </div>
-
-      {/* Type selector */}
-      <div className="shrink-0 border-b border-gray-100 px-4 py-3 dark:border-gray-800">
-        <Label>Tipo do Nó</Label>
-        <div className="mt-1 flex flex-wrap gap-1">
-          {NODE_TYPES.filter((t) => !NODE_TYPES_EXTRA.includes(t)).map((t) => {
-            const active = draft.type === t
-            const c = NODE_TYPE_COLORS[t]
-            return (
-              <button
-                key={t}
-                onClick={() => changeType(t)}
-                className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition"
-                style={{
-                  background: active ? c.stroke : 'transparent',
-                  borderColor: c.stroke,
-                  color: active ? '#fff' : c.stroke,
-                }}
-              >
-                {NODE_TYPE_LABELS[t]}
-              </button>
-            )
-          })}
-        </div>
-        <div className="mt-1.5 flex flex-wrap gap-1 border-t border-gray-100 pt-1.5 dark:border-gray-800">
-          <span className="mr-1 self-center text-[9px] font-bold tracking-widest text-amber-500 uppercase">
-            ＋
-          </span>
-          {NODE_TYPES_EXTRA.map((t) => {
-            const active = draft.type === t
-            const c = NODE_TYPE_COLORS[t]
-            return (
-              <button
-                key={t}
-                onClick={() => changeType(t)}
-                className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition"
-                style={{
-                  background: active ? c.stroke : 'transparent',
-                  borderColor: c.stroke,
-                  color: active ? '#fff' : c.stroke,
-                }}
-              >
-                {NODE_TYPE_LABELS[t]}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Node ID hint */}
-      <div className="shrink-0 px-4 pt-2">
-        <p className="truncate font-mono text-[9px] text-gray-300 dark:text-gray-700">
-          id: {nodeId}
-        </p>
-      </div>
-
-      {/* Custo em pontos de talento */}
-      <div className="flex shrink-0 items-center gap-2 px-4 pt-2">
-        <Label>Custo (pontos)</Label>
-        <input
-          type="number"
-          min={0}
-          value={node.cost ?? talentNodeCost(node)}
-          onChange={(e) => {
-            const v = Number(e.target.value)
-            updateNodeCost(nodeId, Number.isNaN(v) ? undefined : v)
-          }}
-          className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+    <>
+      {imageEditorOpen && pendingImage && (
+        <ImageCropModal
+          title="Ajustar imagem do nó"
+          base64={pendingImage}
+          x={pendingImageX}
+          y={pendingImageY}
+          scale={pendingImageScale}
+          circular
+          onX={setPendingImageX}
+          onY={setPendingImageY}
+          onScale={setPendingImageScale}
+          onApply={applyNodeImage}
+          onClose={() => setImageEditorOpen(false)}
         />
-        <button
-          onClick={() => updateNodeCost(nodeId, undefined)}
-          title="Voltar ao custo padrão (1; jogador/ligação = 0)"
-          className="text-[10px] text-gray-400 hover:text-amber-500"
-        >
-          padrão
-        </button>
-      </div>
+      )}
 
-      {/* Type-specific form */}
-      <div className="flex-1 overflow-y-auto px-4 py-3">
-        <div className="mb-3 border-b-2 pb-1" style={{ borderColor: stroke }}>
-          <span className="text-xs font-bold" style={{ color: stroke }}>
-            {NODE_TYPE_LABELS[draft.type]}
-          </span>
+      <div className="flex h-full flex-col overflow-hidden">
+        {/* Panel header */}
+        <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white">Editar Nó</h3>
+          <button
+            onClick={() => removeNode(nodeId)}
+            className="rounded px-2 py-1 text-xs text-rose-500 transition hover:bg-rose-50 dark:hover:bg-rose-950/40"
+          >
+            ✕ Remover
+          </button>
         </div>
 
-        {draft.type === 'player' && <PlayerEditor data={draft} onChange={save} />}
-        {draft.type === 'attribute' && <AttributeEditor data={draft} onChange={save} />}
-        {draft.type === 'magic' && <MagicEditor data={draft} onChange={save} />}
-        {draft.type === 'stat' && <StatEditor data={draft} onChange={save} />}
-        {draft.type === 'combatAbility' && <CombatAbilityEditor data={draft} onChange={save} />}
-        {draft.type === 'extraDamage' && <ExtraDamageEditor data={draft} onChange={save} />}
-        {draft.type === 'healing' && <HealingEditor data={draft} onChange={save} />}
-        {draft.type === 'weaponBonus' && <WeaponBonusEditor data={draft} onChange={save} />}
-        {draft.type === 'spellModifier' && <SpellModifierEditor data={draft} onChange={save} />}
-        {draft.type === 'defenseBonus' && <DefenseBonusEditor data={draft} onChange={save} />}
-        {draft.type === 'skillBonus' && <SkillBonusEditor data={draft} onChange={save} />}
-        {draft.type === 'link' && <LinkEditor data={draft} onChange={save} />}
-        {draft.type === 'conditional' && <ConditionalEditor data={draft} onChange={save} />}
+        {/* Type selector */}
+        <div className="shrink-0 border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+          <Label>Tipo do Nó</Label>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {NODE_TYPES.filter((t) => !NODE_TYPES_EXTRA.includes(t)).map((t) => {
+              const active = draft.type === t
+              const c = NODE_TYPE_COLORS[t]
+              return (
+                <button
+                  key={t}
+                  onClick={() => changeType(t)}
+                  className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition"
+                  style={{
+                    background: active ? c.stroke : 'transparent',
+                    borderColor: c.stroke,
+                    color: active ? '#fff' : c.stroke,
+                  }}
+                >
+                  {NODE_TYPE_LABELS[t]}
+                </button>
+              )
+            })}
+          </div>
+          <div className="mt-1.5 flex flex-wrap gap-1 border-t border-gray-100 pt-1.5 dark:border-gray-800">
+            <span className="mr-1 self-center text-[9px] font-bold tracking-widest text-amber-500 uppercase">
+              ＋
+            </span>
+            {NODE_TYPES_EXTRA.map((t) => {
+              const active = draft.type === t
+              const c = NODE_TYPE_COLORS[t]
+              return (
+                <button
+                  key={t}
+                  onClick={() => changeType(t)}
+                  className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition"
+                  style={{
+                    background: active ? c.stroke : 'transparent',
+                    borderColor: c.stroke,
+                    color: active ? '#fff' : c.stroke,
+                  }}
+                >
+                  {NODE_TYPE_LABELS[t]}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Node ID hint */}
+        <div className="shrink-0 px-4 pt-2">
+          <p className="truncate font-mono text-[9px] text-gray-300 dark:text-gray-700">
+            id: {nodeId}
+          </p>
+        </div>
+
+        {/* Optional node artwork */}
+        <div className="shrink-0 px-4 pt-2">
+          <Label>Imagem do nó</Label>
+          <div className="mt-1 flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => imageInputRef.current?.click()}
+              className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-gray-400 bg-gray-900 transition hover:border-amber-600"
+              title="Enviar outra imagem"
+            >
+              {node.imageBase64 ? (
+                <img
+                  src={node.imageBase64}
+                  alt="Imagem do nó"
+                  className="h-full w-full object-cover"
+                  style={{
+                    objectPosition: node.imagePosition ?? '50% 50%',
+                    transformOrigin: node.imagePosition ?? '50% 50%',
+                    transform: `scale(${node.imageScale ?? 1})`,
+                  }}
+                />
+              ) : (
+                <span className="flex h-full items-center justify-center text-lg text-gray-400">
+                  ＋
+                </span>
+              )}
+            </button>
+
+            <div className="flex min-w-0 flex-col items-start gap-1">
+              <button
+                type="button"
+                onClick={() => imageInputRef.current?.click()}
+                className="text-[11px] font-semibold text-amber-700 hover:underline dark:text-amber-500"
+              >
+                {node.imageBase64 ? 'Trocar imagem' : 'Enviar imagem'}
+              </button>
+              {node.imageBase64 && (
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => openImageEditor(node.imageBase64!)}
+                    className="text-[10px] text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+                  >
+                    Ajustar recorte
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateNodeAppearance(nodeId, {
+                        imageBase64: undefined,
+                        imagePosition: undefined,
+                        imageScale: undefined,
+                      })
+                    }
+                    className="text-[10px] text-rose-500 hover:underline"
+                  >
+                    Remover
+                  </button>
+                </div>
+              )}
+              <span className="text-[9px] leading-tight text-gray-400">
+                Otimizada automaticamente para o arquivo da árvore.
+              </span>
+            </div>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+          </div>
+        </div>
+
+        {/* Custo em pontos de talento */}
+        <div className="flex shrink-0 items-center gap-2 px-4 pt-2">
+          <Label>Custo (pontos)</Label>
+          <input
+            type="number"
+            min={0}
+            value={node.cost ?? talentNodeCost(node)}
+            onChange={(e) => {
+              const v = Number(e.target.value)
+              updateNodeCost(nodeId, Number.isNaN(v) ? undefined : v)
+            }}
+            className="w-16 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
+          <button
+            onClick={() => updateNodeCost(nodeId, undefined)}
+            title="Voltar ao custo padrão (1; jogador/ligação = 0)"
+            className="text-[10px] text-gray-400 hover:text-amber-500"
+          >
+            padrão
+          </button>
+        </div>
+
+        {/* Type-specific form */}
+        <div className="flex-1 overflow-y-auto px-4 py-3">
+          <div className="mb-3 border-b-2 pb-1" style={{ borderColor: stroke }}>
+            <span className="text-xs font-bold" style={{ color: stroke }}>
+              {NODE_TYPE_LABELS[draft.type]}
+            </span>
+          </div>
+
+          {draft.type === 'player' && <PlayerEditor data={draft} onChange={save} />}
+          {draft.type === 'attribute' && <AttributeEditor data={draft} onChange={save} />}
+          {draft.type === 'magic' && <MagicEditor data={draft} onChange={save} />}
+          {draft.type === 'stat' && <StatEditor data={draft} onChange={save} />}
+          {draft.type === 'combatAbility' && <CombatAbilityEditor data={draft} onChange={save} />}
+          {draft.type === 'extraDamage' && <ExtraDamageEditor data={draft} onChange={save} />}
+          {draft.type === 'healing' && <HealingEditor data={draft} onChange={save} />}
+          {draft.type === 'weaponBonus' && <WeaponBonusEditor data={draft} onChange={save} />}
+          {draft.type === 'spellModifier' && <SpellModifierEditor data={draft} onChange={save} />}
+          {draft.type === 'defenseBonus' && <DefenseBonusEditor data={draft} onChange={save} />}
+          {draft.type === 'skillBonus' && <SkillBonusEditor data={draft} onChange={save} />}
+          {draft.type === 'link' && <LinkEditor data={draft} onChange={save} />}
+          {draft.type === 'conditional' && <ConditionalEditor data={draft} onChange={save} />}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

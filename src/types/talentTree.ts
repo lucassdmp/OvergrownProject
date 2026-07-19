@@ -297,19 +297,19 @@ export const NODE_TYPE_COLORS: Record<
   TalentNodeType,
   { fill: string; stroke: string; text: string }
 > = {
-  player: { fill: '#f0f9ff', stroke: '#0284c7', text: '#0c4a6e' },
-  attribute: { fill: '#fef3c7', stroke: '#d97706', text: '#92400e' },
-  magic: { fill: '#ede9fe', stroke: '#7c3aed', text: '#4c1d95' },
-  stat: { fill: '#d1fae5', stroke: '#059669', text: '#064e3b' },
-  combatAbility: { fill: '#ffe4e6', stroke: '#e11d48', text: '#881337' },
-  extraDamage: { fill: '#ffedd5', stroke: '#ea580c', text: '#7c2d12' },
-  healing: { fill: '#dcfce7', stroke: '#16a34a', text: '#14532d' },
-  weaponBonus: { fill: '#fdf2f8', stroke: '#9d174d', text: '#701a75' },
-  spellModifier: { fill: '#f5f3ff', stroke: '#6d28d9', text: '#3b0764' },
-  defenseBonus: { fill: '#f0fdf4', stroke: '#166534', text: '#14532d' },
-  skillBonus: { fill: '#fff7ed', stroke: '#c2410c', text: '#7c2d12' },
-  link: { fill: '#f8fafc', stroke: '#64748b', text: '#334155' },
-  conditional: { fill: '#fefce8', stroke: '#a16207', text: '#713f12' },
+  player: { fill: '#edf5f7', stroke: '#6f909c', text: '#29434d' },
+  attribute: { fill: '#f5efe4', stroke: '#aa8b61', text: '#57442d' },
+  magic: { fill: '#f2edf7', stroke: '#907aa5', text: '#49375b' },
+  stat: { fill: '#ecf5f0', stroke: '#70917e', text: '#304d3e' },
+  combatAbility: { fill: '#f6eceb', stroke: '#a67a76', text: '#593a38' },
+  extraDamage: { fill: '#f6eee7', stroke: '#aa8468', text: '#5b402d' },
+  healing: { fill: '#eaf4ed', stroke: '#6f9278', text: '#304f39' },
+  weaponBonus: { fill: '#f5eaee', stroke: '#a07784', text: '#563846' },
+  spellModifier: { fill: '#f0ecf5', stroke: '#87759e', text: '#443653' },
+  defenseBonus: { fill: '#eaf3f2', stroke: '#698c88', text: '#2e4b48' },
+  skillBonus: { fill: '#f5ede6', stroke: '#a28268', text: '#55402f' },
+  link: { fill: '#f3f5f6', stroke: '#8d959a', text: '#464c50' },
+  conditional: { fill: '#f4f1e5', stroke: '#9d9367', text: '#514b2f' },
 }
 
 export const NODE_TYPE_LABELS: Record<TalentNodeType, string> = {
@@ -335,6 +335,12 @@ export interface TalentTreeNode {
   x: number
   y: number
   data: TalentNodeData
+  /** Optional optimized image rendered inside the circular node. */
+  imageBase64?: string
+  /** Crop focus saved as `x% y%`, matching the character portrait editor. */
+  imagePosition?: string
+  /** Image zoom used by the circular crop (0.5–2.5). */
+  imageScale?: number
   /**
    * Custo em pontos de talento para adquirir o nó.
    * Padrão: 1. Nós de jogador e de ligação custam 0.

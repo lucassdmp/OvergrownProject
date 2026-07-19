@@ -42,6 +42,10 @@ interface TalentTreeState {
   removeNode: (id: string) => void
   moveNode: (id: string, x: number, y: number) => void
   updateNodeData: (id: string, data: TalentNodeData) => void
+  updateNodeAppearance: (
+    id: string,
+    appearance: Pick<TalentTreeNode, 'imageBase64' | 'imagePosition' | 'imageScale'>,
+  ) => void
   /** Set the talent point cost of a node (undefined = default cost) */
   updateNodeCost: (id: string, cost: number | undefined) => void
 
@@ -120,6 +124,18 @@ export const useTalentTreeStore = create<TalentTreeState>()(
             }),
             false,
             'updateNodeData',
+          ),
+
+        updateNodeAppearance: (id, appearance) =>
+          set(
+            (s) => ({
+              tree: {
+                ...s.tree,
+                nodes: s.tree.nodes.map((n) => (n.id === id ? { ...n, ...appearance } : n)),
+              },
+            }),
+            false,
+            'updateNodeAppearance',
           ),
 
         updateNodeCost: (id, cost) =>
