@@ -186,7 +186,9 @@ export default function TalentTreeCanvas({
       if (!hit) {
         const type = mode.slice(4) as TalentNodeType
         const pos = svgPoint(e.clientX, e.clientY)
-        addNode(snap(pos.x), snap(pos.y), type)
+        const nodeId = addNode(snap(pos.x), snap(pos.y), type)
+        setMultiIds(new Set())
+        setSelectedNodeId(nodeId)
       }
       setMode('select')
       return

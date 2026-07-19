@@ -107,6 +107,18 @@ A árvore padrão não é incluída nos chunks das páginas de produção; o Fir
 
 O identificador `VITE_FIREBASE_TREE_ID` funciona como uma sala. Todos os deployments com `official` acessam a mesma árvore. Use outro valor para criar um ambiente de teste independente, por exemplo `staging`.
 
+O editor mantém uma fila diferencial por documento. Um nó novo é selecionado automaticamente; enquanto ele permanece selecionado, suas propriedades ficam agrupadas localmente e são gravadas ao trocar ou remover a seleção. Movimentos são enviados imediatamente depois do drop. Alterações fora do painel de um nó são combinadas por 700 ms e produzem uma única escrita com somente os campos alterados. `Ctrl+S` esvazia a fila mesmo com o nó ainda selecionado, sem reler ou regravar a árvore completa. Importações e resets comparam o estado anterior e gravam somente nós e arestas efetivamente alterados, em lotes de até 400 operações.
+
+As coleções `nodes` e `edges` não usam filtros nem ordenação por campos internos. Por isso seus índices automáticos estão desabilitados em `firestore.indexes.json`: criar índices adicionais não aceleraria os listeners atuais e aumentaria o armazenamento e o trabalho de cada escrita.
+
+### Projeção pública em chunks
+
+Os documentos individuais de `nodes` e `edges` são a fonte colaborativa usada somente pelo builder. Leitores da ficha e de `/arvore` escutam apenas `talentTrees/{treeId}/publications/current`, um manifesto pequeno com a versão, os hashes e a lista de chunks publicados.
+
+Ao salvar, o builder divide deterministicamente nós, arestas e imagens entre 32 buckets e documentos de no máximo aproximadamente 550 KiB. Somente chunks cujo hash mudou são regravados; o manifesto é atualizado por último, depois que todos os novos chunks existem. Imagens ficam separadas dos dados dos nós, portanto mover um nó não republica sua imagem Base64.
+
+O leitor guarda manifesto, chunks e árvore montada no IndexedDB. Em uma nova visita ele lê o manifesto e reutiliza todos os chunks com o mesmo hash. Se apenas um chunk mudou, somente esse documento é buscado. Projetos ainda sem manifesto usam uma leitura única do formato legado; abrir o builder com uma conta editora cria automaticamente a primeira publicação otimizada.
+
 ## 6. Configurar o deploy
 
 Cadastre as mesmas variáveis `VITE_FIREBASE_*` no provedor que publica o site (por exemplo, **Vercel > Project Settings > Environment Variables**) e faça um novo deploy. Variáveis Vite são incorporadas durante o build, então alterar apenas o Console do provedor sem reconstruir não atualiza o aplicativo.

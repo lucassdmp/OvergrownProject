@@ -210,6 +210,18 @@ service cloud.firestore {
         allow read: if true;
         allow write: if canEditTree();
       }
+
+      // Compact public projection. Readers listen only to the manifest and
+      // fetch versioned chunks whose hashes changed.
+      match /publications/{publicationId} {
+        allow read: if true;
+        allow write: if canEditTree();
+      }
+
+      match /publishedChunks/{chunkId} {
+        allow read: if true;
+        allow write: if canEditTree();
+      }
     }
   }
 }

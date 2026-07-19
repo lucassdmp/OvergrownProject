@@ -2,6 +2,26 @@
   "indexes": [],
   "fieldOverrides": [
     {
+      "collectionGroup": "nodes",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "edges",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "publications",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "publishedChunks",
+      "fieldPath": "*",
+      "indexes": []
+    },
+    {
       "collectionGroup": "characters",
       "fieldPath": "*",
       "indexes": []

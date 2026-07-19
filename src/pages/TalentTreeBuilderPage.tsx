@@ -71,7 +71,12 @@ export default function TalentTreeBuilderPage() {
   const searchMatchCount = searchQuery.trim()
     ? tree.nodes.filter((node) => nodeMatchesSearch(node, searchQuery)).length
     : 0
-  const { saveNow, status: saveStatus, error: saveError, lastSavedAt } = useFirebaseTalentTreeSync()
+  const {
+    saveNow,
+    status: saveStatus,
+    error: saveError,
+    lastSavedAt,
+  } = useFirebaseTalentTreeSync({ selectedNodeId })
 
   // Grid & snap
   const [gridEnabled, setGridEnabled] = useState(false)
@@ -294,7 +299,9 @@ export default function TalentTreeBuilderPage() {
               className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
                 saveStatus === 'error'
                   ? 'border-red-400 bg-red-50 text-red-600 dark:bg-red-950/30'
-                  : saveStatus === 'syncing' || saveStatus === 'connecting'
+                  : saveStatus === 'pending' ||
+                      saveStatus === 'syncing' ||
+                      saveStatus === 'connecting'
                     ? 'border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
                     : saveStatus === 'disabled'
                       ? 'border-gray-300 text-gray-500 dark:border-gray-700'
@@ -305,11 +312,13 @@ export default function TalentTreeBuilderPage() {
                 ? '⚠ Erro ao salvar'
                 : saveStatus === 'connecting'
                   ? '◌ Conectando ao Firebase…'
-                  : saveStatus === 'syncing'
-                    ? '● Sincronizando…'
-                    : saveStatus === 'disabled'
-                      ? 'Firebase não configurado · cópia local'
-                      : '✓ Sincronizado em tempo real'}
+                  : saveStatus === 'pending'
+                    ? '● Salva ao desselecionar'
+                    : saveStatus === 'syncing'
+                      ? '● Sincronizando…'
+                      : saveStatus === 'disabled'
+                        ? 'Firebase não configurado · cópia local'
+                        : '✓ Sincronizado em tempo real'}
             </span>
             <button
               onClick={handleExport}
