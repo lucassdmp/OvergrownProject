@@ -120,14 +120,15 @@ export function useDefaultTreeAutoLoad() {
 
     async function loadTreeFile() {
       let nextTree = structuredClone(DEFAULT_TREE)
-      if (import.meta.env.DEV) {
-        try {
-          const response = await fetch('/__overgrown/talent-tree', { cache: 'no-store' })
-          if (!response.ok) throw new Error(`Falha ao abrir a árvore (${response.status}).`)
-          nextTree = (await response.json()) as TalentTree
-        } catch {
-          // Testes e builds sem o servidor Vite continuam usando o JSON importado.
-        }
+      const treeUrl = import.meta.env.DEV
+        ? '/__overgrown/talent-tree'
+        : `${import.meta.env.BASE_URL}defaultTalentTree.json`
+      try {
+        const response = await fetch(treeUrl, { cache: 'no-store' })
+        if (!response.ok) throw new Error(`Falha ao abrir a árvore (${response.status}).`)
+        nextTree = (await response.json()) as TalentTree
+      } catch {
+        // Mantém o JSON embarcado como fallback caso o asset público esteja indisponível.
       }
       if (cancelled) return
 

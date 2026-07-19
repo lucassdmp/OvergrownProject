@@ -38,7 +38,7 @@ export default function AppNavbar({ isDark, toggleDark }: Props) {
           </Link>
           {authorized && (access?.role === 'editor' || access?.role === 'admin') && (
             <Link
-              to="/talent-tree-builder"
+              to="/tree-builder"
               className="text-amber-700 hover:text-amber-500 dark:text-amber-400 dark:hover:text-amber-300"
             >
               Builder

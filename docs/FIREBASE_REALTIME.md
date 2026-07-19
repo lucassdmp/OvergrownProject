@@ -38,7 +38,7 @@ Use o UID do Firebase Authentication como ID do documento, não o e-mail. Depois
 `/admin` permite gerenciar os demais usuários.
 
 - `viewer`: não abre o builder; pode salvar fichas apenas com `canSaveCharacters: true`.
-- `editor`: pode abrir `/talent-tree-builder` e editar o arquivo local quando o projeto roda via Vite.
+- `editor`: pode abrir `/tree-builder` e editar o arquivo local quando o projeto roda via Vite.
 - `admin`: possui o acesso de editor e pode abrir `/admin`.
 - `canSaveCharacters`: permissão independente para carregar, salvar e excluir fichas no Firestore.
 
@@ -59,9 +59,10 @@ remover um nó agenda um salvamento depois de 600 ms sem novas alterações.
 O servidor Vite valida a estrutura, limita o payload a 8 MiB, incrementa `version` quando o
 conteúdo muda e substitui exclusivamente esse arquivo. Não é necessário usar `Ctrl+S`.
 
-Uma aplicação publicada não pode escrever de volta no repositório do qual seu bundle foi criado.
-Em produção, a árvore é somente leitura até que uma nova versão de
-`src/data/defaultTalentTree.json` seja enviada e publicada.
+No build, o Vite publica uma cópia em `dist/defaultTalentTree.json`. `/arvore` e `/tree-builder`
+buscam esse asset no site hospedado. Uma aplicação publicada não pode escrever de volta no
+repositório: em produção o builder permite editar em memória e exportar, mas uma nova versão oficial
+exige substituir `src/data/defaultTalentTree.json` e publicar outro build.
 
 Não existem listeners, documentos, publicações ou chunks da árvore no Firestore. Dados antigos em
 `talentTrees` podem permanecer como backup, mas as regras atuais não concedem acesso a eles e o

@@ -8,6 +8,7 @@ const PDF_SOURCE = path.resolve(__dirname, 'Livro', 'Overgrown Project.pdf')
 const PDF_URL_PATH = '/overgrown-project.pdf'
 const TALENT_TREE_SOURCE = path.resolve(__dirname, 'src', 'data', 'defaultTalentTree.json')
 const TALENT_TREE_SAVE_PATH = '/__overgrown/talent-tree'
+const TALENT_TREE_PUBLIC_FILE = 'defaultTalentTree.json'
 const MAX_TALENT_TREE_BYTES = 8 * 1024 * 1024
 
 function isValidTalentTree(value: unknown): value is {
@@ -189,6 +190,27 @@ function localTalentTreeWriterPlugin(): Plugin {
   }
 }
 
+/** Copies the official tree to the build root so hosted pages can fetch it as public data. */
+function talentTreePublicAssetPlugin(): Plugin {
+  let outDir = 'dist'
+
+  return {
+    name: 'overgrown-public-talent-tree-asset',
+    apply: 'build',
+    configResolved(config) {
+      outDir = config.build.outDir
+    },
+    closeBundle() {
+      const source = fs.readFileSync(TALENT_TREE_SOURCE, 'utf8')
+      const parsed = JSON.parse(source) as unknown
+      if (!isValidTalentTree(parsed)) {
+        throw new Error('Não foi possível publicar: estrutura da árvore inválida.')
+      }
+      fs.copyFileSync(TALENT_TREE_SOURCE, path.resolve(__dirname, outDir, TALENT_TREE_PUBLIC_FILE))
+    },
+  }
+}
+
 /** Serves Livro/Overgrown Project.pdf at /overgrown-project.pdf without duplicating it into public/. */
 function pdfAssetPlugin(): Plugin {
   let outDir = 'dist'
@@ -216,7 +238,13 @@ function pdfAssetPlugin(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), pdfAssetPlugin(), localTalentTreeWriterPlugin()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    pdfAssetPlugin(),
+    talentTreePublicAssetPlugin(),
+    localTalentTreeWriterPlugin(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

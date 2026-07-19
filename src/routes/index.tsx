@@ -47,8 +47,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    // Hidden page – not linked from the nav. Access via /talent-tree-builder directly.
-    path: '/talent-tree-builder',
+    path: '/tree-builder',
     element: (
       <Suspense
         fallback={
@@ -62,6 +61,10 @@ export const router = createBrowserRouter([
         </FirebaseAccessGate>
       </Suspense>
     ),
+  },
+  {
+    path: '/talent-tree-builder',
+    element: <Navigate to="/tree-builder" replace />,
   },
   {
     // Player-facing talent tree view – reached from the sheet pentagon

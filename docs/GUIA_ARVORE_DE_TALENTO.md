@@ -16,7 +16,7 @@ A árvore é um artefato autoral. Não existe gerador de topologia: conteúdo, p
 ## Edição e salvamento
 
 1. Inicie o projeto com `npm run dev`.
-2. Abra `/talent-tree-builder`.
+2. Abra `/tree-builder`.
 3. Edite, mova, conecte, importe ou remova nós normalmente.
 4. Qualquer alteração agenda um salvamento automático após 500 ms sem novas mudanças.
 5. Nenhum atalho é necessário: após 600 ms sem novas mudanças, o arquivo é salvo automaticamente.
@@ -24,7 +24,7 @@ A árvore é um artefato autoral. Não existe gerador de topologia: conteúdo, p
 
 O servidor local usa `GET /__overgrown/talent-tree` para abrir sempre o arquivo atual e `POST /__overgrown/talent-tree` para salvá-lo. Ele valida a estrutura, IDs únicos e referências das conexões e grava exclusivamente em `src/data/defaultTalentTree.json`. O cliente não escolhe caminhos do sistema de arquivos. Quando o conteúdo realmente muda, o servidor incrementa `version`; salvar novamente sem alterações preserva a versão existente.
 
-Este recurso é intencionalmente local. Em builds de produção o endpoint não existe e a árvore embarcada é somente leitura. O botão de exportar ficha + árvore continua disponível como backup portável, mas não é o mecanismo de publicação da árvore oficial.
+No build, o Vite copia a árvore para `dist/defaultTalentTree.json`, equivalente a um asset público. O site hospedado busca esse arquivo em `/arvore` e `/tree-builder`; o builder não consegue sobrescrever o servidor, mas permite exportar o JSON editado. A URL antiga `/talent-tree-builder` redireciona para `/tree-builder`.
 
 ## Arquitetura visual
 
@@ -103,4 +103,4 @@ npm run lint
 npm run build
 ```
 
-Depois inspecione `/arvore` e `/talent-tree-builder`, verificando busca, zoom, aquisição, dependências, movimentação, conexões e o indicador de salvamento local. Confirme também que `src/data/defaultTalentTree.json` muda depois de editar a árvore no servidor Vite local.
+Depois inspecione `/arvore` e `/tree-builder`, verificando busca, zoom, aquisição, dependências, movimentação, conexões e o indicador de salvamento local. Confirme também que `src/data/defaultTalentTree.json` muda depois de editar a árvore no servidor Vite local e que o build contém `dist/defaultTalentTree.json`.
