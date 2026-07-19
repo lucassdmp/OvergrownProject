@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { useFirebaseCharacters } from '../character/hooks/useFirebaseCharacters'
+import { Link } from 'react-router-dom'
 import { isFirebaseConfigured, useFirebaseSession } from './firebaseSessionContext'
 
 interface Props {
@@ -9,7 +7,6 @@ interface Props {
 }
 
 export default function AppNavbar({ isDark, toggleDark }: Props) {
-  const location = useLocation()
   const {
     user,
     access,
@@ -22,19 +19,6 @@ export default function AppNavbar({ isDark, toggleDark }: Props) {
     login,
     logout,
   } = useFirebaseSession()
-  const cloud = useFirebaseCharacters()
-  const [selectedRemoteId, setSelectedRemoteId] = useState('')
-  const isSheet = location.pathname === '/'
-
-  function loadSelected(characterId: string) {
-    setSelectedRemoteId(characterId)
-    if (!characterId) return
-    cloud.loadRemoteCharacter(characterId)
-    setSelectedRemoteId('')
-  }
-
-  const statusMessage = cloud.error || cloud.message || error
-
   return (
     <header className="sticky top-0 z-40 border-b border-amber-200/70 bg-white/95 shadow-sm backdrop-blur dark:border-amber-900/30 dark:bg-gray-950/95">
       <div className="mx-auto flex min-h-14 max-w-7xl flex-wrap items-center gap-3 px-4 py-2">
@@ -63,37 +47,6 @@ export default function AppNavbar({ isDark, toggleDark }: Props) {
         </nav>
 
         <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
-          {isSheet && user && canSaveCharacters && (
-            <>
-              <select
-                aria-label="Carregar ficha do Firebase"
-                value={selectedRemoteId}
-                onChange={(event) => loadSelected(event.target.value)}
-                className="max-w-44 rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-xs text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
-              >
-                <option value="">Fichas na nuvem…</option>
-                {cloud.remoteCharacters.map(({ character }) => (
-                  <option key={character.id} value={character.id}>
-                    {character.name || 'Sem nome'}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                disabled={cloud.saving || cloud.remainingSeconds > 0}
-                onClick={() => void cloud.saveCharacter()}
-                title={statusMessage ?? 'Salvar a ficha atual no Firebase'}
-                className="rounded-lg border border-emerald-600/50 px-3 py-1.5 text-xs font-bold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
-              >
-                {cloud.saving
-                  ? 'Salvando…'
-                  : cloud.remainingSeconds > 0
-                    ? `Aguarde ${cloud.remainingSeconds}s`
-                    : 'Salvar ficha'}
-              </button>
-            </>
-          )}
-
           <button
             type="button"
             onClick={toggleDark}
@@ -149,13 +102,7 @@ export default function AppNavbar({ isDark, toggleDark }: Props) {
           )}
         </div>
 
-        {isSheet && statusMessage && (
-          <p
-            className={`w-full text-right text-[10px] ${cloud.error || error ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400'}`}
-          >
-            {statusMessage}
-          </p>
-        )}
+        {error && <p className="w-full text-right text-[10px] text-red-500">{error}</p>}
       </div>
     </header>
   )

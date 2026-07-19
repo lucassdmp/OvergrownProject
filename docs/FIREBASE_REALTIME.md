@@ -77,7 +77,7 @@ As regras em `firestore.rules` permitem leitura pública da árvore, mas exigem 
 ```powershell
 npx firebase-tools login
 npx firebase-tools use SEU_PROJECT_ID
-npx firebase-tools deploy --only firestore:rules
+npx firebase-tools deploy --only firestore:rules,firestore:indexes
 ```
 
 Se preferir, copie o conteúdo de `firestore.rules` para **Firestore Database > Rules** no Console e clique em **Publish**.
@@ -102,15 +102,24 @@ Também adicione os domínios publicados em **Authentication > Settings > Author
 
 ## 7. Salvar e recuperar fichas
 
-A página inicial continua disponível sem login e mantém o salvamento local existente. A navbar acima da ficha permite:
+A página inicial continua disponível sem login e mantém o salvamento local existente. A barra superior da própria ficha permite:
 
-1. entrar ou sair com Google e conferir a foto e o papel da conta;
-2. clicar em **Salvar ficha** para criar ou atualizar a ficha ativa no Firestore;
-3. selecionar **Fichas na nuvem…** para recuperar uma ficha salva pela mesma conta em outro navegador.
+1. clicar em **Salvar ficha** para criar ou atualizar a ficha ativa no Firestore;
+2. abrir o seletor para receber somente o nome e o nível de divindade das fichas salvas;
+3. selecionar uma ficha para buscar exclusivamente o documento completo dela;
+4. escolher **+ Criar Novo Personagem** no mesmo seletor;
+5. excluir a ficha ativa depois do mesmo intervalo mínimo de 30 segundos;
+6. atualizar a lista manualmente, evitando manter um listener de fichas completas aberto.
 
 O botão apresenta uma contagem regressiva de 30 segundos depois de cada salvamento. Esse bloqueio visual é apenas uma conveniência; a regra do Firestore usa `request.time`, o relógio do servidor, como autoridade. O intervalo é individual por ficha, então salvar uma ficha não impede o salvamento de outra.
 
-Somente contas simultaneamente autenticadas, ativas e com `canSaveCharacters: true` recebem os controles de nuvem. A ficha é gravada em `users/{uid}/characters/{characterId}` junto de `updatedAt` e `updatedBy`. A imagem do personagem já passa pela otimização existente antes de entrar no documento.
+Somente contas simultaneamente autenticadas, ativas e com `canSaveCharacters: true` recebem os controles de nuvem. A ficha é gravada em `users/{uid}/characters/{characterId}` junto de `updatedAt` e `updatedBy`.
+
+O salvamento é diferencial: campos inalterados não são enviados novamente, arrays são reenviados somente quando mudam e clicar em salvar sem alterações não produz nenhuma escrita nem inicia cooldown. O avatar otimizado fica isolado em `characterAssets/avatar` e só é escrito quando seu hash muda. A troca do avatar e o patch da ficha usam um batch atômico.
+
+A coleção `characterSummaries` contém apenas nome, divindade e metadados mínimos. Ela só recebe escrita na criação da ficha ou quando nome ou divindade mudam. A consulta inicial nunca baixa inventário, notas, atributos nem avatar.
+
+O projeto não depende do Cloud Storage para as imagens. Desde fevereiro de 2026 esse produto exige o plano Blaze; manter o avatar em um documento separado do Firestore preserva a compatibilidade com o plano Spark e evita reenviar o Base64 nas alterações comuns da ficha.
 
 ## 8. Validar a colaboração
 
@@ -124,13 +133,15 @@ Somente contas simultaneamente autenticadas, ativas e com `canSaveCharacters: tr
 
 ```text
 users/{uid}                                autorização, estado e papel do usuário
+  characterSummaries/{characterId}        nome e divindade usados na lista leve de fichas
   characters/{characterId}                ficha privada, autor e horário do salvamento
+    characterAssets/avatar                imagem otimizada, hash e tipo do avatar
 talentTrees/{VITE_FIREBASE_TREE_ID}       metadados da árvore
   nodes/{nodeId}                          conteúdo, posição e imagem do nó
   edges/{edgeId}                          ligação entre dois nós
 ```
 
-As imagens já são reduzidas antes do salvamento e ficam no documento individual do nó. Isso evita concentrar toda a árvore em um único documento — documentos do Firestore possuem limite de 1 MiB.
+As imagens já são reduzidas antes do salvamento. Os índices automáticos das fichas e dos assets são desativados em `firestore.indexes.json`, pois o aplicativo não consulta seus campos; isso reduz armazenamento e fanout de escrita. Documentos do Firestore possuem limite de 1 MiB.
 
 ## Operação e retorno seguro
 
@@ -151,3 +162,5 @@ As imagens já são reduzidas antes do salvamento e ficam no documento individua
 - [Regras de segurança do Firestore](https://firebase.google.com/docs/firestore/security/rules-conditions)
 - [Horário do servidor em regras do Firestore](https://firebase.google.com/docs/reference/rules/rules.firestore.Request)
 - [Limites do Cloud Firestore](https://firebase.google.com/docs/firestore/quotas)
+- [Isenções de índices do Cloud Firestore](https://firebase.google.com/docs/firestore/query-data/index-overview)
+- [Requisitos de plano do Cloud Storage](https://firebase.google.com/docs/storage/faqs-storage-changes-announced-sept-2024)

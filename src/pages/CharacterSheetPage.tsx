@@ -19,19 +19,6 @@ export default function CharacterSheetPage() {
     <div className="min-h-screen pb-16">
       <FirebaseSheetTreeSync />
       <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6">
-        {/* V2 badge */}
-        <div className="flex items-center">
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-amber-500 px-3 py-0.5 text-xs font-bold tracking-widest text-white uppercase">
-              Ficha
-            </span>
-            <span className="text-xs text-gray-400 dark:text-gray-500">
-              Atributos, magias e ataques provenientes da Árvore de Talento
-            </span>
-          </div>
-        </div>
-
-        {/* Header */}
         <CharacterHeader />
 
         {/* Attribute Pentagon – read-only, click to go to /arvore */}

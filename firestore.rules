@@ -31,9 +31,17 @@ service cloud.firestore {
     function validCharacterWrite(userId) {
       return canAccessOwnCharacters(userId)
         && request.resource.data.keys().hasAll(['character', 'updatedAt', 'updatedBy'])
-        && request.resource.data.keys().hasOnly(['character', 'updatedAt', 'updatedBy'])
+        && request.resource.data.keys().hasOnly([
+          'character',
+          'avatarHash',
+          'avatarContentType',
+          'updatedAt',
+          'updatedBy'
+        ])
         && request.resource.data.character is map
         && request.resource.data.character.id is string
+        && request.resource.data.get('avatarHash', '') is string
+        && request.resource.data.get('avatarContentType', '') is string
         && request.resource.data.updatedAt is timestamp
         && request.resource.data.updatedAt == request.time
         && request.resource.data.updatedBy == request.auth.uid;
@@ -56,7 +64,60 @@ service cloud.firestore {
           && request.resource.data.character.id == characterId
           && resource.data.updatedAt is timestamp
           && request.time >= resource.data.updatedAt + duration.value(30, 's');
-        allow delete: if false;
+        allow delete: if canAccessOwnCharacters(userId)
+          && resource.data.updatedAt is timestamp
+          && request.time >= resource.data.updatedAt + duration.value(30, 's');
+
+        // The avatar is isolated so normal sheet patches never resend its
+        // Base64 payload. It must be changed atomically with the parent sheet.
+        match /characterAssets/{assetId} {
+          allow read: if canAccessOwnCharacters(userId);
+          allow create, update: if canAccessOwnCharacters(userId)
+            && assetId == 'avatar'
+            && request.resource.data.keys().hasAll([
+              'dataUrl', 'hash', 'contentType', 'updatedAt', 'updatedBy'
+            ])
+            && request.resource.data.keys().hasOnly([
+              'dataUrl', 'hash', 'contentType', 'updatedAt', 'updatedBy'
+            ])
+            && request.resource.data.dataUrl is string
+            && request.resource.data.dataUrl.size() <= 512 * 1024
+            && request.resource.data.dataUrl.matches('data:image/.*')
+            && request.resource.data.hash is string
+            && request.resource.data.hash.size() == 64
+            && request.resource.data.contentType is string
+            && request.resource.data.contentType.matches('image/.*')
+            && request.resource.data.updatedAt == request.time
+            && request.resource.data.updatedBy == request.auth.uid
+            && getAfter(
+              /databases/$(database)/documents/users/$(userId)/characters/$(characterId)
+            ).data.updatedAt == request.time;
+          allow delete: if canAccessOwnCharacters(userId) && assetId == 'avatar';
+        }
+      }
+
+      // Lightweight list used by the sheet picker. Full character documents
+      // are fetched individually only after the user selects one summary.
+      match /characterSummaries/{characterId} {
+        allow read: if canAccessOwnCharacters(userId);
+        allow create, update: if canAccessOwnCharacters(userId)
+          && request.resource.data.keys().hasAll([
+            'name', 'divinity', 'updatedAt', 'updatedBy'
+          ])
+          && request.resource.data.keys().hasOnly([
+            'name', 'divinity', 'updatedAt', 'updatedBy'
+          ])
+          && request.resource.data.name is string
+          && request.resource.data.name.size() <= 160
+          && request.resource.data.divinity is int
+          && request.resource.data.divinity >= 0
+          && request.resource.data.divinity <= 100
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.updatedBy == request.auth.uid
+          && getAfter(
+            /databases/$(database)/documents/users/$(userId)/characters/$(characterId)
+          ).data.updatedAt == request.time;
+        allow delete: if canAccessOwnCharacters(userId);
       }
     }
 
