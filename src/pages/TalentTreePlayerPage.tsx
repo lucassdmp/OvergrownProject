@@ -17,7 +17,7 @@ import { useSaveShortcut } from '../hooks/useSaveShortcut'
 import { downloadTextFile, fileNamePart } from '../utils/downloadFile'
 import { serializeCharacterFile } from '../features/character/utils/characterFile'
 import { nodeMatchesSearch } from '../features/talentTree/nodeSearch'
-import { useFirebaseTalentTreeSync } from '../features/talentTree/useFirebaseTalentTreeSync'
+import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
 
 // ── Point cost (player/link nodes are free; per-node override via node.cost) ──
 const nodeCost = talentNodeCost
@@ -211,7 +211,7 @@ function NodeContextMenu({
 
 export default function TalentTreePlayerPage() {
   const navigate = useNavigate()
-  useFirebaseTalentTreeSync({ readOnly: true })
+  const treeLoaded = useDefaultTreeAutoLoad()
   const tree = useTalentTreeStore((s) => s.tree)
   const character = useCharacterStore((s) => s.character)
   const acquireNode = useCharacterStore((s) => s.acquireNode)
@@ -478,6 +478,14 @@ export default function TalentTreePlayerPage() {
   )
 
   // ── Loading / empty states ────────────────────────────────────────────────
+  if (!treeLoaded) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-950 text-sm text-gray-400">
+        Abrindo defaultTalentTree.json…
+      </div>
+    )
+  }
+
   if (tree.nodes.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-950">

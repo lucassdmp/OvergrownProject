@@ -3,19 +3,15 @@ import TalentTreeCanvas, {
   type CanvasMode,
 } from '../features/talentTree/components/TalentTreeCanvas'
 import NodeEditPanel from '../features/talentTree/components/NodeEditPanel'
-import { useTalentTreeStore } from '../features/talentTree/store/talentTreeStore'
+import { serializeTree, useTalentTreeStore } from '../features/talentTree/store/talentTreeStore'
 import { NODE_TYPE_COLORS, NODE_TYPE_LABELS, type TalentNodeType } from '../types/talentTree'
 import { useDarkMode } from '../hooks/useDarkMode'
-import { useSaveShortcut } from '../hooks/useSaveShortcut'
-import { downloadTextFile, fileNamePart } from '../utils/downloadFile'
+import { downloadTextFile } from '../utils/downloadFile'
 import { useCharacterStore } from '../features/character/store/characterStore'
-import {
-  isCharacterFile,
-  isTalentTree,
-  serializeCharacterFile,
-} from '../features/character/utils/characterFile'
+import { isCharacterFile, isTalentTree } from '../features/character/utils/characterFile'
 import { nodeMatchesSearch } from '../features/talentTree/nodeSearch'
-import { useFirebaseTalentTreeSync } from '../features/talentTree/useFirebaseTalentTreeSync'
+import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
+import { useLocalTreeFileAutosave } from '../features/talentTree/useLocalTreeFileAutosave'
 
 // ── Toolbar button ────────────────────────────────────────────────────────────
 
@@ -54,8 +50,8 @@ const ADD_TYPE_ICONS: Record<TalentNodeType, string> = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function TalentTreeBuilderPage() {
+  const treeLoaded = useDefaultTreeAutoLoad()
   const { tree, setTreeName, setTreeDescription, importTree, resetTree } = useTalentTreeStore()
-  const character = useCharacterStore((s) => s.character)
   const loadCharacter = useCharacterStore((s) => s.loadCharacter)
   const [isDark, toggleDark] = useDarkMode()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -71,12 +67,7 @@ export default function TalentTreeBuilderPage() {
   const searchMatchCount = searchQuery.trim()
     ? tree.nodes.filter((node) => nodeMatchesSearch(node, searchQuery)).length
     : 0
-  const {
-    saveNow,
-    status: saveStatus,
-    error: saveError,
-    lastSavedAt,
-  } = useFirebaseTalentTreeSync({ selectedNodeId })
+  const { status: saveStatus, error: saveError, lastSavedAt } = useLocalTreeFileAutosave(tree)
 
   // Grid & snap
   const [gridEnabled, setGridEnabled] = useState(false)
@@ -85,19 +76,12 @@ export default function TalentTreeBuilderPage() {
 
   // ── Export ─────────────────────────────────────────────────────────────────
 
-  const handleExport = useCallback(() => {
-    downloadTextFile(
-      serializeCharacterFile(character, tree),
-      `${fileNamePart(character.name, 'personagem')}.json`,
-    )
-  }, [character, tree])
+  const handleTreeExport = useCallback(() => {
+    downloadTextFile(serializeTree(tree), 'defaultTalentTree.json')
+  }, [tree])
 
-  useSaveShortcut(() => {
-    void saveNow()
-  })
-
-  // ── Sincronização e importação ─────────────────────────────────────────────
-  // Importações também entram no fluxo de sincronização do Firebase.
+  // ── Salvamento local e importação ──────────────────────────────────────────
+  // Importações também entram no fluxo de salvamento automático do JSON local.
 
   function handleImportClick() {
     setImportError(null)
@@ -136,6 +120,14 @@ export default function TalentTreeBuilderPage() {
     setSelectedNodeId(null)
     setMode('select')
     setConfirmReset(false)
+  }
+
+  if (!treeLoaded) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-950 text-sm text-gray-400">
+        Abrindo defaultTalentTree.json…
+      </div>
+    )
   }
 
   // ── layout ─────────────────────────────────────────────────────────────────
@@ -292,39 +284,37 @@ export default function TalentTreeBuilderPage() {
                 saveError ??
                 (lastSavedAt
                   ? `Último salvamento: ${lastSavedAt.toLocaleTimeString()}`
-                  : saveStatus === 'disabled'
-                    ? 'Configure o Firebase para ativar a colaboração em tempo real.'
-                    : 'A árvore é sincronizada automaticamente pelo Firebase.')
+                  : saveStatus === 'local-only'
+                    ? 'Em produção, exporte o JSON para alterar o arquivo do projeto.'
+                    : 'As alterações são gravadas automaticamente no JSON local.')
               }
               className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
                 saveStatus === 'error'
                   ? 'border-red-400 bg-red-50 text-red-600 dark:bg-red-950/30'
-                  : saveStatus === 'pending' ||
-                      saveStatus === 'syncing' ||
-                      saveStatus === 'connecting'
+                  : saveStatus === 'pending' || saveStatus === 'saving'
                     ? 'border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
-                    : saveStatus === 'disabled'
+                    : saveStatus === 'local-only' || saveStatus === 'waiting'
                       ? 'border-gray-300 text-gray-500 dark:border-gray-700'
                       : 'border-emerald-400 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
               }`}
             >
               {saveStatus === 'error'
                 ? '⚠ Erro ao salvar'
-                : saveStatus === 'connecting'
-                  ? '◌ Conectando ao Firebase…'
-                  : saveStatus === 'pending'
-                    ? '● Salva ao desselecionar'
-                    : saveStatus === 'syncing'
-                      ? '● Sincronizando…'
-                      : saveStatus === 'disabled'
-                        ? 'Firebase não configurado · cópia local'
-                        : '✓ Sincronizado em tempo real'}
+                : saveStatus === 'pending'
+                  ? '● Salvamento automático pendente'
+                  : saveStatus === 'saving'
+                    ? '● Salvando no JSON…'
+                    : saveStatus === 'local-only'
+                      ? 'JSON somente leitura em produção'
+                      : saveStatus === 'waiting'
+                        ? 'Preparando salvamento local…'
+                        : '✓ defaultTalentTree.json salvo'}
             </span>
             <button
-              onClick={handleExport}
-              className="rounded-lg border border-sky-300 bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-600 transition hover:bg-sky-100 dark:border-sky-700 dark:bg-sky-950/30 dark:text-sky-400 dark:hover:bg-sky-900/40"
+              onClick={handleTreeExport}
+              className="rounded-lg border border-violet-300 bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-600 transition hover:bg-violet-100 dark:border-violet-700 dark:bg-violet-950/30 dark:text-violet-400 dark:hover:bg-violet-900/40"
             >
-              ↓ Exportar Ficha + Árvore
+              ↓ Exportar Árvore
             </button>
             <button
               onClick={handleImportClick}

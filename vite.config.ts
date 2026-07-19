@@ -75,9 +75,32 @@ function localTalentTreeWriterPlugin(): Plugin {
       server.middlewares.use((req, res, next) => {
         const requestPath = req.url?.split('?')[0]
         if (requestPath !== TALENT_TREE_SAVE_PATH) return next()
+        if (req.method === 'GET') {
+          void fs.promises
+            .readFile(TALENT_TREE_SOURCE, 'utf8')
+            .then((source) => {
+              const parsed = JSON.parse(source) as unknown
+              if (!isValidTalentTree(parsed)) throw new Error('Estrutura da árvore inválida.')
+              res.statusCode = 200
+              res.setHeader('Cache-Control', 'no-store')
+              res.setHeader('Content-Type', 'application/json; charset=utf-8')
+              res.end(source)
+            })
+            .catch((error: unknown) => {
+              res.statusCode = 500
+              res.setHeader('Content-Type', 'application/json; charset=utf-8')
+              res.end(
+                JSON.stringify({
+                  ok: false,
+                  error: error instanceof Error ? error.message : 'Falha ao abrir a árvore.',
+                }),
+              )
+            })
+          return
+        }
         if (req.method !== 'POST') {
           res.statusCode = 405
-          res.setHeader('Allow', 'POST')
+          res.setHeader('Allow', 'GET, POST')
           res.end('Method Not Allowed')
           return
         }

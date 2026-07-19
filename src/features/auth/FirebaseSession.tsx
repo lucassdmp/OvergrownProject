@@ -28,7 +28,6 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
   const profileSyncedUid = useRef<string | null>(null)
 
   useEffect(() => {
-    window.localStorage.removeItem('overgrown-talent-tree')
     const services = getFirebaseServices()
     if (!services) {
       setAuthReady(true)

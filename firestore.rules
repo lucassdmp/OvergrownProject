@@ -17,10 +17,6 @@ service cloud.firestore {
       return hasActiveRole(['viewer', 'editor', 'admin']);
     }
 
-    function canEditTree() {
-      return hasActiveRole(['editor', 'admin']);
-    }
-
     function isAdmin() {
       return hasActiveRole(['admin']);
     }
@@ -195,33 +191,5 @@ service cloud.firestore {
       }
     }
 
-    match /talentTrees/{treeId} {
-      // The published talent tree is public. Mutation remains restricted.
-      allow read: if true;
-      allow create, update: if canEditTree();
-      allow delete: if false;
-
-      match /nodes/{nodeId} {
-        allow read: if true;
-        allow write: if canEditTree();
-      }
-
-      match /edges/{edgeId} {
-        allow read: if true;
-        allow write: if canEditTree();
-      }
-
-      // Compact public projection. Readers listen only to the manifest and
-      // fetch versioned chunks whose hashes changed.
-      match /publications/{publicationId} {
-        allow read: if true;
-        allow write: if canEditTree();
-      }
-
-      match /publishedChunks/{chunkId} {
-        allow read: if true;
-        allow write: if canEditTree();
-      }
-    }
   }
 }

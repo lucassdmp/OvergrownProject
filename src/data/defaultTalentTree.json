@@ -230,8 +230,8 @@
     },
     {
       "id": "5f84a518-fa06-454c-a128-78b3ccd7b257",
-      "x": 7170.466580130247,
-      "y": 1558.8677567255818,
+      "x": 7050,
+      "y": 1550,
       "data": {
         "type": "attribute",
         "attribute": "might",
@@ -777,5 +777,5 @@
       "to": "e538524b-ddbb-4fcb-ae9c-fe90da2d5f16"
     }
   ],
-  "version": 444
+  "version": 447
 }

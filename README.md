@@ -2,7 +2,7 @@
 
 ## OverGrown
 
-- [Configuração da colaboração em tempo real com Firebase](docs/FIREBASE_REALTIME.md)
+- [Configuração do Firebase para autenticação e fichas](docs/FIREBASE_REALTIME.md)
 - [Guia da árvore de talentos](docs/GUIA_ARVORE_DE_TALENTO.md)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

@@ -6,18 +6,13 @@ import AttackList from '../features/character/components/AttackList'
 import SkillList from '../features/character/components/SkillList'
 import Inventory from '../features/character/components/Inventory'
 import NotesPanel from '../features/character/components/NotesPanel'
-import DiceRoller from '../features/character/components/DiceRoller'
-import { useFirebaseTalentTreeSync } from '../features/talentTree/useFirebaseTalentTreeSync'
-
-function FirebaseSheetTreeSync() {
-  useFirebaseTalentTreeSync({ readOnly: true })
-  return null
-}
+import { useDefaultTreeAutoLoad } from '../features/talentTree/defaultTree'
 
 export default function CharacterSheetPage() {
+  useDefaultTreeAutoLoad()
+
   return (
     <div className="min-h-screen pb-16">
-      <FirebaseSheetTreeSync />
       <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6">
         <CharacterHeader />
 
@@ -38,11 +33,6 @@ export default function CharacterSheetPage() {
             <AttackList />
           </section>
         </div>
-
-        {/* Dice Roller – stateless, can be shared from v1 */}
-        <section className="rounded-xl border border-gray-200 bg-white px-4 py-4 dark:border-gray-800 dark:bg-gray-900/50">
-          <DiceRoller />
-        </section>
 
         {/* Skills */}
         <section className="rounded-xl border border-gray-200 bg-white px-4 py-4 dark:border-gray-800 dark:bg-gray-900/50">

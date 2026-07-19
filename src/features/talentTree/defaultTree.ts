@@ -8,12 +8,11 @@
 //   • a árvore local é a oficial e o arquivo embarcado tem versão maior
 //     (deploy novo → todos recebem a atualização).
 //
-// Na integração Firebase este módulo fica fora das páginas protegidas para não
-// publicar o conteúdo como asset. O JSON é importado manualmente pelo primeiro
-// editor autorizado e este módulo permanece para migrações/testes offline.
+// No builder local, as alterações voltam para este mesmo arquivo pelo endpoint
+// restrito do servidor Vite. Em produção, o JSON embarcado é somente leitura.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import defaultTreeJson from '../../data/defaultTalentTree.json'
 import type { TalentTree } from '../../types/talentTree'
 import type { Character } from '../../types/game'
@@ -98,28 +97,52 @@ export function migrateCharacterTalentNodes(
   }
 }
 
-function migrateAllCharacters(previousTree: TalentTree) {
+function migrateAllCharacters(previousTree: TalentTree, nextTree: TalentTree) {
   const state = useCharacterStore.getState()
   const characters = Object.fromEntries(
     Object.entries(state.characters).map(([id, character]) => [
       id,
-      migrateCharacterTalentNodes(character, previousTree, DEFAULT_TREE),
+      migrateCharacterTalentNodes(character, previousTree, nextTree),
     ]),
   )
   const character =
     characters[state.character.id] ??
-    migrateCharacterTalentNodes(state.character, previousTree, DEFAULT_TREE)
+    migrateCharacterTalentNodes(state.character, previousTree, nextTree)
   useCharacterStore.setState({ characters, character })
 }
 
 export function useDefaultTreeAutoLoad() {
   const importTree = useTalentTreeStore((state) => state.importTree)
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    const { tree } = useTalentTreeStore.getState()
-    if (shouldLoadDefaultTree(tree)) {
-      migrateAllCharacters(tree)
-      importTree(structuredClone(DEFAULT_TREE))
+    let cancelled = false
+
+    async function loadTreeFile() {
+      let nextTree = structuredClone(DEFAULT_TREE)
+      if (import.meta.env.DEV) {
+        try {
+          const response = await fetch('/__overgrown/talent-tree', { cache: 'no-store' })
+          if (!response.ok) throw new Error(`Falha ao abrir a árvore (${response.status}).`)
+          nextTree = (await response.json()) as TalentTree
+        } catch {
+          // Testes e builds sem o servidor Vite continuam usando o JSON importado.
+        }
+      }
+      if (cancelled) return
+
+      const { tree } = useTalentTreeStore.getState()
+      const changedSource = tree.id !== nextTree.id || tree.version !== nextTree.version
+      if (tree.nodes.length > 0 && changedSource) migrateAllCharacters(tree, nextTree)
+      importTree(nextTree)
+      setLoaded(true)
+    }
+
+    void loadTreeFile()
+    return () => {
+      cancelled = true
     }
   }, [importTree])
+
+  return loaded
 }

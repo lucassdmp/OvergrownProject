@@ -9,7 +9,7 @@ A árvore é um artefato autoral. Não existe gerador de topologia: conteúdo, p
 | `src/data/defaultTalentTree.json`                     | Árvore oficial carregada pelo site e salva pelo builder local. |
 | `src/types/talentTree.ts`                             | Tipos, tiers, pré-requisitos, condições e efeitos.             |
 | `src/features/talentTree/store/talentTreeStore.ts`    | Estado e serialização determinística.                          |
-| `src/features/talentTree/useLocalTreeFileAutosave.ts` | Debounce, fila de gravação, estado visual e `Ctrl+S`.          |
+| `src/features/talentTree/useLocalTreeFileAutosave.ts` | Debounce, fila de gravação e estado visual do autosave.        |
 | `vite.config.ts`                                      | Endpoint local que valida e grava o JSON no projeto.           |
 | `src/features/talentTree/defaultTree.ts`              | Carregamento da árvore embarcada e migração de saves.          |
 
@@ -19,10 +19,10 @@ A árvore é um artefato autoral. Não existe gerador de topologia: conteúdo, p
 2. Abra `/talent-tree-builder`.
 3. Edite, mova, conecte, importe ou remova nós normalmente.
 4. Qualquer alteração agenda um salvamento automático após 500 ms sem novas mudanças.
-5. `Ctrl+S` ou `Cmd+S` cancela o debounce e salva imediatamente.
+5. Nenhum atalho é necessário: após 600 ms sem novas mudanças, o arquivo é salvo automaticamente.
 6. O indicador do cabeçalho informa se existem alterações pendentes, gravação em andamento, sucesso ou erro.
 
-O servidor local aceita somente `POST /__overgrown/talent-tree`, valida a estrutura, IDs únicos e referências das conexões e grava exclusivamente em `src/data/defaultTalentTree.json`. O cliente não escolhe caminhos do sistema de arquivos. Quando o conteúdo realmente muda, o servidor incrementa `version`; salvar novamente sem alterações preserva a versão existente.
+O servidor local usa `GET /__overgrown/talent-tree` para abrir sempre o arquivo atual e `POST /__overgrown/talent-tree` para salvá-lo. Ele valida a estrutura, IDs únicos e referências das conexões e grava exclusivamente em `src/data/defaultTalentTree.json`. O cliente não escolhe caminhos do sistema de arquivos. Quando o conteúdo realmente muda, o servidor incrementa `version`; salvar novamente sem alterações preserva a versão existente.
 
 Este recurso é intencionalmente local. Em builds de produção o endpoint não existe e a árvore embarcada é somente leitura. O botão de exportar ficha + árvore continua disponível como backup portável, mas não é o mecanismo de publicação da árvore oficial.
 
@@ -103,4 +103,4 @@ npm run lint
 npm run build
 ```
 
-Depois inspecione `/arvore` e `/talent-tree-builder`, verificando busca, zoom, aquisição, dependências, movimentação, conexões e o indicador de sincronização. Com Firebase configurado, valide a edição em duas janelas seguindo `docs/FIREBASE_REALTIME.md`; sem Firebase, confirme o fallback local.
+Depois inspecione `/arvore` e `/talent-tree-builder`, verificando busca, zoom, aquisição, dependências, movimentação, conexões e o indicador de salvamento local. Confirme também que `src/data/defaultTalentTree.json` muda depois de editar a árvore no servidor Vite local.
