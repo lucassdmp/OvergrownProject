@@ -14,6 +14,16 @@
       }
     },
     {
+      "id": "021eb771-70ea-464b-8194-3bb9ac990c39",
+      "x": 8000,
+      "y": 2800,
+      "data": {
+        "type": "player",
+        "name": "Grace",
+        "description": "Você pode começar aqui, todo nó adicional custará +1 ponto de atributo."
+      }
+    },
+    {
       "id": "0430e181-ee31-4f20-b854-b64e04bfc566",
       "x": 6950,
       "y": 2550,
@@ -122,7 +132,7 @@
       "y": 2800,
       "data": {
         "type": "player",
-        "name": "Jogador",
+        "name": "Might",
         "description": "Você pode começar aqui, todo nó adicional custará +1 ponto de atributo."
       }
     },
@@ -269,6 +279,16 @@
       }
     },
     {
+      "id": "641cef3a-0ea4-46b4-8d6f-230ac2af89cc",
+      "x": 7450,
+      "y": 3850,
+      "data": {
+        "type": "player",
+        "name": "Wisdom",
+        "description": ""
+      }
+    },
+    {
       "id": "6887be0d-1108-4f28-9f33-ff977d7e6377",
       "x": 5810.3328315720855,
       "y": 3143.625573116298,
@@ -359,6 +379,16 @@
         "type": "attribute",
         "attribute": "might",
         "value": 1
+      }
+    },
+    {
+      "id": "ae66a4ad-f046-44de-948d-64ecdd108cbb",
+      "x": 8000,
+      "y": 3450,
+      "data": {
+        "type": "player",
+        "name": "Sense",
+        "description": ""
       }
     },
     {
@@ -522,6 +552,16 @@
         "type": "attribute",
         "attribute": "fortitude",
         "value": 1
+      }
+    },
+    {
+      "id": "fc9ba17f-bd0b-4f86-bd93-e455c4a920e3",
+      "x": 6900,
+      "y": 3450,
+      "data": {
+        "type": "player",
+        "name": "Fortitude",
+        "description": ""
       }
     },
     {
@@ -777,5 +817,5 @@
       "to": "e538524b-ddbb-4fcb-ae9c-fe90da2d5f16"
     }
   ],
-  "version": 447
+  "version": 448
 }
