@@ -277,7 +277,6 @@ export function useFirebaseCharacters() {
       }
 
       const batch = writeBatch(services.firestore)
-      const remoteTimestamp = Date.now()
       if (!currentRemote) {
         batch.set(characterReference(services.firestore, user.uid, current.id), {
           character: currentCloudCharacter,
@@ -316,13 +315,22 @@ export function useFirebaseCharacters() {
       }
 
       await batch.commit()
+      // The write happens immediately. Only a successful commit starts the
+      // cooldown that prevents the next write for this character.
+      const savedAt = Date.now()
+      setLocalCooldowns((cooldowns) => ({
+        ...cooldowns,
+        [current.id]: savedAt + SAVE_INTERVAL_MS,
+      }))
+      setNow(savedAt)
+
       const cachedCharacter = {
         ...currentCloudCharacter,
         avatarBase64: current.avatarBase64,
       } as Character
       const nextRemote: RemoteCharacter = {
         character: cachedCharacter,
-        updatedAtMs: remoteTimestamp,
+        updatedAtMs: savedAt,
         avatarHash: avatarRemoved ? undefined : (nextAvatarHash ?? currentRemote?.avatarHash),
         avatarContentType: avatarRemoved
           ? undefined
@@ -346,12 +354,7 @@ export function useFirebaseCharacters() {
           return nextSummaries
         })
       }
-      setLocalCooldowns((cooldowns) => ({
-        ...cooldowns,
-        [current.id]: remoteTimestamp + SAVE_INTERVAL_MS,
-      }))
-      setNow(remoteTimestamp)
-      setMessage('Ficha salva no Firebase.')
+      setMessage('Ficha salva no Firebase. Novo salvamento disponível em 30 segundos.')
     } catch (saveError) {
       setError(firebaseErrorMessage(saveError))
     } finally {

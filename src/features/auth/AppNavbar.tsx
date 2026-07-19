@@ -44,6 +44,14 @@ export default function AppNavbar({ isDark, toggleDark }: Props) {
               Builder
             </Link>
           )}
+          {authorized && access?.role === 'admin' && (
+            <Link
+              to="/admin"
+              className="text-violet-700 hover:text-violet-500 dark:text-violet-400 dark:hover:text-violet-300"
+            >
+              Admin
+            </Link>
+          )}
         </nav>
 
         <div className="ml-auto flex flex-wrap items-center justify-end gap-2">

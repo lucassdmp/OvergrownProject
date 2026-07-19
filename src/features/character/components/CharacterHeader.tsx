@@ -485,7 +485,7 @@ export default function CharacterHeader() {
               {cloud.saving
                 ? 'Salvando…'
                 : cloud.remainingSeconds > 0
-                  ? `Salvar em ${cloud.remainingSeconds}s`
+                  ? `Aguarde ${cloud.remainingSeconds}s`
                   : 'Salvar Ficha'}
             </button>
           )}
@@ -625,7 +625,7 @@ export default function CharacterHeader() {
             <hr className="w-full border-gray-200 dark:border-gray-800" />
 
             {/* Bottom Row: Stats and Resources */}
-            <div className="grid grid-cols-1 items-stretch gap-x-6 gap-y-2 sm:grid-cols-[max-content_minmax(280px,1fr)]">
+            <div className="grid grid-cols-1 items-stretch gap-x-6 gap-y-2 sm:grid-cols-[max-content_minmax(280px,1fr)_max-content]">
               <div className="contents">
                 <div className="flex items-center justify-center gap-4 px-3 py-2 sm:col-start-1 sm:row-start-1">
                   <StatBadge
@@ -641,7 +641,7 @@ export default function CharacterHeader() {
                   />
                 </div>
 
-                <div className="flex items-center justify-center gap-6 px-3 py-1.5 sm:col-start-1 sm:row-start-2">
+                <div className="flex items-center justify-center px-3 py-1.5 sm:col-start-1 sm:row-start-2">
                   <StatBadge
                     label="Resistência"
                     value={derivedStats.resistencia}
@@ -649,25 +649,6 @@ export default function CharacterHeader() {
                     detail="Defesa passiva"
                     prominent
                   />
-                  <div className="h-10 w-px bg-gray-200 dark:bg-gray-700" />
-                  <label
-                    className="flex cursor-help flex-col items-center gap-0.5"
-                    title={HEADER_FIELD_DESCRIPTIONS.divinity}
-                  >
-                    <span className="text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
-                      Divindade
-                    </span>
-                    <IntegerInput
-                      min={0}
-                      max={100}
-                      value={character.divinity}
-                      onChange={store.setDivinity}
-                      className="w-16 border-0 bg-transparent p-0 text-center text-xl leading-none font-bold text-gray-700 focus:outline-none dark:text-gray-200"
-                    />
-                    <span className="text-[9px] font-medium text-gray-400 dark:text-gray-500">
-                      Nível atual
-                    </span>
-                  </label>
                 </div>
               </div>
 
@@ -736,6 +717,25 @@ export default function CharacterHeader() {
                   />
                 </div>
               </div>
+
+              <label
+                className="flex min-h-full cursor-help flex-col items-center justify-center gap-1 px-5 pt-4 sm:col-start-3 sm:row-span-2 sm:row-start-1 sm:pt-0"
+                title={HEADER_FIELD_DESCRIPTIONS.divinity}
+              >
+                <span className="text-[10px] font-semibold tracking-widest text-gray-500 uppercase dark:text-gray-400">
+                  Divindade
+                </span>
+                <IntegerInput
+                  min={0}
+                  max={100}
+                  value={character.divinity}
+                  onChange={store.setDivinity}
+                  className="w-20 border-0 bg-transparent p-0 text-center text-4xl leading-none font-bold text-gray-700 focus:outline-none dark:text-gray-200"
+                />
+                <span className="text-[9px] font-medium text-gray-400 dark:text-gray-500">
+                  Nível atual
+                </span>
+              </label>
             </div>
           </div>
         </div>

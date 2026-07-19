@@ -25,12 +25,12 @@ A página `/arvore` é pública e carrega a versão publicada da árvore sem exi
 
 ## 3. Autorizar usuários
 
-Depois que uma pessoa tentar entrar com Google pela primeira vez, copie o UID em **Authentication > Users**. No Firestore, crie manualmente o documento `users/{UID}`:
+Crie apenas o primeiro administrador manualmente. Depois que essa conta entrar com Google pela primeira vez, copie o UID em **Authentication > Users** e, no Firestore, crie ou edite o documento `users/{UID}`:
 
 ```json
 {
   "active": true,
-  "role": "editor",
+  "role": "admin",
   "canSaveCharacters": true,
   "email": "pessoa@exemplo.com",
   "displayName": "Nome opcional"
@@ -41,7 +41,11 @@ Papéis disponíveis:
 
 - `viewer`: não pode editar a árvore; também não pode salvar fichas por padrão;
 - `editor`: também pode abrir `/talent-tree-builder` e alterar nós, arestas e metadados;
-- `admin`: atualmente possui o mesmo acesso à árvore que `editor` e está reservado para futuras telas administrativas.
+- `admin`: pode editar a árvore e abrir `/admin` para consultar os usuários cadastrados e gerenciar permissões.
+
+Depois de publicar as regras, cada pessoa que entrar no aplicativo cria automaticamente o próprio documento com `active: false`, `role: "viewer"` e `canSaveCharacters: false`. Isso não concede acesso: um administrador ainda precisa ativar a conta na página `/admin`.
+
+A página administrativa lista os usuários que já acessaram esta versão do aplicativo. Ela não enumera diretamente todas as contas do Firebase Authentication, pois essa operação exige um backend com Firebase Admin SDK. Contas antigas aparecerão na página depois do próximo login.
 
 O campo `canSaveCharacters` é uma permissão independente. Somente o valor booleano `true` permite carregar e salvar fichas no Firebase. Campo ausente, `false` ou texto `"true"` não concede acesso. Uma pessoa nunca pode ler a coleção de fichas de outro usuário.
 
@@ -52,7 +56,16 @@ Combinações comuns:
 - somente editar a árvore: `role: "editor"` e `canSaveCharacters: false`;
 - editar a árvore e salvar fichas: `role: "editor"` e `canSaveCharacters: true`.
 
-### Dar as duas permissões a partir de um e-mail
+### Dar permissões pela página administrativa
+
+1. Entre com a conta administradora e abra **Admin** na navbar ou acesse `/admin`.
+2. Localize a pessoa pelo nome, e-mail ou UID.
+3. Marque **Ativo**, escolha `viewer`, `editor` ou `admin` e habilite **Salvar fichas** quando necessário.
+4. Clique em **Salvar** na linha do usuário.
+
+Um administrador não pode desativar nem remover o próprio papel de administrador. Essa proteção existe tanto na interface quanto nas regras do Firestore.
+
+### Alternativa pelo Firebase Console
 
 1. Peça para a pessoa entrar uma vez no site para que a conta seja criada no Firebase Authentication.
 2. No Firebase Console, abra **Build > Authentication > Users**.
@@ -60,7 +73,7 @@ Combinações comuns:
 4. Abra **Build > Firestore Database > Data**.
 5. Entre na coleção `users`. Se ela não existir, clique em **Start collection** e informe `users`.
 6. Crie ou edite o documento cujo **Document ID** seja exatamente o UID copiado.
-7. Adicione os campos abaixo, respeitando os tipos:
+7. Adicione ou ajuste os campos abaixo, respeitando os tipos:
    - `active`: boolean, `true`;
    - `role`: string, `editor`;
    - `canSaveCharacters`: boolean, `true`;
@@ -68,11 +81,11 @@ Combinações comuns:
    - `displayName`: string, opcional.
 8. Salve o documento. A permissão é atualizada em tempo real; se a navbar não mudar, saia e entre novamente.
 
-Para revogar o acesso imediatamente, altere `active` para `false` ou exclua o documento. Os documentos de permissão só podem ser administrados pelo Firebase Console ou por um backend usando Admin SDK; o cliente não pode conceder permissão a si mesmo.
+Para revogar o acesso imediatamente, altere `active` para `false` pela página administrativa ou pelo Console. A aplicação não permite excluir documentos de usuário, e nenhum usuário pode conceder permissão a si mesmo.
 
 ## 4. Publicar as regras
 
-As regras em `firestore.rules` permitem leitura pública da árvore, mas exigem login Google e consultam `users/{uid}` em toda gravação da árvore e em todo acesso às fichas privadas. Mesmo que alguém modifique o JavaScript no navegador, o Firestore continuará bloqueando editores inativos ou sem o papel necessário. Para as fichas, as regras também validam o UID proprietário, o timestamp gerado pelo servidor e um intervalo mínimo de 30 segundos entre atualizações do mesmo documento.
+As regras em `firestore.rules` permitem leitura pública da árvore, mas exigem login Google e consultam `users/{uid}` em toda gravação da árvore e em todo acesso às fichas privadas. Somente administradores ativos podem listar usuários e alterar os campos de permissão; o cadastro feito pelo próprio usuário sempre começa inativo e sem privilégios. Mesmo que alguém modifique o JavaScript no navegador, o Firestore continuará bloqueando operações não autorizadas. Para as fichas, as regras também validam o UID proprietário, o timestamp gerado pelo servidor e um intervalo mínimo de 30 segundos entre atualizações do mesmo documento.
 
 ```powershell
 npx firebase-tools login

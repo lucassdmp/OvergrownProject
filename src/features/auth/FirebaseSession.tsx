@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { onAuthStateChanged, type User } from 'firebase/auth'
-import { doc, onSnapshot } from 'firebase/firestore'
+import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore'
 import { getFirebaseServices, signInWithGoogle, signOutFirebase } from '../../services/firebase'
 import { clearFirebaseCharacterCaches } from '../character/utils/firebaseCharacterCache'
 import {
@@ -25,6 +25,7 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
   const [signingIn, setSigningIn] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const previousUserUid = useRef<string | null>(null)
+  const profileSyncedUid = useRef<string | null>(null)
 
   useEffect(() => {
     window.localStorage.removeItem('overgrown-talent-tree')
@@ -43,6 +44,7 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
           void clearFirebaseCharacterCaches(previousUid)
         }
         previousUserUid.current = nextUser?.uid ?? null
+        profileSyncedUid.current = null
         setUser(nextUser)
         setAuthReady(true)
         setAccess(null)
@@ -62,9 +64,31 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
     if (!services || !user) return
 
     setAccessReady(false)
+    const userReference = doc(services.firestore, 'users', user.uid)
     return onSnapshot(
-      doc(services.firestore, 'users', user.uid),
+      userReference,
       (snapshot) => {
+        if (profileSyncedUid.current !== user.uid) {
+          profileSyncedUid.current = user.uid
+          const profile = {
+            email: user.email || '',
+            displayName: user.displayName || '',
+            photoURL: user.photoURL || '',
+            lastLoginAt: serverTimestamp(),
+          }
+          const registration = snapshot.exists()
+            ? profile
+            : {
+                ...profile,
+                active: false,
+                role: 'viewer',
+                canSaveCharacters: false,
+                createdAt: serverTimestamp(),
+              }
+          void setDoc(userReference, registration, { merge: snapshot.exists() }).catch(
+            (profileError) => setError(firebaseErrorMessage(profileError)),
+          )
+        }
         setAccess(snapshot.exists() ? (snapshot.data() as FirebaseUserAccess) : null)
         setAccessReady(true)
         setError(null)
@@ -89,7 +113,7 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
   }, [accessReady, canSaveCharacters, user])
 
   const hasRole = useCallback(
-    (requiredRole: 'viewer' | 'editor') =>
+    (requiredRole: FirebaseUserRole) =>
       authorized && roleLevel[access!.role] >= roleLevel[requiredRole],
     [access, authorized],
   )

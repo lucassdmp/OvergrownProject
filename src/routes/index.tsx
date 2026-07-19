@@ -7,6 +7,7 @@ import PdfPage from '@/pages/PdfPage'
 
 const TalentTreeBuilderPage = lazy(() => import('@/pages/TalentTreeBuilderPage'))
 const TalentTreePlayerPage = lazy(() => import('@/pages/TalentTreePlayerPage'))
+const AdminUsersPage = lazy(() => import('@/pages/AdminUsersPage'))
 const FirebaseAccessGate = lazy(() => import('@/features/auth/FirebaseAccessGate'))
 
 export const router = createBrowserRouter([
@@ -21,6 +22,22 @@ export const router = createBrowserRouter([
       {
         path: 'livro',
         element: <PdfPage />,
+      },
+      {
+        path: 'admin',
+        element: (
+          <Suspense
+            fallback={
+              <div className="flex min-h-[calc(100vh-3.5rem)] items-center justify-center text-sm text-gray-500">
+                Carregando administração…
+              </div>
+            }
+          >
+            <FirebaseAccessGate requiredRole="admin" showSessionBadge={false}>
+              <AdminUsersPage />
+            </FirebaseAccessGate>
+          </Suspense>
+        ),
       },
       {
         // Legacy URL – the sheet now lives at the root

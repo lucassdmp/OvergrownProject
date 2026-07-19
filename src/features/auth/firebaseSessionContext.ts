@@ -23,7 +23,7 @@ export interface FirebaseSessionValue {
   error: string | null
   login: () => Promise<void>
   logout: () => Promise<void>
-  hasRole: (requiredRole: 'viewer' | 'editor') => boolean
+  hasRole: (requiredRole: FirebaseUserRole) => boolean
 }
 
 export const FirebaseSessionContext = createContext<FirebaseSessionValue | null>(null)

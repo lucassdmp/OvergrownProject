@@ -21,6 +21,77 @@ service cloud.firestore {
       return hasActiveRole(['editor', 'admin']);
     }
 
+    function isAdmin() {
+      return hasActiveRole(['admin']);
+    }
+
+    function validUserDocument() {
+      return request.resource.data.keys().hasAll(['active', 'role', 'canSaveCharacters'])
+        && request.resource.data.keys().hasOnly([
+          'active',
+          'role',
+          'canSaveCharacters',
+          'email',
+          'displayName',
+          'photoURL',
+          'createdAt',
+          'lastLoginAt'
+        ])
+        && request.resource.data.active is bool
+        && request.resource.data.role in ['viewer', 'editor', 'admin']
+        && request.resource.data.canSaveCharacters is bool
+        && request.resource.data.get('email', '') is string
+        && request.resource.data.get('email', '').size() <= 320
+        && request.resource.data.get('displayName', '') is string
+        && request.resource.data.get('displayName', '').size() <= 160
+        && request.resource.data.get('photoURL', '') is string
+        && request.resource.data.get('photoURL', '').size() <= 2048
+        && request.resource.data.get('createdAt', request.time) is timestamp
+        && request.resource.data.get('lastLoginAt', request.time) is timestamp;
+    }
+
+    function validSelfRegistration(userId) {
+      return request.auth != null
+        && request.auth.uid == userId
+        && validUserDocument()
+        && request.resource.data.keys().hasAll(['email', 'displayName', 'photoURL'])
+        && request.resource.data.active == false
+        && request.resource.data.role == 'viewer'
+        && request.resource.data.canSaveCharacters == false
+        && request.resource.data.email == request.auth.token.get('email', '')
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.lastLoginAt == request.time;
+    }
+
+    function validSelfProfileUpdate(userId) {
+      return request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'email', 'displayName', 'photoURL', 'lastLoginAt'
+        ])
+        && request.resource.data.email == request.auth.token.get('email', '')
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 160
+        && request.resource.data.photoURL is string
+        && request.resource.data.photoURL.size() <= 2048
+        && request.resource.data.lastLoginAt == request.time;
+    }
+
+    function validAdminPermissionUpdate(userId) {
+      return isAdmin()
+        && validUserDocument()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'active', 'role', 'canSaveCharacters'
+        ])
+        && (
+          userId != request.auth.uid
+          || (
+            request.resource.data.active == true
+            && request.resource.data.role == 'admin'
+          )
+        );
+    }
+
     function canAccessOwnCharacters(userId) {
       return request.auth != null
         && request.auth.uid == userId
@@ -47,11 +118,14 @@ service cloud.firestore {
         && request.resource.data.updatedBy == request.auth.uid;
     }
 
-    // Users may inspect only their own access document. Permission documents
-    // are managed in the Firebase Console or through a trusted Admin SDK.
+    // Every account may register its own inert directory entry after login.
+    // Only an active admin can list users or change permission fields.
     match /users/{userId} {
-      allow get: if request.auth != null && request.auth.uid == userId;
-      allow list, create, update, delete: if false;
+      allow get: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      allow create: if validSelfRegistration(userId);
+      allow update: if validSelfProfileUpdate(userId) || validAdminPermissionUpdate(userId);
+      allow delete: if false;
 
       // Character sheets are private to their owner. Every role that grants
       // application access may save, but no document may be updated more than

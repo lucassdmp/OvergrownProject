@@ -4,10 +4,15 @@ import { isFirebaseConfigured, useFirebaseSession } from './firebaseSessionConte
 
 interface Props {
   children: ReactNode
-  requiredRole: 'viewer' | 'editor'
+  requiredRole: 'viewer' | 'editor' | 'admin'
+  showSessionBadge?: boolean
 }
 
-export default function FirebaseAccessGate({ children, requiredRole }: Props) {
+export default function FirebaseAccessGate({
+  children,
+  requiredRole,
+  showSessionBadge = true,
+}: Props) {
   const { user, authReady, accessReady, signingIn, error, login, logout, hasRole } =
     useFirebaseSession()
   const authorized = hasRole(requiredRole)
@@ -49,24 +54,26 @@ export default function FirebaseAccessGate({ children, requiredRole }: Props) {
   return (
     <>
       {children}
-      <div className="fixed right-3 bottom-3 z-50 flex items-center gap-2 rounded-full border border-gray-700 bg-gray-950/90 px-3 py-1.5 text-[10px] text-gray-400 shadow-lg backdrop-blur">
-        {user.photoURL ? (
-          <img
-            src={user.photoURL}
-            alt=""
-            referrerPolicy="no-referrer"
-            className="h-5 w-5 rounded-full"
-          />
-        ) : null}
-        <span className="max-w-40 truncate">{user.email}</span>
-        <button
-          type="button"
-          onClick={() => void logout()}
-          className="font-bold text-amber-500 hover:text-amber-400"
-        >
-          Sair
-        </button>
-      </div>
+      {showSessionBadge && (
+        <div className="fixed right-3 bottom-3 z-50 flex items-center gap-2 rounded-full border border-gray-700 bg-gray-950/90 px-3 py-1.5 text-[10px] text-gray-400 shadow-lg backdrop-blur">
+          {user.photoURL ? (
+            <img
+              src={user.photoURL}
+              alt=""
+              referrerPolicy="no-referrer"
+              className="h-5 w-5 rounded-full"
+            />
+          ) : null}
+          <span className="max-w-40 truncate">{user.email}</span>
+          <button
+            type="button"
+            onClick={() => void logout()}
+            className="font-bold text-amber-500 hover:text-amber-400"
+          >
+            Sair
+          </button>
+        </div>
+      )}
     </>
   )
 }
